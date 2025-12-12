@@ -28,6 +28,10 @@ export const ReportBuilderPageChart: React.FC<{
       clearSelectedItem();
     },
   });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const fetchChartData = () => {
+    // Fetch or compute chart data here
+  };
 
   return (
     <Box
@@ -37,7 +41,15 @@ export const ReportBuilderPageChart: React.FC<{
           ...selectedItem,
           id,
           type: "chart",
-          open: true,
+          open: false,
+          extra: {
+            ...selectedItem?.extra,
+            chart: {
+              ...selectedItem?.extra?.chart,
+              //dataset: fetched datasetId
+              //chartType: fetched chart type
+            },
+          },
         });
         setSelectedController({
           id,

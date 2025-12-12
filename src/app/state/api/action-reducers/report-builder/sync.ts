@@ -100,8 +100,11 @@ export interface RBReportItemController {
   id: string;
   extra?: {
     chart?: {
-      isDatasetExpanded?: boolean;
       listToDisplay?: ChartProperty | null;
+      showDatasetTable?: {
+        datasetId: string;
+        open: boolean;
+      };
     };
   };
 }

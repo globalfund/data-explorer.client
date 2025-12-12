@@ -48,6 +48,8 @@ export default function KPIController() {
         borderRadius: "4px",
         boxShadow: "0 0 10px 0 rgba(152, 161, 170, 0.60);",
         bgcolor: "#F8F9FA",
+        minWidth: "300px",
+        maxWidth: "304px",
       }}
     >
       <Box

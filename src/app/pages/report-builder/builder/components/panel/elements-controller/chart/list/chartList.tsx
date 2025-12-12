@@ -66,6 +66,18 @@ export default function ChartList() {
         gap: "8px",
         flexDirection: "column",
         padding: "8px",
+        maxHeight: "75vh",
+        overflowY: "auto",
+        paddingRight: "4px",
+        "&::-webkit-scrollbar": {
+          width: "4px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "#000",
+        },
+        "&::-webkit-scrollbar-track": {
+          backgroundColor: "#D9D9D9",
+        },
       }}
     >
       <Typography color="#000" fontSize="14px">

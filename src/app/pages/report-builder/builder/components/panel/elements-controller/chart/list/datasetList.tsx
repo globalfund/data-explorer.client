@@ -18,6 +18,7 @@ export default function DatasetList() {
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const item = items.find((i) => i.id === selectedController?.id);
+  const selectedDataset = datasetState.find((item) => item.isSelected);
   const handleSelectDataset = (id: number) => {
     setDatasetState((prevState) =>
       prevState.map((dataset) => {
@@ -29,7 +30,6 @@ export default function DatasetList() {
     );
   };
   const handleApply = () => {
-    const selectedDataset = datasetState.find((item) => item.isSelected);
     if (!item || !selectedDataset) return;
     editItem({
       ...item,
@@ -51,12 +51,33 @@ export default function DatasetList() {
     setSelectedController({
       ...selectedController,
       extra: {
+        ...selectedController?.extra,
         chart: {
           listToDisplay: null,
         },
       },
     });
   };
+
+  const handleExpandDataset =
+    (datasetId: string) =>
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.stopPropagation();
+      console.log(selectedDataset?.id, "expand dataset");
+      setSelectedController({
+        ...selectedController!,
+        extra: {
+          ...selectedController?.extra,
+          chart: {
+            listToDisplay: null,
+            showDatasetTable: {
+              datasetId: datasetId.toString() || "",
+              open: true,
+            },
+          },
+        },
+      });
+    };
   return (
     <Box
       sx={{
@@ -71,7 +92,7 @@ export default function DatasetList() {
       </Typography>
       <Box
         sx={{
-          maxHeight: "666px",
+          maxHeight: "65vh",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
@@ -139,6 +160,7 @@ export default function DatasetList() {
                   Updated on {item.date}
                 </Typography>
                 <IconButton
+                  onClick={handleExpandDataset(item.name)}
                   sx={{
                     width: "40px",
                     height: "35px",

@@ -27,9 +27,7 @@ export function SelectChartAssetList() {
           buttonLabel={data.buttonLabel}
           helperText={data.helperText}
           icon={data.icon}
-          selectedItem={
-            chartExtra?.[data.type as keyof typeof chartExtra] || ""
-          }
+          selectedItem={chartExtra?.[data.type] || ""}
           type={data.type as ChartProperty}
         />
       ))}

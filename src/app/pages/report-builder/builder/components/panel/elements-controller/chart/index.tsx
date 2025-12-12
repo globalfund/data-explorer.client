@@ -9,15 +9,20 @@ import DatasetList from "./list/datasetList";
 import ChartList from "./list/chartList";
 import { tabList } from "./data";
 import { useStoreState } from "app/state/store/hooks";
+import DataDetail from "./dataDetail";
+import Mapping from "./mapping";
+import Filtering from "./filtering";
+import LayoutTab from "./layout";
 
-type ChartControllerTab = "source" | "style" | "layout";
+type ChartControllerTab = "mapping" | "filter" | "layout" | "style" | "more";
 export default function ChartController() {
-  const [value, setValue] = React.useState<ChartControllerTab>("source");
+  const [value, setValue] = React.useState<ChartControllerTab>("mapping");
   const [isExpanded, setIsExpanded] = React.useState(true);
 
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
+  const chartExtra = selectedController?.extra?.chart || {};
   const handleExpandToggle = () => {
     setIsExpanded(!isExpanded);
   };
@@ -28,18 +33,18 @@ export default function ChartController() {
     setValue(newValue);
   };
 
-  // const renderTabPanel = () => {
-  //   switch (value) {
-  //     case "source":
-  //       return <ImageSource />;
-  //     case "style":
-  //       return <BorderFill />;
-  //     case "layout":
-  //       return <PaddingSize />;
-  //     default:
-  //       return null;
-  //   }
-  // };
+  const renderTabPanel = () => {
+    switch (value) {
+      case "mapping":
+        return <Mapping />;
+      case "filter":
+        return <Filtering />;
+      case "layout":
+        return <LayoutTab />;
+      default:
+        return null;
+    }
+  };
 
   const renderList = () => {
     switch (selectedController?.extra?.chart?.listToDisplay) {
@@ -56,94 +61,108 @@ export default function ChartController() {
     <Box
       id="chart-controller"
       sx={{
-        border: "1px solid #98A1AA",
-        borderRadius: "4px",
-        boxShadow: "0 0 10px 0 rgba(152, 161, 170, 0.60);",
-        bgcolor: "#F8F9FA",
-        display: "flex",
-        flexDirection: "column",
-        gap: "8px",
+        minWidth: "300px",
+        maxWidth: "max-content",
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          height: "50px",
-          padding: "8px",
-          borderBottom: "1px solid #CFD4DA",
-          ".MuiIconButton-root": {
-            backgroundColor: "#FFFFFF",
-            borderRadius: "4px",
-            border: "1px solid #CFD4DA",
-            width: "34px",
-            height: "34px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          },
-        }}
-      >
+      {chartExtra.showDatasetTable?.open && (
+        <DataDetail datasetId={chartExtra.showDatasetTable?.datasetId ?? ""} />
+      )}
+      {!chartExtra.showDatasetTable?.open && (
         <Box
           sx={{
+            border: "1px solid #98A1AA",
+            borderRadius: "4px",
+            boxShadow: "0 0 10px 0 rgba(152, 161, 170, 0.60);",
+            bgcolor: "#F8F9FA",
             display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "10px",
+            flexDirection: "column",
+            gap: "8px",
+            width: "304px",
           }}
         >
-          <IconButton onClick={handleExpandToggle}>
-            {isExpanded ? <MinimizeIcon /> : <MaximizeIcon />}
-          </IconButton>
-          <ChartIcon />
-          <Typography fontSize="16px" color="#000000" fontWeight={700}>
-            Chart
-          </Typography>
-        </Box>
-        <Options />
-      </Box>
-      <Box sx={{ display: isExpanded ? "block" : "none" }}>
-        {selectedController?.extra?.chart?.listToDisplay ? (
-          renderList()
-        ) : (
-          <Box>
-            <SelectChartAssetList />
-
-            <Box sx={{ borderTop: "1px solid #CFD4DA", marginTop: "8px" }}>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                textColor="secondary"
-                indicatorColor="primary"
-                aria-label="secondary tabs example"
-                sx={{
-                  gap: "4px",
-                  display: "flex",
-                  "& .MuiTabs-indicator": {
-                    backgroundColor: "#0F62FE",
-                    height: "2px",
-                  },
-                  "& .MuiTab-root": {
-                    minWidth: "52px",
-                  },
-                }}
-              >
-                {tabList.map((tab) => (
-                  <Tab
-                    key={tab.value}
-                    value={tab.value}
-                    aria-label={tab.value}
-                    sx={tab.sx}
-                    icon={tab.icon}
-                  />
-                ))}
-              </Tabs>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              height: "50px",
+              padding: "8px",
+              borderBottom: "1px solid #CFD4DA",
+              ".MuiIconButton-root": {
+                backgroundColor: "#FFFFFF",
+                borderRadius: "4px",
+                border: "1px solid #CFD4DA",
+                width: "34px",
+                height: "34px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "10px",
+              }}
+            >
+              <IconButton onClick={handleExpandToggle}>
+                {isExpanded ? <MinimizeIcon /> : <MaximizeIcon />}
+              </IconButton>
+              <ChartIcon />
+              <Typography fontSize="16px" color="#000000" fontWeight={700}>
+                Chart
+              </Typography>
             </Box>
-            {/* {renderTabPanel()} */}
+            <Options />
           </Box>
-        )}
-      </Box>
+
+          <Box sx={{ display: isExpanded ? "block" : "none" }}>
+            {selectedController?.extra?.chart?.listToDisplay ? (
+              renderList()
+            ) : (
+              <Box>
+                <SelectChartAssetList />
+
+                <Box sx={{ borderTop: "1px solid #CFD4DA", marginTop: "8px" }}>
+                  <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    textColor="secondary"
+                    indicatorColor="primary"
+                    aria-label="secondary tabs example"
+                    sx={{
+                      gap: "4px",
+                      display: "flex",
+                      "& .MuiTabs-indicator": {
+                        backgroundColor: "#0F62FE",
+                        height: "2px",
+                      },
+                      "& .MuiTab-root": {
+                        minWidth: "52px",
+                      },
+                    }}
+                  >
+                    {tabList.map((tab) => (
+                      <Tab
+                        key={tab.value}
+                        value={tab.value}
+                        aria-label={tab.value}
+                        sx={tab.sx}
+                        icon={tab.icon}
+                      />
+                    ))}
+                  </Tabs>
+                </Box>
+                {renderTabPanel()}
+              </Box>
+            )}
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 }

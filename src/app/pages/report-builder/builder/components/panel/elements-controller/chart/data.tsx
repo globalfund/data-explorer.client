@@ -32,7 +32,7 @@ export const chartInfo: ChartInfoItem[] = [
 
 export const tabList = [
   {
-    value: "data",
+    value: "mapping",
     icon: <DataIcon />,
     sx: {
       borderBottom: "2px solid #98A1AA",
