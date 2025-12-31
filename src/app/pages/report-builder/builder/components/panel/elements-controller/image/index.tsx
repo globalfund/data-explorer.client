@@ -8,7 +8,7 @@ import PaintBucketIcon from "app/assets/vectors/Paint_Bucket.svg?react";
 import LayoutTemplateIcon from "app/assets/vectors/Layout_Template.svg?react";
 import { ImageSource } from "./image-source";
 import { PaddingSize } from "./padding-size";
-import { BorderFill } from "./border-fill";
+import { Customise } from "./customise";
 import { Options } from "../common/elementOptions";
 
 type ImageControllerTab = "source" | "style" | "layout";
@@ -31,7 +31,7 @@ export default function ImageController() {
       case "source":
         return <ImageSource />;
       case "style":
-        return <BorderFill />;
+        return <Customise />;
       case "layout":
         return <PaddingSize />;
       default:

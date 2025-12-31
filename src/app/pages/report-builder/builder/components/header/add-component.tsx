@@ -46,7 +46,53 @@ export default function AddComponent() {
         };
         break;
       case "chart":
-        newItem = { id: uniqueId(), type: "chart", open: false };
+        newItem = {
+          id: uniqueId(),
+          type: "chart",
+          open: false,
+          settings: {
+            paddingTop: "10px",
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            paddingBottom: "10px",
+            borderWidth: "0.5px",
+            borderColor: "#98A1AA",
+            borderRadius: "4px",
+            backgroundColor: "#ffffff00",
+            borderStyle: "solid",
+            width: "100%",
+            height: "141px",
+            justifyContent: "start",
+          },
+          extra: {
+            chart: {
+              field: {
+                chartName: {
+                  value: "Chart Title",
+                  fontFamily: "Arial",
+                  fontWeightLabel: "400",
+                  fontStyle: "normal",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#70777E",
+                  bgColor: "#ffffff00",
+                  enabled: true,
+                },
+                showLegend: {
+                  value: "left",
+                  fontFamily: "Arial",
+                  fontWeight: "700",
+                  fontWeightLabel: "400",
+                  fontStyle: "normal",
+                  fontSize: "44px",
+                  color: "#000000",
+                  bgColor: "#ffffff00",
+                  enabled: true,
+                },
+              },
+            },
+          },
+        };
         break;
       case "table":
         newItem = { id: uniqueId(), type: "table", open: false };

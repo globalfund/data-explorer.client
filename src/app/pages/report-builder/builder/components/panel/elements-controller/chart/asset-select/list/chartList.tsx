@@ -1,7 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import { Typography, Button } from "@mui/material";
-import { chartTypes } from "../../../../chart/data";
+import { chartTypes } from "../../../../../chart/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 
 export default function ChartList() {
@@ -18,7 +18,7 @@ export default function ChartList() {
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const item = items.find((i) => i.id === selectedController?.id);
 
-  const handleSelectChartType = (id: number) => {
+  const handleSelectChartType = (id: string) => {
     setChartTypesState((prevState) =>
       prevState.map((chartType) => {
         if (chartType.id === id) {
@@ -39,7 +39,7 @@ export default function ChartList() {
         ...item?.extra,
         chart: {
           ...item?.extra?.chart,
-          chartType: selectedChartType?.chartType,
+          chartType: selectedChartType?.id,
         },
       },
     });

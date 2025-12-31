@@ -14,7 +14,7 @@ interface Props {
   selectedItem: string;
   type: ChartProperty;
 }
-export function ChartAssetSelect({
+export function AssetSelect({
   buttonLabel,
   helperText,
   icon,

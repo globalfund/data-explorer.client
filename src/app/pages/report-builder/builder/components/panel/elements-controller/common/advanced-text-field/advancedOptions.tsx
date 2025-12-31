@@ -10,23 +10,34 @@ import {
   fontSizeOptions,
   fontFamilyOptions,
 } from "app/components/rich-text-editor/data";
-import StyledMenu from "../../common/menu-popup";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import StyledMenu from "../menu-popup";
 
 export interface AdvancedOptionsProps {
-  type: "topLabel" | "bigNumberText" | "bottomLabel" | "optionalText";
+  fontFamilyValue: string;
+  weightValue: string;
+  fontSizeValue: string;
+  textColorValue: string;
+  bgColorValue: string;
+  handleFontFamilyChange: (value: string) => void;
+  handleWeightChange: (value: string) => void;
+  handleSizeChange: (value: string) => void;
+  handleColorChange: (color: string, target: "text" | "background") => void;
 }
 export default function AdvancedOptions(props: Readonly<AdvancedOptionsProps>) {
+  const {
+    fontFamilyValue,
+    weightValue,
+    fontSizeValue,
+    textColorValue,
+    bgColorValue,
+    handleFontFamilyChange,
+    handleWeightChange,
+    handleSizeChange,
+    handleColorChange,
+  } = props;
   const [isAdvancedOptionsExpanded, setIsAdvancedOptionsExpanded] =
     React.useState(false);
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
-  const selectedItemController = useStoreState(
-    (state) => state.RBReportItemsControllerState.item,
-  );
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find((i) => i.id === selectedItemController?.id);
+
   const [fontWeightAnchorEl, setFontWeightAnchorEl] =
     React.useState<null | HTMLElement>(null);
   const [isFontWeightMenuActive, setIsFontWeightMenuActive] =
@@ -38,129 +49,9 @@ export default function AdvancedOptions(props: Readonly<AdvancedOptionsProps>) {
   const [fontSizeAnchorEl, setFontSizeAnchorEl] =
     React.useState<null | HTMLElement>(null);
   const [isFontSizeMenuActive, setIsFontSizeMenuActive] = React.useState(false);
-  const weightValue =
-    selectedItem?.extra?.kpi_box?.field?.[props.type]?.fontWeightLabel || "400";
-  const fontFamilyValue =
-    selectedItem?.extra?.kpi_box?.field?.[props.type]?.fontFamily || "Arial";
-  const fontSizeValue =
-    selectedItem?.extra?.kpi_box?.field?.[props.type]?.fontSize || "14px";
-  const textColorValue =
-    selectedItem?.extra?.kpi_box?.field?.[props.type]?.color || "#000000";
-  const bgColorValue =
-    selectedItem?.extra?.kpi_box?.field?.[props.type]?.bgColor || "#FFFFFF";
-
   const weightLabel = weightOptions.find(
     (option) => option.value === weightValue,
   )?.label;
-
-  const handleWeightChange = (value: string) => {
-    let fontWeight = {};
-    if (value.includes("italic")) {
-      fontWeight = {
-        fontStyle: "italic",
-        fontWeight: value.split("+")[0],
-        fontWeightLabel: value,
-      };
-    } else {
-      fontWeight = {
-        fontStyle: "normal",
-        fontWeight: value,
-        fontWeightLabel: value,
-      };
-    }
-    editItem({
-      ...selectedItem,
-      open: selectedItem?.open || false,
-      id: selectedItem?.id || "",
-      type: "kpi_box",
-      extra: {
-        ...selectedItem?.extra,
-        kpi_box: {
-          ...selectedItem?.extra?.kpi_box,
-          field: {
-            ...selectedItem?.extra?.kpi_box?.field,
-            [props.type]: {
-              ...selectedItem?.extra?.kpi_box?.field?.[props.type],
-              ...fontWeight,
-            },
-          },
-        },
-      },
-    });
-  };
-  const handleSizeChange = (value: string) => {
-    editItem({
-      ...selectedItem,
-      open: selectedItem?.open || false,
-      id: selectedItem?.id || "",
-      type: "kpi_box",
-      extra: {
-        ...selectedItem?.extra,
-        kpi_box: {
-          ...selectedItem?.extra?.kpi_box,
-          field: {
-            ...selectedItem?.extra?.kpi_box?.field,
-            [props.type]: {
-              ...selectedItem?.extra?.kpi_box?.field?.[props.type],
-              fontSize: `${value}px`,
-            },
-          },
-        },
-      },
-    });
-  };
-  const handleFontFamilyChange = (value: string) => {
-    editItem({
-      ...selectedItem,
-      open: selectedItem?.open || false,
-      id: selectedItem?.id || "",
-      type: "kpi_box",
-      extra: {
-        ...selectedItem?.extra,
-        kpi_box: {
-          ...selectedItem?.extra?.kpi_box,
-          field: {
-            ...selectedItem?.extra?.kpi_box?.field,
-            [props.type]: {
-              ...selectedItem?.extra?.kpi_box?.field?.[props.type],
-              fontFamily: value,
-            },
-          },
-        },
-      },
-    });
-  };
-  const handleColorChange = (
-    color: string,
-    colorType: "text" | "background",
-  ) => {
-    let field = "";
-    if (colorType === "background") {
-      field = "bgColor";
-    } else {
-      field = "color";
-    }
-
-    editItem({
-      ...selectedItem,
-      open: selectedItem?.open || false,
-      id: selectedItem?.id || "",
-      type: "kpi_box",
-      extra: {
-        ...selectedItem?.extra,
-        kpi_box: {
-          ...selectedItem?.extra?.kpi_box,
-          field: {
-            ...selectedItem?.extra?.kpi_box?.field,
-            [props.type]: {
-              ...selectedItem?.extra?.kpi_box?.field?.[props.type],
-              [field]: color,
-            },
-          },
-        },
-      },
-    });
-  };
   const handleTriggerMenu = (
     event: React.MouseEvent<HTMLElement>,
     type: "fontWeight" | "fontSize" | "fontFamily",

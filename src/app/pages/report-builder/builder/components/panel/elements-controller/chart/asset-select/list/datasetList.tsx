@@ -1,5 +1,5 @@
 import React from "react";
-import { datasetItems } from "../../../../chart/data";
+import { datasetItems } from "../../../../../chart/data";
 import Box from "@mui/material/Box";
 import { Typography, IconButton, Divider, Button } from "@mui/material";
 import FullscreenIcon from "app/assets/vectors/TableToolbarFullscreen.svg?react";

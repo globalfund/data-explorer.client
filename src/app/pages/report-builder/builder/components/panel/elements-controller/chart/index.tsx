@@ -4,15 +4,16 @@ import MinimizeIcon from "app/assets/vectors/Minimize.svg?react";
 import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
 import ChartIcon from "app/assets/vectors/RBChart.svg?react";
 import { Options } from "../common/elementOptions";
-import { SelectChartAssetList } from "./selectAsset.tsx";
-import DatasetList from "./list/datasetList";
-import ChartList from "./list/chartList";
+import { SelectChartAssetList } from "./asset-select";
+import DatasetList from "./asset-select/list/datasetList";
+import ChartList from "./asset-select/list/chartList";
 import { tabList } from "./data";
 import { useStoreState } from "app/state/store/hooks";
 import DataDetail from "./dataDetail";
 import Mapping from "./mapping";
 import Filtering from "./filtering";
 import LayoutTab from "./layout";
+import Customise from "./customise";
 
 type ChartControllerTab = "mapping" | "filter" | "layout" | "style" | "more";
 export default function ChartController() {
@@ -41,6 +42,8 @@ export default function ChartController() {
         return <Filtering />;
       case "layout":
         return <LayoutTab />;
+      case "style":
+        return <Customise />;
       default:
         return null;
     }

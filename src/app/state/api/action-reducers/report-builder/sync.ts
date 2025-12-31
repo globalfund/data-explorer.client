@@ -10,7 +10,8 @@ export type RBReportItemTypes =
   | "kpi_box"
   | "grid"
   | "column"
-  | "section_divider";
+  | "section_divider"
+  | null;
 
 export type ObjectFitTypes =
   | "contain"
@@ -18,10 +19,18 @@ export type ObjectFitTypes =
   | "fill"
   | "none"
   | "scale-down";
+export type ChartType =
+  | "line"
+  | "bar"
+  | "pie"
+  | "sankey"
+  | "treemap"
+  | "geomap";
 
 export type ChartProperty = "dataset" | "chartType";
-
-export interface RBRKPIFieldFormatting {
+export type AlignHorizontal = "left" | "center" | "right";
+export type AlignVertical = "top" | "middle" | "bottom";
+export interface AdvancedTextFormatting {
   value: string;
   fontFamily: string;
   fontWeight: string;
@@ -33,10 +42,14 @@ export interface RBRKPIFieldFormatting {
   enabled: boolean;
 }
 export interface RBRKPIBoxField {
-  topLabel?: RBRKPIFieldFormatting;
-  bigNumberText?: RBRKPIFieldFormatting;
-  bottomLabel?: RBRKPIFieldFormatting;
-  optionalText?: RBRKPIFieldFormatting;
+  topLabel?: AdvancedTextFormatting;
+  bigNumberText?: AdvancedTextFormatting;
+  bottomLabel?: AdvancedTextFormatting;
+  optionalText?: AdvancedTextFormatting;
+}
+export interface ChartField {
+  chartName?: AdvancedTextFormatting;
+  showLegend?: AdvancedTextFormatting;
 }
 export interface RBReportItem {
   id: string;
@@ -51,14 +64,14 @@ export interface RBReportItem {
     image?: {
       src?: string;
       sizingMode?: "fit-proportional" | "fill" | "crop" | "auto";
-      alignVertical?: "top" | "middle" | "bottom";
-      alignHorizontal?: "left" | "center" | "right";
+      alignVertical?: AlignVertical;
+      alignHorizontal?: AlignHorizontal;
     };
     kpi_box?: {
       field?: RBRKPIBoxField;
       options?: {
-        alignVertical?: "top" | "middle" | "bottom";
-        alignHorizontal?: "left" | "center" | "right";
+        alignVertical?: AlignVertical;
+        alignHorizontal?: AlignHorizontal;
         innerLine?: {
           type?: "line" | "box" | "simple";
           borderWidth?: string;
@@ -68,7 +81,18 @@ export interface RBReportItem {
     };
     chart?: {
       dataset?: string | null;
-      chartType?: string | null;
+      chartType?: ChartType;
+      field?: ChartField;
+      alignVertical?: AlignVertical;
+      alignHorizontal?: AlignHorizontal;
+      type?: {
+        bar?: {
+          donutChecked?: boolean;
+          barWidthChecked?: boolean;
+          donutThickness?: number;
+          barWidth?: number;
+        };
+      };
     };
   };
   settings?: {

@@ -9,8 +9,9 @@ import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
 import Button from "@mui/material/Button";
 import StyledMenu from "../../common/menu-popup";
 import { lineOptions } from "../data";
+import BorderFill from "../../common/border-fill";
 
-export function BorderFill() {
+export function Customise() {
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
@@ -19,31 +20,31 @@ export function BorderFill() {
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const selectedItem = items.find((i) => i.id === selectedController?.id);
-  const handleBackgroundColorChange = (color: IColor) => {
-    editItem({
-      ...selectedItem,
-      open: selectedItem?.open || false,
-      id: selectedController?.id || "",
-      type: "kpi_box",
-      settings: {
-        ...selectedItem?.settings,
-        backgroundColor: ColorService.convert("hex", color.hex).hex,
-      },
-    });
-  };
-  const handleBorderColorChange = (color: IColor) => {
-    editItem({
-      ...selectedItem,
-      open: selectedItem?.open || false,
-      id: selectedController?.id || "",
-      type: "kpi_box",
-      settings: {
-        ...selectedItem?.settings,
-        borderColor: ColorService.convert("hex", color.hex).hex,
-        borderStyle: "solid",
-      },
-    });
-  };
+  // const handleBackgroundColorChange = (color: IColor) => {
+  //   editItem({
+  //     ...selectedItem,
+  //     open: selectedItem?.open || false,
+  //     id: selectedController?.id || "",
+  //     type: "kpi_box",
+  //     settings: {
+  //       ...selectedItem?.settings,
+  //       backgroundColor: ColorService.convert("hex", color.hex).hex,
+  //     },
+  //   });
+  // };
+  // const handleBorderColorChange = (color: IColor) => {
+  //   editItem({
+  //     ...selectedItem,
+  //     open: selectedItem?.open || false,
+  //     id: selectedController?.id || "",
+  //     type: "kpi_box",
+  //     settings: {
+  //       ...selectedItem?.settings,
+  //       borderColor: ColorService.convert("hex", color.hex).hex,
+  //       borderStyle: "solid",
+  //     },
+  //   });
+  // };
   const handleInnerBorderColorChange = (color: IColor) => {
     editItem({
       ...selectedItem,
@@ -207,7 +208,8 @@ export function BorderFill() {
           />
         </Box>
       </Box>
-      <Box>
+      <BorderFill itemType="kpi_box" />
+      {/* <Box>
         <Typography fontWeight={700}>Border & Fill</Typography>
         <Box
           sx={{
@@ -291,7 +293,7 @@ export function BorderFill() {
             </Box>
           </Box>
         </Box>
-      </Box>
+      </Box> */}
     </Box>
   );
 }

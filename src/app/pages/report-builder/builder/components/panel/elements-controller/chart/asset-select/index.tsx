@@ -2,8 +2,9 @@ import { Box } from "@mui/material";
 import { ChartProperty } from "app/state/api/action-reducers/report-builder/sync";
 import React from "react";
 import { chartInfo } from "../data";
-import { ChartAssetSelect } from "./chartAssetSelect";
+import { AssetSelect } from "./asset-select";
 import { useStoreState } from "app/state/store/hooks";
+import { chartTypes } from "../../../../chart/data";
 
 export function SelectChartAssetList() {
   const items = useStoreState((state) => state.RBReportItemsState.items);
@@ -12,6 +13,14 @@ export function SelectChartAssetList() {
   );
   const item = items.find((i) => i.id === selectedController?.id);
   const chartExtra = item?.extra?.chart || {};
+  const getSelectedItem = (type: "chartType" | "dataset") => {
+    if (type === "chartType") {
+      const chartTypeId = chartExtra[type];
+      const chartType = chartTypes.find((chart) => chart.id === chartTypeId);
+      return chartType ? chartType.chartType : "";
+    }
+    return chartExtra?.[type] || "";
+  };
   return (
     <Box
       sx={{
@@ -22,12 +31,12 @@ export function SelectChartAssetList() {
       }}
     >
       {chartInfo.map((data) => (
-        <ChartAssetSelect
+        <AssetSelect
           key={data.buttonLabel}
           buttonLabel={data.buttonLabel}
           helperText={data.helperText}
           icon={data.icon}
-          selectedItem={chartExtra?.[data.type] || ""}
+          selectedItem={getSelectedItem(data.type)}
           type={data.type as ChartProperty}
         />
       ))}

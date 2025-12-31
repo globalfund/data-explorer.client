@@ -41,7 +41,7 @@ export const datasetItems = [
 
 export const chartTypes = [
   {
-    id: 1,
+    id: "bar",
     chartType: "Bar Chart",
     description: "Compare values across categories.",
     isSelected: false,
@@ -65,7 +65,7 @@ export const chartTypes = [
   },
 
   {
-    id: 2,
+    id: "line",
     chartType: "Line Chart",
     description: "Show trends or changes over time.",
     isSelected: false,
@@ -88,7 +88,7 @@ export const chartTypes = [
     ),
   },
   {
-    id: 3,
+    id: "pie",
     chartType: "Pie Chart",
     description: "Show proportions of a whole.",
     icon: (
@@ -110,7 +110,7 @@ export const chartTypes = [
     ),
   },
   {
-    id: 4,
+    id: "scatter",
     chartType: "Scatter Chart",
     description: "Reveal relationships or distributions.",
     isSelected: false,
@@ -133,7 +133,7 @@ export const chartTypes = [
     ),
   },
   {
-    id: 5,
+    id: "geomap",
     chartType: "Geo Map",
     description: "Visualize data by location.",
     isSelected: false,
@@ -156,7 +156,7 @@ export const chartTypes = [
     ),
   },
   {
-    id: 6,
+    id: "sankey",
     chartType: "Sankey Diagram",
     description: "Show flows between sources and targets.",
     isSelected: false,
@@ -179,7 +179,7 @@ export const chartTypes = [
     ),
   },
   {
-    id: 7,
+    id: "treemap",
     chartType: "Tree Map",
     description: "Show proportions within hierarchies.",
     isSelected: false,
@@ -202,7 +202,7 @@ export const chartTypes = [
     ),
   },
   {
-    id: 8,
+    id: "heatmap",
     chartType: "Heatmap Chart",
     description: "Show intensity or distribution across two dimensions.",
     isSelected: false,
@@ -299,7 +299,7 @@ export const chartTypes = [
     ),
   },
   {
-    id: 9,
+    id: "radar",
     chartType: "Radar Chart",
     description: "Compare multivariate data across categories.",
     isSelected: false,

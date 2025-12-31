@@ -11,14 +11,3 @@ export const objectFitMap: Record<string, string> = {
   crop: "none",
   auto: "none",
 };
-
-export const alignHOptions = [
-  { label: "Left", value: "left" },
-  { label: "Center", value: "center" },
-  { label: "Right", value: "right" },
-];
-export const alignVOptions = [
-  { label: "Top", value: "top" },
-  { label: "Middle", value: "middle" },
-  { label: "Bottom", value: "bottom" },
-];
