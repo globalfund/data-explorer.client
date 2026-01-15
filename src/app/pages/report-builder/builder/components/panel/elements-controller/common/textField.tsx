@@ -67,8 +67,8 @@ export default function TextField(props: Readonly<Props>) {
       ];
       const kpiBox = item?.extra?.kpi_box?.field || {};
 
-      const getKPIBoxValue = (kpiBox: RBRKPIBoxField, field: string) => {
-        const fieldObj = kpiBox[
+      const getKPIBoxValue = (kb: RBRKPIBoxField, field: string) => {
+        const fieldObj = kb[
           field as keyof RBRKPIBoxField
         ] as RBRKPIFieldFormatting;
         return fieldObj?.value || "";

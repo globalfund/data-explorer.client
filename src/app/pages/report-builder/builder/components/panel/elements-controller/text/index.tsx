@@ -21,8 +21,9 @@ export default function TextController() {
   const handleExpandToggle = () => {
     setIsExpanded(!isExpanded);
   };
+
   const handleChange = (
-    event: React.SyntheticEvent,
+    _event: React.SyntheticEvent,
     newValue: TextControllerTab,
   ) => {
     setValue(newValue);

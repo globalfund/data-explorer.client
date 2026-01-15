@@ -40,7 +40,7 @@ export function BorderFill() {
       },
     });
   };
-  const handleOpacityChange = (event: Event, value: number | number[]) => {
+  const handleOpacityChange = (_event: Event, value: number | number[]) => {
     editItem({
       ...item,
       id: selectedController?.id || "",

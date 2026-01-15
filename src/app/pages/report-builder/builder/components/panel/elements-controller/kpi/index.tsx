@@ -20,8 +20,9 @@ export default function KPIController() {
   const handleExpandToggle = () => {
     setIsExpanded(!isExpanded);
   };
+
   const handleChange = (
-    event: React.SyntheticEvent,
+    _event: React.SyntheticEvent,
     newValue: KPIControllerTab,
   ) => {
     setValue(newValue);
