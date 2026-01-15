@@ -7,6 +7,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import importPlugin from "eslint-plugin-import";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import prettier from "eslint-plugin-prettier/recommended";
+import prettierPlugin from "eslint-plugin-prettier";
 
 export default tseslint.config(
   { ignores: ["dist", "cypress", "cypress.config.js"] },
@@ -37,6 +38,7 @@ export default tseslint.config(
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
+      prettierPlugin,
     },
     settings: {
       // for eslint-plugin-react to auto detect react version

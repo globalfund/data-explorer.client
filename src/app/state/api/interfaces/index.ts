@@ -1,11 +1,13 @@
 import { Action, Thunk } from "easy-peasy";
 import { CMSDataModel } from "app/state/api/action-reducers/sync";
 import {
+  RBReportItemControllerModel,
   RBReportItemOrderModel,
   RBReportItemsModel,
   RBReportNotesModel,
   RBReportRTEModel,
   RBReportSettingsModel,
+  RBReportTooltipModel,
 } from "app/state/api/action-reducers/report-builder/sync";
 import {
   AppliedFiltersStateModel,
@@ -249,6 +251,8 @@ export interface StoreModel {
   TempAppliedFiltersState: AppliedFiltersStateModel;
   // report builder
   RBReportItemsState: RBReportItemsModel;
+  RBTooltipTriggerState: RBReportTooltipModel;
+  RBReportItemsControllerState: RBReportItemControllerModel;
   RBReportRTEState: RBReportRTEModel;
   RBReportItemOrderState: RBReportItemOrderModel;
   RBReportSettingsState: RBReportSettingsModel;

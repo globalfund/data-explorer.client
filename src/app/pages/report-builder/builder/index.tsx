@@ -7,7 +7,6 @@ import { uniqueId } from "app/utils/uniqueId";
 import Close from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { RTEToolbar } from "app/components/rich-text-editor";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { Empty } from "app/pages/report-builder/builder/components/empty";
 import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
@@ -17,14 +16,14 @@ import { ReportBuilderPageChart } from "app/pages/report-builder/builder/compone
 import { ReportBuilderPageTable } from "app/pages/report-builder/builder/components/table";
 import { ReportBuilderPageImage } from "app/pages/report-builder/builder/components/image";
 import { ItemComponent } from "app/pages/report-builder/builder/components/order-container";
+import ElementsController from "./components/panel/elements-controller";
+import KPIBox from "./components/kpi";
 
 export const ReportBuilderPage: React.FC = () => {
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const activeRTE = useStoreState((state) => state.RBReportRTEState.activeRTE);
   const setActiveRTE = useStoreActions(
     (actions) => actions.RBReportRTEState.setActiveRTE,
   );
-
   const addedItemRef = React.useRef(items.length > 0);
 
   const setItems = useStoreActions(
@@ -69,7 +68,6 @@ export const ReportBuilderPage: React.FC = () => {
             moveItem={moveItem}
           >
             <ReportBuilderPageText
-              item={item}
               id={item.id}
               setEditor={setActiveRTE}
               settings={item.settings}
@@ -124,6 +122,17 @@ export const ReportBuilderPage: React.FC = () => {
               id={item.id}
               setEditor={setActiveRTE}
             />
+          </ItemComponent>
+        );
+      case "kpi_box":
+        return (
+          <ItemComponent
+            id={item.id}
+            index={index}
+            childrenData={[]}
+            moveItem={moveItem}
+          >
+            <KPIBox id={item.id} />
           </ItemComponent>
         );
       case "column":
@@ -189,16 +198,18 @@ export const ReportBuilderPage: React.FC = () => {
       addItem({
         id: uniqueId(),
         type: "text",
+        open: true,
         extra: { focus: true, key: e.key },
         settings: {
-          paddingTop: 10,
-          paddingLeft: 10,
-          paddingRight: 10,
-          paddingBottom: 10,
-          stroke: 0,
-          strokeColor: "#000000",
-          cornerRadius: 8,
-          backgroundColor: "transparent",
+          paddingTop: "10px",
+          paddingLeft: "10px",
+          paddingRight: "10px",
+          paddingBottom: "10px",
+          borderWidth: "0px",
+          borderColor: "#000000",
+          borderRadius: "8px",
+          backgroundColor: "#ffffff00",
+          width: "100%",
         },
       });
       addedItemRef.current = true;
@@ -231,31 +242,31 @@ export const ReportBuilderPage: React.FC = () => {
     }
   }, [items.length]);
 
-  const parsedReportSettings = React.useMemo(() => {
-    return {
-      width:
-        parseInt(reportSettings.width, 10) < 300
-          ? 300
-          : parseInt(reportSettings.width, 10),
-      height:
-        parseInt(reportSettings.height, 10) < 300
-          ? 300
-          : parseInt(reportSettings.height, 10),
-      hPadding:
-        parseInt(reportSettings.hPadding, 10) < 0
-          ? 0
-          : parseInt(reportSettings.hPadding, 10),
-      vPadding:
-        parseInt(reportSettings.vPadding, 10) < 0
-          ? 0
-          : parseInt(reportSettings.vPadding, 10),
-      stroke:
-        parseInt(reportSettings.stroke, 10) < 0
-          ? 0
-          : parseInt(reportSettings.stroke, 10),
-      strokeColor: reportSettings.strokeColor,
-    };
-  }, [reportSettings]);
+  // const parsedReportSettings = React.useMemo(() => {
+  //   return {
+  //     width:
+  //       parseInt(reportSettings.width, 10) < 300
+  //         ? 300
+  //         : parseInt(reportSettings.width, 10),
+  //     height:
+  //       parseInt(reportSettings.height, 10) < 300
+  //         ? 300
+  //         : parseInt(reportSettings.height, 10),
+  //     hPadding:
+  //       parseInt(reportSettings.hPadding, 10) < 0
+  //         ? 0
+  //         : parseInt(reportSettings.hPadding, 10),
+  //     vPadding:
+  //       parseInt(reportSettings.vPadding, 10) < 0
+  //         ? 0
+  //         : parseInt(reportSettings.vPadding, 10),
+  //     stroke:
+  //       parseInt(reportSettings.stroke, 10) < 0
+  //         ? 0
+  //         : parseInt(reportSettings.stroke, 10),
+  //     strokeColor: reportSettings.strokeColor,
+  //   };
+  // }, [reportSettings]);
 
   return (
     <Box
@@ -267,29 +278,17 @@ export const ReportBuilderPage: React.FC = () => {
         justifyContent: "center",
       }}
     >
-      {activeRTE && (
-        <Box
-          sx={{
-            top: -50,
-            bgcolor: "#f8f9fa",
-            left:
-              (parsedReportSettings.width > window.innerWidth ||
-              parsedReportSettings.width < 1200
-                ? 24
-                : (window.innerWidth - parsedReportSettings.width) / 2) +
-              parsedReportSettings.hPadding,
-            position: "absolute",
-            width:
-              (parsedReportSettings.width > window.innerWidth ||
-              parsedReportSettings.width < 1200
-                ? window.innerWidth - 48
-                : parsedReportSettings.width) -
-              parsedReportSettings.hPadding * 2,
-          }}
-        >
-          <RTEToolbar editor={activeRTE} />
-        </Box>
-      )}
+      <Box
+        sx={{
+          top: 68,
+          right: "20px",
+          position: "fixed",
+          width: "300px",
+          zIndex: 2,
+        }}
+      >
+        <ElementsController />
+      </Box>
       <DndProvider backend={HTML5Backend}>
         <Box
           sx={{
@@ -297,6 +296,7 @@ export const ReportBuilderPage: React.FC = () => {
             overflow: "overlay",
             bgcolor: "#ffffff",
             height: "fit-content",
+            paddingBottom: "40px",
             boxShadow: "0 0 10px 0 rgba(152, 161, 170, 0.60)",
           }}
         >

@@ -1,55 +1,111 @@
-export const headingOptions = [
+export const weightOptions = [
   {
-    label: "Normal Text",
-    value: "paragraph",
-    style: { fontWeight: "400", fontSize: "16px" },
+    label: "Light",
+    value: "400",
   },
   {
-    label: "Title",
-    value: "title",
-    style: { fontWeight: "700", fontSize: "48px" },
+    label: "Medium",
+    value: "500",
   },
   {
-    label: "Subtitle",
-    value: "subtitle",
-    style: { fontWeight: "700", fontSize: "24px" },
+    label: "Bold",
+    value: "600",
   },
   {
-    label: "Heading 1",
-    value: "1",
-    style: { fontWeight: "700", fontSize: "18px" },
+    label: "Extra Bold",
+    value: "700",
   },
   {
-    label: "Heading 2",
-    value: "2",
-    style: { fontWeight: "700", fontSize: "14px" },
+    label: "Thin Italic",
+    value: "400+italic",
   },
   {
-    label: "Heading 3",
-    value: "3",
-    style: { fontWeight: "400", fontSize: "12px" },
+    label: "Medium Italic",
+    value: "500+italic",
+  },
+  {
+    label: "Bold Italic",
+    value: "600+italic",
+  },
+  {
+    label: "Extra Bold Italic",
+    value: "700+italic",
   },
 ];
 
 export const fontFamilyOptions = [
   {
-    label: "Inter",
-    value: "Inter",
-    stateVar: "isFontFamilyInter",
+    label: "Amatic SC",
+    value: "Amatic SC",
+    stateVar: "isFontFamilyAmaticSC",
+    fontWeight: "400",
   },
   {
     label: "Arial",
     value: "Arial",
     stateVar: "isFontFamilyArial",
+    fontWeight: "400",
   },
   {
-    label: "Times New Roman",
-    value: "Times New Roman",
-    stateVar: "isFontFamilyTimesNewRoman",
+    label: "Caveat",
+    value: "Caveat",
+    stateVar: "isFontFamilyCaveat",
+    fontWeight: "700",
+  },
+  {
+    label: "Comfortaa",
+    value: "Comfortaa",
+    stateVar: "isFontFamilyComfortaa",
+    fontWeight: "400",
+  },
+  {
+    label: "Comic Sans MS",
+    value: "Comic Sans MS",
+    stateVar: "isFontFamilyComicSansMS",
+    fontWeight: "700",
   },
   {
     label: "Courier New",
     value: "Courier New",
     stateVar: "isFontFamilyCourierNew",
+    fontWeight: "400",
+  },
+  {
+    label: "EB Garamond",
+    value: "EB Garamond",
+    stateVar: "isFontFamilyEBGaramond",
+    fontWeight: "400",
+  },
+  {
+    label: "Finlandica",
+    value: "Finlandica",
+    stateVar: "isFontFamilyFinlandica",
+    fontWeight: "400",
+  },
+  {
+    label: "Impact",
+    value: "Impact",
+    stateVar: "isFontFamilyImpact",
+    fontWeight: "400",
+  },
+  {
+    label: "Inter",
+    value: "Inter",
+    stateVar: "isFontFamilyInter",
+    fontWeight: "400",
+  },
+];
+
+export const fontSizeOptions = Array.from({ length: 72 }, (_, i) => i + 8).map(
+  (size) => ({
+    label: `${size}px`,
+    value: size.toString(),
+  }),
+);
+
+export const lineHeightOptions = [
+  {
+    label: "auto",
+    value: "auto",
   },
 ];

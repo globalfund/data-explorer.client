@@ -1,222 +1,241 @@
 import React from "react";
-import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import Tabs from "@mui/material/Tabs";
-import Button from "@mui/material/Button";
-import Close from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import MoreVert from "@mui/icons-material/MoreVert";
-import { useStoreActions } from "app/state/store/hooks";
-import { DraggableModal } from "app/components/draggable-modal";
-import { TabPlaceholderIcon } from "app/pages/report-builder/builder/components/image/data";
-import { ReportBuilderPageItemMenu } from "app/pages/report-builder/builder/components/item-menu";
-import {
-  TabPanel,
-  UploadTab,
-  UnsplashTab,
-  MyAssetsTab,
-} from "app/pages/report-builder/builder/components/image/tabs";
+import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { useTooltip } from "app/hooks/useTooltip";
+import { createPortal } from "react-dom";
 
 export const ReportBuilderPageImage: React.FC<{
   id: string;
-  extRemoveItem?: (e: React.MouseEvent) => void;
-}> = ({ id, extRemoveItem }) => {
-  const [tab, setTab] = React.useState(0);
-  const [clicked, setClicked] = React.useState(false);
-  const [imageReady, setImageReady] = React.useState(false);
-  const [applyEnabled, setApplyEnabled] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-  const removeItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.removeItem,
+}> = ({ id }) => {
+  const { visible, coords, triggerTooltip, setAnchor } = useTooltip({
+    hideAfter: 5000,
+    position: "bottom",
+  });
+  const triggeredTooltip = useStoreState(
+    (state) => state.RBTooltipTriggerState.tooltip,
   );
+  const setTooltipTrigger = useStoreActions(
+    (actions) => actions.RBTooltipTriggerState.setValue,
+  );
+  const setSelectedController = useStoreActions(
+    (actions) => actions.RBReportItemsControllerState.setItem,
+  );
+  const clearSelectedItem = useStoreActions(
+    (actions) => actions.RBReportItemsControllerState.clearItem,
+  );
+  const items = useStoreState((state) => state.RBReportItemsState.items);
 
-  const handleMoreVertClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const selectedItem = items.find((i) => i.id === id);
+  const editItem = useStoreActions(
+    (actions) => actions.RBReportItemsState.editItem,
+  );
+  const { img: imgStyle, ...settings } = selectedItem?.settings || {};
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const { image: imageExtra } = selectedItem?.extra || {};
+  const imageSrc = imageExtra?.src;
+  const tooltipWidth =
+    document.getElementById("tooltip-image-move-pan")?.clientWidth || 0;
 
-  const handleDeleteItem = (e: React.MouseEvent) => {
-    if (extRemoveItem) {
-      extRemoveItem(e);
-    } else {
-      removeItem(id);
+  // Adjust image size when sizing mode is auto
+  React.useEffect(() => {
+    if (imageExtra?.sizingMode === "auto") {
+      editItem({
+        ...selectedItem,
+        open: selectedItem!.open,
+        id,
+        type: "image",
+        settings: {
+          ...selectedItem?.settings,
+          width: `100%`,
+          height: "auto",
+        },
+      });
     }
-    handleClose();
-  };
-
-  const content = React.useMemo(() => {
-    return (
-      <React.Fragment>
-        <Typography fontSize="16px" color="#525252" mb="5px">
-          Choose your method for upload
-        </Typography>
-        <Tabs
-          value={tab}
-          onChange={(_, newValue) => setTab(newValue)}
-          sx={{
-            button: {
-              flex: 1,
-              gap: "8px",
-              height: "40px",
-              minHeight: "40px",
-              maxHeight: "40px",
-              fontWeight: "400",
-              textTransform: "none",
-              justifyContent: "flex-end",
-              flexDirection: "row-reverse",
-            },
-            ".Mui-selected": {
-              fontWeight: "700",
-            },
-            ".MuiTabs-flexContainer": {
-              mt: "6px",
-              borderBottom: "2px solid #c6c6c6",
-            },
-            ".MuiTabs-indicator": {
-              background: "#3154f4",
-            },
-          }}
-        >
-          <Tab label="Unsplash" icon={<TabPlaceholderIcon />} />
-          <Tab label="Upload" icon={<TabPlaceholderIcon />} />
-          <Tab label="My Assets" icon={<TabPlaceholderIcon />} />
-        </Tabs>
-        <TabPanel value={tab} index={0}>
-          <UnsplashTab setApplyEnabled={setApplyEnabled} />
-        </TabPanel>
-        <TabPanel value={tab} index={1}>
-          <UploadTab setApplyEnabled={setApplyEnabled} />
-        </TabPanel>
-        <TabPanel value={tab} index={2}>
-          <MyAssetsTab setApplyEnabled={setApplyEnabled} />
-        </TabPanel>
-      </React.Fragment>
-    );
-  }, [tab]);
-
-  const actions = React.useMemo(() => {
-    return (
-      <React.Fragment>
-        <Button variant="outlined" onClick={() => setClicked(false)}>
-          Cancel
-        </Button>
-        <Button
-          variant="contained"
-          disabled={!applyEnabled}
-          onClick={() => {
-            setClicked(false);
-            setImageReady(true);
-          }}
-          sx={{
-            color: "#fff",
-            fontWeight: "400",
-            bgcolor: "#3154f4",
-            "&:hover": {
-              bgcolor: "#2548c4",
-            },
-          }}
-        >
-          Apply
-        </Button>
-      </React.Fragment>
-    );
-  }, [applyEnabled]);
+  }, [imageExtra?.sizingMode]);
 
   React.useEffect(() => {
-    setApplyEnabled(false);
-  }, [tab]);
+    if (triggeredTooltip.visible && triggeredTooltip.id === id) {
+      triggerTooltip();
+    }
+    return () => {
+      if (triggeredTooltip.visible) {
+        setTooltipTrigger({ visible: false, id: null });
+      }
+    };
+  }, [triggeredTooltip]);
+
+  useClickOutsideEditor({
+    editorId: "image-render",
+    toolbarId: "image-controller",
+    onOutsideClick: () => {
+      clearSelectedItem();
+    },
+  });
+
+  const triggerImageController = (open: boolean) => {
+    setSelectedController({ id, type: "image", open });
+  };
+
+  const getUniqueStyle = () => {
+    if (imageExtra?.sizingMode === "fill") {
+      return {
+        display: "block",
+        height: `calc(${settings.height} + ${settings.paddingTop} + ${
+          settings.paddingBottom
+        })`,
+      };
+    }
+    if (imageExtra?.sizingMode === "auto") {
+      return {
+        display: "block",
+      };
+    }
+    return {};
+  };
+
+  const renderImage = React.useCallback(
+    (value: "fit-proportional" | "fill" | "crop" | "auto") => {
+      if (!imageSrc) return null;
+      switch (value) {
+        case "fit-proportional":
+          return (
+            <img
+              src={imageSrc}
+              alt="random"
+              style={{ ...imgStyle, maxHeight: "100%", maxWidth: "100%" }}
+            />
+          );
+        case "fill":
+          return (
+            <TransformWrapper
+              initialScale={1}
+              centerOnInit={true}
+              limitToBounds={true}
+            >
+              <TransformComponent
+                wrapperStyle={{
+                  width: settings.width,
+                  height: settings.height,
+                }}
+              >
+                {imageSrc && (
+                  <img src={imageSrc} alt="random" style={{ ...imgStyle }} />
+                )}
+              </TransformComponent>
+            </TransformWrapper>
+          );
+        case "crop":
+          return <img src={imageSrc} alt="random" style={{ ...imgStyle }} />;
+        case "auto":
+          return <img src={imageSrc} alt="random" style={{ ...imgStyle }} />;
+        default:
+          return null;
+      }
+    },
+    [
+      imageSrc,
+      settings.width,
+      settings.height,
+      settings.paddingLeft,
+      settings.paddingRight,
+      settings.paddingTop,
+      settings.paddingBottom,
+      imageExtra?.sizingMode,
+      imgStyle,
+    ],
+  );
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        display: "flex",
-        position: "relative",
-        flexDirection: "column",
-        "&:hover": {
-          ".top-right-actions": {
-            display: "flex",
-          },
-        },
-      }}
-    >
-      {!imageReady && (
-        <Box
-          sx={{
-            gap: "10px",
-            width: "100%",
-            height: "130px",
-            display: "flex",
-            padding: "10px",
-            cursor: "pointer",
-            borderRadius: "4px",
-            alignItems: "center",
-            bgcolor: "#d6ddfd",
-            flexDirection: "column",
-            justifyContent: "center",
-            border: "1px dashed #3154f4",
-            transition: "all 0.3s ease-in-out",
-          }}
-          onClick={() => setClicked(true)}
-        >
-          <svg width="24" height="25" viewBox="0 0 24 25" fill="none">
-            <path
-              d="M21 15.4999L17.914 12.4139C17.5389 12.039 17.0303 11.8284 16.5 11.8284C15.9697 11.8284 15.4611 12.039 15.086 12.4139L6 21.4999M5 3.5H19C20.1046 3.5 21 4.39543 21 5.5V19.5C21 20.6046 20.1046 21.5 19 21.5H5C3.89543 21.5 3 20.6046 3 19.5V5.5C3 4.39543 3.89543 3.5 5 3.5ZM11 9.5C11 10.6046 10.1046 11.5 9 11.5C7.89543 11.5 7 10.6046 7 9.5C7 8.39543 7.89543 7.5 9 7.5C10.1046 7.5 11 8.39543 11 9.5Z"
-              stroke="#3154F4"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <Typography fontSize="16px" color="#3154f4">
-            Click to add an image
-          </Typography>
-        </Box>
-      )}
-      {imageReady && (
-        <Box sx={{ height: "400px" }}>
-          <img
-            alt="Uploaded"
-            src="/static/images/ImagePlaceholder.png"
-            style={{ width: "100%", height: "100%" }}
-          />
-        </Box>
-      )}
-      <Box className="top-right-actions">
-        {imageReady && (
-          <React.Fragment>
-            <IconButton onClick={handleMoreVertClick}>
-              <MoreVert fontSize="small" />
-            </IconButton>
-            <ReportBuilderPageItemMenu
-              itemId={id}
-              anchorEl={anchorEl}
-              deleteItem={handleDeleteItem}
-              handleClose={() => setAnchorEl(null)}
-            />
-          </React.Fragment>
+    <React.Fragment>
+      <Box
+        ref={setAnchor}
+        id="image-render"
+        onClick={() => triggerImageController(true)}
+      >
+        {!imageSrc && (
+          <Box
+            sx={{
+              gap: "10px",
+              width: "100%",
+              height: "220px",
+              display: "flex",
+              cursor: "pointer",
+              borderRadius: "4px",
+              alignItems: "center",
+              bgcolor: "#d6ddfd",
+              flexDirection: "column",
+              justifyContent: "center",
+              border: "1px dashed #3154f4",
+              transition: "all 0.3s ease-in-out",
+            }}
+          >
+            <svg width="24" height="25" viewBox="0 0 24 25" fill="none">
+              <path
+                d="M21 15.4999L17.914 12.4139C17.5389 12.039 17.0303 11.8284 16.5 11.8284C15.9697 11.8284 15.4611 12.039 15.086 12.4139L6 21.4999M5 3.5H19C20.1046 3.5 21 4.39543 21 5.5V19.5C21 20.6046 20.1046 21.5 19 21.5H5C3.89543 21.5 3 20.6046 3 19.5V5.5C3 4.39543 3.89543 3.5 5 3.5ZM11 9.5C11 10.6046 10.1046 11.5 9 11.5C7.89543 11.5 7 10.6046 7 9.5C7 8.39543 7.89543 7.5 9 7.5C10.1046 7.5 11 8.39543 11 9.5Z"
+                stroke="#3154F4"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <Typography fontSize="16px" color="#3154f4">
+              Click to add an image
+            </Typography>
+          </Box>
         )}
-        {!imageReady && (
-          <IconButton onClick={handleDeleteItem}>
-            <Close fontSize="small" htmlColor="#ea1541" />
-          </IconButton>
+        {imageSrc && (
+          <Box
+            sx={{
+              backgroundColor: "#fff",
+
+              ...settings,
+              ...getUniqueStyle(),
+            }}
+          >
+            {renderImage(imageExtra?.sizingMode || "fit-proportional")}
+          </Box>
         )}
       </Box>
-      <DraggableModal
-        id="report-builder-image-modal"
-        width={550}
-        open={clicked}
-        actions={actions}
-        setOpen={setClicked}
-        title="Add an Image"
-      >
-        {content}
-      </DraggableModal>
-    </Box>
+      {visible &&
+        coords &&
+        createPortal(
+          <Box
+            id="tooltip-image-move-pan"
+            sx={{
+              position: "fixed",
+              top: (coords.top ?? 0) + 10,
+              left: coords.left - tooltipWidth,
+              transform: "translate(-50%, 0)",
+              width: "371px",
+              height: "62px",
+              p: "10px",
+              borderRadius: "4px",
+              bgcolor: "#000",
+              boxShadow: "0 2px 7px 0 rgba(0, 0, 0, 0.12)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              gap: "8px",
+              zIndex: 1,
+            }}
+          >
+            <Typography
+              fontWeight={700}
+              color="#fff"
+              fontSize={"14px"}
+              margin={0}
+            >
+              Pan and move to customise
+            </Typography>
+            <Typography color="#fff" fontSize={"14px"} margin={0}>
+              Hold the image and move to select the perfect frame
+            </Typography>
+          </Box>,
+          document.body,
+        )}
+    </React.Fragment>
   );
 };

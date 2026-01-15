@@ -33,7 +33,7 @@ export const DraggableModal: React.FC<{
   title: string;
   children: React.ReactNode;
   actions?: React.ReactNode;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpen: (value: boolean) => void;
 }> = ({ id, width, open, setOpen, title, children, actions }) => {
   return (
     <Dialog

@@ -29,36 +29,145 @@ export default function AddComponent() {
         newItem = {
           id: uniqueId(),
           type: "text",
+          open: false,
           settings: {
-            paddingTop: 10,
-            paddingLeft: 10,
-            paddingRight: 10,
-            paddingBottom: 10,
-            stroke: 0,
-            strokeColor: "#000000",
-            cornerRadius: 8,
-            backgroundColor: "transparent",
+            paddingTop: "10px",
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            paddingBottom: "10px",
+            borderWidth: "0.5px",
+            borderColor: "#98A1AA",
+            borderRadius: "4px",
+            borderStyle: "solid",
+            backgroundColor: "#ffffff00",
+            width: "100%",
+            height: "100%",
           },
         };
         break;
       case "chart":
-        newItem = { id: uniqueId(), type: "chart" };
+        newItem = { id: uniqueId(), type: "chart", open: false };
         break;
       case "table":
-        newItem = { id: uniqueId(), type: "table" };
+        newItem = { id: uniqueId(), type: "table", open: false };
         break;
       case "image":
-        newItem = { id: uniqueId(), type: "image" };
+        newItem = {
+          id: uniqueId(),
+          type: "image",
+          open: false,
+          settings: {
+            paddingTop: "10px",
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            paddingBottom: "10px",
+            borderWidth: "0.5px",
+            borderColor: "#98A1AA",
+            borderRadius: "4px",
+            backgroundColor: "#ffffff00",
+            borderStyle: "solid",
+            width: "100%",
+            height: "400px",
+            img: {
+              objectFit: "contain",
+              opacity: 1,
+            },
+          },
+          extra: {
+            image: {
+              sizingMode: "fit-proportional",
+            },
+          },
+        };
         break;
       case "section_divider":
-        newItem = { id: uniqueId(), type: "section_divider" };
+        newItem = { id: uniqueId(), type: "section_divider", open: false };
         break;
       case "kpi_box":
+        newItem = {
+          id: uniqueId(),
+          type: "kpi_box",
+          open: false,
+          settings: {
+            paddingTop: "10px",
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            paddingBottom: "10px",
+            borderWidth: "0.5px",
+            borderColor: "#98A1AA",
+            borderRadius: "4px",
+            backgroundColor: "#ffffff00",
+            borderStyle: "solid",
+            width: "100%",
+            height: "141px",
+            justifyContent: "start",
+          },
+          extra: {
+            kpi_box: {
+              options: {
+                alignVertical: "middle",
+                alignHorizontal: "left",
+                innerLine: {
+                  type: "line",
+                  borderWidth: "0.5px",
+                  borderColor: "#98A1AA",
+                },
+              },
+              field: {
+                topLabel: {
+                  value: "Top Label",
+                  fontFamily: "Arial",
+                  fontWeightLabel: "400",
+                  fontStyle: "normal",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#70777E",
+                  bgColor: "#ffffff00",
+                  enabled: true,
+                },
+                bigNumberText: {
+                  value: "BN",
+                  fontFamily: "Arial",
+                  fontWeight: "700",
+                  fontWeightLabel: "400",
+                  fontStyle: "normal",
+                  fontSize: "44px",
+                  color: "#000000",
+                  bgColor: "#ffffff00",
+                  enabled: true,
+                },
+                bottomLabel: {
+                  value: "Bottom Label",
+                  fontFamily: "Arial",
+                  fontWeightLabel: "400",
+                  fontStyle: "normal",
+                  fontWeight: "400",
+                  fontSize: "16px",
+                  color: "#70777E",
+                  bgColor: "#ffffff00",
+                  enabled: true,
+                },
+                optionalText: {
+                  value: "Optional Text",
+                  fontFamily: "Arial",
+                  fontWeightLabel: "400",
+                  fontStyle: "normal",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#70777E",
+                  bgColor: "#ffffff00",
+                  enabled: true,
+                },
+              },
+            },
+          },
+        };
+        break;
       case "grid":
-        newItem = { id: uniqueId(), type: "grid" };
+        newItem = { id: uniqueId(), type: "grid", open: false };
         break;
       case "column":
-        newItem = { id: uniqueId(), type: "column" };
+        newItem = { id: uniqueId(), type: "column", open: false };
         break;
       default:
         break;

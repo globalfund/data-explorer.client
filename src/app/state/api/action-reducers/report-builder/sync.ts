@@ -2,21 +2,101 @@ import { Editor } from "@tiptap/react";
 import { uniqueId } from "app/utils/uniqueId";
 import { action, Action } from "easy-peasy";
 
+export type RBReportItemTypes =
+  | "text"
+  | "chart"
+  | "table"
+  | "image"
+  | "kpi_box"
+  | "grid"
+  | "column"
+  | "section_divider";
+
+export type ObjectFitTypes =
+  | "contain"
+  | "cover"
+  | "fill"
+  | "none"
+  | "scale-down";
+export interface RBRKPIFieldFormatting {
+  value: string;
+  fontFamily: string;
+  fontWeight: string;
+  fontWeightLabel: string;
+  fontSize: string;
+  fontStyle: string;
+  color: string;
+  bgColor: string;
+  enabled: boolean;
+}
+export interface RBRKPIBoxField {
+  topLabel?: RBRKPIFieldFormatting;
+  bigNumberText?: RBRKPIFieldFormatting;
+  bottomLabel?: RBRKPIFieldFormatting;
+  optionalText?: RBRKPIFieldFormatting;
+}
 export interface RBReportItem {
   id: string;
-  type:
-    | "text"
-    | "chart"
-    | "table"
-    | "image"
-    | "kpi_box"
-    | "grid"
-    | "column"
-    | "section_divider";
-  extra?: any;
-  settings?: any;
+  type: RBReportItemTypes;
+  open: boolean;
+  extra?: {
+    focus?: boolean;
+    key?: string;
+    text?: {
+      rte: any;
+    };
+    image?: {
+      src?: string;
+      sizingMode?: "fit-proportional" | "fill" | "crop" | "auto";
+      alignVertical?: "top" | "middle" | "bottom";
+      alignHorizontal?: "left" | "center" | "right";
+    };
+    kpi_box?: {
+      field?: RBRKPIBoxField;
+      options?: {
+        alignVertical?: "top" | "middle" | "bottom";
+        alignHorizontal?: "left" | "center" | "right";
+        innerLine?: {
+          type?: "line" | "box" | "simple";
+          borderWidth?: string;
+          borderColor?: string;
+        };
+      };
+    };
+  };
+  settings?: {
+    width?: string;
+    height?: string;
+    paddingTop?: string;
+    paddingBottom?: string;
+    paddingLeft?: string;
+    paddingRight?: string;
+    borderWidth?: string;
+    borderColor?: string;
+    borderRadius?: string;
+    borderStyle?: string;
+    backgroundColor?: string;
+    display?: string;
+    alignItems?: string;
+    justifyContent?: string;
+    img?: {
+      opacity?: number;
+      objectFit?: ObjectFitTypes;
+      width?: string;
+    };
+  };
 }
 
+export interface RBReportItemController {
+  open: boolean;
+  type: RBReportItemTypes | null;
+  id: string;
+}
+export interface RBReportItemControllerModel {
+  item: RBReportItemController | null;
+  clearItem: Action<RBReportItemControllerModel>;
+  setItem: Action<RBReportItemControllerModel, RBReportItemController>;
+}
 export interface RBReportItemsModel {
   items: RBReportItem[];
   clearItems: Action<RBReportItemsModel>;
@@ -64,6 +144,17 @@ export interface RBReportNotesModel {
   setValue: Action<RBReportNotesModel, string>;
 }
 
+export interface RBReportTooltipModel {
+  tooltip: {
+    visible: boolean;
+    id: string | null;
+  };
+  setValue: Action<
+    RBReportTooltipModel,
+    { visible: boolean; id: string | null }
+  >;
+}
+
 export const RBReportItemsState: RBReportItemsModel = {
   items: [],
   addItem: action((state, payload) => {
@@ -93,6 +184,16 @@ export const RBReportItemsState: RBReportItemsModel = {
       };
       state.items.splice(index + 1, 0, newItem);
     }
+  }),
+};
+
+export const RBReportItemsControllerState: RBReportItemControllerModel = {
+  item: null,
+  setItem: action((state, payload) => {
+    state.item = payload;
+  }),
+  clearItem: action((state) => {
+    state.item = null;
   }),
 };
 
@@ -155,5 +256,15 @@ export const RBReportNotesState: RBReportNotesModel = {
   value: "",
   setValue: action((state, payload) => {
     state.value = payload;
+  }),
+};
+
+export const RBTooltipTriggerState: RBReportTooltipModel = {
+  tooltip: {
+    visible: false,
+    id: null,
+  },
+  setValue: action((state, payload) => {
+    state.tooltip = payload;
   }),
 };

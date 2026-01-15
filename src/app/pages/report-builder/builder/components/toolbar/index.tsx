@@ -37,14 +37,17 @@ export const ReportBuilderPageToolbar: React.FC = () => {
           id: uniqueId(),
           type: "text",
           settings: {
-            paddingTop: 10,
-            paddingLeft: 10,
-            paddingRight: 10,
-            paddingBottom: 10,
-            stroke: 0,
-            strokeColor: "#000000",
-            cornerRadius: 8,
-            backgroundColor: "transparent",
+            paddingTop: "10px",
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            paddingBottom: "10px",
+            borderWidth: "0.5px",
+            borderColor: "#3154F4",
+            borderRadius: "4px",
+            borderStyle: "solid",
+            backgroundColor: "#ffffff00",
+            width: "100%",
+            height: "100%",
           },
         };
         break;
@@ -55,7 +58,31 @@ export const ReportBuilderPageToolbar: React.FC = () => {
         newItem = { id: uniqueId(), type: "table" };
         break;
       case "image":
-        newItem = { id: uniqueId(), type: "image" };
+        newItem = {
+          id: uniqueId(),
+          type: "image",
+          settings: {
+            paddingTop: "10px",
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            paddingBottom: "10px",
+            borderWidth: "0.5px",
+            borderColor: "#3154F4",
+            borderStyle: "solid",
+            borderRadius: "4px",
+            backgroundColor: "#ffffff00",
+            width: "100%",
+            height: "400px",
+            img: {
+              objectFit: "contain",
+            },
+          },
+          extra: {
+            image: {
+              sizingMode: "fit-proportional",
+            },
+          },
+        };
         break;
       case "section_divider":
         newItem = { id: uniqueId(), type: "section_divider" };

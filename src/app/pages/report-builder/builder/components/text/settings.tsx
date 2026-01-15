@@ -3,10 +3,10 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import { DraggablePopper } from "app/components/draggable-popper";
-import PaddingTop from "app/assets/vectors/RBPaddingTop.svg?react";
+import PaddingTop from "app/assets/vectors/RBAlignTop.svg?react";
 import PaddingLeft from "app/assets/vectors/RBPaddingLeft.svg?react";
 import PaddingRight from "app/assets/vectors/RBPaddingRight.svg?react";
-import PaddingBottom from "app/assets/vectors/RBPaddingBottom.svg?react";
+import PaddingBottom from "app/assets/vectors/RBAlignBottom.svg?react";
 
 export const ReportBuilderPageTextSettings: React.FC<{
   handleClose: () => void;
@@ -17,9 +17,9 @@ export const ReportBuilderPageTextSettings: React.FC<{
     paddingLeft: number;
     paddingRight: number;
     paddingBottom: number;
-    stroke: number;
-    strokeColor: string;
-    cornerRadius: number;
+    borderWidth: number;
+    borderColor: string;
+    borderRadius: number;
     backgroundColor: string;
   };
 }> = ({ anchorEl, handleClose, textCompSettings, setVisualSettings }) => {
@@ -104,7 +104,7 @@ export const ReportBuilderPageTextSettings: React.FC<{
   const handleStrokeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (value === "") {
-      setVisualSettings({ stroke: "" });
+      setVisualSettings({ borderWidth: "" });
       return;
     }
     if (!/^\d+$/.test(value)) return;
@@ -116,30 +116,30 @@ export const ReportBuilderPageTextSettings: React.FC<{
 
   const handleStrokeBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (e.target.value === "") {
-      setVisualSettings({ stroke: "0" });
+      setVisualSettings({ borderWidth: "0" });
     }
   };
 
-  const handleStrokeColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setVisualSettings({ strokeColor: e.target.value });
+  const handleborderColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setVisualSettings({ borderColor: e.target.value });
   };
 
-  const handleCornerRadiusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBorderRadiusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (value === "") {
-      setVisualSettings({ cornerRadius: "" });
+      setVisualSettings({ borderRadius: "" });
       return;
     }
     if (!/^\d+$/.test(value)) return;
     const nValue = parseInt(value, 10);
     if (!isNaN(nValue) && nValue >= 0) {
-      setVisualSettings({ cornerRadius: value });
+      setVisualSettings({ borderRadius: value });
     }
   };
 
-  const handleCornerRadiusBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleBorderRadiusBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (e.target.value === "") {
-      setVisualSettings({ cornerRadius: "0" });
+      setVisualSettings({ borderRadius: "0" });
     }
   };
 
@@ -353,7 +353,7 @@ export const ReportBuilderPageTextSettings: React.FC<{
               id="stroke-input"
               onBlur={handleStrokeBlur}
               onChange={handleStrokeChange}
-              value={textCompSettings.stroke}
+              value={textCompSettings.borderWidth}
             />
           </Box>
           <Box>
@@ -363,8 +363,8 @@ export const ReportBuilderPageTextSettings: React.FC<{
             <input
               type="color"
               id="stroke-color-input"
-              onChange={handleStrokeColorChange}
-              value={textCompSettings.strokeColor}
+              onChange={handleborderColorChange}
+              value={textCompSettings.borderColor}
             />
           </Box>
           <Box>
@@ -374,9 +374,9 @@ export const ReportBuilderPageTextSettings: React.FC<{
             <input
               type="text"
               id="corner-radius-input"
-              onBlur={handleCornerRadiusBlur}
-              onChange={handleCornerRadiusChange}
-              value={textCompSettings.cornerRadius}
+              onBlur={handleBorderRadiusBlur}
+              onChange={handleBorderRadiusChange}
+              value={textCompSettings.borderRadius}
             />
           </Box>
           <Box>

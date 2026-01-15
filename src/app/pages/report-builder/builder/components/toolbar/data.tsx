@@ -163,7 +163,7 @@ export const ComponentOptions = [
   { label: "Chart", icon: <ChartOptionIcon />, value: "chart" },
   { label: "Table", icon: <TableOptionIcon />, value: "table" },
   { label: "Image", icon: <ImageOptionIcon />, value: "image" },
-  // { label: "KPI Box", icon: <KPIOptionIcon />, value: "kpi_box" },
+  { label: "Key Metrics Box", icon: <KPIOptionIcon />, value: "kpi_box" },
   { label: "Grid", icon: <GridOptionIcon />, value: "grid" },
   { label: "Column", icon: <ColumnOptionIcon />, value: "column" },
   {

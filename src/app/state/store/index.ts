@@ -140,10 +140,12 @@ import componentHeader from "../api/action-reducers/cms/componentsHeader";
 import componentFooter from "../api/action-reducers/cms/componentsFooter";
 import {
   RBReportItemOrderState,
+  RBReportItemsControllerState,
   RBReportItemsState,
   RBReportNotesState,
   RBReportRTEState,
   RBReportSettings,
+  RBTooltipTriggerState,
 } from "../api/action-reducers/report-builder/sync";
 
 const storeContent: StoreModel = {
@@ -294,6 +296,8 @@ const storeContent: StoreModel = {
   TempAppliedFiltersState: persist(TempAppliedFiltersState),
   // report builder
   RBReportItemsState: persist(RBReportItemsState),
+  RBTooltipTriggerState: persist(RBTooltipTriggerState),
+  RBReportItemsControllerState: persist(RBReportItemsControllerState),
   RBReportRTEState: persist(RBReportRTEState),
   RBReportItemOrderState: persist(RBReportItemOrderState),
   RBReportSettingsState: persist(RBReportSettings),

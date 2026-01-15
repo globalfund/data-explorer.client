@@ -55,11 +55,7 @@ const GridItem: React.FC<{
       case "text":
         return (
           <Box sx={containerSx}>
-            <ReportBuilderPageText
-              id={uniqueId()}
-              setEditor={setActiveRTE}
-              extRemoveItem={handleRemoveItem}
-            />
+            <ReportBuilderPageText id={uniqueId()} setEditor={setActiveRTE} />
           </Box>
         );
       case "chart":
@@ -83,10 +79,7 @@ const GridItem: React.FC<{
       case "image":
         return (
           <Box sx={containerSx}>
-            <ReportBuilderPageImage
-              id={uniqueId()}
-              extRemoveItem={handleRemoveItem}
-            />
+            <ReportBuilderPageImage id={uniqueId()} />
           </Box>
         );
       default:
