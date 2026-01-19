@@ -33,6 +33,7 @@ import {
 } from "app/pages/datasets/grant-implementation/data";
 import orderBy from "lodash/orderBy";
 import isEqual from "lodash/isEqual";
+import IconButton from "@mui/material/IconButton";
 
 interface GrantImplementationPageBlock6Props {
   geographyGrouping: string;
@@ -51,6 +52,7 @@ export const GrantImplementationPageBlock6: React.FC<
 
   const [expendituresDropdownSelected, setExpendituresDropdownSelected] =
     React.useState(dropdownItemsExpenditures[0].value);
+  const [unit, setUnit] = React.useState<"amount" | "percentage">("percentage");
   const [chart4AppliedFiltersData, setChart4AppliedFiltersData] =
     React.useState({
       ...defaultAppliedFilters,
@@ -305,6 +307,72 @@ export const GrantImplementationPageBlock6: React.FC<
     );
   }, [expenditureCycles, expendituresCycleDropdownSelected]);
 
+  const unitButtons = React.useMemo(
+    () => (
+      <Box
+        gap="8px"
+        display="flex"
+        flexDirection="row"
+        sx={{
+          "& > button": {
+            width: "40px",
+            height: "35px",
+            fontSize: "16px",
+            borderRadius: "4px",
+            border: `1px solid ${appColors.CHART_BLOCK_CYCLES.BUTTON_BORDER_COLOR}`,
+            "&:hover": {
+              color: appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_TEXT_COLOR,
+              background:
+                appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR,
+              borderColor:
+                appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR,
+            },
+          },
+        }}
+      >
+        <IconButton
+          onClick={() => setUnit("percentage")}
+          sx={{
+            color:
+              unit === "percentage"
+                ? appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_TEXT_COLOR
+                : appColors.CHART_BLOCK_CYCLES.BUTTON_TEXT_COLOR,
+            background:
+              unit === "percentage"
+                ? appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR
+                : appColors.CHART_BLOCK_CYCLES.BUTTON_BACKGROUND_COLOR,
+            borderColor:
+              unit === "percentage"
+                ? appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR
+                : appColors.CHART_BLOCK_CYCLES.BUTTON_BORDER_COLOR,
+          }}
+        >
+          %
+        </IconButton>
+        <IconButton
+          onClick={() => setUnit("amount")}
+          sx={{
+            color:
+              unit === "amount"
+                ? appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_TEXT_COLOR
+                : appColors.CHART_BLOCK_CYCLES.BUTTON_TEXT_COLOR,
+            background:
+              unit === "amount"
+                ? appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR
+                : appColors.CHART_BLOCK_CYCLES.BUTTON_BACKGROUND_COLOR,
+            borderColor:
+              unit === "amount"
+                ? appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR
+                : appColors.CHART_BLOCK_CYCLES.BUTTON_BORDER_COLOR,
+          }}
+        >
+          $
+        </IconButton>
+      </Box>
+    ),
+    [unit],
+  );
+
   const expendituresChartEmpty = React.useMemo(() => {
     switch (expendituresDropdownSelected) {
       case dropdownItemsExpenditures[0].value:
@@ -461,8 +529,8 @@ export const GrantImplementationPageBlock6: React.FC<
       case dropdownItemsExpenditures[0].value:
         return (
           <Heatmap
-            valueType="amount"
-            contentProp="value"
+            valueType={unit}
+            contentProp={unit === "percentage" ? "percentage" : "value"}
             hoveredLegend={null}
             columnCategory="cycle"
             rowCategory="component"
@@ -517,6 +585,7 @@ export const GrantImplementationPageBlock6: React.FC<
         return null;
     }
   }, [
+    unit,
     tableSearch,
     expendituresDropdownSelected,
     dataExpendituresHeatmap,
@@ -686,6 +755,11 @@ export const GrantImplementationPageBlock6: React.FC<
         handleResetFilters={handleResetChartFilters}
         tempAppliedFiltersData={chart4TempAppliedFiltersData}
         extraDropdown={expendituresCycleDropdown}
+        unitButtons={
+          expendituresDropdownSelected === dropdownItemsExpenditures[0].value
+            ? unitButtons
+            : undefined
+        }
         data={exportChartData}
         infoType="expenditures"
       >
