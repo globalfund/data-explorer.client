@@ -1,7 +1,6 @@
 import { Box, Divider, Slider, Typography } from "@mui/material";
 import React from "react";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import BorderFill from "../../common/border-fill";
 
 export function Customise() {
   const selectedController = useStoreState(
@@ -68,7 +67,7 @@ export function Customise() {
         </Box>
       </Box>
       <Divider sx={{ color: "#CFD4DA" }} />
-      <BorderFill itemType="image" />
+      {/* <BorderFill itemType="image" /> */}
     </Box>
   );
 }

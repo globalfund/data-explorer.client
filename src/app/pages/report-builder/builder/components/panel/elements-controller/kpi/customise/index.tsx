@@ -9,7 +9,6 @@ import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
 import Button from "@mui/material/Button";
 import StyledMenu from "../../common/menu-popup";
 import { lineOptions } from "../data";
-import BorderFill from "../../common/border-fill";
 
 export function Customise() {
   const selectedController = useStoreState(
@@ -208,7 +207,7 @@ export function Customise() {
           />
         </Box>
       </Box>
-      <BorderFill itemType="kpi_box" />
+      {/* <BorderFill itemType="kpi_box" /> */}
       {/* <Box>
         <Typography fontWeight={700}>Border & Fill</Typography>
         <Box

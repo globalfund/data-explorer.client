@@ -20,7 +20,7 @@ export default function ImageController() {
     setIsExpanded(!isExpanded);
   };
   const handleChange = (
-    event: React.SyntheticEvent,
+    _event: React.SyntheticEvent,
     newValue: ImageControllerTab,
   ) => {
     setValue(newValue);

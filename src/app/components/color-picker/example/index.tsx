@@ -84,11 +84,11 @@ export const ColorPicker = ({
   };
 
   const onChange = React.useCallback(
-    (color: IColor) => {
-      if (!color) return;
-      onChangeColor(color);
-      setFallbackHue(color.hsv.h); // Update fallback hue on color change
-      const newColors = [color.hex, ...(recentlyUsedColors ?? [])];
+    (c: IColor) => {
+      if (!c) return;
+      onChangeColor(c);
+      setFallbackHue(c.hsv.h); // Update fallback hue on color change
+      const newColors = [c.hex, ...(recentlyUsedColors ?? [])];
       setRecentlyUsedColors(Array.from(new Set(newColors)).slice(0, 5));
     },
     [onChangeColor, color],
@@ -97,8 +97,8 @@ export const ColorPicker = ({
   const handleTriggerColorPicker = (e: any) => {
     setAnchorEl(anchorEl ? null : e.currentTarget);
   };
-  const handleTriggerInputChange = (color: string) => {
-    onChangeColor(ColorService.convert("hex", color));
+  const handleTriggerInputChange = (c: string) => {
+    onChangeColor(ColorService.convert("hex", c));
   };
   const handleClose = () => {
     setAnchorEl(null);

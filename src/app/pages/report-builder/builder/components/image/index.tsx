@@ -121,7 +121,9 @@ export const ReportBuilderPageImage: React.FC<{
                   height: settings.height,
                 }}
               >
-                {imageSrc && <img src={imageSrc} alt="random" />}
+                {imageSrc && (
+                  <img src={imageSrc} alt="random" style={{ ...imgStyle }} />
+                )}
               </TransformComponent>
             </TransformWrapper>
           );

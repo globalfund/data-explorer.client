@@ -48,19 +48,19 @@ export function useInteractive({
       if (disabled) return;
       if (!isTouch(event) && event.button !== 0) return;
 
-      const onMove = (event: TInteractionEvent) => {
-        move(isTouch(event) ? event.touches[0] : event);
+      const onMove = (e: TInteractionEvent) => {
+        move(isTouch(e) ? e.touches[0] : e);
       };
 
-      const onEnd = (event: TInteractionEvent) => {
-        move(isTouch(event) ? event.changedTouches[0] : event, true);
+      const onEnd = (e: TInteractionEvent) => {
+        move(isTouch(e) ? e.changedTouches[0] : e, true);
 
         document.removeEventListener(
-          isTouch(event) ? "touchmove" : "mousemove",
+          isTouch(e) ? "touchmove" : "mousemove",
           onMove,
         );
         document.removeEventListener(
-          isTouch(event) ? "touchend" : "mouseup",
+          isTouch(e) ? "touchend" : "mouseup",
           onEnd,
         );
       };

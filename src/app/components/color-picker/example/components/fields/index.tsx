@@ -105,8 +105,8 @@ export const ColorInput = ({ color, onChange, disabled }: IColorInputProps) => {
       return;
     }
     if (!fields.hex.inputted) {
-      setFields((fields) => ({
-        ...fields,
+      setFields((oldFields) => ({
+        ...oldFields,
         hex: { ...fields.hex, value: color.hex },
       }));
     }
@@ -117,8 +117,8 @@ export const ColorInput = ({ color, onChange, disabled }: IColorInputProps) => {
       return;
     }
     if (!fields.rgb.inputted) {
-      setFields((fields) => ({
-        ...fields,
+      setFields((oldFields) => ({
+        ...oldFields,
         rgb: { ...fields.rgb, value: color.rgb },
       }));
     }
@@ -127,8 +127,8 @@ export const ColorInput = ({ color, onChange, disabled }: IColorInputProps) => {
   const onInputFocus = useCallback(
     <T extends keyof typeof fields>(field: T) =>
       () => {
-        setFields((fields) => ({
-          ...fields,
+        setFields((oldFields) => ({
+          ...oldFields,
           [field]: { ...fields[field], inputted: true },
         }));
       },
@@ -144,8 +144,8 @@ export const ColorInput = ({ color, onChange, disabled }: IColorInputProps) => {
     const value = event.target.value;
     const newColor = ColorService.convert("hex", value);
 
-    setFields((fields) => ({
-      ...fields,
+    setFields((oldFields) => ({
+      ...oldFields,
       hex: { ...fields["hex"], value },
     }));
     onChange(newColor);

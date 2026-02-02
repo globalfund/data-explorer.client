@@ -2,9 +2,11 @@ import React from "react";
 import get from "lodash/get";
 import remove from "lodash/remove";
 import Box from "@mui/material/Box";
+import { Helmet } from "react-helmet-async";
 import Divider from "@mui/material/Divider";
 import { useParams } from "react-router-dom";
 import Typography from "@mui/material/Typography";
+import { useCMSData } from "app/hooks/useCMSData";
 import { Results } from "app/pages/location/views/results";
 import CircularProgress from "@mui/material/CircularProgress";
 import { DetailPageTabs } from "app/components/detail-page-tabs";
@@ -15,8 +17,6 @@ import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { AccessToFunding } from "app/pages/location/views/access-to-funding";
 import { GrantImplementation } from "app/pages/location/views/grant-implementation";
 import { ResourceMobilization } from "app/pages/location/views/resource-mobilization";
-import { useCMSData } from "app/hooks/useCMSData";
-import { Helmet } from "react-helmet-async";
 
 export const Location: React.FC = () => {
   const params = useParams<{ id: string; tab: string }>();
@@ -36,7 +36,9 @@ export const Location: React.FC = () => {
         value: string;
       }[],
   );
-  const [resultsYear, setResultsYear] = React.useState(cyclesResultsTable[0]);
+  const [resultsYear, setResultsYear] = React.useState(
+    cyclesResultsTable[0] ?? new Date().getFullYear().toString(),
+  );
 
   const dataOverview = useStoreState((state) =>
     get(state.GeographyOverview, "data.data[0]", {
