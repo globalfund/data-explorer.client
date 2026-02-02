@@ -6,7 +6,7 @@ import FullscreenIcon from "app/assets/vectors/TableToolbarFullscreen.svg?react"
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 
 export default function DatasetList() {
-  const [datasetState, setDatasetState] = React.useState(datasetItems);
+  const [selectedDatasetId, setSelectedDatasetId] = React.useState<string>("");
   const setSelectedController = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
   );
@@ -18,16 +18,11 @@ export default function DatasetList() {
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const item = items.find((i) => i.id === selectedController?.id);
-  const selectedDataset = datasetState.find((item) => item.isSelected);
-  const handleSelectDataset = (id: number) => {
-    setDatasetState((prevState) =>
-      prevState.map((dataset) => {
-        if (dataset.id === id) {
-          return { ...dataset, isSelected: !dataset.isSelected };
-        }
-        return dataset;
-      }),
-    );
+  const selectedDataset = datasetItems.find(
+    (item) => item.id === selectedDatasetId,
+  );
+  const handleSelectDataset = (id: string) => {
+    setSelectedDatasetId(id);
   };
   const handleApply = () => {
     if (!item || !selectedDataset) return;
@@ -39,7 +34,11 @@ export default function DatasetList() {
         ...item?.extra,
         chart: {
           ...item?.extra?.chart,
-          dataset: selectedDataset?.name,
+          dataset: selectedDataset?.id,
+          mapping:
+            item?.extra?.chart?.dataset === selectedDataset?.id
+              ? item?.extra?.chart?.mapping
+              : {},
         },
       },
     });
@@ -109,7 +108,7 @@ export default function DatasetList() {
           },
         }}
       >
-        {datasetState.map((item) => (
+        {datasetItems.map((item) => (
           <Box
             onClick={() => handleSelectDataset(item.id)}
             key={item.id}
@@ -121,7 +120,8 @@ export default function DatasetList() {
               borderRadius: "5px",
               flexDirection: "column",
               border: "1px solid #adb5bd",
-              borderColor: item.isSelected ? "#3154F4" : "#ADB5BD",
+              borderColor:
+                item.id === selectedDatasetId ? "#3154F4" : "#ADB5BD",
             }}
           >
             <Box
@@ -160,7 +160,7 @@ export default function DatasetList() {
                   Updated on {item.date}
                 </Typography>
                 <IconButton
-                  onClick={handleExpandDataset(item.name)}
+                  onClick={handleExpandDataset(item.id)}
                   sx={{
                     width: "40px",
                     height: "35px",
@@ -204,7 +204,7 @@ export default function DatasetList() {
           Back
         </Button>
         <Button
-          disabled={!datasetState.some((item) => item.isSelected)}
+          disabled={!selectedDataset}
           onClick={handleApply}
           sx={{
             width: "71px",

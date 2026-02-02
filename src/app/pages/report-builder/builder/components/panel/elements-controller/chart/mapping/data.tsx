@@ -4,16 +4,18 @@ import PoundIcon from "app/assets/vectors/PoundIcon.svg?react";
 import WorldIcon from "app/assets/vectors/World.svg?react";
 import DateTimeIcon from "app/assets/vectors/DateTime.svg?react";
 import BooleanMappingIcon from "app/assets/vectors/Toggle.svg?react";
+import { DataType } from "app/state/api/action-reducers/report-builder/sync";
 
 export interface MappingData {
   value: string;
   id: string;
   label?: string;
-  type: "text" | "date" | "number" | "geographical" | "date-time" | "boolean";
+  disabled?: boolean;
+  type: DataType;
 }
 
 export const MappingTypeIcons = {
-  text: <CaseSensitiveIcon />,
+  string: <CaseSensitiveIcon />,
   date: <DateIcon />,
   number: <PoundIcon />,
   geographical: <WorldIcon />,
@@ -24,7 +26,7 @@ export const mappingData: MappingData[] = [
   {
     value: "Text or String",
     id: "1",
-    type: "text",
+    type: "string",
   },
   {
     value: "Date",
@@ -66,12 +68,12 @@ export const mappingData: MappingData[] = [
   {
     value: "Text or String",
     id: "9",
-    type: "text",
+    type: "string",
   },
   {
     value: "Text or String",
     id: "10",
-    type: "text",
+    type: "string",
   },
 ];
 
@@ -111,7 +113,7 @@ export const dimensions = [
 
 export const aggregationOptions = [
   { value: "sum", id: "agg-1", label: "Sum" },
-  { value: "average", id: "agg-2", label: "Average" },
+  { value: "mean", id: "agg-2", label: "Average" },
   { value: "count", id: "agg-3", label: "Count" },
   { value: "median", id: "agg-4", label: "Median" },
 ];

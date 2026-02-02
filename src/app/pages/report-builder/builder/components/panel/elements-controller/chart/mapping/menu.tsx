@@ -7,9 +7,9 @@ interface StyledMenuProps {
   open: boolean;
   anchorEl: HTMLElement | null;
   onClose: () => void;
-  options: Partial<MappingData>[];
-  activeValue: string;
-  onSelect: (value: any) => void;
+  options: MappingData[];
+  activeValue: string[];
+  onSelect: (value: string[]) => void;
   width?: number | string;
 }
 
@@ -22,7 +22,7 @@ export default function StyledMenu({
   onSelect,
 }: Readonly<StyledMenuProps>) {
   const getBackgroundColor = (option: Partial<MappingData>) => {
-    if (option.value === activeValue) {
+    if (activeValue.includes(option.value!)) {
       if (option.type === "number") {
         return "#0E6027";
       } else {
@@ -82,7 +82,7 @@ export default function StyledMenu({
           <MenuItem
             key={option.id}
             value={option.value}
-            onClick={() => onSelect(option.value)}
+            onClick={() => onSelect([...activeValue, option.value!])}
             id={`styled-menu-item-${option.value}`}
             sx={{
               position: "relative",
@@ -97,6 +97,10 @@ export default function StyledMenu({
               border: "none",
               marginBottom: "8px",
               "&:hover": { backgroundColor: "transparent" },
+              opacity: option.disabled ? 0.5 : 1,
+              pointerEvents: option.disabled ? "none" : "auto",
+              cursor: option.disabled ? "not-allowed" : "pointer",
+              userSelect: option.disabled ? "none" : "auto",
             }}
           >
             {option.type !== undefined && MappingTypeIcons[option.type]}
@@ -108,7 +112,7 @@ export default function StyledMenu({
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
-                color: option.value === activeValue ? "#FFF" : "#000",
+                color: activeValue.includes(option.value!) ? "#FFF" : "#000",
                 fontSize: "14px",
                 width: "100%",
                 borderRadius: "14px",

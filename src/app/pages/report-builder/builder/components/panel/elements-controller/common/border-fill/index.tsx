@@ -24,7 +24,7 @@ export default function BorderFill(props: Readonly<CustomiseComponentProps>) {
       type: props.borderFill?.itemType ?? null,
       settings: {
         ...item?.settings,
-        backgroundColor: ColorService.convert("hex", color.hex).hex,
+        backgroundColor: color.hex,
       },
     });
   };
@@ -36,7 +36,7 @@ export default function BorderFill(props: Readonly<CustomiseComponentProps>) {
       type: props.borderFill?.itemType ?? null,
       settings: {
         ...item?.settings,
-        borderColor: ColorService.convert("hex", color.hex).hex,
+        borderColor: color.hex,
         borderStyle: "solid",
       },
     });

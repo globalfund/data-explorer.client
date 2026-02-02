@@ -54,7 +54,7 @@ export function AssetSelect({
         {icon}
       </Box>
       {selectedItem ? (
-        <Box
+        <Button
           sx={{
             display: "flex",
             alignItems: "center",
@@ -64,11 +64,25 @@ export function AssetSelect({
             svg: {
               flexShrink: 0,
             },
+            textTransform: "none",
+            fontSize: "14px",
+          }}
+          onClick={() => {
+            if (selectedController) {
+              setSelectedController({
+                ...selectedController,
+                extra: {
+                  chart: {
+                    listToDisplay: type,
+                  },
+                },
+              });
+            }
           }}
         >
           <Typography>{selectedItem}</Typography>
           <ArrowUpDown />
-        </Box>
+        </Button>
       ) : (
         <Box
           sx={{

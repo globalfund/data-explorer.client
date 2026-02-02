@@ -5,10 +5,17 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { aggregationOptions } from "./data";
 
-export default function Aggregation() {
+interface AggregationProps {
+  setSelectedValue: (value: string) => void;
+  selectedValue: string;
+}
+
+export default function Aggregation({
+  selectedValue,
+  setSelectedValue,
+}: AggregationProps) {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
-  const [selectedValue, setSelectedValue] = React.useState<string>("sum");
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -56,7 +63,8 @@ export default function Aggregation() {
         }}
       >
         <Typography fontSize={"14px"} color="#000" textTransform={"uppercase"}>
-          {selectedValue}
+          {aggregationOptions.find((option) => option.value === selectedValue)
+            ?.label || ""}
         </Typography>
         <Box
           sx={{
@@ -67,7 +75,7 @@ export default function Aggregation() {
             gap: "8px",
           }}
         >
-          <IconButton>
+          <IconButton onClick={handleOpenMenu}>
             {anchorEl ? (
               <KeyboardArrowUp htmlColor="#000" />
             ) : (
@@ -125,7 +133,7 @@ export default function Aggregation() {
               }}
             >
               <Typography
-                title={option.value}
+                title={option.label}
                 component={"span"}
                 sx={{
                   padding: "4px 8px",
@@ -143,7 +151,7 @@ export default function Aggregation() {
                   textTransform: "uppercase",
                 }}
               >
-                {option.value}
+                {option.label}
               </Typography>
             </MenuItem>
           );

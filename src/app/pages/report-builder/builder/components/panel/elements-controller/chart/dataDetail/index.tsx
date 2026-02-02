@@ -5,16 +5,20 @@ import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
 import { Link } from "react-router-dom";
 import { Table } from "app/components/table";
-import {
-  TABLE_VARIATION_15_COLUMNS as EXPENDITURES_TABLE_COLUMNS,
-  TABLE_VARIATION_15_DATA,
-} from "app/components/table/data";
+
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { datasetItems } from "../../../../chart/data";
+
+import {
+  useGFDataset,
+  useGFSampleDataset,
+} from "app/hooks/queries/report-builder";
 
 export default function DataDetail(props: Readonly<{ datasetId: string }>) {
   const setSelectedController = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
   );
+
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
@@ -23,6 +27,28 @@ export default function DataDetail(props: Readonly<{ datasetId: string }>) {
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const item = items.find((i) => i.id === selectedController?.id);
+
+  const datasetDetail = datasetItems.find(
+    (dataset) => dataset.id === props.datasetId,
+  );
+
+  const sampledDatasetQuery = useGFSampleDataset(props.datasetId);
+  const sampledDataset = sampledDatasetQuery?.data?.data?.data?.result;
+
+  const loadDataset = useGFDataset(props.datasetId);
+  const loadedDataset = React.useMemo(() => {
+    return loadDataset?.data?.pages
+      .map((page) => page?.data?.data?.result?.data || [])
+      .flat();
+  }, [loadDataset]);
+
+  const columns = React.useMemo(() => {
+    if (!sampledDataset) return [];
+    return sampledDataset.stats?.map((stat) => ({
+      title: stat.name,
+      field: stat.name,
+    }));
+  }, [sampledDataset]);
 
   const handleHideTable = () => {
     setSelectedController({
@@ -67,6 +93,10 @@ export default function DataDetail(props: Readonly<{ datasetId: string }>) {
         chart: {
           ...item?.extra?.chart,
           dataset: props.datasetId,
+          mapping:
+            item?.extra?.chart?.dataset === props.datasetId
+              ? item?.extra?.chart?.mapping
+              : {},
         },
       },
     });
@@ -90,6 +120,7 @@ export default function DataDetail(props: Readonly<{ datasetId: string }>) {
     });
   };
   const isExpanded = true;
+
   return (
     <Box
       sx={{
@@ -111,7 +142,7 @@ export default function DataDetail(props: Readonly<{ datasetId: string }>) {
         }}
       >
         <Typography fontSize={"16px"} fontWeight={700}>
-          Pledges and Contributions - Reference Rate
+          {datasetDetail?.name}
         </Typography>
         <Box
           sx={{
@@ -167,9 +198,7 @@ export default function DataDetail(props: Readonly<{ datasetId: string }>) {
           Description
         </Typography>
         <Typography color={"#161616)"} fontSize={"14px"}>
-          Government, private sector, nongovernment and other donor pledges and
-          contributions. These amounts are in US$ equivalents based on the
-          Reference Rate used.
+          {datasetDetail?.description}
         </Typography>
       </Box>
       <Box
@@ -223,9 +252,11 @@ export default function DataDetail(props: Readonly<{ datasetId: string }>) {
       <Box p={"20px"}>
         <Table
           id="table-data-detail"
-          data={TABLE_VARIATION_15_DATA}
-          columns={EXPENDITURES_TABLE_COLUMNS}
-          dataTree
+          data={loadedDataset || []}
+          columns={columns}
+          onScrollToBottom={() => {
+            loadDataset.fetchNextPage();
+          }}
         />
       </Box>
     </Box>

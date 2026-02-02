@@ -3,9 +3,11 @@ import Box from "@mui/material/Box";
 import { Typography, Button } from "@mui/material";
 import { chartTypes } from "../../../../../chart/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { ChartType } from "app/state/api/action-reducers/report-builder/sync";
+import { getDefaultVisualOptions } from "../../utils";
 
 export default function ChartList() {
-  const [chartTypesState, setChartTypesState] = React.useState(chartTypes);
+  const [selectedChartType, setSelectedChartType] = React.useState<string>("");
   const setSelectedController = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
   );
@@ -18,19 +20,10 @@ export default function ChartList() {
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const item = items.find((i) => i.id === selectedController?.id);
 
-  const handleSelectChartType = (id: string) => {
-    setChartTypesState((prevState) =>
-      prevState.map((chartType) => {
-        if (chartType.id === id) {
-          return { ...chartType, isSelected: !chartType.isSelected };
-        }
-        return chartType;
-      }),
-    );
-  };
   const handleApply = () => {
-    const selectedChartType = chartTypesState.find((item) => item.isSelected);
     if (!item || !selectedChartType) return;
+    const chartTypeUnchanged =
+      item?.extra?.chart?.chartType === selectedChartType;
     editItem({
       ...item,
       id: selectedController?.id || "",
@@ -39,14 +32,21 @@ export default function ChartList() {
         ...item?.extra,
         chart: {
           ...item?.extra?.chart,
-          chartType: selectedChartType?.id,
+          mapping: chartTypeUnchanged ? item?.extra?.chart?.mapping : {},
+          chartType: selectedChartType as ChartType,
+          visualOptions: chartTypeUnchanged
+            ? item?.extra?.chart?.visualOptions
+            : getDefaultVisualOptions(selectedChartType),
+          appliedFilters: chartTypeUnchanged
+            ? item?.extra?.chart?.appliedFilters
+            : {},
         },
       },
     });
 
     handleBack();
   };
-
+  console.log(getDefaultVisualOptions(selectedChartType), "default options");
   const handleBack = () => {
     if (!selectedController) return;
     setSelectedController({
@@ -90,17 +90,19 @@ export default function ChartList() {
           gap: "8px",
         }}
       >
-        {chartTypesState.map((item) => (
+        {chartTypes.map((item) => (
           <Box
-            onClick={() => handleSelectChartType(item.id)}
+            onClick={() => setSelectedChartType(item.id)}
             key={item.id}
             sx={{
               display: "flex",
               height: "61px",
               border: "0.5px solid #ADB5BD",
-              borderColor: item.isSelected ? "#3154F4" : "#ADB5BD",
+              borderColor:
+                item.id === selectedChartType ? "#3154F4" : "#ADB5BD",
               borderRadius: "4px",
               background: "#FFFFFF",
+              cursor: "pointer",
             }}
           >
             <Box
@@ -178,7 +180,7 @@ export default function ChartList() {
           Back
         </Button>
         <Button
-          disabled={!chartTypesState.some((item) => item.isSelected)}
+          disabled={!selectedChartType}
           onClick={handleApply}
           sx={{
             width: "71px",

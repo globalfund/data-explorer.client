@@ -21,10 +21,15 @@ interface CheckfieldProps {
   label: string;
 }
 
+interface ColorPaletteProps {
+  type?: "categorical" | "sequential";
+}
+
 export interface CustomiseComponentProps {
   slider?: SliderProps;
   borderFill?: BorderFillProps;
   checkfield?: CheckfieldProps;
+  colorPalette?: ColorPaletteProps;
 }
 export const ComponentTypes: Record<
   string,

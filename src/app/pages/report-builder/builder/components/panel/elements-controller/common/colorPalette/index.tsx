@@ -2,13 +2,23 @@ import React from "react";
 import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
 import { Box, Button, MenuItem, Menu, Typography } from "@mui/material";
 import Check from "@mui/icons-material/Check";
-import { colorPaletteData } from "../data";
+import {
+  colorPaletteCategoricalData,
+  colorPaletteSequentialData,
+} from "../data";
+import { CustomiseComponentProps } from "../../chart/customise/component";
 
-export function ColorPalette() {
+export function ColorPalette(props: Readonly<CustomiseComponentProps>) {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const colorPaletteData =
+    props.colorPalette?.type === "categorical"
+      ? colorPaletteCategoricalData
+      : colorPaletteSequentialData;
+
   const [colorPaletteDataState, setColorPaletteDataState] = React.useState(
     colorPaletteData.map((palette) => ({
       ...palette,

@@ -51,6 +51,16 @@ export interface ChartField {
   chartName?: AdvancedTextFormatting;
   showLegend?: AdvancedTextFormatting;
 }
+
+export interface MappedDimension {
+  [key: string]: {
+    value: string[];
+    mappedType: string[];
+    config?: {
+      aggregation: string[];
+    };
+  };
+}
 export interface RBReportItem {
   id: string;
   type: RBReportItemTypes;
@@ -85,6 +95,9 @@ export interface RBReportItem {
       field?: ChartField;
       alignVertical?: AlignVertical;
       alignHorizontal?: AlignHorizontal;
+      mapping?: MappedDimension;
+      visualOptions?: Record<string, any>;
+      appliedFilters?: Record<string, any[]>;
       type?: {
         bar?: {
           donutChecked?: boolean;
@@ -93,6 +106,7 @@ export interface RBReportItem {
           barWidth?: number;
         };
       };
+      renderedChartData?: RBRenderedChartData | null;
     };
   };
   settings?: {
@@ -193,6 +207,86 @@ export interface RBReportTooltipModel {
     RBReportTooltipModel,
     { visible: boolean; id: string | null }
   >;
+}
+
+export interface IChartDimension {
+  id: string;
+  name: string;
+  validTypes: string[];
+  required: boolean;
+  description: string;
+  aggregation?: boolean;
+  aggregationDefault?: string | { [key: string]: string };
+  multiple?: boolean;
+  minValues?: number;
+}
+
+export interface FilterGroupOptionModel {
+  label: string;
+  value: string;
+  count?: number;
+  subOptions?: FilterGroupOptionModel[];
+}
+
+export interface FilterGroupModel {
+  name: string;
+  options: FilterGroupOptionModel[];
+}
+
+export interface RBRenderChartDataRequest {
+  chartType: ChartType | undefined;
+  mapping: any;
+  vizOptions: any;
+  appliedFilters: any;
+  datasetId: string;
+}
+
+export interface RBRenderedChartData {
+  renderedContent: string;
+  appliedFilters: any;
+  filterOptionGroups: FilterGroupModel[];
+  dataTypes: Record<string, { dateFormat: string; type: string } | string>;
+  mappedData: any;
+  dimensions: IChartDimension[];
+  ssr: false;
+}
+
+interface IStat {
+  data: { name: string; value: number }[];
+  type: string;
+  name: string;
+}
+export type DataType =
+  | "string"
+  | "date"
+  | "number"
+  | "geographical"
+  | "date-time"
+  | "boolean";
+export interface RBSampledDatasetResponse {
+  data: {
+    code: number;
+    result: {
+      count: number;
+      dataTypes: Record<
+        string,
+        { dateFormat: string; type: DataType } | DataType
+      >;
+      filterOptionGroups: string[];
+      stats: IStat[];
+      sample: any[];
+    };
+  };
+}
+
+export interface RBDatasetResponse {
+  data: {
+    code: number;
+    result: {
+      count: number;
+      data: any[];
+    };
+  };
 }
 
 export const RBReportItemsState: RBReportItemsModel = {

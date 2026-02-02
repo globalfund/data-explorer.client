@@ -1,11 +1,13 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { BarChart } from "app/components/charts/bar";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import ChartIcon from "app/assets/vectors/RBChart.svg?react";
-import { STORY_DATA_VARIANT_1 } from "app/components/charts/bar/data";
 import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
+import ChartPlaceholder from "./placeholders/placeholder";
+import { checkValidDimensionMapping } from "../panel/elements-controller/chart/utils";
+import ChartComponent from "./chart-component";
+import { useRenderChartData } from "app/hooks/queries/report-builder";
 
 export const ReportBuilderPageChart: React.FC<{
   id: string;
@@ -21,6 +23,54 @@ export const ReportBuilderPageChart: React.FC<{
   const setSelectedController = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
   );
+
+  const renderChartData = useRenderChartData();
+
+  const chartExtra = selectedItem?.extra?.chart;
+  const renderedChartData = chartExtra?.renderedChartData;
+
+  console.log("renderedChartData", renderedChartData);
+
+  React.useEffect(() => {
+    if (
+      chartExtra?.dataset &&
+      checkValidDimensionMapping(chartExtra.chartType || "", chartExtra.mapping)
+    ) {
+      renderChartData.mutate(
+        {
+          chartType: chartExtra.chartType,
+          mapping: chartExtra.mapping,
+          vizOptions: chartExtra.visualOptions,
+          appliedFilters: chartExtra.appliedFilters,
+          datasetId: chartExtra.dataset,
+        },
+        {
+          onSuccess: (data) => {
+            editItem({
+              ...selectedItem,
+              id,
+              type: "chart",
+              open: selectedItem?.open || true,
+              extra: {
+                ...selectedItem?.extra,
+                chart: {
+                  ...selectedItem?.extra?.chart,
+                  renderedChartData: data.data,
+                },
+              },
+            });
+          },
+        },
+      );
+    }
+  }, [
+    chartExtra?.mapping,
+    chartExtra?.chartType,
+    chartExtra?.dataset,
+    chartExtra?.appliedFilters,
+    chartExtra?.visualOptions,
+  ]);
+
   useClickOutsideEditor({
     editorId: "chart-render",
     toolbarId: "chart-controller",
@@ -41,7 +91,7 @@ export const ReportBuilderPageChart: React.FC<{
           ...selectedItem,
           id,
           type: "chart",
-          open: false,
+          open: true,
           extra: {
             ...selectedItem?.extra,
             chart: {
@@ -69,7 +119,29 @@ export const ReportBuilderPageChart: React.FC<{
         },
       }}
     >
-      {!selectedItem?.open && (
+      {selectedItem?.open && chartExtra?.chartType ? (
+        <Box
+          sx={{
+            height: selectedItem.settings?.height,
+            width: selectedItem.settings?.width,
+          }}
+        >
+          {checkValidDimensionMapping(
+            chartExtra.chartType || "",
+            chartExtra.mapping,
+          ) && renderedChartData ? (
+            <ChartComponent
+              data={renderedChartData?.mappedData}
+              mapping={chartExtra?.mapping}
+              chartType={chartExtra.chartType}
+              visualOptions={chartExtra.visualOptions || {}}
+              id={id}
+            />
+          ) : (
+            <ChartPlaceholder chartType={chartExtra.chartType} />
+          )}
+        </Box>
+      ) : (
         <Box
           sx={{
             gap: "10px",
@@ -92,9 +164,6 @@ export const ReportBuilderPageChart: React.FC<{
             Configure Chart
           </Typography>
         </Box>
-      )}
-      {selectedItem?.open && (
-        <BarChart data={STORY_DATA_VARIANT_1} valueLabels={{ value: "" }} />
       )}
     </Box>
   );

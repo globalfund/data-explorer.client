@@ -94,6 +94,12 @@ export const fontFamilyOptions = [
     stateVar: "isFontFamilyInter",
     fontWeight: "400",
   },
+  {
+    label: "IBM Plex Sans",
+    value: "IBM Plex Sans",
+    stateVar: "isFontFamilyIBMPlexSans",
+    fontWeight: "400",
+  },
 ];
 
 export const fontSizeOptions = Array.from({ length: 72 }, (_, i) => i + 8).map(

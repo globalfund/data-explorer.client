@@ -61,7 +61,7 @@ export default function AddComponent() {
             backgroundColor: "#ffffff00",
             borderStyle: "solid",
             width: "100%",
-            height: "141px",
+            height: "500px",
             justifyContent: "start",
           },
           extra: {

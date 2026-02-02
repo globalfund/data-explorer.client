@@ -4,7 +4,7 @@ import React from "react";
 import { chartInfo } from "../data";
 import { AssetSelect } from "./asset-select";
 import { useStoreState } from "app/state/store/hooks";
-import { chartTypes } from "../../../../chart/data";
+import { chartTypes, datasetItems } from "../../../../chart/data";
 
 export function SelectChartAssetList() {
   const items = useStoreState((state) => state.RBReportItemsState.items);
@@ -13,11 +13,18 @@ export function SelectChartAssetList() {
   );
   const item = items.find((i) => i.id === selectedController?.id);
   const chartExtra = item?.extra?.chart || {};
+
+  console.log(chartExtra, "chart extra in asset select");
   const getSelectedItem = (type: "chartType" | "dataset") => {
     if (type === "chartType") {
       const chartTypeId = chartExtra[type];
       const chartType = chartTypes.find((chart) => chart.id === chartTypeId);
       return chartType ? chartType.chartType : "";
+    } else if (type === "dataset") {
+      return (
+        datasetItems.find((dataset) => dataset.id === chartExtra.dataset)
+          ?.name || ""
+      );
     }
     return chartExtra?.[type] || "";
   };

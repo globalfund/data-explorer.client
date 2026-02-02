@@ -14,8 +14,14 @@ import Mapping from "./mapping";
 import Filtering from "./filtering";
 import LayoutTab from "./layout";
 import Customise from "./customise";
+import Advanced from "./advanced";
 
-type ChartControllerTab = "mapping" | "filter" | "layout" | "style" | "more";
+type ChartControllerTab =
+  | "mapping"
+  | "filter"
+  | "layout"
+  | "style"
+  | "advanced";
 export default function ChartController() {
   const [value, setValue] = React.useState<ChartControllerTab>("mapping");
   const [isExpanded, setIsExpanded] = React.useState(true);
@@ -23,7 +29,15 @@ export default function ChartController() {
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
+
+  const items = useStoreState((state) => state.RBReportItemsState.items);
+  const item = items.find((i) => i.id === selectedController?.id);
+
   const chartExtra = selectedController?.extra?.chart || {};
+
+  const chartConfigured =
+    item?.extra?.chart?.dataset && item?.extra?.chart?.chartType;
+
   const handleExpandToggle = () => {
     setIsExpanded(!isExpanded);
   };
@@ -44,6 +58,8 @@ export default function ChartController() {
         return <LayoutTab />;
       case "style":
         return <Customise />;
+      case "advanced":
+        return <Advanced />;
       default:
         return null;
     }
@@ -132,8 +148,8 @@ export default function ChartController() {
 
                 <Box sx={{ borderTop: "1px solid #CFD4DA", marginTop: "8px" }}>
                   <Tabs
-                    value={value}
-                    onChange={handleChange}
+                    value={chartConfigured ? value : null}
+                    onChange={chartConfigured ? handleChange : undefined}
                     textColor="secondary"
                     indicatorColor="primary"
                     aria-label="secondary tabs example"
@@ -160,7 +176,20 @@ export default function ChartController() {
                     ))}
                   </Tabs>
                 </Box>
-                {renderTabPanel()}
+
+                {chartConfigured ? (
+                  renderTabPanel()
+                ) : (
+                  <Box
+                    sx={{
+                      padding: "38.5px 8px",
+                      fontSize: "14px",
+                      textAlign: "center",
+                    }}
+                  >
+                    *Configure chart first to start editing.
+                  </Box>
+                )}
               </Box>
             )}
           </Box>
