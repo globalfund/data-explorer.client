@@ -100,39 +100,29 @@ const VisualOptions = ({
     text: string,
     components: ComponentMap,
   ): string | React.ReactNode {
-    const tokenRegex = /\{([^}]+)\}/g;
+    if (!text) return "";
+    const regex = /{(.*?)}/g;
 
-    // Fast path: no tokens → return string
-    if (!tokenRegex.test(text)) {
-      return text;
-    }
+    const parts: React.ReactNode[] = [];
+    let lastIndex = 0;
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+      const [full, key] = match;
+      const start = match.index;
 
-    // Reset regex state after .test()
-    tokenRegex.lastIndex = 0;
-
-    const parts = text.split(/(\{[^}]+\})/g);
-
-    let hasReplacement = false;
-
-    const nodes = parts.map((part, index) => {
-      const match = part.match(/^\{([^}]+)\}$/);
-
-      if (match) {
-        const key = match[1];
-        const component = components[key];
-
-        if (component) {
-          hasReplacement = true;
-          return <React.Fragment key={index}>{component}</React.Fragment>;
-        }
+      // Push plain text before the placeholder
+      if (start > lastIndex) {
+        parts.push(text.slice(lastIndex, start));
       }
 
-      return <React.Fragment key={index}>{part}</React.Fragment>;
-    });
+      // Push replacement (string or ReactNode)
+      parts.push(components[key] ?? "");
+      lastIndex = start + full.length;
+    }
 
-    // If no component was actually replaced, return original string
-    if (!hasReplacement) {
-      return text;
+    // Push any remaining text
+    if (lastIndex < text.length) {
+      parts.push(text.slice(lastIndex));
     }
 
     return (
@@ -143,7 +133,7 @@ const VisualOptions = ({
         }}
         component={"span"}
       >
-        {nodes}
+        {parts}
       </Box>
     );
   }
