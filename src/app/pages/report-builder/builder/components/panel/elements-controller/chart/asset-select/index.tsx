@@ -14,7 +14,6 @@ export function SelectChartAssetList() {
   const item = items.find((i) => i.id === selectedController?.id);
   const chartExtra = item?.extra?.chart || {};
 
-  console.log(chartExtra, "chart extra in asset select");
   const getSelectedItem = (type: "chartType" | "dataset") => {
     if (type === "chartType") {
       const chartTypeId = chartExtra[type];

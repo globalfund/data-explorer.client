@@ -46,7 +46,7 @@ export default function ChartList() {
 
     handleBack();
   };
-  console.log(getDefaultVisualOptions(selectedChartType), "default options");
+
   const handleBack = () => {
     if (!selectedController) return;
     setSelectedController({

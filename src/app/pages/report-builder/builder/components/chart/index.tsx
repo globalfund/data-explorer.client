@@ -29,8 +29,6 @@ export const ReportBuilderPageChart: React.FC<{
   const chartExtra = selectedItem?.extra?.chart;
   const renderedChartData = chartExtra?.renderedChartData;
 
-  console.log("renderedChartData", renderedChartData);
-
   React.useEffect(() => {
     if (
       chartExtra?.dataset &&
@@ -78,10 +76,6 @@ export const ReportBuilderPageChart: React.FC<{
       clearSelectedItem();
     },
   });
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const fetchChartData = () => {
-    // Fetch or compute chart data here
-  };
 
   return (
     <Box
@@ -122,8 +116,8 @@ export const ReportBuilderPageChart: React.FC<{
       {selectedItem?.open && chartExtra?.chartType ? (
         <Box
           sx={{
-            height: selectedItem.settings?.height,
-            width: selectedItem.settings?.width,
+            width: chartExtra?.visualOptions?.width,
+            height: chartExtra?.visualOptions?.height,
           }}
         >
           {checkValidDimensionMapping(

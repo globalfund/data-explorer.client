@@ -72,8 +72,6 @@ const VisualOptions = ({
     [visualOptionsTemp],
   );
 
-  console.log("visualOptions", visualOptionsState);
-
   const optionsToDisplay = React.useMemo(() => {
     return Object.entries(defaultOptionsToDisplay)
       .map(([key, value]) => ({
@@ -144,9 +142,6 @@ const VisualOptions = ({
     arrowDown: <Direction style={{ transform: "rotate(180deg)" }} />,
     arrowLeft: <Direction style={{ transform: "rotate(270deg)" }} />,
   };
-
-  console.log("optionsToDisplay", optionsToDisplay);
-  console.log("visualOptions", visualOptions);
 
   const checkOptionDisabled = (option: any, parent?: string) => {
     const optionDisabled = option.disabled

@@ -34,8 +34,6 @@ export default function Filtering() {
     [],
   );
 
-  console.log("chartExtra", chartExtra);
-
   const [tmpAppliedFilters, setTmpAppliedFilters] = React.useState<
     Record<string, any[]>
   >(chartExtra?.appliedFilters || {});

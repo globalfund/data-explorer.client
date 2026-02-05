@@ -1,9 +1,13 @@
 import React from "react";
-import { datasetItems } from "../../../../../chart/data";
+import get from "lodash/get";
 import Box from "@mui/material/Box";
-import { Typography, IconButton, Divider, Button } from "@mui/material";
-import FullscreenIcon from "app/assets/vectors/TableToolbarFullscreen.svg?react";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import { datasetItems } from "../../../../../chart/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import FullscreenIcon from "app/assets/vectors/TableToolbarFullscreen.svg?react";
 
 export default function DatasetList() {
   const [selectedDatasetId, setSelectedDatasetId] = React.useState<string>("");
@@ -18,12 +22,15 @@ export default function DatasetList() {
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const item = items.find((i) => i.id === selectedController?.id);
+
   const selectedDataset = datasetItems.find(
     (item) => item.id === selectedDatasetId,
   );
+
   const handleSelectDataset = (id: string) => {
     setSelectedDatasetId(id);
   };
+
   const handleApply = () => {
     if (!item || !selectedDataset) return;
     editItem({
@@ -62,7 +69,6 @@ export default function DatasetList() {
     (datasetId: string) =>
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       e.stopPropagation();
-      console.log(selectedDataset?.id, "expand dataset");
       setSelectedController({
         ...selectedController!,
         extra: {
@@ -77,6 +83,50 @@ export default function DatasetList() {
         },
       });
     };
+
+  const datasetsLatestUpdate = useStoreState(
+    (state) =>
+      get(state.datasetsLatestUpdate, "data.data", []) as {
+        name: string;
+        date: string;
+      }[],
+  );
+
+  const useGetDatasetLatestUpdate = (id: string) => {
+    let key = "";
+    switch (id) {
+      case "gf_results":
+        key = "results";
+        break;
+      case "gf_pledges_contributions":
+        key = "pledges-contributions";
+        break;
+      case "gf_eligibility":
+        key = "eligibility";
+        break;
+      case "gf_allocations":
+        key = "allocations";
+        break;
+      case "gf_grant_implementation":
+        key = "grants";
+        break;
+      case "gf_grant_commitments":
+        key = "commitments";
+        break;
+      case "gf_grant_disbursements":
+        key = "disbursements";
+        break;
+    }
+    if (!key) {
+      return "";
+    }
+    return get(
+      datasetsLatestUpdate.find((dataset) => dataset.name === key),
+      "date",
+      "",
+    );
+  };
+
   return (
     <Box
       sx={{
@@ -157,7 +207,7 @@ export default function DatasetList() {
               >
                 <Typography fontSize="14px" color="#373D43">
                   {" "}
-                  Updated on {item.date}
+                  Updated on {useGetDatasetLatestUpdate(item.id)}
                 </Typography>
                 <IconButton
                   onClick={handleExpandDataset(item.id)}

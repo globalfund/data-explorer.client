@@ -54,7 +54,7 @@ export const useGFDataset = (datasetId: string) => {
         return undefined; // no more pages
       }
     },
-    getPreviousPageParam: (firstPage, allPages) => {
+    getPreviousPageParam: (_firstPage, allPages) => {
       if (allPages.length > 1) {
         return allPages.length - 1; // previous page number
       } else {

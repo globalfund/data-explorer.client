@@ -41,6 +41,7 @@ export default function ChartController() {
   const handleExpandToggle = () => {
     setIsExpanded(!isExpanded);
   };
+
   const handleChange = (
     event: React.SyntheticEvent,
     newValue: ChartControllerTab,

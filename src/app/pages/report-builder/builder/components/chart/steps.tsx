@@ -1,4 +1,5 @@
 import React from "react";
+import get from "lodash/get";
 import Box from "@mui/material/Box";
 import Input from "@mui/material/Input";
 import Button from "@mui/material/Button";
@@ -7,6 +8,7 @@ import Search from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
+import { useStoreState } from "app/state/store/hooks";
 import SortIcon from "app/assets/vectors/Sort.svg?react";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import SettingsIcon from "app/assets/vectors/Settings_ButtonIcon.svg?react";
@@ -14,6 +16,49 @@ import FullscreenIcon from "app/assets/vectors/TableToolbarFullscreen.svg?react"
 import { datasetItems } from "app/pages/report-builder/builder/components/chart/data";
 
 export const SelectDatasetStep: React.FC = () => {
+  const datasetsLatestUpdate = useStoreState(
+    (state) =>
+      get(state.datasetsLatestUpdate, "data.data", []) as {
+        name: string;
+        date: string;
+      }[],
+  );
+
+  const useGetDatasetLatestUpdate = (id: string) => {
+    let key = "";
+    switch (id) {
+      case "gf_results":
+        key = "results";
+        break;
+      case "gf_pledges_contributions":
+        key = "pledges-contributions";
+        break;
+      case "gf_eligibility":
+        key = "eligibility";
+        break;
+      case "gf_allocations":
+        key = "allocations";
+        break;
+      case "gf_grant_implementation":
+        key = "grants";
+        break;
+      case "gf_grant_commitments":
+        key = "commitments";
+        break;
+      case "gf_grant_disbursements":
+        key = "disbursements";
+        break;
+    }
+    if (!key) {
+      return "";
+    }
+    return get(
+      datasetsLatestUpdate.find((dataset) => dataset.name === key),
+      "date",
+      "",
+    );
+  };
+
   return (
     <Box
       sx={{
@@ -93,7 +138,9 @@ export const SelectDatasetStep: React.FC = () => {
               }}
             >
               <Button variant="outlined">Source</Button>
-              <Typography fontSize="16px">{item.date}</Typography>
+              <Typography fontSize="16px">
+                {useGetDatasetLatestUpdate(item.id)}
+              </Typography>
             </Box>
           </Box>
           <IconButton

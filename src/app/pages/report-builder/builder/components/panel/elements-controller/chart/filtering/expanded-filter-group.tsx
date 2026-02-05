@@ -32,7 +32,7 @@ const ExpandedFilterGroup = (props: ExpandedFilterGroupProps) => {
       );
     }
   };
-  console.log(props.options, "options", props.name);
+
   return (
     // TODO: Paginate options if too many
     <Box width="100%" position="relative" marginBottom="5px">

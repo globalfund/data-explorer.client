@@ -168,7 +168,6 @@ export function SearchLayout(props: SearchLayoutProps) {
       {open && (
         <ClickAwayListener
           onClickAway={(event) => {
-            console.log(event.target);
             if ((get(event.target, "tagName", "") as string) !== "INPUT") {
               props.setValue("");
             }

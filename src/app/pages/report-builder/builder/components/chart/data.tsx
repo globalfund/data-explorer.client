@@ -13,32 +13,39 @@ export const datasetItems = [
     id: "gf_results",
     name: "Reported Results",
     description: "Global Fund results reported on an annual basis.",
-    date: "2023-01-01",
   },
   {
     id: "gf_pledges_contributions",
     name: "Pledges and Contributions - Reference Rate",
     description:
       "Government, private sector, nongovernment and other donor pledges and contributions. These amounts are in US$ equivalents based on the Reference Rate used.",
-    date: "2023-01-02",
   },
   {
     id: "gf_eligibility",
     name: "Country Eligibility",
     description: "Country eligibility for funding over time.",
-    date: "2023-01-04",
   },
   {
     id: "gf_allocations",
     name: "Allocations",
     description: "Allocations amounts for countries by disease.",
-    date: "2023-01-04",
   },
   {
     id: "gf_grant_implementation",
     name: "Grant Implementation Periods",
     description: "All grants and implementation periods across the portfolio",
-    date: "2023-01-05",
+  },
+  {
+    id: "gf_grant_commitments",
+    name: "Grant Commitments",
+    description:
+      "All financial commitments made against grants across the portfolio. These amounts are in US$ equivalents based on the Reference Rate used.",
+  },
+  {
+    id: "gf_grant_disbursements",
+    name: "Grant Disbursements",
+    description:
+      "All financial disbursements made against grants across the portfolio. These amounts are in US$ equivalent based on the Reference Rate used.",
   },
 ];
 

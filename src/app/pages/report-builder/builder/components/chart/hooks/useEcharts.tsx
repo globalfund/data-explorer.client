@@ -144,8 +144,6 @@ export function useEcharts({
       colorPaletteCategoricalData.find((item) => item.name === colorPalette)
         ?.colors ?? [];
 
-    console.log(paletteColors, "paletteColors", colorPalette);
-
     const resolvedXAxisName = customXAxisName
       ? (xAxisName ?? mapping?.bars?.value?.[0] ?? "")
       : "";
@@ -265,9 +263,7 @@ export function useEcharts({
           type: "bar",
           data: sizes,
           realtimeSort: realTimeSort ?? true,
-          barWidth: customBarWidth
-            ? parseBarWidth(barWidth, undefined)
-            : undefined,
+          barWidth: customBarWidth ? parseBarWidth(barWidth) : undefined,
           colorBy: "data",
           itemStyle: {
             borderRadius: parseCssPx(cornerRadius, 0),
@@ -812,7 +808,6 @@ export function useEcharts({
         trendlineSource.push([item?.x, item?.y]);
       });
     });
-    console.log(mapping?.x?.mappedType, "mapping?.x?.mappedType");
 
     return {
       backgroundColor: background ?? "transparent",
