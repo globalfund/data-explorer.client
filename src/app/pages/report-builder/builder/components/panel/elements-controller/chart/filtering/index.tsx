@@ -1,0 +1,273 @@
+import { Box, Button, Typography } from "@mui/material";
+import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import SearchIcon from "app/assets/vectors/Search_grants.svg?react";
+import CollapseIcon from "app/assets/vectors/Collapse_ButtonIcon.svg?react";
+import React from "react";
+import { appColors } from "app/theme";
+import { SearchInput } from "app/components/filters/list/data";
+import { get, isEqual } from "lodash";
+import ExpandedFilterGroup from "./expanded-filter-group";
+
+export default function Filtering() {
+  const selectedController = useStoreState(
+    (state) => state.RBReportItemsControllerState.item,
+  );
+
+  const editItem = useStoreActions(
+    (actions) => actions.RBReportItemsState.editItem,
+  );
+
+  const items = useStoreState((state) => state.RBReportItemsState.items);
+  const item = items.find((i) => i.id === selectedController?.id);
+
+  const chartExtra = item?.extra?.chart;
+
+  const renderedChartData = chartExtra?.renderedChartData;
+
+  const filterOptionGroups = renderedChartData?.filterOptionGroups;
+
+  const [expandedGroupNames, setExpandedGroupNames] = React.useState<string[]>(
+    [],
+  );
+
+  console.log("chartExtra", chartExtra);
+
+  const [tmpAppliedFilters, setTmpAppliedFilters] = React.useState<
+    Record<string, any[]>
+  >(chartExtra?.appliedFilters || {});
+
+  React.useEffect(() => {
+    if (!isEqual(tmpAppliedFilters, chartExtra?.appliedFilters || {})) {
+      setTmpAppliedFilters(chartExtra?.appliedFilters || {});
+    }
+  }, [chartExtra?.appliedFilters]);
+
+  const handleApply = (reset: boolean = false) => {
+    if (!item) return;
+    if (
+      !reset &&
+      isEqual(tmpAppliedFilters, chartExtra?.appliedFilters || {})
+    ) {
+      return;
+    }
+    editItem({
+      ...item,
+      id: selectedController?.id || "",
+      type: "chart",
+      extra: {
+        ...item?.extra,
+        chart: {
+          ...item?.extra?.chart,
+          appliedFilters: reset ? {} : tmpAppliedFilters,
+        },
+      },
+    });
+
+    if (reset) {
+      setTmpAppliedFilters({});
+    }
+  };
+
+  return (
+    <Box
+      sx={{
+        padding: "8px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "8px",
+        maxHeight: "500px",
+        overflowY: "scroll",
+        "&::-webkit-scrollbar": {
+          display: "none",
+        },
+      }}
+    >
+      <Box
+        sx={{
+          gap: "6px",
+          width: "100%",
+          height: "max-content",
+          display: "flex",
+          padding: "5px 10px",
+          borderRadius: "5px",
+          alignItems: "center",
+          background: appColors.COMMON.WHITE,
+          border: `0.5px solid ${appColors.COMMON.SECONDARY_COLOR_5}`,
+        }}
+      >
+        <SearchIcon />
+        <SearchInput
+          type="text"
+          placeholder="Search"
+          style={{ height: "24px", padding: 0, background: "transparent" }}
+          onChange={() => {}}
+        />
+      </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          gap: "8px",
+          alignItems: "center",
+          width: "max-content",
+          marginLeft: "auto",
+          cursor: "pointer",
+        }}
+        onClick={() => setExpandedGroupNames([])}
+      >
+        <Typography
+          sx={{
+            fontSize: "14px",
+            color: "#3154F4",
+            textDecoration: "underline",
+          }}
+        >
+          Collapse All
+        </Typography>
+        <CollapseIcon stroke="#3154F4" strokeWidth={"0.5px"} />
+      </Box>
+
+      <Box>
+        {filterOptionGroups?.map((group) => (
+          <Accordion
+            key={group.name}
+            expanded={expandedGroupNames.includes(group.name)}
+            onChange={() => {
+              if (expandedGroupNames.includes(group.name)) {
+                setExpandedGroupNames((prev) =>
+                  prev.filter((name) => name !== group.name),
+                );
+              } else {
+                setExpandedGroupNames((prev) => [...prev, group.name]);
+              }
+            }}
+            sx={{
+              borderStyle: "none",
+              borderBottom: `0.5px solid ${appColors.COMMON.SECONDARY_COLOR_6}`,
+              padding: "8px 0px",
+              background: "transparent",
+            }}
+          >
+            <AccordionSummary
+              expandIcon={
+                get(group, "options.length", 0) > 0 ? (
+                  <ExpandMoreIcon />
+                ) : undefined
+              }
+              sx={{
+                minHeight: "20px",
+                justifyContent: "flex-start",
+                "&.Mui-expanded": {
+                  minHeight: "20px",
+                },
+                "> .MuiAccordionSummary-content": {
+                  flexGrow: 0,
+                },
+                gap: "8px",
+              }}
+            >
+              <Typography fontSize="14px" fontWeight="700">
+                {group.name}
+              </Typography>
+            </AccordionSummary>
+            {group.options && expandedGroupNames.includes(group.name) && (
+              <AccordionDetails>
+                <ExpandedFilterGroup
+                  name={group.name}
+                  options={group.options || []}
+                  selectedFilters={
+                    get(tmpAppliedFilters, group.name, []) as string[]
+                  }
+                  setSelectedFilters={(filters: string[]) => {
+                    setTmpAppliedFilters((prev) => ({
+                      ...prev,
+                      [group.name]: filters,
+                    }));
+                  }}
+                />
+              </AccordionDetails>
+            )}
+          </Accordion>
+        ))}
+      </Box>
+
+      <Box
+        sx={{
+          gap: "10px",
+          display: "flex",
+          justifyContent: "space-between",
+          "& > button": {
+            fontSize: "14px",
+            lineHeight: "1.5",
+            padding: "7px 12px",
+          },
+        }}
+      >
+        <Button
+          onClick={() => {
+            setExpandedGroupNames([]);
+            handleApply(true);
+          }}
+          variant="outlined"
+          startIcon={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+            >
+              <rect
+                width="16"
+                height="16"
+                fill="white"
+                fillOpacity="0.01"
+                style={{ mixBlendMode: "multiply" }}
+              />
+              <path
+                d="M14 8C14 9.18669 13.6481 10.3467 12.9888 11.3334C12.3295 12.3201 11.3925 13.0892 10.2961 13.5433C9.19975 13.9974 7.99335 14.1162 6.82946 13.8847C5.66558 13.6532 4.59648 13.0818 3.75736 12.2426C2.91825 11.4035 2.3468 10.3344 2.11529 9.17054C1.88378 8.00666 2.0026 6.80026 2.45673 5.7039C2.91085 4.60754 3.67989 3.67047 4.66658 3.01118C5.65328 2.35189 6.81331 2 8 2C9.68 2 11.2867 2.66667 12.4933 3.82667L14 5.33333M14 5.33333L14 2M14 5.33333H10.6667"
+                stroke="black"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          }
+          sx={{
+            border: "none",
+          }}
+        >
+          Reset
+        </Button>
+        <Button
+          onClick={() => {
+            setTmpAppliedFilters(chartExtra?.appliedFilters || {});
+            setExpandedGroupNames([]);
+          }}
+          variant="outlined"
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={() => handleApply()}
+          variant="outlined"
+          sx={{
+            color: "#fff",
+            bgcolor: "#3154f4",
+            "&:hover": { bgcolor: "#3154f4" },
+          }}
+          disabled={isEqual(
+            tmpAppliedFilters,
+            chartExtra?.appliedFilters || {},
+          )}
+        >
+          Apply
+        </Button>
+      </Box>
+    </Box>
+  );
+}

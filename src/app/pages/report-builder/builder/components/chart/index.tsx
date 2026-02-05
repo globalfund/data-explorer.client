@@ -1,119 +1,112 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import { Close } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import MoreVert from "@mui/icons-material/MoreVert";
-import { BarChart } from "app/components/charts/bar";
-import ArrowBack from "@mui/icons-material/ArrowBack";
-import { useStoreActions } from "app/state/store/hooks";
-import { DraggableModal } from "app/components/draggable-modal";
-import { STORY_DATA_VARIANT_1 } from "app/components/charts/bar/data";
-import { ReportBuilderPageItemMenu } from "app/pages/report-builder/builder/components/item-menu";
-import {
-  SelectDatasetStep,
-  CustomiseChartStep,
-} from "app/pages/report-builder/builder/components/chart/steps";
+import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import ChartIcon from "app/assets/vectors/RBChart.svg?react";
+import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
+import ChartPlaceholder from "./placeholders/placeholder";
+import { checkValidDimensionMapping } from "../panel/elements-controller/chart/utils";
+import ChartComponent from "./chart-component";
+import { useRenderChartData } from "app/hooks/queries/report-builder";
 
 export const ReportBuilderPageChart: React.FC<{
   id: string;
-  extRemoveItem?: (e: React.MouseEvent) => void;
-}> = ({ id, extRemoveItem }) => {
-  const [step, setStep] = React.useState(1);
-  const [clicked, setClicked] = React.useState(false);
-  const [chartReady, setChartReady] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-  const removeItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.removeItem,
+}> = ({ id }) => {
+  const items = useStoreState((state) => state.RBReportItemsState.items);
+  const editItem = useStoreActions(
+    (actions) => actions.RBReportItemsState.editItem,
+  );
+  const clearSelectedItem = useStoreActions(
+    (actions) => actions.RBReportItemsControllerState.clearItem,
+  );
+  const selectedItem = items.find((i) => i.id === id);
+  const setSelectedController = useStoreActions(
+    (actions) => actions.RBReportItemsControllerState.setItem,
   );
 
-  const handleMoreVertClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const renderChartData = useRenderChartData();
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const chartExtra = selectedItem?.extra?.chart;
+  const renderedChartData = chartExtra?.renderedChartData;
 
-  const handleDeleteItem = (e: React.MouseEvent) => {
-    if (extRemoveItem) {
-      extRemoveItem(e);
-    } else {
-      removeItem(id);
-    }
-    handleClose();
-  };
+  console.log("renderedChartData", renderedChartData);
 
-  const title = React.useMemo(() => {
-    if (step === 1) {
-      return "Select Dataset";
-    }
-    if (step === 2) {
-      return "Customise Chart";
-    }
-    return "Unknown Step";
-  }, [step]);
-
-  const content = React.useMemo(() => {
-    if (step === 1) {
-      return <SelectDatasetStep />;
-    }
-    if (step === 2) {
-      return <CustomiseChartStep />;
-    }
-    return undefined;
-  }, [step]);
-
-  const actions = React.useMemo(() => {
-    if (step === 1) {
-      return (
-        <React.Fragment>
-          <Button variant="outlined" onClick={() => setClicked(false)}>
-            Cancel
-          </Button>
-          <Button variant="outlined" onClick={() => setStep(2)}>
-            Continue
-          </Button>
-        </React.Fragment>
-      );
-    }
-    if (step === 2) {
-      return (
-        <React.Fragment>
-          <Button
-            variant="outlined"
-            onClick={() => setStep(1)}
-            startIcon={<ArrowBack sx={{ transform: "scale(0.8)" }} />}
-          >
-            Go Back to Data
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              setClicked(false);
-              setChartReady(true);
-            }}
-            sx={{
-              color: "#fff",
-              fontWeight: "400",
-              bgcolor: "#3154f4",
-              "&:hover": {
-                bgcolor: "#2548c4",
+  React.useEffect(() => {
+    if (
+      chartExtra?.dataset &&
+      checkValidDimensionMapping(chartExtra.chartType || "", chartExtra.mapping)
+    ) {
+      renderChartData.mutate(
+        {
+          chartType: chartExtra.chartType,
+          mapping: chartExtra.mapping,
+          vizOptions: chartExtra.visualOptions,
+          appliedFilters: chartExtra.appliedFilters,
+          datasetId: chartExtra.dataset,
+        },
+        {
+          onSuccess: (data) => {
+            editItem({
+              ...selectedItem,
+              id,
+              type: "chart",
+              open: selectedItem?.open || true,
+              extra: {
+                ...selectedItem?.extra,
+                chart: {
+                  ...selectedItem?.extra?.chart,
+                  renderedChartData: data.data,
+                },
               },
-            }}
-          >
-            Apply
-          </Button>
-        </React.Fragment>
+            });
+          },
+        },
       );
     }
-    return undefined;
-  }, [step]);
+  }, [
+    chartExtra?.mapping,
+    chartExtra?.chartType,
+    chartExtra?.dataset,
+    chartExtra?.appliedFilters,
+    chartExtra?.visualOptions,
+  ]);
+
+  useClickOutsideEditor({
+    editorId: "chart-render",
+    toolbarId: "chart-controller",
+    onOutsideClick: () => {
+      clearSelectedItem();
+    },
+  });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const fetchChartData = () => {
+    // Fetch or compute chart data here
+  };
 
   return (
     <Box
+      id="chart-render"
+      onClick={() => {
+        editItem({
+          ...selectedItem,
+          id,
+          type: "chart",
+          open: true,
+          extra: {
+            ...selectedItem?.extra,
+            chart: {
+              ...selectedItem?.extra?.chart,
+              //dataset: fetched datasetId
+              //chartType: fetched chart type
+            },
+          },
+        });
+        setSelectedController({
+          id,
+          type: "chart",
+          open: true,
+        });
+      }}
       sx={{
         width: "100%",
         display: "flex",
@@ -126,7 +119,29 @@ export const ReportBuilderPageChart: React.FC<{
         },
       }}
     >
-      {!chartReady && (
+      {selectedItem?.open && chartExtra?.chartType ? (
+        <Box
+          sx={{
+            height: selectedItem.settings?.height,
+            width: selectedItem.settings?.width,
+          }}
+        >
+          {checkValidDimensionMapping(
+            chartExtra.chartType || "",
+            chartExtra.mapping,
+          ) && renderedChartData ? (
+            <ChartComponent
+              data={renderedChartData?.mappedData}
+              mapping={chartExtra?.mapping}
+              chartType={chartExtra.chartType}
+              visualOptions={chartExtra.visualOptions || {}}
+              id={id}
+            />
+          ) : (
+            <ChartPlaceholder chartType={chartExtra.chartType} />
+          )}
+        </Box>
+      ) : (
         <Box
           sx={{
             gap: "10px",
@@ -141,57 +156,15 @@ export const ReportBuilderPageChart: React.FC<{
             justifyContent: "center",
             border: "1px dashed #3154f4",
             transition: "all 0.3s ease-in-out",
-            height: !clicked ? "130px" : "330px",
+            height: "220px",
           }}
-          onClick={() => setClicked(true)}
         >
-          <svg width="24" height="25" viewBox="0 0 24 25" fill="none">
-            <path
-              strokeWidth="2"
-              stroke="#3154f4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M13 17.5V9.5M18 17.5V5.5M3 3.5V19.5C3 20.0304 3.21071 20.5391 3.58579 20.9142C3.96086 21.2893 4.46957 21.5 5 21.5H21M8 17.5V14.5"
-            />
-          </svg>
+          <ChartIcon />
           <Typography fontSize="16px" color="#3154f4">
-            Click to add a chart
+            Configure Chart
           </Typography>
         </Box>
       )}
-      {chartReady && (
-        <BarChart data={STORY_DATA_VARIANT_1} valueLabels={{ value: "" }} />
-      )}
-      <Box className="top-right-actions">
-        {chartReady && (
-          <React.Fragment>
-            <IconButton onClick={handleMoreVertClick}>
-              <MoreVert fontSize="small" />
-            </IconButton>
-            <ReportBuilderPageItemMenu
-              itemId={id}
-              anchorEl={anchorEl}
-              deleteItem={handleDeleteItem}
-              handleClose={() => setAnchorEl(null)}
-            />
-          </React.Fragment>
-        )}
-        {!chartReady && (
-          <IconButton onClick={handleDeleteItem}>
-            <Close fontSize="small" htmlColor="#ea1541" />
-          </IconButton>
-        )}
-      </Box>
-      <DraggableModal
-        id="report-builder-chart-modal"
-        width={550}
-        title={title}
-        open={clicked}
-        actions={actions}
-        setOpen={setClicked}
-      >
-        {content}
-      </DraggableModal>
     </Box>
   );
 };

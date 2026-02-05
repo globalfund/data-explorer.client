@@ -7,8 +7,8 @@ import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
 import UploadIcon from "app/assets/vectors/RBUpload.svg?react";
 import PaintBucketIcon from "app/assets/vectors/Paint_Bucket.svg?react";
 import LayoutTemplateIcon from "app/assets/vectors/Layout_Template.svg?react";
-import { PaddingSize } from "./padding-size";
-import { BorderFill } from "./border-fill";
+import { PaddingSize } from "./layout";
+import { Customise } from "./customise";
 import { Options } from "../common/elementOptions";
 import KPITextFormatting from "./text-format";
 
@@ -33,7 +33,7 @@ export default function KPIController() {
       case "text":
         return <KPITextFormatting />;
       case "style":
-        return <BorderFill />;
+        return <Customise />;
       case "layout":
         return <PaddingSize />;
       default:
@@ -49,6 +49,8 @@ export default function KPIController() {
         borderRadius: "4px",
         boxShadow: "0 0 10px 0 rgba(152, 161, 170, 0.60);",
         bgcolor: "#F8F9FA",
+        minWidth: "300px",
+        maxWidth: "304px",
       }}
     >
       <Box

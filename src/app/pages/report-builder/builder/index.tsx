@@ -283,7 +283,7 @@ export const ReportBuilderPage: React.FC = () => {
           top: 68,
           right: "20px",
           position: "fixed",
-          width: "300px",
+
           zIndex: 2,
         }}
       >

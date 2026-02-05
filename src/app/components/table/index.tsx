@@ -53,6 +53,20 @@ export const Table: React.FC<TableProps> = (props: TableProps) => {
         });
       }
 
+      table.on("scrollVertical", () => {
+        const holder = table.element.querySelector(
+          ".tabulator-tableholder",
+        ) as HTMLElement | null;
+        if (holder) {
+          const remaining =
+            holder.scrollHeight - holder.scrollTop - holder.clientHeight;
+
+          if (props.onScrollToBottom && remaining < 10) {
+            props.onScrollToBottom();
+          }
+        }
+      });
+
       if (props.dataTreeStartExpanded || props.dataTreeStartExpandedFn) {
         setTimeout(() => {
           table.redraw();
@@ -62,13 +76,22 @@ export const Table: React.FC<TableProps> = (props: TableProps) => {
       if (props.setTable) {
         props.setTable(table);
       }
+      return () => {
+        table.destroy();
+        tableBuiltRef.current = false;
+      };
     }
-  }, []);
+  }, [props.columns]);
 
   React.useEffect(() => {
     if (ref.current && tableBuiltRef.current) {
       const tables = Tabulator.findTable(`#${props.id}`);
       if (tables.length > 0 && tables[0]) {
+        const total = tables[0].getDataCount();
+        // If total is less than or equal to 20 that means the current table height is auto, else no need to set height again
+        if (total <= 20 && props.data.length > 20) {
+          tables[0].setHeight("500px");
+        }
         tables[0].replaceData(props.data);
       }
     }

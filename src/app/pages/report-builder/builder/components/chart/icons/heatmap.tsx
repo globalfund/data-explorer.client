@@ -1,0 +1,97 @@
+import React from "react";
+
+const Icon = () => {
+  return (
+    <svg
+      width="30"
+      height="30"
+      viewBox="0 0 30 30"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect
+        x="3.75"
+        y="20.3289"
+        width="5.92105"
+        height="5.92105"
+        stroke="black"
+        strokeWidth="1.57895"
+        strokeLinejoin="round"
+      />
+      <rect
+        x="3.75"
+        y="12.0396"
+        width="5.92105"
+        height="5.92105"
+        stroke="black"
+        strokeWidth="1.57895"
+        strokeLinejoin="round"
+      />
+      <rect
+        x="3.75"
+        y="3.75"
+        width="5.92105"
+        height="5.92105"
+        stroke="black"
+        strokeWidth="1.57895"
+        strokeLinejoin="round"
+      />
+      <rect
+        x="12.0396"
+        y="20.3289"
+        width="5.92105"
+        height="5.92105"
+        stroke="black"
+        strokeWidth="1.57895"
+        strokeLinejoin="round"
+      />
+      <rect
+        x="12.0396"
+        y="12.0396"
+        width="5.92105"
+        height="5.92105"
+        stroke="black"
+        strokeWidth="1.57895"
+        strokeLinejoin="round"
+      />
+      <rect
+        x="12.0396"
+        y="3.75"
+        width="5.92105"
+        height="5.92105"
+        stroke="black"
+        strokeWidth="1.57895"
+        strokeLinejoin="round"
+      />
+      <rect
+        x="20.3291"
+        y="20.3289"
+        width="5.92105"
+        height="5.92105"
+        stroke="black"
+        strokeWidth="1.57895"
+        strokeLinejoin="round"
+      />
+      <rect
+        x="20.3291"
+        y="12.0396"
+        width="5.92105"
+        height="5.92105"
+        stroke="black"
+        strokeWidth="1.57895"
+        strokeLinejoin="round"
+      />
+      <rect
+        x="20.3291"
+        y="3.75"
+        width="5.92105"
+        height="5.92105"
+        stroke="black"
+        strokeWidth="1.57895"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export default Icon;

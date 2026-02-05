@@ -23,9 +23,9 @@ export function PaddingSize() {
     selectedItem?.extra?.kpi_box?.options?.alignHorizontal || "left",
   );
 
-  const [alignVerticalAnchorEl, setAlignVerticalAnchorEl] =
+  const [alignHorizontalAnchorEl, setAlignHorizontalAnchorEl] =
     React.useState<null | HTMLElement>(null);
-  const isAlignVerticalMenuActive = Boolean(alignVerticalAnchorEl);
+  const isAlignHorizontalMenuActive = Boolean(alignHorizontalAnchorEl);
 
   React.useEffect(() => {
     setAlignHorizontal(
@@ -33,7 +33,7 @@ export function PaddingSize() {
     );
   }, [selectedItem]);
 
-  const handleSelectAlignVertical = (value: "left" | "center" | "right") => {
+  const handleSelectAlignHorizontal = (value: "left" | "center" | "right") => {
     let justifyContent = "";
     switch (value) {
       case "left":
@@ -71,11 +71,11 @@ export function PaddingSize() {
   };
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAlignVerticalAnchorEl(event.currentTarget);
+    setAlignHorizontalAnchorEl(event.currentTarget);
   };
 
   const handleCloseMenu = () => {
-    setAlignVerticalAnchorEl(null);
+    setAlignHorizontalAnchorEl(null);
   };
 
   return (
@@ -97,7 +97,7 @@ export function PaddingSize() {
           variant="text"
           onClick={(event) => handleOpenMenu(event)}
           endIcon={
-            isAlignVerticalMenuActive ? (
+            isAlignHorizontalMenuActive ? (
               <KeyboardArrowUp />
             ) : (
               <KeyboardArrowDown />
@@ -122,12 +122,12 @@ export function PaddingSize() {
         </Button>
 
         <StyledMenu
-          open={isAlignVerticalMenuActive}
-          anchorEl={alignVerticalAnchorEl}
+          open={isAlignHorizontalMenuActive}
+          anchorEl={alignHorizontalAnchorEl}
           onClose={() => handleCloseMenu()}
           options={alignHOptions}
           activeValue={alignHorizontal}
-          onSelect={handleSelectAlignVertical}
+          onSelect={handleSelectAlignHorizontal}
         />
       </Box>
 

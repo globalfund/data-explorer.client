@@ -3,6 +3,7 @@ import React from "react";
 import TextController from "./text";
 import ImageController from "./image";
 import KPIController from "./kpi";
+import ChartController from "./chart";
 
 export default function ElementsController() {
   const selectedItem = useStoreState(
@@ -17,6 +18,8 @@ export default function ElementsController() {
         return <ImageController />;
       case "kpi_box":
         return <KPIController />;
+      case "chart":
+        return <ChartController />;
       default:
         return null;
     }

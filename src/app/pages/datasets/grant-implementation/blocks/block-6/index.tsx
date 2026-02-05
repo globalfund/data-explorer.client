@@ -107,6 +107,7 @@ export const GrantImplementationPageBlock6: React.FC<
         [key: string]: TableDataItem;
       }[],
   );
+
   const fetchExpendituresTable = useStoreActions(
     (actions) => actions.FinancialInsightsExpendituresTable.fetch,
   );

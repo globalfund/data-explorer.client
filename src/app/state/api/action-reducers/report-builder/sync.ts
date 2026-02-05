@@ -10,7 +10,8 @@ export type RBReportItemTypes =
   | "kpi_box"
   | "grid"
   | "column"
-  | "section_divider";
+  | "section_divider"
+  | null;
 
 export type ObjectFitTypes =
   | "contain"
@@ -18,7 +19,18 @@ export type ObjectFitTypes =
   | "fill"
   | "none"
   | "scale-down";
-export interface RBRKPIFieldFormatting {
+export type ChartType =
+  | "line"
+  | "bar"
+  | "pie"
+  | "sankey"
+  | "treemap"
+  | "geomap";
+
+export type ChartProperty = "dataset" | "chartType";
+export type AlignHorizontal = "left" | "center" | "right";
+export type AlignVertical = "top" | "middle" | "bottom";
+export interface AdvancedTextFormatting {
   value: string;
   fontFamily: string;
   fontWeight: string;
@@ -30,10 +42,24 @@ export interface RBRKPIFieldFormatting {
   enabled: boolean;
 }
 export interface RBRKPIBoxField {
-  topLabel?: RBRKPIFieldFormatting;
-  bigNumberText?: RBRKPIFieldFormatting;
-  bottomLabel?: RBRKPIFieldFormatting;
-  optionalText?: RBRKPIFieldFormatting;
+  topLabel?: AdvancedTextFormatting;
+  bigNumberText?: AdvancedTextFormatting;
+  bottomLabel?: AdvancedTextFormatting;
+  optionalText?: AdvancedTextFormatting;
+}
+export interface ChartField {
+  chartName?: AdvancedTextFormatting;
+  showLegend?: AdvancedTextFormatting;
+}
+
+export interface MappedDimension {
+  [key: string]: {
+    value: string[];
+    mappedType: string[];
+    config?: {
+      aggregation: string[];
+    };
+  };
 }
 export interface RBReportItem {
   id: string;
@@ -48,20 +74,39 @@ export interface RBReportItem {
     image?: {
       src?: string;
       sizingMode?: "fit-proportional" | "fill" | "crop" | "auto";
-      alignVertical?: "top" | "middle" | "bottom";
-      alignHorizontal?: "left" | "center" | "right";
+      alignVertical?: AlignVertical;
+      alignHorizontal?: AlignHorizontal;
     };
     kpi_box?: {
       field?: RBRKPIBoxField;
       options?: {
-        alignVertical?: "top" | "middle" | "bottom";
-        alignHorizontal?: "left" | "center" | "right";
+        alignVertical?: AlignVertical;
+        alignHorizontal?: AlignHorizontal;
         innerLine?: {
           type?: "line" | "box" | "simple";
           borderWidth?: string;
           borderColor?: string;
         };
       };
+    };
+    chart?: {
+      dataset?: string | null;
+      chartType?: ChartType;
+      field?: ChartField;
+      alignVertical?: AlignVertical;
+      alignHorizontal?: AlignHorizontal;
+      mapping?: MappedDimension;
+      visualOptions?: Record<string, any>;
+      appliedFilters?: Record<string, any[]>;
+      type?: {
+        bar?: {
+          donutChecked?: boolean;
+          barWidthChecked?: boolean;
+          donutThickness?: number;
+          barWidth?: number;
+        };
+      };
+      renderedChartData?: RBRenderedChartData | null;
     };
   };
   settings?: {
@@ -91,6 +136,15 @@ export interface RBReportItemController {
   open: boolean;
   type: RBReportItemTypes | null;
   id: string;
+  extra?: {
+    chart?: {
+      listToDisplay?: ChartProperty | null;
+      showDatasetTable?: {
+        datasetId: string;
+        open: boolean;
+      };
+    };
+  };
 }
 export interface RBReportItemControllerModel {
   item: RBReportItemController | null;
@@ -153,6 +207,86 @@ export interface RBReportTooltipModel {
     RBReportTooltipModel,
     { visible: boolean; id: string | null }
   >;
+}
+
+export interface IChartDimension {
+  id: string;
+  name: string;
+  validTypes: string[];
+  required: boolean;
+  description: string;
+  aggregation?: boolean;
+  aggregationDefault?: string | { [key: string]: string };
+  multiple?: boolean;
+  minValues?: number;
+}
+
+export interface FilterGroupOptionModel {
+  label: string;
+  value: string;
+  count?: number;
+  subOptions?: FilterGroupOptionModel[];
+}
+
+export interface FilterGroupModel {
+  name: string;
+  options: FilterGroupOptionModel[];
+}
+
+export interface RBRenderChartDataRequest {
+  chartType: ChartType | undefined;
+  mapping: any;
+  vizOptions: any;
+  appliedFilters: any;
+  datasetId: string;
+}
+
+export interface RBRenderedChartData {
+  renderedContent: string;
+  appliedFilters: any;
+  filterOptionGroups: FilterGroupModel[];
+  dataTypes: Record<string, { dateFormat: string; type: string } | string>;
+  mappedData: any;
+  dimensions: IChartDimension[];
+  ssr: false;
+}
+
+interface IStat {
+  data: { name: string; value: number }[];
+  type: string;
+  name: string;
+}
+export type DataType =
+  | "string"
+  | "date"
+  | "number"
+  | "geographical"
+  | "date-time"
+  | "boolean";
+export interface RBSampledDatasetResponse {
+  data: {
+    code: number;
+    result: {
+      count: number;
+      dataTypes: Record<
+        string,
+        { dateFormat: string; type: DataType } | DataType
+      >;
+      filterOptionGroups: string[];
+      stats: IStat[];
+      sample: any[];
+    };
+  };
+}
+
+export interface RBDatasetResponse {
+  data: {
+    code: number;
+    result: {
+      count: number;
+      data: any[];
+    };
+  };
 }
 
 export const RBReportItemsState: RBReportItemsModel = {

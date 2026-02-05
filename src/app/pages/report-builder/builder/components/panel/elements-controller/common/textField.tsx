@@ -3,14 +3,15 @@ import Input from "@mui/material/TextField";
 import {
   RBReportItem,
   RBRKPIBoxField,
-  RBRKPIFieldFormatting,
+  AdvancedTextFormatting,
+  RBReportItemTypes,
 } from "app/state/api/action-reducers/report-builder/sync";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import React from "react";
 
 type InputEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
-interface Props {
-  item: "text" | "image" | "kpi_box";
+export interface TextFieldProps {
+  item: RBReportItemTypes;
   type:
     | "letterSpacing"
     | "lineHeight"
@@ -26,7 +27,9 @@ interface Props {
     | "topLabel"
     | "bottomLabel"
     | "optionalText"
-    | "innerBorderWidth";
+    | "innerBorderWidth"
+    | "chartName"
+    | "showLegend";
 
   onChange?: (value: string) => void;
   value?: string;
@@ -34,7 +37,7 @@ interface Props {
   sx?: Record<string, any>;
   disabled?: boolean;
 }
-export default function TextField(props: Readonly<Props>) {
+export default function TextField(props: Readonly<TextFieldProps>) {
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
@@ -70,7 +73,7 @@ export default function TextField(props: Readonly<Props>) {
       const getKPIBoxValue = (kb: RBRKPIBoxField, field: string) => {
         const fieldObj = kb[
           field as keyof RBRKPIBoxField
-        ] as RBRKPIFieldFormatting;
+        ] as AdvancedTextFormatting;
         return fieldObj?.value || "";
       };
       const createKPIBoxUpdater = (fieldType: string, e: InputEvent) => {
@@ -85,7 +88,7 @@ export default function TextField(props: Readonly<Props>) {
       ): RBReportItem => {
         const currentField = item?.extra?.kpi_box?.field?.[
           fieldType as keyof RBRKPIBoxField
-        ] as RBRKPIFieldFormatting;
+        ] as AdvancedTextFormatting;
 
         const updatedField = { ...currentField, value };
 
@@ -193,6 +196,7 @@ export default function TextField(props: Readonly<Props>) {
           updateSetting({ paddingBottom: e.target.value });
         },
       },
+
       width: {
         value: item?.settings?.width || "0px",
         action: (e: InputEvent) => {
@@ -205,6 +209,34 @@ export default function TextField(props: Readonly<Props>) {
           updateSetting({ height: e.target.value });
         },
       },
+      chartName: {
+        value: item?.extra?.chart?.field?.chartName?.value,
+        action: (e: InputEvent) => {
+          const value = e.target.value;
+          const currentField = item?.extra?.chart?.field
+            ?.chartName as AdvancedTextFormatting;
+          editItem({
+            ...item,
+            open: item?.open || false,
+            id: selectedController?.id || "",
+            type: props.item,
+            extra: {
+              ...item?.extra,
+              chart: {
+                ...item?.extra?.chart,
+                field: {
+                  ...item?.extra?.chart?.field,
+                  chartName: {
+                    ...currentField,
+                    value,
+                  },
+                },
+              },
+            },
+          });
+        },
+      },
+
       ...Object.assign({}, ...getKPIBoxFields()),
     };
   }, [

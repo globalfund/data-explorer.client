@@ -3,12 +3,8 @@ import Direction from "app/assets/vectors/RBAlignBottom.svg?react";
 import Button from "@mui/material/Button";
 import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
 import React from "react";
-import {
-  alignHOptions,
-  alignVOptions,
-  objectFitMap,
-  sizingModes,
-} from "../data";
+import { alignHOptions, alignVOptions } from "../../common/data";
+import { objectFitMap, sizingModes } from "../data";
 import StyledMenu from "../../common/menu-popup";
 import CustomTextField from "../../common/textField";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";

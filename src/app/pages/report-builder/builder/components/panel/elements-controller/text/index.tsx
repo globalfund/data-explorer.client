@@ -46,6 +46,8 @@ export default function TextController() {
     <Box
       id="rte-toolbar"
       sx={{
+        minWidth: "300px",
+        maxWidth: "304px",
         border: "1px solid #98A1AA",
         borderRadius: "4px",
         boxShadow: "0 0 10px 0 rgba(152, 161, 170, 0.60);",

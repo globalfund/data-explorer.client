@@ -6,19 +6,23 @@ import { HelmetProvider } from "react-helmet-async";
 import CssBaseline from "@mui/material/CssBaseline";
 import { PageLoader } from "app/components/page-loader";
 import { StoreProvider, useStoreRehydrated } from "easy-peasy";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 interface ProviderProps {
   children?: any;
 }
 
 function Providers(props: ProviderProps) {
+  const queryClient = new QueryClient();
   return (
     <HelmetProvider>
       <StoreProvider store={store}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <AppContainer>{props.children}</AppContainer>
-        </ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <AppContainer>{props.children}</AppContainer>
+          </ThemeProvider>
+        </QueryClientProvider>
       </StoreProvider>
     </HelmetProvider>
   );
