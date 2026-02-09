@@ -6,9 +6,10 @@ import React from "react";
 import { alignHOptions, alignVOptions } from "../../common/data";
 import { objectFitMap, sizingModes } from "../data";
 import StyledMenu from "../../common/menu-popup";
-import CustomTextField from "../../common/textField";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { ObjectFitTypes } from "app/state/api/action-reducers/report-builder/sync";
+import { set } from "lodash";
+import TextField from "../../components/textfield";
 
 export function PaddingSize() {
   const selectedItemController = useStoreState(
@@ -43,6 +44,18 @@ export function PaddingSize() {
   const [sizingModeAnchorEl, setSizingModeAnchorEl] =
     React.useState<null | HTMLElement>(null);
   const isSizingModeMenuActive = Boolean(sizingModeAnchorEl);
+
+  const handleChange = (key: string, value: any) => {
+    if (!selectedItem) return;
+    const currentItem = structuredClone(selectedItem);
+    set(currentItem, key, value);
+    editItem({
+      ...currentItem,
+      id: selectedItemController?.id || "",
+      open: currentItem?.open || false,
+      type: "image",
+    });
+  };
 
   React.useEffect(() => {
     setSelectedSizingMode(
@@ -337,45 +350,51 @@ export function PaddingSize() {
             justifyContent: "space-between",
           }}
         >
-          <Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                marginBottom: "8px",
-                svg: {
-                  transform: "rotate(90deg)",
-                },
-              }}
-            >
-              <Direction />
-              <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
-                Left
-              </Typography>
-            </Box>
-            <CustomTextField type="paddingLeft" item="image" />
-          </Box>
+          <TextField
+            label={
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  marginBottom: "8px",
+                  svg: {
+                    transform: "rotate(90deg)",
+                  },
+                }}
+              >
+                <Direction />
+                <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
+                  Left
+                </Typography>
+              </Box>
+            }
+            value={selectedItem?.settings?.paddingLeft ?? ""}
+            onChange={(value) => handleChange("settings.paddingLeft", value)}
+          />
 
-          <Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                marginBottom: "8px",
-                svg: {
-                  transform: "rotate(180deg)",
-                },
-              }}
-            >
-              <Direction />
-              <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
-                Top
-              </Typography>
-            </Box>
-            <CustomTextField type="paddingTop" item="image" />
-          </Box>
+          <TextField
+            label={
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  marginBottom: "8px",
+                  svg: {
+                    transform: "rotate(180deg)",
+                  },
+                }}
+              >
+                <Direction />
+                <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
+                  Top
+                </Typography>
+              </Box>
+            }
+            value={selectedItem?.settings?.paddingTop ?? ""}
+            onChange={(value) => handleChange("settings.paddingTop", value)}
+          />
         </Box>
 
         <Box
@@ -384,42 +403,48 @@ export function PaddingSize() {
             justifyContent: "space-between",
           }}
         >
-          <Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                marginBottom: "8px",
-                svg: {
-                  transform: "rotate(270deg)",
-                },
-              }}
-            >
-              <Direction />
-              <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
-                Right
-              </Typography>
-            </Box>
-            <CustomTextField type="paddingRight" item="image" />
-          </Box>
+          <TextField
+            label={
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  marginBottom: "8px",
+                  svg: {
+                    transform: "rotate(270deg)",
+                  },
+                }}
+              >
+                <Direction />
+                <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
+                  Right
+                </Typography>
+              </Box>
+            }
+            value={selectedItem?.settings?.paddingRight ?? ""}
+            onChange={(value) => handleChange("settings.paddingRight", value)}
+          />
 
-          <Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                marginBottom: "8px",
-              }}
-            >
-              <Direction />
-              <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
-                Bottom
-              </Typography>
-            </Box>
-            <CustomTextField type="paddingBottom" item="image" />
-          </Box>
+          <TextField
+            label={
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  marginBottom: "8px",
+                }}
+              >
+                <Direction />
+                <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
+                  Bottom
+                </Typography>
+              </Box>
+            }
+            value={selectedItem?.settings?.paddingBottom ?? ""}
+            onChange={(value) => handleChange("settings.paddingBottom", value)}
+          />
         </Box>
 
         <Box>
@@ -432,25 +457,17 @@ export function PaddingSize() {
               justifyContent: "space-between",
             }}
           >
-            <Box>
-              <Typography
-                sx={{ color: "#373D43", fontSize: "14px" }}
-                marginBottom={"8px"}
-              >
-                Width
-              </Typography>
-              <CustomTextField type="width" item="image" />
-            </Box>
+            <TextField
+              label="Width"
+              value={selectedItem?.settings?.width ?? ""}
+              onChange={(value) => handleChange("settings.width", value)}
+            />
 
-            <Box>
-              <Typography
-                sx={{ color: "#373D43", fontSize: "14px" }}
-                marginBottom={"8px"}
-              >
-                Height
-              </Typography>
-              <CustomTextField type="height" item="image" />
-            </Box>
+            <TextField
+              label="Height"
+              value={selectedItem?.settings?.height ?? ""}
+              onChange={(value) => handleChange("settings.height", value)}
+            />
           </Box>
         </Box>
       </Box>

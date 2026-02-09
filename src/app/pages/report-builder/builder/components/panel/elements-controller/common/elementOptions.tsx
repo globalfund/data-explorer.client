@@ -6,6 +6,7 @@ import StyledMenu from "./menu-popup";
 import Copy from "app/assets/vectors/Duplicate.svg?react";
 import Folder from "app/assets/vectors/Folder2.svg?react";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { SaveAsAssetModal } from "app/pages/report-builder/main/components/save-as-an-asset-modal";
 
 const DeleteIcon = (
   <svg
@@ -60,7 +61,7 @@ export function Options() {
   ];
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const isOpen = Boolean(anchorEl);
-  const [selectedValue, setSelectedValue] = React.useState<string>("");
+
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -74,6 +75,14 @@ export function Options() {
     (actions) => actions.RBReportItemsState.removeItem,
   );
 
+  const duplicateItem = useStoreActions(
+    (actions) => actions.RBReportItemsState.duplicateItem,
+  );
+  const [saveAsModalOpen, setSaveAsModalOpen] = React.useState(false);
+
+  const [nameValue, setNameValue] = React.useState("");
+  const [descriptionValue, setDescriptionValue] = React.useState("");
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -83,7 +92,13 @@ export function Options() {
       setSelectedItemController({ id: "", type: null, open: false });
       handleClose();
     }
-    setSelectedValue(value);
+    if (value === "duplicate") {
+      duplicateItem(selectedItemController?.id as string);
+      handleClose();
+    }
+    if (value === "save") {
+      setSaveAsModalOpen(true);
+    }
   };
 
   return (
@@ -104,9 +119,17 @@ export function Options() {
         anchorEl={anchorEl}
         onClose={handleClose}
         options={optionsItems}
-        activeValue={selectedValue}
+        activeValue={""}
         onSelect={handleChange}
         width={187}
+      />
+      <SaveAsAssetModal
+        open={saveAsModalOpen}
+        onClose={() => setSaveAsModalOpen(false)}
+        descriptionValue={descriptionValue}
+        nameValue={nameValue}
+        setDescriptionValue={setDescriptionValue}
+        setNameValue={setNameValue}
       />
     </Box>
   );

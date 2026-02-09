@@ -66,7 +66,8 @@ export default function ChartList() {
         gap: "8px",
         flexDirection: "column",
         padding: "8px",
-        maxHeight: "75vh",
+        paddingBottom: "0px",
+        maxHeight: "600px",
         overflowY: "auto",
         paddingRight: "4px",
         "&::-webkit-scrollbar": {
@@ -156,9 +157,10 @@ export default function ChartList() {
           justifyContent: "space-between",
           alignItems: "center",
           borderTop: "0.5px solid #98A1AA",
-          borderTopLeftRadius: "4px",
-          borderTopRightRadius: "4px",
-          paddingTop: "8px",
+          padding: "8px 0",
+          position: "sticky",
+          bottom: 0,
+          background: "#F8F9FA",
         }}
       >
         <Button

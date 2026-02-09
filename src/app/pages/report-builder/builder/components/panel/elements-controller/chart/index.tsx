@@ -1,5 +1,5 @@
 import { Box, IconButton, Tab, Tabs, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import MinimizeIcon from "app/assets/vectors/Minimize.svg?react";
 import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
 import ChartIcon from "app/assets/vectors/RBChart.svg?react";
@@ -77,9 +77,20 @@ export default function ChartController() {
     }
   };
 
+  useEffect(() => {
+    if (chartConfigured) {
+      setValue("mapping");
+    }
+  }, [
+    chartConfigured,
+    item?.extra?.chart?.dataset,
+    item?.extra?.chart?.chartType,
+  ]);
+
   return (
     <Box
       id="chart-controller"
+      key={selectedController?.id}
       sx={{
         minWidth: "300px",
         maxWidth: "max-content",

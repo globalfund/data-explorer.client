@@ -2,13 +2,14 @@ import { Box, Typography } from "@mui/material";
 import { ColorPicker } from "app/components/color-picker/example";
 import { ColorService } from "app/components/color-picker/utils/color";
 import React from "react";
-import CustomTextField from "app/pages/report-builder/builder/components/panel/elements-controller/common/textField";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { IColor } from "app/components/color-picker/types";
 import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
 import Button from "@mui/material/Button";
 import StyledMenu from "../../common/menu-popup";
 import { lineOptions } from "../data";
+import TextField from "../../components/textfield";
+import { set } from "lodash";
 
 export function Customise() {
   const selectedController = useStoreState(
@@ -44,7 +45,11 @@ export function Customise() {
   //     },
   //   });
   // };
-  const handleInnerBorderColorChange = (color: IColor) => {
+
+  const handleChange = (key: string, value: any) => {
+    const currentKpiBoxExtra =
+      structuredClone(selectedItem?.extra?.kpi_box) || {};
+    set(currentKpiBoxExtra, key, value);
     editItem({
       ...selectedItem,
       open: selectedItem?.open || false,
@@ -52,18 +57,12 @@ export function Customise() {
       type: "kpi_box",
       extra: {
         ...selectedItem?.extra,
-        kpi_box: {
-          ...selectedItem?.extra?.kpi_box,
-          options: {
-            ...selectedItem?.extra?.kpi_box?.options,
-            innerLine: {
-              ...selectedItem?.extra?.kpi_box?.options?.innerLine,
-              borderColor: ColorService.convert("hex", color.hex).hex,
-            },
-          },
-        },
+        kpi_box: currentKpiBoxExtra,
       },
     });
+  };
+  const handleInnerBorderColorChange = (color: IColor) => {
+    handleChange("options.innerLine.borderColor", color.hex);
   };
 
   const [lineMenuOption, setLineMenuOption] = React.useState(
@@ -180,12 +179,16 @@ export function Customise() {
         }}
       >
         <Box>
-          <Typography
-            sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
-          >
-            Line Stroke
-          </Typography>
-          <CustomTextField type="innerBorderWidth" item="kpi_box" />
+          <TextField
+            label="Line Stroke"
+            value={
+              selectedItem?.extra?.kpi_box?.options?.innerLine?.borderWidth ||
+              ""
+            }
+            onChange={(value) => {
+              handleChange("options.innerLine.borderWidth", value);
+            }}
+          />
         </Box>
         <Box>
           <Typography

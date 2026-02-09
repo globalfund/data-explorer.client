@@ -46,7 +46,6 @@ const ChartComponent = (props: ChartComponentProps) => {
     props.chartType,
     props.visualOptions,
     props.mapping,
-    render,
     props.id,
   ]);
 

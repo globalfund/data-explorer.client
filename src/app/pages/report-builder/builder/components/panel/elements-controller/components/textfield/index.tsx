@@ -24,6 +24,7 @@ export default function TextField(props: Readonly<TextFieldProps>) {
       {props.label ? (
         <Typography
           sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
+          component={"div"}
         >
           {props.label}
         </Typography>

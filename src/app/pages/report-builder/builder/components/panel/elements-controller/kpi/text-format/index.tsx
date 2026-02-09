@@ -1,7 +1,15 @@
-import { Box } from "@mui/material";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
-import AdvancedTextField from "../../common/advanced-text-field";
+import { Box, Typography, Checkbox } from "@mui/material";
+import TextField from "../../components/textfield";
+import AdvancedOptions from "../../common/advanced-text-field/advancedOptions";
+import SelectField from "../../components/selectfield";
+import {
+  fontFamilyOptions,
+  fontSizeOptions,
+  weightOptions,
+} from "app/components/rich-text-editor/data";
+import ColorPickerfield from "../../components/colorpickerfield";
 
 export default function KPITextFormatting() {
   const label = { slotProps: { input: { "aria-label": "Checkbox demo" } } };
@@ -201,47 +209,130 @@ export default function KPITextFormatting() {
               paddingBottom: "16px",
             }}
           >
-            <AdvancedTextField
-              option={option}
-              itemType="kpi_box"
-              checked={checked}
-              handleCheck={handleCheck}
-              labelMap={labelMap}
-              label={label}
-              componentType="TextField"
-              advancedOptions={{
-                fontFamilyValue:
-                  selectedItem.extra?.kpi_box?.field?.[
-                    option as keyof typeof selectedItem.extra.kpi_box.field
-                  ]?.fontFamily ?? "",
-                weightValue:
-                  selectedItem.extra?.kpi_box?.field?.[
-                    option as keyof typeof selectedItem.extra.kpi_box.field
-                  ]?.fontWeightLabel ?? "",
-                fontSizeValue:
-                  selectedItem.extra?.kpi_box?.field?.[
-                    option as keyof typeof selectedItem.extra.kpi_box.field
-                  ]?.fontSize ?? "",
-                textColorValue:
-                  selectedItem.extra?.kpi_box?.field?.[
-                    option as keyof typeof selectedItem.extra.kpi_box.field
-                  ]?.color ?? "",
-                bgColorValue:
-                  selectedItem.extra?.kpi_box?.field?.[
-                    option as keyof typeof selectedItem.extra.kpi_box.field
-                  ]?.bgColor ?? "",
-                handleFontFamilyChange: (value: string) =>
-                  handleFontFamilyChange(value, option),
-                handleWeightChange: (value: string) =>
-                  handleWeightChange(value, option),
-                handleSizeChange: (value: string) =>
-                  handleSizeChange(value, option),
-                handleColorChange: (
-                  color: string,
-                  target: "text" | "background",
-                ) => handleColorChange(color, target, option),
+            <Box
+              key={option}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "8px",
+                alignItems: "flex-start",
               }}
-            />
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                <Checkbox
+                  {...label}
+                  checked={checked}
+                  onChange={handleCheck(option)}
+                  defaultChecked
+                />
+                <Typography
+                  sx={{
+                    color: checked ? "#373D43" : "#ADB5BD",
+                    fontSize: "14px",
+                  }}
+                >
+                  {labelMap[option as keyof typeof labelMap]}
+                </Typography>
+              </Box>{" "}
+              <TextField
+                value={
+                  selectedItem.extra?.kpi_box?.field?.[
+                    option as keyof typeof selectedItem.extra.kpi_box.field
+                  ]?.value ?? ""
+                }
+                width="100%"
+                onChange={(value) =>
+                  editItem({
+                    ...selectedItem,
+                    open: selectedItem?.open || false,
+                    id: selectedItem?.id || "",
+                    type: "kpi_box",
+                    extra: {
+                      ...selectedItem?.extra,
+                      kpi_box: {
+                        ...selectedItem?.extra?.kpi_box,
+                        field: {
+                          ...selectedItem?.extra?.kpi_box?.field,
+                          [option]: {
+                            ...selectedItem?.extra?.kpi_box?.field?.[
+                              option as keyof typeof selectedItem.extra.kpi_box.field
+                            ],
+                            value: value,
+                          },
+                        },
+                      },
+                    },
+                  })
+                }
+              />
+              <AdvancedOptions
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "16px",
+                  width: "100%",
+                }}
+                disabled={!checked}
+              >
+                <Box
+                  sx={{
+                    gridColumn: "span 2",
+                  }}
+                >
+                  <SelectField
+                    label="Font Family"
+                    value={
+                      selectedItem.extra?.kpi_box?.field?.[
+                        option as keyof typeof selectedItem.extra.kpi_box.field
+                      ]?.fontFamily ?? ""
+                    }
+                    onChange={(value) => handleFontFamilyChange(value, option)}
+                    options={fontFamilyOptions}
+                  />
+                </Box>
+
+                <SelectField
+                  label="Font Size"
+                  value={
+                    selectedItem.extra?.kpi_box?.field?.[
+                      option as keyof typeof selectedItem.extra.kpi_box.field
+                    ]?.fontSize.replace("px", "") ?? ""
+                  }
+                  onChange={(value) => handleSizeChange(value, option)}
+                  options={fontSizeOptions}
+                />
+                <SelectField
+                  label="Font Weight"
+                  value={
+                    selectedItem.extra?.kpi_box?.field?.[
+                      option as keyof typeof selectedItem.extra.kpi_box.field
+                    ]?.fontWeightLabel ?? ""
+                  }
+                  onChange={(value) => handleWeightChange(value, option)}
+                  options={weightOptions}
+                />
+                <ColorPickerfield
+                  label="Text Color"
+                  color={
+                    selectedItem.extra?.kpi_box?.field?.[
+                      option as keyof typeof selectedItem.extra.kpi_box.field
+                    ]?.color ?? ""
+                  }
+                  onChange={(color) => handleColorChange(color, "text", option)}
+                />
+                <ColorPickerfield
+                  label="Background Color"
+                  color={
+                    selectedItem.extra?.kpi_box?.field?.[
+                      option as keyof typeof selectedItem.extra.kpi_box.field
+                    ]?.bgColor ?? ""
+                  }
+                  onChange={(color) =>
+                    handleColorChange(color, "background", option)
+                  }
+                />
+              </AdvancedOptions>
+            </Box>
           </Box>
         );
       })}
