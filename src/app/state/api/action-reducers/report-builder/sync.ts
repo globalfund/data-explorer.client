@@ -1,6 +1,6 @@
 import { Editor } from "@tiptap/react";
-import { uniqueId } from "app/utils/uniqueId";
 import { action, Action } from "easy-peasy";
+import { uniqueId } from "app/utils/uniqueId";
 
 export type RBReportItemTypes =
   | "text"
@@ -19,6 +19,7 @@ export type ObjectFitTypes =
   | "fill"
   | "none"
   | "scale-down";
+
 export type ChartType =
   | "line"
   | "bar"
@@ -28,8 +29,11 @@ export type ChartType =
   | "geomap";
 
 export type ChartProperty = "dataset" | "chartType";
+
 export type AlignHorizontal = "left" | "center" | "right";
+
 export type AlignVertical = "top" | "middle" | "bottom";
+
 export interface AdvancedTextFormatting {
   value: string;
   fontFamily: string;
@@ -41,12 +45,14 @@ export interface AdvancedTextFormatting {
   bgColor: string;
   enabled: boolean;
 }
+
 export interface RBRKPIBoxField {
   topLabel?: AdvancedTextFormatting;
   bigNumberText?: AdvancedTextFormatting;
   bottomLabel?: AdvancedTextFormatting;
   optionalText?: AdvancedTextFormatting;
 }
+
 export interface ChartField {
   chartName?: AdvancedTextFormatting;
   showLegend?: AdvancedTextFormatting;
@@ -61,6 +67,7 @@ export interface MappedDimension {
     };
   };
 }
+
 export interface RBReportItem {
   id: string;
   type: RBReportItemTypes;
@@ -146,11 +153,13 @@ export interface RBReportItemController {
     };
   };
 }
+
 export interface RBReportItemControllerModel {
   item: RBReportItemController | null;
   clearItem: Action<RBReportItemControllerModel>;
   setItem: Action<RBReportItemControllerModel, RBReportItemController>;
 }
+
 export interface RBReportItemsModel {
   items: RBReportItem[];
   clearItems: Action<RBReportItemsModel>;
@@ -182,14 +191,16 @@ export interface RBReportSettingsModel {
   setWidth: Action<RBReportSettingsModel, string>;
   height: string;
   setHeight: Action<RBReportSettingsModel, string>;
-  vPadding: string;
-  setVPadding: Action<RBReportSettingsModel, string>;
-  hPadding: string;
-  setHPadding: Action<RBReportSettingsModel, string>;
+  padding: string[];
+  setPadding: Action<RBReportSettingsModel, string[]>;
   stroke: string;
   setStroke: Action<RBReportSettingsModel, string>;
   strokeColor: string;
   setStrokeColor: Action<RBReportSettingsModel, string>;
+  backgroundColor: string;
+  setBackgroundColor: Action<RBReportSettingsModel, string>;
+  borderRadius: string;
+  setBorderRadius: Action<RBReportSettingsModel, string>;
   resetSettings: Action<RBReportSettingsModel>;
 }
 
@@ -256,6 +267,7 @@ interface IStat {
   type: string;
   name: string;
 }
+
 export type DataType =
   | "string"
   | "date"
@@ -263,6 +275,7 @@ export type DataType =
   | "geographical"
   | "date-time"
   | "boolean";
+
 export interface RBSampledDatasetResponse {
   data: {
     code: number;
@@ -360,13 +373,9 @@ export const RBReportSettings: RBReportSettingsModel = {
   setHeight: action((state, payload) => {
     state.height = payload;
   }),
-  vPadding: "50",
-  setVPadding: action((state, payload) => {
-    state.vPadding = payload;
-  }),
-  hPadding: "50",
-  setHPadding: action((state, payload) => {
-    state.hPadding = payload;
+  padding: ["50", "50", "50", "50"],
+  setPadding: action((state, payload) => {
+    state.padding = payload;
   }),
   stroke: "0",
   setStroke: action((state, payload) => {
@@ -376,13 +385,22 @@ export const RBReportSettings: RBReportSettingsModel = {
   setStrokeColor: action((state, payload) => {
     state.strokeColor = payload;
   }),
+  backgroundColor: "#ffffff",
+  setBackgroundColor: action((state, payload) => {
+    state.backgroundColor = payload;
+  }),
+  borderRadius: "0",
+  setBorderRadius: action((state, payload) => {
+    state.borderRadius = payload;
+  }),
   resetSettings: action((state) => {
     state.width = "0";
     state.height = "0";
-    state.vPadding = "50";
-    state.hPadding = "50";
+    state.padding = ["50", "50", "50", "50"];
     state.stroke = "0";
     state.strokeColor = "#000000";
+    state.backgroundColor = "#ffffff";
+    state.borderRadius = "0";
   }),
 };
 

@@ -18,6 +18,8 @@ import { ReportBuilderPageImage } from "app/pages/report-builder/builder/compone
 import { ItemComponent } from "app/pages/report-builder/builder/components/order-container";
 import ElementsController from "./components/panel/elements-controller";
 import KPIBox from "./components/kpi";
+import { ReportBuilderPageReportSettings } from "./components/report-settings";
+import { colors } from "app/theme";
 
 export const ReportBuilderPage: React.FC = () => {
   const items = useStoreState((state) => state.RBReportItemsState.items);
@@ -280,11 +282,25 @@ export const ReportBuilderPage: React.FC = () => {
     >
       <Box
         sx={{
-          top: 68,
+          zIndex: 2,
+          top: "68px",
+          left: "20px",
+          width: "220px",
+          position: "fixed",
+          borderRadius: "8px",
+          flexDirection: "column",
+          bgcolor: colors.primary.white,
+          boxShadow: "0 0 10px 0 rgba(152, 161, 170, 0.60)",
+        }}
+      >
+        <ReportBuilderPageReportSettings />
+      </Box>
+      <Box
+        sx={{
+          zIndex: 2,
+          top: "68px",
           right: "20px",
           position: "fixed",
-
-          zIndex: 2,
         }}
       >
         <ElementsController />
@@ -294,10 +310,9 @@ export const ReportBuilderPage: React.FC = () => {
           sx={{
             maxWidth: "100%",
             overflow: "overlay",
-            bgcolor: "#ffffff",
             height: "fit-content",
             paddingBottom: "40px",
-            boxShadow: "0 0 10px 0 rgba(152, 161, 170, 0.60)",
+            bgcolor: "transparent",
           }}
         >
           <Box
@@ -310,7 +325,9 @@ export const ReportBuilderPage: React.FC = () => {
               justifyContent: "flex-start",
               width: `${reportSettings.width}px`,
               height: `${reportSettings.height}px`,
-              p: `${reportSettings.vPadding}px ${reportSettings.hPadding}px`,
+              bgcolor: reportSettings.backgroundColor,
+              borderRadius: `${reportSettings.borderRadius}px`,
+              p: reportSettings.padding.map((p) => `${p}px`).join(" "),
               border: `${reportSettings.stroke}px solid ${reportSettings.strokeColor}`,
               ".top-right-actions": {
                 top: 4,

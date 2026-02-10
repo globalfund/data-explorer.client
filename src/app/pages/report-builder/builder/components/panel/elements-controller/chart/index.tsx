@@ -22,9 +22,10 @@ type ChartControllerTab =
   | "layout"
   | "style"
   | "advanced";
+
 export default function ChartController() {
-  const [value, setValue] = React.useState<ChartControllerTab>("mapping");
   const [isExpanded, setIsExpanded] = React.useState(true);
+  const [value, setValue] = React.useState<ChartControllerTab>("mapping");
 
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
@@ -139,7 +140,6 @@ export default function ChartController() {
             </Box>
             <Options />
           </Box>
-
           <Box sx={{ display: isExpanded ? "block" : "none" }}>
             {selectedController?.extra?.chart?.listToDisplay ? (
               renderList()
