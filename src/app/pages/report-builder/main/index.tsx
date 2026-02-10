@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { ReportBuilderSidebar } from "app/pages/report-builder/main/components/sidebar";
 import { ReportBuilderToolbar } from "app/pages/report-builder/main/components/toolbar";
+import { AllAssetsView } from "app/pages/report-builder/main/components/all-assets-view";
 import { AllReportsView } from "app/pages/report-builder/main/components/all-reports-view";
 import { TemplatesLayoutsView } from "app/pages/report-builder/main/components/templates-layouts-view";
 import { ReportBuilderNewFolderModal } from "app/pages/report-builder/main/components/new-folder-modal";
@@ -52,6 +53,7 @@ export const ReportBuilder: React.FC = () => {
           />
         );
       case "All Assets":
+        return <AllAssetsView selectedView={selectedView} />;
       case "Tutorials":
       default:
         return <React.Fragment />;
