@@ -225,7 +225,7 @@ export const ReportBuilderPage: React.FC = () => {
       );
     }
     if (parseInt(reportSettings.height, 10) < 300) {
-      reportSettingsActions.setHeight((window.innerHeight - 110).toString());
+      reportSettingsActions.setHeight((window.innerHeight - 160).toString());
     }
 
     window.addEventListener("keydown", handleKeyDown);
@@ -307,12 +307,13 @@ export const ReportBuilderPage: React.FC = () => {
       </Box>
       <DndProvider backend={HTML5Backend}>
         <Box
+          id="items-container"
           sx={{
             maxWidth: "100%",
             overflow: "overlay",
             height: "fit-content",
             paddingBottom: "40px",
-            bgcolor: "transparent",
+            bgcolor: reportSettings.backgroundColor,
           }}
         >
           <Box

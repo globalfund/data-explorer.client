@@ -245,6 +245,7 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
     reportSettingsActions.setWidth(width);
     reportSettingsActions.setHeight(height);
     reportSettingsActions.setPadding(padding);
+    props.closePanel();
   };
 
   return (
@@ -445,6 +446,7 @@ export const BorderFillPanel: React.FC<{ closePanel: () => void }> = (
     reportSettingsActions.setStrokeColor(strokeColor);
     reportSettingsActions.setBorderRadius(borderRadius);
     reportSettingsActions.setBackgroundColor(backgroundColor);
+    props.closePanel();
   };
 
   return (
