@@ -132,6 +132,10 @@ export function useEcharts({
       yAxisName,
       customXAxisName,
       xAxisName,
+
+      chartOrientation,
+      alignHorizontal,
+      alignVertical,
     } = vo;
 
     const sortedData = sortBy(data ?? [], (d) => d?.bars);
@@ -226,8 +230,10 @@ export function useEcharts({
         containLabel: true,
       },
       xAxis: {
-        type: "category",
-        data: bars,
+        ...(chartOrientation === "horizontal"
+          ? { type: logarithmicYAxis ? "log" : "value" }
+          : { type: "category", data: bars }),
+        inverse: alignHorizontal === "right",
         name: resolvedXAxisName,
         nameLocation: "middle",
         nameGap: 32,
@@ -244,7 +250,10 @@ export function useEcharts({
       },
 
       yAxis: {
-        type: logarithmicYAxis ? "log" : "value",
+        ...(chartOrientation === "horizontal"
+          ? { type: "category", data: bars }
+          : { type: logarithmicYAxis ? "log" : "value" }),
+        inverse: alignVertical === "top",
         name: resolvedYAxisName,
         nameLocation: "middle",
         nameGap: 47,
@@ -643,6 +652,9 @@ export function useEcharts({
       yAxisName,
       customXAxisName,
       xAxisName,
+
+      alignVertical,
+      alignHorizontal,
     } = vo;
 
     const paletteColors: string[] =
@@ -731,7 +743,7 @@ export function useEcharts({
         nameLocation: "middle",
         nameGap: 32,
         boundaryGap: false,
-
+        inverse: alignHorizontal === "right",
         splitLine: { show: true },
         axisTick: { show: false },
         axisLine: { show: true, lineStyle: { color: "#8D8D8D", width: 1 } },
@@ -749,7 +761,7 @@ export function useEcharts({
         name: resolvedYAxisName,
         nameLocation: "middle",
         nameGap: 47,
-
+        inverse: alignVertical === "top",
         splitLine: { show: true },
         axisTick: { show: false },
         axisLine: { show: true, lineStyle: { color: "#8D8D8D", width: 1 } },
