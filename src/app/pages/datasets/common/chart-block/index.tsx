@@ -228,6 +228,7 @@ export const DatasetChartBlock: React.FC<DatasetChartBlockProps> = (
                 handleDropdownChange={props.handleDropdownChange}
               />
             )}
+          {props.unitButtons}
         </Box>
       </Box>
       <Box>
