@@ -11,7 +11,7 @@ import { SettingsTabView } from "app/pages/report-builder/builder/components/rep
 
 export const ReportBuilderPageReportSettings: React.FC = () => {
   const [isExpanded, setIsExpanded] = React.useState(true);
-  const [value, setValue] = React.useState<"file" | "settings">("file");
+  const [value, setValue] = React.useState<"file" | "settings">("settings");
 
   const handleExpandToggle = () => {
     setIsExpanded(!isExpanded);

@@ -1,14 +1,18 @@
 import React from "react";
+import { colors } from "app/theme";
 import Box from "@mui/material/Box";
 import { DndProvider } from "react-dnd";
 import update from "immutability-helper";
 import Divider from "@mui/material/Divider";
+import { useParams } from "react-router-dom";
 import { uniqueId } from "app/utils/uniqueId";
 import Close from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import KPIBox from "app/pages/report-builder/builder/components/kpi";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { Empty } from "app/pages/report-builder/builder/components/empty";
+import { ReportBuilderPageReportSettings } from "./components/report-settings";
 import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
 import { ReportBuilderPageGrid } from "app/pages/report-builder/builder/components/grid";
 import { ReportBuilderPageText } from "app/pages/report-builder/builder/components/text";
@@ -16,12 +20,18 @@ import { ReportBuilderPageChart } from "app/pages/report-builder/builder/compone
 import { ReportBuilderPageTable } from "app/pages/report-builder/builder/components/table";
 import { ReportBuilderPageImage } from "app/pages/report-builder/builder/components/image";
 import { ItemComponent } from "app/pages/report-builder/builder/components/order-container";
-import ElementsController from "./components/panel/elements-controller";
-import KPIBox from "./components/kpi";
-import { ReportBuilderPageReportSettings } from "./components/report-settings";
-import { colors } from "app/theme";
+import ElementsController from "app/pages/report-builder/builder/components/panel/elements-controller";
+import {
+  useGFGetReport,
+  // useGFUpdateReport,
+} from "app/hooks/queries/report-builder";
 
 export const ReportBuilderPage: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+
+  const reportData = useGFGetReport(id);
+  // const updateReport = useGFUpdateReport();
+
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const setActiveRTE = useStoreActions(
     (actions) => actions.RBReportRTEState.setActiveRTE,
@@ -34,10 +44,7 @@ export const ReportBuilderPage: React.FC = () => {
   const removeItem = useStoreActions(
     (actions) => actions.RBReportItemsState.removeItem,
   );
-  const reportSettings = useStoreState((state) => state.RBReportSettingsState);
-  const reportSettingsActions = useStoreActions(
-    (actions) => actions.RBReportSettingsState,
-  );
+
   const setNotes = useStoreActions(
     (actions) => actions.RBReportNotesState.setValue,
   );
@@ -218,16 +225,16 @@ export const ReportBuilderPage: React.FC = () => {
     }
   };
 
-  React.useEffect(() => {
-    if (parseInt(reportSettings.width, 10) < 300) {
-      reportSettingsActions.setWidth(
-        (window.innerWidth > 1440 ? 1392 : window.innerWidth - 32).toString(),
-      );
-    }
-    if (parseInt(reportSettings.height, 10) < 300) {
-      reportSettingsActions.setHeight((window.innerHeight - 160).toString());
-    }
+  // const onSave = () => {
+  //   if (id) {
+  //     updateReport.mutate({
+  //       reportId: id,
+  //       ...reportData.data?.data,
+  //     });
+  //   }
+  // };
 
+  React.useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
@@ -243,32 +250,6 @@ export const ReportBuilderPage: React.FC = () => {
       addedItemRef.current = true;
     }
   }, [items.length]);
-
-  // const parsedReportSettings = React.useMemo(() => {
-  //   return {
-  //     width:
-  //       parseInt(reportSettings.width, 10) < 300
-  //         ? 300
-  //         : parseInt(reportSettings.width, 10),
-  //     height:
-  //       parseInt(reportSettings.height, 10) < 300
-  //         ? 300
-  //         : parseInt(reportSettings.height, 10),
-  //     hPadding:
-  //       parseInt(reportSettings.hPadding, 10) < 0
-  //         ? 0
-  //         : parseInt(reportSettings.hPadding, 10),
-  //     vPadding:
-  //       parseInt(reportSettings.vPadding, 10) < 0
-  //         ? 0
-  //         : parseInt(reportSettings.vPadding, 10),
-  //     stroke:
-  //       parseInt(reportSettings.stroke, 10) < 0
-  //         ? 0
-  //         : parseInt(reportSettings.stroke, 10),
-  //     strokeColor: reportSettings.strokeColor,
-  //   };
-  // }, [reportSettings]);
 
   return (
     <Box
@@ -312,8 +293,7 @@ export const ReportBuilderPage: React.FC = () => {
             maxWidth: "100%",
             overflow: "overlay",
             height: "fit-content",
-            paddingBottom: "40px",
-            bgcolor: reportSettings.backgroundColor,
+            bgcolor: reportData.data?.data.settings.backgroundColor,
           }}
         >
           <Box
@@ -324,12 +304,14 @@ export const ReportBuilderPage: React.FC = () => {
               flexDirection: "column",
               alignItems: "flex-start",
               justifyContent: "flex-start",
-              width: `${reportSettings.width}px`,
-              height: `${reportSettings.height}px`,
-              bgcolor: reportSettings.backgroundColor,
-              borderRadius: `${reportSettings.borderRadius}px`,
-              p: reportSettings.padding.map((p) => `${p}px`).join(" "),
-              border: `${reportSettings.stroke}px solid ${reportSettings.strokeColor}`,
+              width: `${reportData.data?.data.settings.width}px`,
+              height: `${reportData.data?.data.settings.height}px`,
+              bgcolor: reportData.data?.data.settings.backgroundColor,
+              borderRadius: `${reportData.data?.data.settings.borderRadius}px`,
+              p: reportData.data?.data.settings.padding
+                .map((p: string) => `${p}px`)
+                .join(" "),
+              border: `${reportData.data?.data.settings.stroke}px solid ${reportData.data?.data.settings.strokeColor}`,
               ".top-right-actions": {
                 top: 4,
                 right: 4,

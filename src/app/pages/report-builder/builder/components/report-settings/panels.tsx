@@ -1,11 +1,16 @@
 import React from "react";
+import get from "lodash/get";
 import { colors } from "app/theme";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import { useParams } from "react-router-dom";
 import InputLabel from "@mui/material/InputLabel";
 import Typography from "@mui/material/Typography";
 import FormHelperText from "@mui/material/FormHelperText";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import {
+  useGFGetReport,
+  useGFUpdateReport,
+} from "app/hooks/queries/report-builder";
 import {
   TopPadding,
   LeftPadding,
@@ -66,7 +71,41 @@ const panelSx = {
 };
 
 export const RenamePanel: React.FC<{ closePanel: () => void }> = (props) => {
-  const handleApply = () => {};
+  const { id } = useParams<{ id: string }>();
+
+  const reportData = useGFGetReport(id);
+  const updateReport = useGFUpdateReport();
+
+  const [name, setName] = React.useState(reportData?.data?.data.name ?? "");
+  const [description, setDescription] = React.useState(
+    reportData?.data?.data.description ?? "",
+  );
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setName(e.target.value);
+
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
+    setDescription(e.target.value);
+
+  const handleApply = () => {
+    if (id) {
+      updateReport.mutate(
+        { reportId: id, name, description },
+        {
+          onSuccess: () => {
+            console.log("Report updated successfully");
+            props.closePanel();
+            reportData.refetch();
+          },
+        },
+      );
+    }
+  };
+
+  React.useEffect(() => {
+    setName(reportData.data?.data.name ?? "");
+    setDescription(reportData.data?.data.description ?? "");
+  }, [reportData.data?.data.name, reportData.data?.data.description]);
 
   return (
     <React.Fragment>
@@ -74,13 +113,15 @@ export const RenamePanel: React.FC<{ closePanel: () => void }> = (props) => {
         <Box width="100%">
           <InputLabel id="report-name-label" htmlFor="report-name-input">
             <span>Report Name</span>
-            <span>0/100</span>
+            <span>{name.length}/100</span>
           </InputLabel>
           <input
             type="text"
+            value={name}
             maxLength={100}
             autoFocus={true}
             id="report-name-input"
+            onChange={handleNameChange}
           />
         </Box>
         <Box width="100%">
@@ -89,9 +130,14 @@ export const RenamePanel: React.FC<{ closePanel: () => void }> = (props) => {
             htmlFor="report-description-input"
           >
             <span>Report Description</span>
-            <span>0/250</span>
+            <span>{description.length}/250</span>
           </InputLabel>
-          <textarea id="report-description-input" maxLength={250} />
+          <textarea
+            maxLength={250}
+            value={description}
+            id="report-description-input"
+            onChange={handleDescriptionChange}
+          />
         </Box>
       </Box>
       <Box
@@ -127,16 +173,22 @@ export const RenamePanel: React.FC<{ closePanel: () => void }> = (props) => {
 export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
   props,
 ) => {
-  const reportSettings = useStoreState((state) => state.RBReportSettingsState);
-  const reportSettingsActions = useStoreActions(
-    (actions) => actions.RBReportSettingsState,
-  );
+  const { id } = useParams<{ id: string }>();
+
+  const reportData = useGFGetReport(id);
+  const updateReport = useGFUpdateReport();
 
   const [widthError, setWidthError] = React.useState("");
   const [heightError, setHeightError] = React.useState("");
-  const [width, setWidth] = React.useState(reportSettings.width);
-  const [height, setHeight] = React.useState(reportSettings.height);
-  const [padding, setPadding] = React.useState(reportSettings.padding);
+  const [width, setWidth] = React.useState(
+    reportData?.data?.data.settings.width,
+  );
+  const [height, setHeight] = React.useState(
+    reportData?.data?.data.settings.height,
+  );
+  const [padding, setPadding] = React.useState(
+    reportData?.data?.data.settings.padding,
+  );
 
   const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -185,7 +237,7 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
   };
 
   const setPaddingNewValueChange = (i: number, value: string) => {
-    const newValue = [...reportSettings.padding];
+    const newValue = [...get(reportData, "data.data.settings.padding", [])];
     if (value === "") {
       newValue[i] = "0";
       setPadding(newValue);
@@ -201,7 +253,7 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
 
   const setPaddingBlur = (i: number, value: string) => {
     if (value === "") {
-      const newValue = [...reportSettings.padding];
+      const newValue = [...get(reportData, "data.data.settings.padding", [])];
       newValue[i] = "0";
       setPadding(newValue);
     }
@@ -242,11 +294,38 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
   };
 
   const handleApply = () => {
-    reportSettingsActions.setWidth(width);
-    reportSettingsActions.setHeight(height);
-    reportSettingsActions.setPadding(padding);
-    props.closePanel();
+    if (id) {
+      updateReport.mutate(
+        {
+          reportId: id,
+          width,
+          height,
+          padding,
+          stroke: reportData.data?.data.settings.stroke,
+          strokeColor: reportData.data?.data.settings.strokeColor,
+          borderRadius: reportData.data?.data.settings.borderRadius,
+          backgroundColor: reportData.data?.data.settings.backgroundColor,
+        },
+        {
+          onSuccess: () => {
+            console.log("Report updated successfully");
+            props.closePanel();
+            reportData.refetch();
+          },
+        },
+      );
+    }
   };
+
+  React.useEffect(() => {
+    setWidth(reportData.data?.data.settings.width);
+    setHeight(reportData.data?.data.settings.height);
+    setPadding(reportData.data?.data.settings.padding);
+  }, [
+    reportData.data?.data.settings.width,
+    reportData.data?.data.settings.height,
+    reportData.data?.data.settings.padding,
+  ]);
 
   return (
     <React.Fragment>
@@ -377,20 +456,22 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
 export const BorderFillPanel: React.FC<{ closePanel: () => void }> = (
   props,
 ) => {
-  const reportSettings = useStoreState((state) => state.RBReportSettingsState);
-  const reportSettingsActions = useStoreActions(
-    (actions) => actions.RBReportSettingsState,
-  );
+  const { id } = useParams<{ id: string }>();
 
-  const [stroke, setStroke] = React.useState(reportSettings.stroke);
+  const reportData = useGFGetReport(id);
+  const updateReport = useGFUpdateReport();
+
+  const [stroke, setStroke] = React.useState(
+    reportData?.data?.data.settings.stroke,
+  );
   const [strokeColor, setStrokeColor] = React.useState(
-    reportSettings.strokeColor,
+    reportData?.data?.data.settings.strokeColor,
   );
   const [borderRadius, setBorderRadius] = React.useState(
-    reportSettings.borderRadius,
+    reportData?.data?.data.settings.borderRadius,
   );
   const [backgroundColor, setBackgroundColor] = React.useState(
-    reportSettings.backgroundColor,
+    reportData?.data?.data.settings.backgroundColor,
   );
 
   const handleStrokeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -442,12 +523,40 @@ export const BorderFillPanel: React.FC<{ closePanel: () => void }> = (
   };
 
   const handleApply = () => {
-    reportSettingsActions.setStroke(stroke);
-    reportSettingsActions.setStrokeColor(strokeColor);
-    reportSettingsActions.setBorderRadius(borderRadius);
-    reportSettingsActions.setBackgroundColor(backgroundColor);
-    props.closePanel();
+    if (id) {
+      updateReport.mutate(
+        {
+          reportId: id,
+          stroke,
+          strokeColor,
+          borderRadius,
+          backgroundColor,
+          width: reportData.data?.data.settings.width,
+          height: reportData.data?.data.settings.height,
+          padding: reportData.data?.data.settings.padding,
+        },
+        {
+          onSuccess: () => {
+            console.log("Report updated successfully");
+            props.closePanel();
+            reportData.refetch();
+          },
+        },
+      );
+    }
   };
+
+  React.useEffect(() => {
+    setStroke(reportData.data?.data.settings.stroke);
+    setStrokeColor(reportData.data?.data.settings.strokeColor);
+    setBorderRadius(reportData.data?.data.settings.borderRadius);
+    setBackgroundColor(reportData.data?.data.settings.backgroundColor);
+  }, [
+    reportData.data?.data.settings.stroke,
+    reportData.data?.data.settings.strokeColor,
+    reportData.data?.data.settings.borderRadius,
+    reportData.data?.data.settings.backgroundColor,
+  ]);
 
   return (
     <React.Fragment>

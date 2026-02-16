@@ -1,11 +1,13 @@
+import axiosInstance from "app/utils/axiosInstance";
 import { useMutation, useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
+  RBReportModel,
   RBDatasetResponse,
-  RBRenderChartDataRequest,
   RBRenderedChartData,
+  RBRenderChartDataRequest,
   RBSampledDatasetResponse,
+  RBChartModel,
 } from "app/state/api/action-reducers/report-builder/sync";
-import axiosInstance from "app/utils/axiosInstance";
 
 export const useRenderChartData = () => {
   return useMutation({
@@ -62,5 +64,143 @@ export const useGFDataset = (datasetId: string) => {
       }
     },
     enabled: !!datasetId,
+  });
+};
+
+export const useGFCreateReport = () => {
+  return useMutation({
+    mutationKey: ["ReportBuilderGFCreateReport"],
+    mutationFn: (data: {
+      name: string;
+      description: string;
+      settings: {
+        width: string;
+        height: string;
+        padding: string[];
+        stroke: string;
+        strokeColor: string;
+        borderRadius: string;
+        backgroundColor: string;
+      };
+    }) => axiosInstance.post<RBReportModel>("/report", data),
+  });
+};
+
+export const useGFGetReport = (reportId?: string) => {
+  return useQuery({
+    queryKey: ["GFGetReport", reportId],
+    queryFn: () => axiosInstance.get<RBReportModel>(`/report/${reportId}`),
+    enabled: !!reportId,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+};
+
+export const useGFUpdateReport = () => {
+  return useMutation({
+    mutationKey: ["ReportBuilderGFUpdateReport"],
+    mutationFn: (data: {
+      reportId: string;
+      name?: string;
+      description?: string;
+      width?: string;
+      height?: string;
+      padding?: string;
+      stroke?: string;
+      strokeColor?: string;
+      borderRadius?: string;
+      backgroundColor?: string;
+      rows?: {
+        items: any[];
+        structure: string;
+        contentWidths: {
+          id: string;
+          widths: number[];
+        }[];
+        contentHeights: {
+          id: string;
+          heights: number[];
+        }[];
+      }[];
+    }) => {
+      const _data: {
+        name?: string;
+        description?: string;
+        settings?: {
+          width?: string;
+          height?: string;
+          padding?: string;
+          stroke?: string;
+          strokeColor?: string;
+          borderRadius?: string;
+          backgroundColor?: string;
+        };
+      } = {};
+      if (data.name) {
+        Object.assign(_data, { name: data.name });
+      }
+      if (data.description) {
+        Object.assign(_data, { description: data.description });
+      }
+      if (data.width) {
+        Object.assign(_data, {
+          settings: { ..._data.settings, width: data.width },
+        });
+      }
+      if (data.height) {
+        Object.assign(_data, {
+          settings: { ..._data.settings, height: data.height },
+        });
+      }
+      if (data.padding) {
+        Object.assign(_data, {
+          settings: { ..._data.settings, padding: data.padding },
+        });
+      }
+      if (data.stroke) {
+        Object.assign(_data, {
+          settings: { ..._data.settings, stroke: data.stroke },
+        });
+      }
+      if (data.strokeColor) {
+        Object.assign(_data, {
+          settings: { ..._data.settings, strokeColor: data.strokeColor },
+        });
+      }
+      if (data.borderRadius) {
+        Object.assign(_data, {
+          settings: { ..._data.settings, borderRadius: data.borderRadius },
+        });
+      }
+      if (data.backgroundColor) {
+        Object.assign(_data, {
+          settings: {
+            ..._data.settings,
+            backgroundColor: data.backgroundColor,
+          },
+        });
+      }
+      if (data.rows) {
+        Object.assign(_data, { rows: data.rows });
+      }
+      return axiosInstance.patch<RBReportModel>(
+        `/report/${data.reportId}`,
+        _data,
+      );
+    },
+  });
+};
+
+export const useGFDeleteReport = () => {
+  return useMutation({
+    mutationKey: ["ReportBuilderGFDeleteReport"],
+    mutationFn: (id: string) => axiosInstance.delete(`/report/${id}`),
+  });
+};
+
+export const useGFCreateChart = () => {
+  return useMutation({
+    mutationKey: ["ReportBuilderGFCreateChart"],
+    mutationFn: (data: Omit<RBRenderChartDataRequest, "id">) =>
+      axiosInstance.post<RBChartModel>("/chart", data),
   });
 };

@@ -7,6 +7,8 @@ import Divider from "@mui/material/Divider";
 import Close from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import { useNavigate, useParams } from "react-router-dom";
+import { useGFDeleteReport } from "app/hooks/queries/report-builder";
 import ChevronRightOutlined from "@mui/icons-material/ChevronRightOutlined";
 import {
   RenamePanel,
@@ -22,6 +24,10 @@ import {
 } from "app/pages/report-builder/builder/components/report-settings/icons";
 
 export const SettingsTabView: React.FC = () => {
+  const navigate = useNavigate();
+  const deleteReport = useGFDeleteReport();
+  const { id } = useParams<{ id: string }>();
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [selectedOption, setSelectedOption] = React.useState<
     "rename" | "size" | "paint" | null
@@ -37,6 +43,14 @@ export const SettingsTabView: React.FC = () => {
   const closePanel = () => {
     setAnchorEl(null);
     setSelectedOption(null);
+  };
+
+  const handleDeleteReportClick = () => {
+    if (id) {
+      deleteReport.mutate(id, {
+        onSuccess: () => navigate("/report-builder", { replace: true }),
+      });
+    }
   };
 
   const title = React.useMemo(() => {
@@ -172,7 +186,7 @@ export const SettingsTabView: React.FC = () => {
         <Button
           fullWidth
           startIcon={<Backspace />}
-          onClick={handleOptionSelect(null)}
+          onClick={handleDeleteReportClick}
         >
           <div>Delete Report</div>
         </Button>

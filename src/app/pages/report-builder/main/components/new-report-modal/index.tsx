@@ -2,10 +2,11 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import { Link } from "react-router-dom";
+import { useGFCreateReport } from "app/hooks/queries/report-builder";
 
 export const ReportBuilderNewReportModal: React.FC<{
   open: boolean;
@@ -22,6 +23,9 @@ export const ReportBuilderNewReportModal: React.FC<{
   descriptionValue,
   setDescriptionValue,
 }) => {
+  const navigate = useNavigate();
+  const createReport = useGFCreateReport();
+
   const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length <= 100) {
       setNameValue(e.target.value);
@@ -31,6 +35,34 @@ export const ReportBuilderNewReportModal: React.FC<{
   const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length <= 250) {
       setDescriptionValue(e.target.value);
+    }
+  };
+
+  const onCreateReportClick = () => {
+    if (nameValue && descriptionValue) {
+      createReport.mutate(
+        {
+          name: nameValue,
+          description: descriptionValue,
+          settings: {
+            width: (window.innerWidth > 1440
+              ? 1392
+              : window.innerWidth - 32
+            ).toString(),
+            height: (window.innerHeight - 160).toString(),
+            padding: ["50", "50", "50", "50"],
+            stroke: "0",
+            strokeColor: "#000000",
+            backgroundColor: "#ffffff",
+            borderRadius: "0",
+          },
+        },
+        {
+          onSuccess: (data) => {
+            navigate(`/report-builder/${data.data.id}/edit`);
+          },
+        },
+      );
     }
   };
 
@@ -101,6 +133,7 @@ export const ReportBuilderNewReportModal: React.FC<{
             }}
           >
             <input
+              autoFocus
               type="text"
               value={nameValue}
               onChange={onNameChange}
@@ -157,10 +190,8 @@ export const ReportBuilderNewReportModal: React.FC<{
               Cancel
             </Button>
             <Button
-              component={Link}
               variant="contained"
-              LinkComponent={Link}
-              to={"/report-builder/new"}
+              onClick={onCreateReportClick}
               disabled={!nameValue || !descriptionValue}
               sx={{
                 fontWeight: "400",

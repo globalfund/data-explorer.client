@@ -262,6 +262,54 @@ export interface RBRenderedChartData {
   ssr: false;
 }
 
+export interface RBReportModel {
+  id: string;
+  name: string;
+  title: string;
+  description: string;
+  rows: {
+    items: any[];
+    structure: string;
+    contentWidths: {
+      id: string;
+      widths: number[];
+    }[];
+    contentHeights: {
+      id: string;
+      heights: number[];
+    }[];
+  }[];
+  public: boolean;
+  baseline: boolean;
+  backgroundColor: string;
+  owner: string;
+  createdDate: string;
+  updatedDate: string;
+  settings: {
+    [key: string]: any;
+  };
+}
+
+export interface RBChartModel {
+  id: string;
+  name: string;
+  nameLower: string;
+  public: boolean;
+  baseline: boolean;
+  isMappingValid: boolean;
+  isAIAssisted: boolean;
+  vizType: string;
+  datasetId: string;
+  mapping: object;
+  vizOptions: object;
+  appliedFilters: object;
+  enabledFilterOptionGroups: string[];
+  owner: string;
+  createdDate: string;
+  updatedDate: string;
+  settings: object;
+}
+
 interface IStat {
   data: { name: string; value: number }[];
   type: string;
