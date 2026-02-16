@@ -276,7 +276,7 @@ export function Heatmap(props: HeatmapProps) {
             },
           }}
         >
-          {LEGENDS.map((item) => (
+          {(props.customLegends ?? LEGENDS)?.map((item) => (
             <Box key={item.label}>
               <Box
                 bgcolor={item.color}
@@ -422,7 +422,7 @@ export function Heatmap(props: HeatmapProps) {
                       if (value !== "N/A") {
                         if (props.valueType === "percentage") {
                           value = value + "%";
-                        } else {
+                        } else if (props.valueType === "amount") {
                           value = formatFinancialValue(
                             parseInt(value.toString(), 10),
                           );

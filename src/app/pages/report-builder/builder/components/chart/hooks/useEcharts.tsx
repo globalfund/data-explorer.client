@@ -24,6 +24,7 @@ import {
   VisualMapComponent,
   DataZoomComponent,
   TitleComponent,
+  RadarComponent,
 } from "echarts/components";
 
 //@ts-expect-error module without types
@@ -64,6 +65,7 @@ echarts.use([
   DataZoomComponent,
   VisualMapComponent,
   TitleComponent,
+  RadarComponent,
 ]);
 
 interface UseDataThemesEchartProps {
@@ -1100,50 +1102,160 @@ export function useEcharts({
 
   function echartsRadarchart(data: any, visualOptions: any) {
     const {
-      // Tooltip
       showTooltip,
-      isMonetaryValue,
-      // Palette
-      palette,
+      monetaryValueTooltip: isMonetaryValue,
+      colorPalette: palette,
       showLegend,
+      legendPosition,
+      showChartName,
+      chartTitle,
+      background,
+      startAngle,
+      gridCircles,
+      paddingLeft,
+      paddingTop,
+      paddingRight,
+      paddingBottom,
+      strokeWidth,
+      strokeColor,
+      showPointMarkers,
     } = visualOptions;
 
+    const titleFontFamily = get(
+      visualOptions,
+      "chartTitleOptions.fontFamily",
+      "sans-serif",
+    );
+
+    const titleFontWeight = get(
+      visualOptions,
+      "chartTitleOptions.fontWeight",
+      600,
+    );
+
+    const titleFontSize = Number(
+      get(visualOptions, "chartTitleOptions.fontSize", 16),
+    );
+
+    const titleTextColor = get(
+      visualOptions,
+      "chartTitleOptions.textColor",
+      "#161616",
+    );
+
+    const legendFontFamily = get(
+      visualOptions,
+      "legendTextOptions.fontFamily",
+      "sans-serif",
+    );
+
+    const legendFontWeight = get(
+      visualOptions,
+      "legendTextOptions.fontWeight",
+      600,
+    );
+
+    const legendFontSize = Number(
+      get(visualOptions, "legendTextOptions.fontSize", 14),
+    );
+
+    const legendTextColor = get(
+      visualOptions,
+      "legendTextOptions.textColor",
+      "#161616",
+    );
+
+    const paletteColors =
+      colorPaletteCategoricalData.find((item: any) => item.name === palette)
+        ?.colors ?? undefined;
+
+    const minAxisRange =
+      visualOptions.minAxisRange === "auto"
+        ? undefined
+        : Number(visualOptions.minAxisRange);
+
+    const maxAxisRange =
+      visualOptions.maxAxisRange === "auto"
+        ? undefined
+        : Number(visualOptions.maxAxisRange);
+
+    const indicators = data.indicators.map((ind: any) => {
+      const next = { ...ind };
+      if (minAxisRange !== undefined) next.min = minAxisRange;
+      if (maxAxisRange !== undefined) next.max = maxAxisRange;
+      return next;
+    });
+
+    const radarCenter: any = ["50%", "50%"];
+    const radarRadius: any = "70%";
+
+    const legendMap: any = {
+      top: { top: paddingTop, left: "center" },
+      bottom: { bottom: paddingBottom, left: "center" },
+      left: { left: paddingLeft, top: "middle", orient: "vertical" },
+      right: { right: paddingRight, top: "middle", orient: "vertical" },
+    };
+
     return {
+      color: paletteColors,
+      backgroundColor: background,
+
+      title: {
+        show: showChartName,
+        text: chartTitle,
+        textStyle: {
+          fontFamily: titleFontFamily,
+          fontWeight: titleFontWeight,
+          fontSize: titleFontSize,
+          color: titleTextColor,
+        },
+      },
+
       tooltip: {
         trigger: showTooltip ? "item" : "none",
         valueFormatter: (value: number | string) =>
           valueFormatter2(value, isMonetaryValue),
       },
+
       legend: {
         type: "scroll",
-        top: 10,
-        data: data.categories.map((color: any) => String(color)),
         show: showLegend,
+        ...legendMap[legendPosition ?? "top"],
+        data: data.categories.map((c: any) => String(c)),
+        textStyle: {
+          fontFamily: legendFontFamily,
+          fontWeight: legendFontWeight,
+          fontSize: legendFontSize,
+          color: legendTextColor,
+        },
       },
-      visualMap: {
-        top: "middle",
-        right: 10,
-        color: colorPaletteCategoricalData.find(
-          (item) => item.label === palette,
-        )?.colors,
-        show: false,
-        calculable: true,
+      radar: {
+        startAngle,
+        splitNumber: gridCircles,
+        indicator: indicators,
+        center: radarCenter,
+        radius: radarRadius,
+        axisName: {
+          show: showPointMarkers,
+        },
+        axisLine: {
+          lineStyle: {
+            width: Number(strokeWidth ?? 1),
+            color: strokeColor,
+          },
+        },
+        splitLine: {
+          lineStyle: {
+            width: Number(strokeWidth ?? 1),
+            color: strokeColor,
+          },
+        },
       },
 
-      radar: {
-        indicator: data.indicators,
-      },
       series: data.data.map((item: any) => ({
         type: "radar",
         symbol: "none",
-        lineStyle: {
-          width: 1,
-        },
-        emphasis: {
-          areaStyle: {
-            color: "rgba(0,250,0,0.3)",
-          },
-        },
+        areaStyle: {},
         data: [
           {
             value: item.value,

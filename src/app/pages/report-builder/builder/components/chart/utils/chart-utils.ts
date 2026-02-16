@@ -119,3 +119,90 @@ export const valueFormatter3 = (params: any, isMonetaryValue: boolean) => {
     isMonetaryValue ? formatFinancialValue(params.value, true) : params.value
   }`;
 };
+
+type LegendItem = {
+  label: string;
+  color: string;
+};
+
+export function generateHeatmapLegends(
+  data: { value: number }[],
+  paletteColors: string[],
+  options?: {
+    suffix?: string; // e.g. "%"
+    decimals?: number; // rounding precision
+    includeNA?: boolean;
+    includeOutlier?: boolean;
+    outlierThreshold?: number;
+  },
+): LegendItem[] {
+  const {
+    suffix = "",
+    decimals = 0,
+    includeNA = true,
+    includeOutlier = false,
+    outlierThreshold = 1.2, // 120%
+  } = options || {};
+
+  const values = data.map((d) => d.value).filter((v) => typeof v === "number");
+
+  if (!values.length) return [];
+
+  const maxValue = Math.max(...values);
+  const minValue = Math.min(...values);
+
+  if (maxValue === minValue) {
+    return [
+      {
+        label: `${maxValue.toFixed(decimals)}${suffix}`,
+        color: paletteColors[Math.floor(paletteColors.length / 2)] || "#FFFFFF",
+      },
+    ];
+  }
+
+  const bucketCount = paletteColors.length;
+  const step = (maxValue - minValue) / bucketCount;
+
+  const legends: LegendItem[] = [];
+
+  for (let i = 0; i < bucketCount; i++) {
+    const start = minValue + step * i;
+    const end = minValue + step * (i + 1);
+
+    const formattedStart = start.toFixed(decimals);
+    const formattedEnd = end.toFixed(decimals);
+
+    let label: string;
+
+    if (i === 0) {
+      label = `< ${formattedEnd}${suffix}`;
+    } else if (i === bucketCount - 1) {
+      label = `> ${formattedStart}${suffix}`;
+    } else {
+      label = `${formattedStart}${suffix} - ${formattedEnd}${suffix}`;
+    }
+
+    legends.push({
+      label,
+      color: paletteColors[i],
+    });
+  }
+
+  // Optional outlier
+  if (includeOutlier) {
+    legends.push({
+      label: `> ${(maxValue * outlierThreshold).toFixed(decimals)}${suffix} outlier`,
+      color: "#DADADA",
+    });
+  }
+
+  // Optional N/A
+  if (includeNA) {
+    legends.push({
+      label: "N/A",
+      color: "#FFFFFF",
+    });
+  }
+
+  return legends;
+}

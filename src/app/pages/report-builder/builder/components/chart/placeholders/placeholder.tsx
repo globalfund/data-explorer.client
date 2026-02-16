@@ -7,6 +7,7 @@ import SankeyChartPlaceholderImage from "./sankey.svg?react";
 import ScatterChartPlaceholderImage from "./scatter.svg?react";
 import TreemapPlaceholderImage from "./treemap.svg?react";
 import RadarChartPlaceholderImage from "./radar.svg?react";
+import HeatmapPlaceholderImage from "./heatmap.svg?react";
 
 import { Box } from "@mui/material";
 
@@ -20,6 +21,7 @@ const ChartPlaceholder = ({ chartType }: { chartType: string }) => {
     scatter: <ScatterChartPlaceholderImage height={"100%"} />,
     treemap: <TreemapPlaceholderImage height={"100%"} />,
     radar: <RadarChartPlaceholderImage height={"100%"} />,
+    heatmap: <HeatmapPlaceholderImage height={"100%"} />,
   };
 
   const getPlaceholder = (chartType: string) => {

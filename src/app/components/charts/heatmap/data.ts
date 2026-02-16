@@ -22,7 +22,7 @@ export interface HeatmapProps {
   columnCategory: string;
   data: HeatmapDataItem[];
   hoveredLegend: string | null;
-  valueType: "percentage" | "amount";
+  valueType: "percentage" | "amount" | "other";
   itemWidth?: number;
   contentProp: string;
   getItemColor: (item?: HeatmapDataItem) => string;
@@ -32,6 +32,7 @@ export interface HeatmapProps {
   rowHeader?: string;
   noLegend?: boolean;
   expandAll?: boolean;
+  customLegends?: { label: string; color: string }[];
 }
 
 export function getPercentageColor(item?: HeatmapDataItem) {
