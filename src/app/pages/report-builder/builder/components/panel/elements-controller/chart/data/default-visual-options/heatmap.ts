@@ -1,15 +1,54 @@
 import { IDefaultChartVisualOptions } from "../../utils";
 
 const options: IDefaultChartVisualOptions = {
+  cellSize: {
+    type: "slider",
+    default: 50,
+    label: "Cell Size",
+    tab: "layout",
+  },
+  cellPadding: {
+    type: "slider",
+    default: 50,
+    label: "Cell Padding",
+    tab: "layout",
+  },
+  sortXAxis: {
+    type: "text",
+    default: "ascending",
+    label: "Sort X Axis",
+    options: ["ascending", "descending"],
+    tab: "layout",
+    group: "Sorting",
+    column: "span 1",
+  },
+  sortYAxis: {
+    type: "text",
+    default: "ascending",
+    label: "Sort Y Axis",
+    options: ["ascending", "descending"],
+    tab: "layout",
+    group: "Sorting",
+    column: "span 1",
+  },
+  emptyCells: {
+    type: "text",
+    default: "show as zero",
+    label: "Empty Cells",
+    options: ["show as zero", "show as N/A", "hide"],
+    tab: "layout",
+    group: "Sorting",
+    column: "span 1",
+  },
   showChartName: {
     type: "boolean",
     default: true,
-    label: "Show Chart Name",
+    label: "Show Chart Title",
     tab: "layout",
   },
   chartTitle: {
     type: "text",
-    default: "Line Chart",
+    default: "Heatmap Chart",
     tab: "layout",
     disabled: {
       showChartName: false,
@@ -174,36 +213,12 @@ const options: IDefaultChartVisualOptions = {
     group: "Size",
     column: "span 1",
   },
-  lineWidth: {
-    type: "text",
-    default: "2",
-    label: "Line Width",
-    tab: "style",
-    group: "Line Style",
-    column: "span 1",
-  },
-  lineType: {
-    type: "text",
-    default: "solid",
-    options: ["solid", "dashed", "dotted"],
-    tab: "style",
-    label: "Line Type",
-    group: "Line Style",
-    column: "span 1",
-  },
-  smoothLine: {
-    type: "boolean",
-    default: false,
-    label: "Smooth Line",
-    tab: "style",
-    group: "Line Style",
-  },
   colorPalette: {
-    type: "colorPaletteCategorical",
+    type: "colorPaletteSequential",
     default: "default",
     label: "Color Palette",
     tab: "style",
-    group: "Line Style",
+    group: "Bar Style",
   },
   strokeWidth: {
     type: "text",
@@ -237,6 +252,18 @@ const options: IDefaultChartVisualOptions = {
     group: "Border & Fill",
     column: "span 1",
   },
+  autoNormalize: {
+    tab: "advanced",
+    type: "boolean",
+    default: false,
+    label: "Auto-Normalize",
+  },
+  showValues: {
+    tab: "advanced",
+    type: "boolean",
+    default: false,
+    label: "Show Values",
+  },
   showTooltip: {
     tab: "advanced",
     type: "boolean",
@@ -249,29 +276,17 @@ const options: IDefaultChartVisualOptions = {
     default: false,
     label: "Make tooltip monetary value",
   },
-  customYAxisName: {
+  rotateXlabels: {
     tab: "advanced",
-    label: "Custom Y Axis Name",
     type: "boolean",
     default: false,
+    label: "Rotate X-Labels",
   },
-  yAxisName: {
+  truncateLongLabels: {
     tab: "advanced",
-    type: "text",
-    default: "",
-    placeholder: "(default axis name here)",
-  },
-  customXAxisName: {
-    tab: "advanced",
-    label: "Custom X Axis Name",
     type: "boolean",
     default: false,
-  },
-  xAxisName: {
-    tab: "advanced",
-    type: "text",
-    default: "",
-    placeholder: "(default axis name here)",
+    label: "Truncate long labels",
   },
 };
 

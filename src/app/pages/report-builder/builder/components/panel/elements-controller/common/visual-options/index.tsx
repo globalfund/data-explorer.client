@@ -284,6 +284,8 @@ const VisualOptions = ({
     }
   };
 
+  console.log("visualOptions", visualOptions);
+
   const groupsToDisplay = groupBy(
     optionsToDisplay,
     (option) => option.group || "",
@@ -305,7 +307,7 @@ const VisualOptions = ({
     >
       {Object.entries(groupsToDisplay).map(
         ([groupName, groupOptions], groupIndex) => (
-          <React.Fragment key={groupName}>
+          <React.Fragment key={groupName + groupIndex}>
             {groupName ? (
               <Typography
                 sx={{

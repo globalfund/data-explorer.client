@@ -4,12 +4,12 @@ const options: IDefaultChartVisualOptions = {
   showChartName: {
     type: "boolean",
     default: true,
-    label: "Show Chart Name",
+    label: "Show Chart Title",
     tab: "layout",
   },
   chartTitle: {
     type: "text",
-    default: "Line Chart",
+    default: "Treemap Chart",
     tab: "layout",
     disabled: {
       showChartName: false,
@@ -54,6 +54,7 @@ const options: IDefaultChartVisualOptions = {
       showChartName: false,
     },
   },
+
   showLegend: {
     type: "boolean",
     default: true,
@@ -63,7 +64,7 @@ const options: IDefaultChartVisualOptions = {
   legendPosition: {
     type: "text",
     options: ["top", "bottom", "left", "right"],
-    default: "top",
+    default: "bottom",
     tab: "layout",
     disabled: {
       showLegend: false,
@@ -108,9 +109,23 @@ const options: IDefaultChartVisualOptions = {
     },
     tab: "layout",
   },
+  showLabels: {
+    type: "boolean",
+    default: true,
+    label: "Show Labels",
+    tab: "layout",
+    group: "Labels",
+  },
+  showBreadcrumbs: {
+    type: "boolean",
+    default: true,
+    label: "Show Breadcrumbs",
+    tab: "layout",
+    group: "Labels",
+  },
   paddingLeft: {
     type: "text",
-    default: "30",
+    default: "0",
     label: "{arrowLeft} Left",
     tab: "layout",
     group: "Padding",
@@ -118,7 +133,7 @@ const options: IDefaultChartVisualOptions = {
   },
   paddingTop: {
     type: "text",
-    default: "50",
+    default: "30",
     label: "{arrowUp} Top",
     tab: "layout",
     group: "Padding",
@@ -126,7 +141,7 @@ const options: IDefaultChartVisualOptions = {
   },
   paddingRight: {
     type: "text",
-    default: "10",
+    default: "0",
     label: "{arrowRight} Right",
     tab: "layout",
     group: "Padding",
@@ -134,7 +149,7 @@ const options: IDefaultChartVisualOptions = {
   },
   paddingBottom: {
     type: "text",
-    default: "30",
+    default: "16",
     label: "{arrowDown} Bottom",
     tab: "layout",
     group: "Padding",
@@ -142,8 +157,8 @@ const options: IDefaultChartVisualOptions = {
   },
   alignHorizontal: {
     type: "text",
-    options: ["left", "right"],
-    default: "left",
+    options: ["left", "center", "right"],
+    default: "center",
     label: "Horizontal",
     tab: "layout",
     group: "Align",
@@ -151,8 +166,8 @@ const options: IDefaultChartVisualOptions = {
   },
   alignVertical: {
     type: "text",
-    options: ["top", "bottom"],
-    default: "bottom",
+    options: ["top", "middle", "bottom"],
+    default: "middle",
     label: "Vertical",
     tab: "layout",
     group: "Align",
@@ -174,30 +189,6 @@ const options: IDefaultChartVisualOptions = {
     group: "Size",
     column: "span 1",
   },
-  lineWidth: {
-    type: "text",
-    default: "2",
-    label: "Line Width",
-    tab: "style",
-    group: "Line Style",
-    column: "span 1",
-  },
-  lineType: {
-    type: "text",
-    default: "solid",
-    options: ["solid", "dashed", "dotted"],
-    tab: "style",
-    label: "Line Type",
-    group: "Line Style",
-    column: "span 1",
-  },
-  smoothLine: {
-    type: "boolean",
-    default: false,
-    label: "Smooth Line",
-    tab: "style",
-    group: "Line Style",
-  },
   colorPalette: {
     type: "colorPaletteCategorical",
     default: "default",
@@ -207,7 +198,7 @@ const options: IDefaultChartVisualOptions = {
   },
   strokeWidth: {
     type: "text",
-    default: "0",
+    default: "0.3",
     label: "Stroke",
     tab: "style",
     group: "Border & Fill",
@@ -215,7 +206,7 @@ const options: IDefaultChartVisualOptions = {
   },
   strokeColor: {
     type: "color",
-    default: "#000000",
+    default: "#ffffff",
     label: "Stroke Color",
     tab: "style",
     group: "Border & Fill",
@@ -248,30 +239,6 @@ const options: IDefaultChartVisualOptions = {
     type: "boolean",
     default: false,
     label: "Make tooltip monetary value",
-  },
-  customYAxisName: {
-    tab: "advanced",
-    label: "Custom Y Axis Name",
-    type: "boolean",
-    default: false,
-  },
-  yAxisName: {
-    tab: "advanced",
-    type: "text",
-    default: "",
-    placeholder: "(default axis name here)",
-  },
-  customXAxisName: {
-    tab: "advanced",
-    label: "Custom X Axis Name",
-    type: "boolean",
-    default: false,
-  },
-  xAxisName: {
-    tab: "advanced",
-    type: "text",
-    default: "",
-    placeholder: "(default axis name here)",
   },
 };
 

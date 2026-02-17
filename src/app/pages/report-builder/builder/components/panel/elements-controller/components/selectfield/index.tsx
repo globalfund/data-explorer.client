@@ -160,6 +160,7 @@ export default function SelectField({
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
+                  fontSize: "14px",
                 }}
               >
                 {option.label}

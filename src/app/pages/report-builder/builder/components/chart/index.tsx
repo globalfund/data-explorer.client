@@ -8,6 +8,7 @@ import ChartPlaceholder from "./placeholders/placeholder";
 import { checkValidDimensionMapping } from "../panel/elements-controller/chart/utils";
 import ChartComponent from "./chart-component";
 import { useRenderChartData } from "app/hooks/queries/report-builder";
+import GeomapLegend from "./geomap-legend";
 
 export const ReportBuilderPageChart: React.FC<{
   id: string;
@@ -118,6 +119,7 @@ export const ReportBuilderPageChart: React.FC<{
           sx={{
             width: chartExtra?.visualOptions?.width,
             height: chartExtra?.visualOptions?.height,
+            position: "relative",
           }}
         >
           {checkValidDimensionMapping(
@@ -134,6 +136,23 @@ export const ReportBuilderPageChart: React.FC<{
           ) : (
             <ChartPlaceholder chartType={chartExtra.chartType} />
           )}
+
+          {chartExtra.chartType === "geomap" &&
+          chartExtra.visualOptions?.showLegend ? (
+            <Box
+              sx={{
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+              }}
+            >
+              <GeomapLegend
+                data={renderedChartData?.mappedData}
+                visualOptions={chartExtra.visualOptions}
+                mapping={chartExtra.mapping}
+              />
+            </Box>
+          ) : null}
         </Box>
       ) : (
         <Box

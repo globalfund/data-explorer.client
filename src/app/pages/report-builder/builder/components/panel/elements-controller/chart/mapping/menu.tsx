@@ -47,7 +47,7 @@ export default function StyledMenu({
       }}
       MenuListProps={{
         sx: {
-          // maxHeight: 360,
+          maxHeight: 360,
           overflowY: "auto",
           //style scrollbar
           "&::-webkit-scrollbar": {

@@ -117,17 +117,23 @@ export function Dimension(props: Readonly<DimensionProps>) {
                           : "#D6DDFD",
                       borderRadius: "14px",
                       color: "#000",
-                      overflow: "hidden",
                       justifyContent: "space-between",
-                      textTransform: "none",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
                       fontSize: "14px",
                       fontWeight: "normal",
                     }}
                   >
-                    {" "}
-                    {value}
+                    <Box
+                      component={"span"}
+                      sx={{
+                        flex: 1,
+                        textTransform: "none",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {value}
+                    </Box>
                   </Button>{" "}
                 </Box>
               </Box>

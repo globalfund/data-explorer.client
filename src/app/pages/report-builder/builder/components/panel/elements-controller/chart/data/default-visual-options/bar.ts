@@ -57,7 +57,7 @@ const options: IDefaultChartVisualOptions = {
   chartOrientation: {
     type: "text",
     options: ["horizontal", "vertical"],
-    default: "horizontal",
+    default: "vertical",
     label: "Orientation",
     tab: "layout",
   },
@@ -149,8 +149,8 @@ const options: IDefaultChartVisualOptions = {
   },
   alignHorizontal: {
     type: "text",
-    options: ["left", "center", "right"],
-    default: "center",
+    options: ["left", "right"],
+    default: "left",
     label: "Horizontal",
     tab: "layout",
     group: "Align",
@@ -158,8 +158,8 @@ const options: IDefaultChartVisualOptions = {
   },
   alignVertical: {
     type: "text",
-    options: ["top", "middle", "bottom"],
-    default: "middle",
+    options: ["top", "bottom"],
+    default: "bottom",
     label: "Vertical",
     tab: "layout",
     group: "Align",

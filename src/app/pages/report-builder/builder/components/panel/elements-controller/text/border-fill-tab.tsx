@@ -2,9 +2,10 @@ import { Box, Typography } from "@mui/material";
 import { ColorPicker } from "app/components/color-picker/example";
 import { ColorService } from "app/components/color-picker/utils/color";
 import React from "react";
-import CustomTextField from "../common/textField";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { IColor } from "app/components/color-picker/types";
+import { set } from "lodash";
+import TextField from "../components/textfield";
 
 export default function StyleTab() {
   const selectedController = useStoreState(
@@ -15,6 +16,18 @@ export default function StyleTab() {
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const item = items.find((i) => i.id === selectedController?.id);
+
+  const handleChange = (key: string, value: any) => {
+    if (!item) return;
+    const currentItem = structuredClone(item);
+    set(currentItem, key, value);
+    editItem({
+      ...currentItem,
+      id: selectedController?.id || "",
+      open: currentItem?.open || false,
+      type: "text",
+    });
+  };
   const handleBackgroundColorChange = (color: IColor) => {
     editItem({
       ...item,
@@ -64,14 +77,11 @@ export default function StyleTab() {
             justifyContent: "space-between",
           }}
         >
-          <Box>
-            <Typography
-              sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
-            >
-              Stroke
-            </Typography>
-            <CustomTextField type="borderWidth" item="text" />
-          </Box>
+          <TextField
+            label="Stroke"
+            value={item?.settings?.borderWidth ?? ""}
+            onChange={(value) => handleChange("settings.borderWidth", value)}
+          />
           <Box>
             <Typography
               sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
@@ -99,14 +109,11 @@ export default function StyleTab() {
             justifyContent: "space-between",
           }}
         >
-          <Box>
-            <Typography
-              sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
-            >
-              Corner Radius
-            </Typography>
-            <CustomTextField type="borderRadius" item="text" />
-          </Box>
+          <TextField
+            label="Corner Radius"
+            value={item?.settings?.borderRadius ?? ""}
+            onChange={(value) => handleChange("settings.borderRadius", value)}
+          />
           <Box>
             <Typography
               sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}

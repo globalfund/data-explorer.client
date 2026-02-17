@@ -134,6 +134,8 @@ export default function DatasetList() {
         gap: "8px",
         flexDirection: "column",
         padding: "8px",
+        paddingBottom: "0px",
+        maxHeight: "600px",
       }}
     >
       <Typography color="#000" fontSize="14px">
@@ -141,7 +143,6 @@ export default function DatasetList() {
       </Typography>
       <Box
         sx={{
-          maxHeight: "65vh",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
@@ -229,17 +230,20 @@ export default function DatasetList() {
       <Divider sx={{ borderRadius: "4px", border: "0.5px solid #98A1AA" }} />
       <Box
         sx={{
-          height: "35px",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          padding: "8px 0",
+          position: "sticky",
+          bottom: 0,
+          background: "#F8F9FA",
         }}
       >
         <Button
           onClick={() => handleBack()}
           sx={{
             width: "71px",
-            height: "100%",
+            height: "35px",
             borderRadius: "4px",
             border: "1px solid #CFD4DA",
             bgcolor: "#fff",
@@ -258,7 +262,7 @@ export default function DatasetList() {
           onClick={handleApply}
           sx={{
             width: "71px",
-            height: "100%",
+            height: "35px",
             borderRadius: "4px",
             bgcolor: "#3154F4",
             color: "#fff",

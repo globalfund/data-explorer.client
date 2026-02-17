@@ -31,7 +31,7 @@ import { ColorPicker } from "app/components/color-picker/example";
 import { ColorService } from "app/components/color-picker/utils/color";
 import StyledMenu from "../../common/menu-popup";
 import AlignButtons from "./align-buttons";
-import TextField from "../../common/textField";
+import TextField from "../../components/textfield";
 
 export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
   const [fontFamilyAnchorEl, setFontFamilyAnchorEl] =
@@ -366,33 +366,19 @@ export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
         }}
       >
         <Box>
-          <Typography
-            sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
-          >
-            Line Height
-          </Typography>
-
           <TextField
-            type="letterSpacing"
+            label="Line Height"
             value={editorState.lineHeight}
             onChange={onLineHeightChange}
             width="134px"
-            item="text"
           />
         </Box>
         <Box>
-          <Typography
-            sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
-          >
-            Letter Spacing
-          </Typography>
-
           <TextField
-            type="letterSpacing"
+            label="Letter Spacing"
             value={editorState.letterSpacing}
             onChange={onLetterSpacingChange}
             width="134px"
-            item="text"
           />
         </Box>
       </Box>

@@ -8,6 +8,10 @@ import LINE_OPTIONS from "../chart/data/default-visual-options/line";
 import PIE_OPTIONS from "../chart/data/default-visual-options/pie";
 import SANKEY_OPTIONS from "../chart/data/default-visual-options/sankey";
 import SCATTER_OPTIONS from "../chart/data/default-visual-options/scatter";
+import GEOMAP_OPTIONS from "../chart/data/default-visual-options/geomap";
+import TREEMAP_OPTIONS from "../chart/data/default-visual-options/treemap";
+import RADAR_OPTIONS from "../chart/data/default-visual-options/radar";
+import HEATMAP_OPTIONS from "../chart/data/default-visual-options/heatmap";
 
 import { charts } from "./data/chartsBase";
 
@@ -49,6 +53,10 @@ export const DEFAULT_VISUAL_OPTIONS: Record<
   pie: PIE_OPTIONS,
   sankey: SANKEY_OPTIONS,
   scatter: SCATTER_OPTIONS,
+  geomap: GEOMAP_OPTIONS,
+  treemap: TREEMAP_OPTIONS,
+  radar: RADAR_OPTIONS,
+  heatmap: HEATMAP_OPTIONS,
 };
 
 export const getDimensions = (chartType: string): IChartDimension[] => {

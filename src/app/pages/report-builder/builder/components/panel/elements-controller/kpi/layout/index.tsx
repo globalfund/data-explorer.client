@@ -1,12 +1,13 @@
-import { Box, Typography } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 import Direction from "app/assets/vectors/RBAlignBottom.svg?react";
 import Button from "@mui/material/Button";
 import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
 import React from "react";
 import StyledMenu from "../../common/menu-popup";
-import CustomTextField from "../../common/textField";
+
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { alignHOptions } from "../data";
+import { set } from "lodash";
 
 export function PaddingSize() {
   const selectedItemController = useStoreState(
@@ -32,6 +33,18 @@ export function PaddingSize() {
       selectedItem?.extra?.kpi_box?.options?.alignHorizontal || "left",
     );
   }, [selectedItem]);
+
+  const handleChange = (key: string, value: any) => {
+    if (!selectedItem) return;
+    const currentItem = structuredClone(selectedItem);
+    set(currentItem, key, value);
+    editItem({
+      ...currentItem,
+      id: selectedItemController?.id || "",
+      open: currentItem?.open || false,
+      type: "kpi_box",
+    });
+  };
 
   const handleSelectAlignHorizontal = (value: "left" | "center" | "right") => {
     let justifyContent = "";
@@ -151,45 +164,51 @@ export function PaddingSize() {
             justifyContent: "space-between",
           }}
         >
-          <Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                marginBottom: "8px",
-                svg: {
-                  transform: "rotate(90deg)",
-                },
-              }}
-            >
-              <Direction />
-              <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
-                Left
-              </Typography>
-            </Box>
-            <CustomTextField type="paddingLeft" item="kpi_box" />
-          </Box>
+          <TextField
+            label={
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  marginBottom: "8px",
+                  svg: {
+                    transform: "rotate(90deg)",
+                  },
+                }}
+              >
+                <Direction />
+                <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
+                  Left
+                </Typography>
+              </Box>
+            }
+            value={selectedItem?.settings?.paddingLeft ?? ""}
+            onChange={(value) => handleChange("settings.paddingLeft", value)}
+          />
 
-          <Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                marginBottom: "8px",
-                svg: {
-                  transform: "rotate(180deg)",
-                },
-              }}
-            >
-              <Direction />
-              <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
-                Top
-              </Typography>
-            </Box>
-            <CustomTextField type="paddingTop" item="kpi_box" />
-          </Box>
+          <TextField
+            label={
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  marginBottom: "8px",
+                  svg: {
+                    transform: "rotate(180deg)",
+                  },
+                }}
+              >
+                <Direction />
+                <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
+                  Top
+                </Typography>
+              </Box>
+            }
+            value={selectedItem?.settings?.paddingTop ?? ""}
+            onChange={(value) => handleChange("settings.paddingTop", value)}
+          />
         </Box>
 
         <Box
@@ -198,42 +217,48 @@ export function PaddingSize() {
             justifyContent: "space-between",
           }}
         >
-          <Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                marginBottom: "8px",
-                svg: {
-                  transform: "rotate(270deg)",
-                },
-              }}
-            >
-              <Direction />
-              <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
-                Right
-              </Typography>
-            </Box>
-            <CustomTextField type="paddingRight" item="kpi_box" />
-          </Box>
+          <TextField
+            label={
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  marginBottom: "8px",
+                  svg: {
+                    transform: "rotate(270deg)",
+                  },
+                }}
+              >
+                <Direction />
+                <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
+                  Right
+                </Typography>
+              </Box>
+            }
+            value={selectedItem?.settings?.paddingRight ?? ""}
+            onChange={(value) => handleChange("settings.paddingRight", value)}
+          />
 
-          <Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                marginBottom: "8px",
-              }}
-            >
-              <Direction />
-              <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
-                Bottom
-              </Typography>
-            </Box>
-            <CustomTextField type="paddingBottom" item="kpi_box" />
-          </Box>
+          <TextField
+            label={
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  marginBottom: "8px",
+                }}
+              >
+                <Direction />
+                <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
+                  Bottom
+                </Typography>
+              </Box>
+            }
+            value={selectedItem?.settings?.paddingBottom ?? ""}
+            onChange={(value) => handleChange("settings.paddingBottom", value)}
+          />
         </Box>
 
         <Box>
@@ -246,25 +271,17 @@ export function PaddingSize() {
               justifyContent: "space-between",
             }}
           >
-            <Box>
-              <Typography
-                sx={{ color: "#373D43", fontSize: "14px" }}
-                marginBottom={"8px"}
-              >
-                Width
-              </Typography>
-              <CustomTextField type="width" item="kpi_box" />
-            </Box>
+            <TextField
+              label="Width"
+              value={selectedItem?.settings?.width ?? ""}
+              onChange={(value) => handleChange("settings.width", value)}
+            />
 
-            <Box>
-              <Typography
-                sx={{ color: "#373D43", fontSize: "14px" }}
-                marginBottom={"8px"}
-              >
-                Height
-              </Typography>
-              <CustomTextField type="height" item="kpi_box" />
-            </Box>
+            <TextField
+              label="Height"
+              value={selectedItem?.settings?.height ?? ""}
+              onChange={(value) => handleChange("settings.height", value)}
+            />
           </Box>
         </Box>
       </Box>

@@ -2,12 +2,18 @@ import { Box, Typography } from "@mui/material";
 import { ColorPicker } from "app/components/color-picker/example";
 import { ColorService } from "app/components/color-picker/utils/color";
 import React from "react";
-import CustomTextField from "app/pages/report-builder/builder/components/panel/elements-controller/common/textField";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { IColor } from "app/components/color-picker/types";
-import { CustomiseComponentProps } from "../../chart/customise/component";
 
-export default function BorderFill(props: Readonly<CustomiseComponentProps>) {
+import { set } from "lodash";
+import TextField from "../../components/textfield";
+import { RBReportItemTypes } from "app/state/api/action-reducers/report-builder/sync";
+
+interface BorderFillProps {
+  itemType: RBReportItemTypes;
+}
+
+export default function BorderFill(props: Readonly<BorderFillProps>) {
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
@@ -16,24 +22,28 @@ export default function BorderFill(props: Readonly<CustomiseComponentProps>) {
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const item = items.find((i) => i.id === selectedController?.id);
-  const handleBackgroundColorChange = (color: IColor) => {
+
+  const handleChange = (key: string, value: any) => {
+    if (!item) return;
+    const currentItem = structuredClone(item);
+    set(currentItem, key, value);
     editItem({
-      ...item,
+      ...currentItem,
       id: selectedController?.id || "",
-      open: item?.open || false,
-      type: props.borderFill?.itemType ?? null,
-      settings: {
-        ...item?.settings,
-        backgroundColor: color.hex,
-      },
+      open: currentItem?.open || false,
+      type: props.itemType ?? null,
     });
+  };
+
+  const handleBackgroundColorChange = (color: IColor) => {
+    handleChange("settings.backgroundColor", color.hex);
   };
   const handleBorderColorChange = (color: IColor) => {
     editItem({
       ...item,
       id: selectedController?.id || "",
       open: item?.open || false,
-      type: props.borderFill?.itemType ?? null,
+      type: props.itemType ?? null,
       settings: {
         ...item?.settings,
         borderColor: color.hex,
@@ -64,17 +74,12 @@ export default function BorderFill(props: Readonly<CustomiseComponentProps>) {
             justifyContent: "space-between",
           }}
         >
-          <Box>
-            <Typography
-              sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
-            >
-              Stroke
-            </Typography>
-            <CustomTextField
-              type="borderWidth"
-              item={props.borderFill?.itemType ?? null}
-            />
-          </Box>
+          <TextField
+            label="Stroke"
+            value={item?.settings?.borderWidth ?? ""}
+            onChange={(value) => handleChange("settings.borderWidth", value)}
+          />
+
           <Box>
             <Typography
               sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
@@ -103,14 +108,10 @@ export default function BorderFill(props: Readonly<CustomiseComponentProps>) {
           }}
         >
           <Box>
-            <Typography
-              sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
-            >
-              Corner Radius
-            </Typography>
-            <CustomTextField
-              type="borderRadius"
-              item={props.borderFill?.itemType ?? null}
+            <TextField
+              label="Corner Radius"
+              value={item?.settings?.borderRadius ?? ""}
+              onChange={(value) => handleChange("settings.borderRadius", value)}
             />
           </Box>
           <Box>

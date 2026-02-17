@@ -4,12 +4,12 @@ const options: IDefaultChartVisualOptions = {
   showChartName: {
     type: "boolean",
     default: true,
-    label: "Show Chart Name",
+    label: "Show Chart Title",
     tab: "layout",
   },
   chartTitle: {
     type: "text",
-    default: "Line Chart",
+    default: "Geomap Chart",
     tab: "layout",
     disabled: {
       showChartName: false,
@@ -63,7 +63,7 @@ const options: IDefaultChartVisualOptions = {
   legendPosition: {
     type: "text",
     options: ["top", "bottom", "left", "right"],
-    default: "top",
+    default: "bottom",
     tab: "layout",
     disabled: {
       showLegend: false,
@@ -108,6 +108,49 @@ const options: IDefaultChartVisualOptions = {
     },
     tab: "layout",
   },
+  mapRoaming: {
+    type: "boolean",
+    default: false,
+    label: "Map Roaming",
+    tab: "layout",
+  },
+  roamOption: {
+    type: "text",
+    default: "scale",
+    options: ["scale", "move", "both"],
+    tab: "layout",
+    disabled: {
+      mapRoaming: false,
+    },
+  },
+  showAntartica: {
+    type: "boolean",
+    default: true,
+    label: "Show Antarctica",
+    tab: "layout",
+  },
+  scaleLimitMin: {
+    type: "text",
+    default: "0.5",
+    label: "Min",
+    tab: "layout",
+    group: "Scale Limit",
+    disabled: {
+      mapRoaming: false,
+    },
+    column: "span 1",
+  },
+  scaleLimitMax: {
+    type: "text",
+    default: "2",
+    label: "Max",
+    group: "Scale Limit",
+    tab: "layout",
+    disabled: {
+      mapRoaming: false,
+    },
+    column: "span 1",
+  },
   paddingLeft: {
     type: "text",
     default: "30",
@@ -142,8 +185,8 @@ const options: IDefaultChartVisualOptions = {
   },
   alignHorizontal: {
     type: "text",
-    options: ["left", "right"],
-    default: "left",
+    options: ["left", "center", "right"],
+    default: "center",
     label: "Horizontal",
     tab: "layout",
     group: "Align",
@@ -151,8 +194,8 @@ const options: IDefaultChartVisualOptions = {
   },
   alignVertical: {
     type: "text",
-    options: ["top", "bottom"],
-    default: "bottom",
+    options: ["top", "middle", "bottom"],
+    default: "middle",
     label: "Vertical",
     tab: "layout",
     group: "Align",
@@ -168,46 +211,22 @@ const options: IDefaultChartVisualOptions = {
   },
   height: {
     type: "text",
-    default: "400px",
+    default: "700px",
     label: "Height",
     tab: "layout",
     group: "Size",
     column: "span 1",
   },
-  lineWidth: {
-    type: "text",
-    default: "2",
-    label: "Line Width",
-    tab: "style",
-    group: "Line Style",
-    column: "span 1",
-  },
-  lineType: {
-    type: "text",
-    default: "solid",
-    options: ["solid", "dashed", "dotted"],
-    tab: "style",
-    label: "Line Type",
-    group: "Line Style",
-    column: "span 1",
-  },
-  smoothLine: {
-    type: "boolean",
-    default: false,
-    label: "Smooth Line",
-    tab: "style",
-    group: "Line Style",
-  },
   colorPalette: {
-    type: "colorPaletteCategorical",
-    default: "default",
+    type: "colorPaletteSequential",
+    default: "blue",
     label: "Color Palette",
     tab: "style",
     group: "Line Style",
   },
   strokeWidth: {
     type: "text",
-    default: "0",
+    default: "0.3",
     label: "Stroke",
     tab: "style",
     group: "Border & Fill",
@@ -248,30 +267,6 @@ const options: IDefaultChartVisualOptions = {
     type: "boolean",
     default: false,
     label: "Make tooltip monetary value",
-  },
-  customYAxisName: {
-    tab: "advanced",
-    label: "Custom Y Axis Name",
-    type: "boolean",
-    default: false,
-  },
-  yAxisName: {
-    tab: "advanced",
-    type: "text",
-    default: "",
-    placeholder: "(default axis name here)",
-  },
-  customXAxisName: {
-    tab: "advanced",
-    label: "Custom X Axis Name",
-    type: "boolean",
-    default: false,
-  },
-  xAxisName: {
-    tab: "advanced",
-    type: "text",
-    default: "",
-    placeholder: "(default axis name here)",
   },
 };
 

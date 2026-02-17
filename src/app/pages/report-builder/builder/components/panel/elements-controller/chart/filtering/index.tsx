@@ -78,10 +78,12 @@ export default function Filtering() {
         flexDirection: "column",
         gap: "8px",
         maxHeight: "500px",
+        position: "relative",
         overflowY: "scroll",
         "&::-webkit-scrollbar": {
           display: "none",
         },
+        paddingBottom: 0,
       }}
     >
       <Box
@@ -168,7 +170,7 @@ export default function Filtering() {
                 gap: "8px",
               }}
             >
-              <Typography fontSize="14px" fontWeight="700">
+              <Typography fontSize="14px" fontWeight="400">
                 {group.name}
               </Typography>
             </AccordionSummary>
@@ -196,8 +198,13 @@ export default function Filtering() {
       <Box
         sx={{
           gap: "10px",
+          position: "sticky",
+          bottom: 0,
+          background: "#F8F9FA",
           display: "flex",
-          justifyContent: "space-between",
+          borderTop: `0.5px solid ${appColors.COMMON.SECONDARY_COLOR_6}`,
+
+          padding: "11px 0",
           "& > button": {
             fontSize: "14px",
             lineHeight: "1.5",
@@ -237,6 +244,7 @@ export default function Filtering() {
           }
           sx={{
             border: "none",
+            marginRight: "auto",
           }}
         >
           Reset
@@ -257,6 +265,10 @@ export default function Filtering() {
             color: "#fff",
             bgcolor: "#3154f4",
             "&:hover": { bgcolor: "#3154f4" },
+            "&:disabled": {
+              bgcolor: "#CFD4DA",
+              color: appColors.COMMON.SECONDARY_COLOR_2,
+            },
           }}
           disabled={isEqual(
             tmpAppliedFilters,
