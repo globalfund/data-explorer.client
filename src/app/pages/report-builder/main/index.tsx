@@ -1,6 +1,9 @@
 import React from "react";
+import get from "lodash/get";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import { useQuery } from "@tanstack/react-query";
+import { GFGetReportsQueryOptions } from "app/hooks/queries/report-builder";
 import { ReportBuilderSidebar } from "app/pages/report-builder/main/components/sidebar";
 import { ReportBuilderToolbar } from "app/pages/report-builder/main/components/toolbar";
 import { AllAssetsView } from "app/pages/report-builder/main/components/all-assets-view";
@@ -12,10 +15,11 @@ import { ReportBuilderNewReportModal } from "app/pages/report-builder/main/compo
 export const ReportBuilder: React.FC = () => {
   const [sidebarSelectedItem, setSidebarSelectedItem] =
     React.useState("All Reports");
+  const [search, setSearch] = React.useState("");
   const [selectedView, setSelectedView] = React.useState<"cards" | "list">(
     "cards",
   );
-  const [selectedSort, setSelectedSort] = React.useState("Date Created");
+  const [selectedSort, setSelectedSort] = React.useState("createdDate DESC");
   const [newFolderModalOpen, setNewFolderModalOpen] = React.useState(false);
   const [newFolderModalNameValue, setNewFolderModalNameValue] =
     React.useState("");
@@ -24,6 +28,10 @@ export const ReportBuilder: React.FC = () => {
     React.useState("");
   const [newReportModalDescriptionValue, setNewReportModalDescriptionValue] =
     React.useState("");
+
+  const getReports = useQuery(
+    GFGetReportsQueryOptions({ search: search, sort: selectedSort }),
+  );
 
   const handleNewFolderModalOpen = () => {
     setNewFolderModalOpen(true);
@@ -44,7 +52,16 @@ export const ReportBuilder: React.FC = () => {
   const view = React.useMemo(() => {
     switch (sidebarSelectedItem) {
       case "All Reports":
-        return <AllReportsView selectedView={selectedView} />;
+        return (
+          <AllReportsView
+            reports={{
+              isLoading: getReports.isLoading,
+              data: get(getReports, "data.data", []),
+            }}
+            selectedView={selectedView}
+            refetch={getReports.refetch}
+          />
+        );
       case "Templates and Layouts":
         return (
           <TemplatesLayoutsView
@@ -58,20 +75,33 @@ export const ReportBuilder: React.FC = () => {
       default:
         return <React.Fragment />;
     }
-  }, [sidebarSelectedItem, selectedView]);
+  }, [
+    selectedView,
+    sidebarSelectedItem,
+    getReports.isLoading,
+    getReports.data?.data,
+  ]);
+
+  React.useEffect(() => {
+    if (sidebarSelectedItem === "All Reports") {
+      getReports.refetch();
+    }
+  }, [sidebarSelectedItem, search]);
 
   return (
     <React.Fragment>
       <Box padding="50px 0">
         <Grid container spacing={2}>
-          <Grid item xs={12} md={4} lg={2.5}>
+          <Grid item xs={12} md={3.5} lg={2}>
             <ReportBuilderSidebar
               selectedItem={sidebarSelectedItem}
               setSelectedItem={setSidebarSelectedItem}
             />
           </Grid>
-          <Grid item xs={12} md={8} lg={9.5}>
+          <Grid item xs={12} md={8.5} lg={10}>
             <ReportBuilderToolbar
+              search={search}
+              setSearch={setSearch}
               selectedSort={selectedSort}
               selectedView={selectedView}
               setSelectedSort={setSelectedSort}
