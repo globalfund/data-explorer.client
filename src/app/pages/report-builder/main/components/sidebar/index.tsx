@@ -63,7 +63,7 @@ export const ReportBuilderSidebar: React.FC<{
                 justifyContent: "flex-start",
                 ".MuiButton-startIcon": { ml: 0, mr: "10px" },
                 "&:hover": {
-                  background: "#f1f3f5",
+                  background: "#eff1fe",
                 },
               },
             }}
@@ -73,9 +73,9 @@ export const ReportBuilderSidebar: React.FC<{
               onClick={handleItemClick("All Reports")}
               sx={{
                 background:
-                  selectedItem === "All Reports" ? "#f1f3f5" : "transparent",
+                  selectedItem === "All Reports" ? "#eff1fe" : "transparent",
                 border:
-                  selectedItem === "All Reports" ? "1px solid #70777e" : "none",
+                  selectedItem === "All Reports" ? "1px solid #3154f4" : "none",
                 path: { stroke: "#252c34" },
               }}
             >
@@ -86,9 +86,9 @@ export const ReportBuilderSidebar: React.FC<{
               onClick={handleItemClick("All Assets")}
               sx={{
                 background:
-                  selectedItem === "All Assets" ? "#f1f3f5" : "transparent",
+                  selectedItem === "All Assets" ? "#eff1fe" : "transparent",
                 border:
-                  selectedItem === "All Assets" ? "1px solid #70777e" : "none",
+                  selectedItem === "All Assets" ? "1px solid #3154f4" : "none",
               }}
             >
               All Assets
@@ -98,9 +98,9 @@ export const ReportBuilderSidebar: React.FC<{
               onClick={handleItemClick("Tutorials")}
               sx={{
                 background:
-                  selectedItem === "Tutorials" ? "#f1f3f5" : "transparent",
+                  selectedItem === "Tutorials" ? "#eff1fe" : "transparent",
                 border:
-                  selectedItem === "Tutorials" ? "1px solid #70777e" : "none",
+                  selectedItem === "Tutorials" ? "1px solid #3154f4" : "none",
               }}
             >
               Tutorials
@@ -111,11 +111,11 @@ export const ReportBuilderSidebar: React.FC<{
               sx={{
                 background:
                   selectedItem === "Templates and Layouts"
-                    ? "#f1f3f5"
+                    ? "#eff1fe"
                     : "transparent",
                 border:
                   selectedItem === "Templates and Layouts"
-                    ? "1px solid #70777e"
+                    ? "1px solid #3154f4"
                     : "none",
               }}
             >

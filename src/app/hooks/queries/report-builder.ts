@@ -1,12 +1,17 @@
 import axiosInstance from "app/utils/axiosInstance";
-import { useMutation, useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
+  useMutation,
+  useQuery,
+  useInfiniteQuery,
+  queryOptions,
+} from "@tanstack/react-query";
+import {
+  RBChartModel,
   RBReportModel,
   RBDatasetResponse,
   RBRenderedChartData,
   RBRenderChartDataRequest,
   RBSampledDatasetResponse,
-  RBChartModel,
 } from "app/state/api/action-reducers/report-builder/sync";
 
 export const useCreateReport = () => {
@@ -101,6 +106,30 @@ export const useGFDataset = (datasetId: string) => {
       }
     },
     enabled: !!datasetId,
+  });
+};
+
+export const GFGetReportsQueryOptions = (params: {
+  sort: string;
+  search: string;
+}) => {
+  return queryOptions({
+    queryKey: ["GFGetReports", params.search, params.sort],
+    queryFn: () =>
+      axiosInstance.get(`/reports`, {
+        params: {
+          filter: `{"where":{"name":{"like":".*${params.search}.*","options":"i"}},"order":["${params.sort}"]}`,
+        },
+      }),
+    staleTime: 1000 * 60 * 5,
+  });
+};
+
+export const useGFGetReports = () => {
+  return useQuery({
+    queryKey: ["GFGetReports"],
+    queryFn: () => axiosInstance.get<RBReportModel[]>(`/reports`),
+    staleTime: 1000 * 60 * 5,
   });
 };
 
@@ -239,5 +268,12 @@ export const useGFCreateChart = () => {
     mutationKey: ["ReportBuilderGFCreateChart"],
     mutationFn: (data: Omit<RBRenderChartDataRequest, "id">) =>
       axiosInstance.post<RBChartModel>("/chart", data),
+  });
+};
+
+export const useGFDuplicateReport = () => {
+  return useMutation({
+    mutationKey: ["ReportBuilderGFDuplicateReport"],
+    mutationFn: (id: string) => axiosInstance.get(`/report/duplicate/${id}`),
   });
 };
