@@ -1,7 +1,8 @@
+import React from "react";
 import { colors } from "app/theme";
-import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import { DndProvider } from "react-dnd";
+import { useDebounce } from "react-use";
 import update from "immutability-helper";
 import Divider from "@mui/material/Divider";
 import { useParams } from "react-router-dom";
@@ -13,6 +14,7 @@ import KPIBox from "app/pages/report-builder/builder/components/kpi";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { Empty } from "app/pages/report-builder/builder/components/empty";
 import { ReportBuilderPageReportSettings } from "./components/report-settings";
+import { useGetReport, usePatchReport } from "app/hooks/queries/report-builder";
 import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
 import { ReportBuilderPageGrid } from "app/pages/report-builder/builder/components/grid";
 import { ReportBuilderPageText } from "app/pages/report-builder/builder/components/text";
@@ -21,8 +23,6 @@ import { ReportBuilderPageTable } from "app/pages/report-builder/builder/compone
 import { ReportBuilderPageImage } from "app/pages/report-builder/builder/components/image";
 import { ItemComponent } from "app/pages/report-builder/builder/components/order-container";
 import ElementsController from "app/pages/report-builder/builder/components/panel/elements-controller";
-import { useGetReport, usePatchReport } from "app/hooks/queries/report-builder";
-import { useDebounce } from "react-use";
 
 export const ReportBuilderPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -57,7 +57,7 @@ export const ReportBuilderPage: React.FC = () => {
     (actions) => actions.RBReportItemsState.addItem,
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (reportData) {
       setActiveReport(reportData);
     }
@@ -65,12 +65,19 @@ export const ReportBuilderPage: React.FC = () => {
 
   useDebounce(
     () => {
-      updateReport.mutate({
-        items: reportState.items,
-        description: reportState.description,
-        settings: reportState.settings,
-        name: reportState.name,
-      });
+      updateReport.mutate(
+        {
+          items: reportState.items,
+          description: reportState.description,
+          settings: reportState.settings,
+          name: reportState.name,
+        },
+        {
+          onSuccess: () => {
+            reportQuery.refetch();
+          },
+        },
+      );
     },
     2000,
     [
@@ -284,6 +291,8 @@ export const ReportBuilderPage: React.FC = () => {
     }
   }, [items.length]);
 
+  // console.log(reportData);
+
   return (
     <Box
       sx={{
@@ -338,7 +347,7 @@ export const ReportBuilderPage: React.FC = () => {
               alignItems: "flex-start",
               justifyContent: "flex-start",
               width: `${reportData?.settings.width}px`,
-              // height: `${reportData?.settings.height}px`,
+              height: `${reportData?.settings.height}px`,
               bgcolor: reportData?.settings.backgroundColor,
               borderRadius: `${reportData?.settings.borderRadius}px`,
               p: reportData?.settings.padding

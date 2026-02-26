@@ -51,7 +51,7 @@ export const AllReportsView: React.FC<{
   const handleEdit = () => {
     const id = getAnchorElId();
     if (!id) return;
-    navigate(`/report-builder/${id}/edit`);
+    navigate(`/report-builder/reports/${id}/edit`);
   };
 
   const handleDuplicate = () => {
@@ -70,6 +70,10 @@ export const AllReportsView: React.FC<{
     deleteReport.mutate(id, {
       onSuccess: () => refetch(),
     });
+  };
+
+  const handleItemClick = (id: string) => () => {
+    navigate(`/report-builder/reports/${id}`);
   };
 
   const view = React.useMemo(() => {
@@ -103,6 +107,7 @@ export const AllReportsView: React.FC<{
                   justifyContent: "center",
                   border: "1px solid #cfd4da",
                 }}
+                onClick={handleItemClick(item.id)}
               >
                 <img
                   src="/static/images/layout-placeholder.png"
@@ -118,7 +123,12 @@ export const AllReportsView: React.FC<{
                   justifyContent: "space-between",
                 }}
               >
-                <Typography variant="h6" fontSize="16px" lineHeight="normal">
+                <Typography
+                  variant="h6"
+                  fontSize="16px"
+                  lineHeight="normal"
+                  onClick={handleItemClick(item.id)}
+                >
                   {item.name}
                 </Typography>
                 <IconButton
@@ -168,7 +178,11 @@ export const AllReportsView: React.FC<{
                   ]}
                 />
               </Box>
-              <Typography variant="body2" width="calc(100% - 40px)">
+              <Typography
+                variant="body2"
+                width="calc(100% - 40px)"
+                onClick={handleItemClick(item.id)}
+              >
                 {item.description}
               </Typography>
             </Grid>

@@ -294,7 +294,7 @@ export const ReportBuilderPreviewPage: React.FC = () => {
             alignItems: "flex-start",
             justifyContent: "flex-start",
             width: `${reportData?.settings.width}px`,
-            // height: `${reportData?.settings.height}px`,
+            height: `${reportData?.settings.height}px`,
             bgcolor: reportData?.settings?.backgroundColor,
             borderRadius: `${reportData?.settings.borderRadius}px`,
             p: reportData?.settings?.padding

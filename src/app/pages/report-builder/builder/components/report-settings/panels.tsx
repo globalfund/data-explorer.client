@@ -8,6 +8,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Typography from "@mui/material/Typography";
 import FormHelperText from "@mui/material/FormHelperText";
 import {
+  useGetReport,
   useGFGetReport,
   useGFUpdateReport,
 } from "app/hooks/queries/report-builder";
@@ -175,7 +176,8 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
 ) => {
   const { id } = useParams<{ id: string }>();
 
-  const reportData = useGFGetReport(id);
+  const reportData = useGetReport(id);
+  console.log(reportData.data);
   const updateReport = useGFUpdateReport();
 
   const [widthError, setWidthError] = React.useState("");
