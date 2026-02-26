@@ -122,11 +122,12 @@ export const ItemComponent = (props: ItemComponentProps) => {
     <Box
       ref={ref}
       id={`container-${id}`}
-      data-handler-id={handlerId}
       sx={{ ...style, opacity: isDragging ? 0.5 : 1, position: "relative" }}
     >
       <Box
         id={`item-${id}`}
+        ref={ref}
+        data-handler-id={handlerId}
         sx={{
           top: 0,
           zIndex: 1,

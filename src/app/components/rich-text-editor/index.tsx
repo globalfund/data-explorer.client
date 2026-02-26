@@ -4,15 +4,20 @@ import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { extensions } from "app/components/rich-text-editor/extensions";
 import { Editor, useEditor, EditorContent } from "@tiptap/react";
 import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 
 export const RichEditor: React.FC<{
   itemId: string;
   visualSettings: any;
   initialContent?: string;
   setEditor: (editor: Editor | null) => void;
-}> = ({ setEditor, itemId }) => {
+  viewMode?: boolean;
+}> = ({ setEditor, itemId, viewMode }) => {
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find((i) => i.id === itemId);
+  const selectedItem = items.find(
+    (i) => i.id === itemId,
+  ) as ReportItemOf<"text">;
+
   const editItem = useStoreActions(
     (actions) => actions.RBReportItemsState.editItem,
   );
@@ -23,17 +28,15 @@ export const RichEditor: React.FC<{
   const editor = useEditor({
     extensions,
     autofocus: true,
-    content: selectedItem?.extra?.text?.rte || "",
-
+    content: selectedItem?.data?.rte || "",
+    editable: !viewMode,
     onUpdate: ({ editor }) => {
       if (selectedItem) {
         editItem({
           ...selectedItem,
-          extra: {
-            ...selectedItem.extra,
-            text: {
-              rte: editor.getJSON(),
-            },
+          data: {
+            ...selectedItem.data,
+            rte: editor.getJSON(),
           },
         });
       }
@@ -56,7 +59,7 @@ export const RichEditor: React.FC<{
     <Box
       id="rte-editor"
       sx={{
-        ...selectedItem?.settings,
+        ...selectedItem?.options,
         "*": { margin: "0 !important" },
         blockquote: { margin: "0 40px !important" },
       }}

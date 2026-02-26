@@ -4,6 +4,7 @@ import React from "react";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { set } from "lodash";
 import TextField from "../components/textfield";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 
 export default function LayoutTab() {
   const selectedItemController = useStoreState(
@@ -14,7 +15,9 @@ export default function LayoutTab() {
   );
 
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find((i) => i.id === selectedItemController?.id);
+  const selectedItem = items.find(
+    (i) => i.id === selectedItemController?.id,
+  ) as ReportItemOf<"text">;
 
   const handleChange = (key: string, value: any) => {
     if (!selectedItem) return;
@@ -70,8 +73,8 @@ export default function LayoutTab() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.settings?.paddingLeft ?? ""}
-            onChange={(value) => handleChange("settings.paddingLeft", value)}
+            value={selectedItem?.options?.paddingLeft ?? ""}
+            onChange={(value) => handleChange("options.paddingLeft", value)}
           />
 
           <TextField
@@ -93,8 +96,8 @@ export default function LayoutTab() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.settings?.paddingTop ?? ""}
-            onChange={(value) => handleChange("settings.paddingTop", value)}
+            value={selectedItem?.options?.paddingTop ?? ""}
+            onChange={(value) => handleChange("options.paddingTop", value)}
           />
         </Box>
 
@@ -123,8 +126,8 @@ export default function LayoutTab() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.settings?.paddingRight ?? ""}
-            onChange={(value) => handleChange("settings.paddingRight", value)}
+            value={selectedItem?.options?.paddingRight ?? ""}
+            onChange={(value) => handleChange("options.paddingRight", value)}
           />
 
           <TextField
@@ -143,8 +146,8 @@ export default function LayoutTab() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.settings?.paddingBottom ?? ""}
-            onChange={(value) => handleChange("settings.paddingBottom", value)}
+            value={selectedItem?.options?.paddingBottom ?? ""}
+            onChange={(value) => handleChange("options.paddingBottom", value)}
           />
         </Box>
 
@@ -160,14 +163,14 @@ export default function LayoutTab() {
           >
             <TextField
               label="Width"
-              value={selectedItem?.settings?.width ?? ""}
-              onChange={(value) => handleChange("settings.width", value)}
+              value={selectedItem?.options?.width ?? ""}
+              onChange={(value) => handleChange("options.width", value)}
             />
 
             <TextField
               label="Height"
-              value={selectedItem?.settings?.height ?? ""}
-              onChange={(value) => handleChange("settings.height", value)}
+              value={selectedItem?.options?.height ?? ""}
+              onChange={(value) => handleChange("options.height", value)}
             />
           </Box>
         </Box>

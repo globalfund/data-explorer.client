@@ -9,10 +9,12 @@ import { checkValidDimensionMapping } from "../panel/elements-controller/chart/u
 import ChartComponent from "./chart-component";
 import { useRenderChartData } from "app/hooks/queries/report-builder";
 import GeomapLegend from "./geomap-legend";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 
 export const ReportBuilderPageChart: React.FC<{
   id: string;
-}> = ({ id }) => {
+  viewMode?: boolean;
+}> = ({ id, viewMode }) => {
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const editItem = useStoreActions(
     (actions) => actions.RBReportItemsState.editItem,
@@ -20,18 +22,19 @@ export const ReportBuilderPageChart: React.FC<{
   const clearSelectedItem = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.clearItem,
   );
-  const selectedItem = items.find((i) => i.id === id);
+  const selectedItem = items.find((i) => i.id === id) as ReportItemOf<"chart">;
   const setSelectedController = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
   );
 
   const renderChartData = useRenderChartData();
 
-  const chartExtra = selectedItem?.extra?.chart;
+  const chartExtra = selectedItem?.data;
   const renderedChartData = chartExtra?.renderedChartData;
 
   React.useEffect(() => {
     if (
+      !viewMode &&
       chartExtra?.dataset &&
       checkValidDimensionMapping(chartExtra.chartType || "", chartExtra.mapping)
     ) {
@@ -39,7 +42,7 @@ export const ReportBuilderPageChart: React.FC<{
         {
           chartType: chartExtra.chartType,
           mapping: chartExtra.mapping,
-          vizOptions: chartExtra.visualOptions,
+          vizOptions: selectedItem.options,
           appliedFilters: chartExtra.appliedFilters,
           datasetId: chartExtra.dataset,
         },
@@ -50,12 +53,9 @@ export const ReportBuilderPageChart: React.FC<{
               id,
               type: "chart",
               open: selectedItem?.open || true,
-              extra: {
-                ...selectedItem?.extra,
-                chart: {
-                  ...selectedItem?.extra?.chart,
-                  renderedChartData: data.data,
-                },
+              data: {
+                ...selectedItem?.data,
+                renderedChartData: data.data,
               },
             });
           },
@@ -67,7 +67,7 @@ export const ReportBuilderPageChart: React.FC<{
     chartExtra?.chartType,
     chartExtra?.dataset,
     chartExtra?.appliedFilters,
-    chartExtra?.visualOptions,
+    selectedItem?.options,
   ]);
 
   useClickOutsideEditor({
@@ -82,25 +82,19 @@ export const ReportBuilderPageChart: React.FC<{
     <Box
       id="chart-render"
       onClick={() => {
-        editItem({
-          ...selectedItem,
-          id,
-          type: "chart",
-          open: true,
-          extra: {
-            ...selectedItem?.extra,
-            chart: {
-              ...selectedItem?.extra?.chart,
-              //dataset: fetched datasetId
-              //chartType: fetched chart type
-            },
-          },
-        });
-        setSelectedController({
-          id,
-          type: "chart",
-          open: true,
-        });
+        if (!viewMode) {
+          editItem({
+            ...selectedItem,
+            id,
+            type: "chart",
+            open: true,
+          });
+          setSelectedController({
+            id,
+            type: "chart",
+            open: true,
+          });
+        }
       }}
       sx={{
         width: "100%",
@@ -117,8 +111,8 @@ export const ReportBuilderPageChart: React.FC<{
       {selectedItem?.open && chartExtra?.chartType ? (
         <Box
           sx={{
-            width: chartExtra?.visualOptions?.width,
-            height: chartExtra?.visualOptions?.height,
+            width: selectedItem?.options?.width,
+            height: selectedItem?.options?.height,
             position: "relative",
           }}
         >
@@ -130,7 +124,7 @@ export const ReportBuilderPageChart: React.FC<{
               data={renderedChartData?.mappedData}
               mapping={chartExtra?.mapping}
               chartType={chartExtra.chartType}
-              visualOptions={chartExtra.visualOptions || {}}
+              visualOptions={selectedItem.options || {}}
               id={id}
             />
           ) : (
@@ -138,7 +132,7 @@ export const ReportBuilderPageChart: React.FC<{
           )}
 
           {chartExtra.chartType === "geomap" &&
-          chartExtra.visualOptions?.showLegend ? (
+          selectedItem.options?.showLegend ? (
             <Box
               sx={{
                 position: "absolute",
@@ -148,13 +142,13 @@ export const ReportBuilderPageChart: React.FC<{
             >
               <GeomapLegend
                 data={renderedChartData?.mappedData}
-                visualOptions={chartExtra.visualOptions}
+                visualOptions={selectedItem.options}
                 mapping={chartExtra.mapping}
               />
             </Box>
           ) : null}
         </Box>
-      ) : (
+      ) : viewMode ? null : (
         <Box
           sx={{
             gap: "10px",

@@ -10,6 +10,7 @@ import StyledMenu from "../../common/menu-popup";
 import { lineOptions } from "../data";
 import TextField from "../../components/textfield";
 import { set } from "lodash";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 
 export function Customise() {
   const selectedController = useStoreState(
@@ -19,7 +20,9 @@ export function Customise() {
     (actions) => actions.RBReportItemsState.editItem,
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find((i) => i.id === selectedController?.id);
+  const selectedItem = items.find(
+    (i) => i.id === selectedController?.id,
+  ) as ReportItemOf<"kpi_box">;
   // const handleBackgroundColorChange = (color: IColor) => {
   //   editItem({
   //     ...selectedItem,
@@ -47,18 +50,14 @@ export function Customise() {
   // };
 
   const handleChange = (key: string, value: any) => {
-    const currentKpiBoxExtra =
-      structuredClone(selectedItem?.extra?.kpi_box) || {};
-    set(currentKpiBoxExtra, key, value);
+    const currentItem = structuredClone(selectedItem);
+    if (!currentItem) return;
+    set(currentItem, key, value);
     editItem({
-      ...selectedItem,
+      ...currentItem,
       open: selectedItem?.open || false,
       id: selectedController?.id || "",
       type: "kpi_box",
-      extra: {
-        ...selectedItem?.extra,
-        kpi_box: currentKpiBoxExtra,
-      },
     });
   };
   const handleInnerBorderColorChange = (color: IColor) => {
@@ -66,7 +65,7 @@ export function Customise() {
   };
 
   const [lineMenuOption, setLineMenuOption] = React.useState(
-    selectedItem?.extra?.kpi_box?.options?.innerLine?.type || "line",
+    selectedItem?.options?.innerLine?.type || "line",
   );
 
   const [lineMenuAnchorEl, setLineMenuAnchorEl] =
@@ -74,9 +73,7 @@ export function Customise() {
   const isLineOptionMenuActive = Boolean(lineMenuAnchorEl);
 
   React.useEffect(() => {
-    setLineMenuOption(
-      selectedItem?.extra?.kpi_box?.options?.innerLine?.type || "line",
-    );
+    setLineMenuOption(selectedItem?.options?.innerLine?.type || "line");
   }, [selectedItem]);
 
   const handleSelectLineOption = (value: "line" | "box" | "simple") => {
@@ -97,21 +94,12 @@ export function Customise() {
       open: selectedItem?.open || false,
       id: selectedController?.id || "",
       type: "kpi_box",
-      settings: {
-        ...selectedItem?.settings,
+      options: {
+        ...selectedItem?.options,
         display: "flex",
         alignItems,
-      },
-      extra: {
-        ...selectedItem?.extra,
-        kpi_box: {
-          ...selectedItem?.extra?.kpi_box,
-          options: {
-            ...selectedItem?.extra?.kpi_box?.options,
-            innerLine: {
-              type: value,
-            },
-          },
+        innerLine: {
+          type: value,
         },
       },
     });
@@ -181,10 +169,7 @@ export function Customise() {
         <Box>
           <TextField
             label="Line Stroke"
-            value={
-              selectedItem?.extra?.kpi_box?.options?.innerLine?.borderWidth ||
-              ""
-            }
+            value={selectedItem?.options?.innerLine?.borderWidth || ""}
             onChange={(value) => {
               handleChange("options.innerLine.borderWidth", value);
             }}
@@ -199,8 +184,7 @@ export function Customise() {
           <ColorPicker
             color={ColorService.convert(
               "hex",
-              selectedItem?.extra?.kpi_box?.options?.innerLine?.borderColor ||
-                "#000000",
+              selectedItem?.options?.innerLine?.borderColor || "#000000",
             )}
             onChange={handleInnerBorderColorChange}
             disabled={false}

@@ -30,7 +30,8 @@ export default function AddComponent() {
           id: uniqueId(),
           type: "text",
           open: false,
-          settings: {
+          data: { rte: null },
+          options: {
             paddingTop: "10px",
             paddingLeft: "10px",
             paddingRight: "10px",
@@ -50,7 +51,7 @@ export default function AddComponent() {
           id: uniqueId(),
           type: "chart",
           open: false,
-          settings: {
+          options: {
             paddingTop: "10px",
             paddingLeft: "10px",
             paddingRight: "10px",
@@ -64,45 +65,22 @@ export default function AddComponent() {
             height: "500px",
             justifyContent: "start",
           },
-          extra: {
-            chart: {
-              field: {
-                chartName: {
-                  value: "Chart Title",
-                  fontFamily: "Arial",
-                  fontWeightLabel: "400",
-                  fontStyle: "normal",
-                  fontWeight: "400",
-                  fontSize: "14px",
-                  color: "#70777E",
-                  bgColor: "#ffffff00",
-                  enabled: true,
-                },
-                showLegend: {
-                  value: "left",
-                  fontFamily: "Arial",
-                  fontWeight: "700",
-                  fontWeightLabel: "400",
-                  fontStyle: "normal",
-                  fontSize: "44px",
-                  color: "#000000",
-                  bgColor: "#ffffff00",
-                  enabled: true,
-                },
-              },
-            },
+          data: {
+            dataset: null,
+            chartType: undefined,
+            mapping: {},
           },
         };
         break;
       case "table":
-        newItem = { id: uniqueId(), type: "table", open: false };
+        newItem = { id: uniqueId(), type: "table", open: false, data: null };
         break;
       case "image":
         newItem = {
           id: uniqueId(),
           type: "image",
           open: false,
-          settings: {
+          options: {
             paddingTop: "10px",
             paddingLeft: "10px",
             paddingRight: "10px",
@@ -114,27 +92,82 @@ export default function AddComponent() {
             borderStyle: "solid",
             width: "100%",
             height: "400px",
-            img: {
-              objectFit: "contain",
-              opacity: 1,
-            },
+            imgObjectFit: "contain",
+            imgOpacity: 1,
+            sizingMode: "fit-proportional",
+            enableCrop: true,
           },
-          extra: {
-            image: {
-              sizingMode: "fit-proportional",
+          data: {
+            src: "",
+            cropCoordinates: {
+              left: 0,
+              top: 0,
+              width: 1000,
+              height: 1000,
             },
           },
         };
         break;
       case "section_divider":
-        newItem = { id: uniqueId(), type: "section_divider", open: false };
+        newItem = {
+          id: uniqueId(),
+          type: "section_divider",
+          open: false,
+          data: null,
+        };
         break;
       case "kpi_box":
         newItem = {
           id: uniqueId(),
           type: "kpi_box",
           open: false,
-          settings: {
+          data: {
+            topLabel: {
+              value: "Top Label",
+              fontFamily: "Arial",
+              fontWeightLabel: "400",
+              fontStyle: "normal",
+              fontWeight: "400",
+              fontSize: "14px",
+              color: "#70777E",
+              bgColor: "#ffffff00",
+              enabled: true,
+            },
+            bigNumberText: {
+              value: "BN",
+              fontFamily: "Arial",
+              fontWeight: "700",
+              fontWeightLabel: "400",
+              fontStyle: "normal",
+              fontSize: "44px",
+              color: "#000000",
+              bgColor: "#ffffff00",
+              enabled: true,
+            },
+            bottomLabel: {
+              value: "Bottom Label",
+              fontFamily: "Arial",
+              fontWeightLabel: "400",
+              fontStyle: "normal",
+              fontWeight: "400",
+              fontSize: "16px",
+              color: "#70777E",
+              bgColor: "#ffffff00",
+              enabled: true,
+            },
+            optionalText: {
+              value: "Optional Text",
+              fontFamily: "Arial",
+              fontWeightLabel: "400",
+              fontStyle: "normal",
+              fontWeight: "400",
+              fontSize: "14px",
+              color: "#70777E",
+              bgColor: "#ffffff00",
+              enabled: true,
+            },
+          },
+          options: {
             paddingTop: "10px",
             paddingLeft: "10px",
             paddingRight: "10px",
@@ -147,73 +180,38 @@ export default function AddComponent() {
             width: "100%",
             height: "141px",
             justifyContent: "start",
-          },
-          extra: {
-            kpi_box: {
-              options: {
-                alignVertical: "middle",
-                alignHorizontal: "left",
-                innerLine: {
-                  type: "line",
-                  borderWidth: "0.5px",
-                  borderColor: "#98A1AA",
-                },
-              },
-              field: {
-                topLabel: {
-                  value: "Top Label",
-                  fontFamily: "Arial",
-                  fontWeightLabel: "400",
-                  fontStyle: "normal",
-                  fontWeight: "400",
-                  fontSize: "14px",
-                  color: "#70777E",
-                  bgColor: "#ffffff00",
-                  enabled: true,
-                },
-                bigNumberText: {
-                  value: "BN",
-                  fontFamily: "Arial",
-                  fontWeight: "700",
-                  fontWeightLabel: "400",
-                  fontStyle: "normal",
-                  fontSize: "44px",
-                  color: "#000000",
-                  bgColor: "#ffffff00",
-                  enabled: true,
-                },
-                bottomLabel: {
-                  value: "Bottom Label",
-                  fontFamily: "Arial",
-                  fontWeightLabel: "400",
-                  fontStyle: "normal",
-                  fontWeight: "400",
-                  fontSize: "16px",
-                  color: "#70777E",
-                  bgColor: "#ffffff00",
-                  enabled: true,
-                },
-                optionalText: {
-                  value: "Optional Text",
-                  fontFamily: "Arial",
-                  fontWeightLabel: "400",
-                  fontStyle: "normal",
-                  fontWeight: "400",
-                  fontSize: "14px",
-                  color: "#70777E",
-                  bgColor: "#ffffff00",
-                  enabled: true,
-                },
-              },
+            alignVertical: "middle",
+            alignHorizontal: "left",
+            innerLine: {
+              type: "line",
+              borderWidth: "0.5px",
+              borderColor: "#98A1AA",
             },
           },
         };
         break;
       case "grid":
-        newItem = { id: uniqueId(), type: "grid", open: false };
+        newItem = {
+          id: uniqueId(),
+          type: "grid",
+          open: false,
+          data: {
+            rows: 2,
+            columns: 2,
+            items: {},
+          },
+        };
         break;
       case "column":
-        newItem = { id: uniqueId(), type: "column", open: false };
+        newItem = {
+          id: uniqueId(),
+          type: "column",
+          open: false,
+          data: {
+            columns: 2,
+            items: {},
+          },
+        };
         break;
       default:
         break;

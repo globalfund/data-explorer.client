@@ -13,6 +13,7 @@ import {
   useGFDataset,
   useGFSampleDataset,
 } from "app/hooks/queries/report-builder";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 
 export default function DataDetail(props: Readonly<{ datasetId: string }>) {
   const setSelectedController = useStoreActions(
@@ -26,7 +27,9 @@ export default function DataDetail(props: Readonly<{ datasetId: string }>) {
     (actions) => actions.RBReportItemsState.editItem,
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const item = items.find((i) => i.id === selectedController?.id);
+  const item = items.find(
+    (i) => i.id === selectedController?.id,
+  ) as ReportItemOf<"chart">;
 
   const datasetDetail = datasetItems.find(
     (dataset) => dataset.id === props.datasetId,
@@ -88,16 +91,11 @@ export default function DataDetail(props: Readonly<{ datasetId: string }>) {
       ...item,
       id: selectedController?.id || "",
       type: "chart",
-      extra: {
-        ...item?.extra,
-        chart: {
-          ...item?.extra?.chart,
-          dataset: props.datasetId,
-          mapping:
-            item?.extra?.chart?.dataset === props.datasetId
-              ? item?.extra?.chart?.mapping
-              : {},
-        },
+      data: {
+        ...item?.data,
+        dataset: props.datasetId,
+        mapping:
+          item?.data?.dataset === props.datasetId ? item?.data?.mapping : {},
       },
     });
     handleBack();

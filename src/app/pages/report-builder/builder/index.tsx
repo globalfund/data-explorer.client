@@ -1,5 +1,5 @@
-import React from "react";
 import { colors } from "app/theme";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import { DndProvider } from "react-dnd";
 import update from "immutability-helper";
@@ -21,18 +21,23 @@ import { ReportBuilderPageTable } from "app/pages/report-builder/builder/compone
 import { ReportBuilderPageImage } from "app/pages/report-builder/builder/components/image";
 import { ItemComponent } from "app/pages/report-builder/builder/components/order-container";
 import ElementsController from "app/pages/report-builder/builder/components/panel/elements-controller";
-import {
-  useGFGetReport,
-  // useGFUpdateReport,
-} from "app/hooks/queries/report-builder";
+import { useGetReport, usePatchReport } from "app/hooks/queries/report-builder";
+import { useDebounce } from "react-use";
 
 export const ReportBuilderPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
-  const reportData = useGFGetReport(id);
-  // const updateReport = useGFUpdateReport();
+  const reportQuery = useGetReport(id);
+  const reportData = reportQuery?.data?.data;
 
-  const items = useStoreState((state) => state.RBReportItemsState.items);
+  const updateReport = usePatchReport(id);
+
+  const setActiveReport = useStoreActions(
+    (actions) => actions.RBReportItemsState.setReport,
+  );
+
+  const reportState = useStoreState((state) => state.RBReportItemsState);
+  const items = reportState.items;
   const setActiveRTE = useStoreActions(
     (actions) => actions.RBReportRTEState.setActiveRTE,
   );
@@ -50,6 +55,30 @@ export const ReportBuilderPage: React.FC = () => {
   );
   const addItem = useStoreActions(
     (actions) => actions.RBReportItemsState.addItem,
+  );
+
+  useEffect(() => {
+    if (reportData) {
+      setActiveReport(reportData);
+    }
+  }, [reportData]);
+
+  useDebounce(
+    () => {
+      updateReport.mutate({
+        items: reportState.items,
+        description: reportState.description,
+        settings: reportState.settings,
+        name: reportState.name,
+      });
+    },
+    2000,
+    [
+      reportState.items,
+      reportState.description,
+      reportState.settings,
+      reportState.name,
+    ],
   );
 
   const moveItem = React.useCallback(
@@ -79,9 +108,9 @@ export const ReportBuilderPage: React.FC = () => {
             <ReportBuilderPageText
               id={item.id}
               setEditor={setActiveRTE}
-              settings={item.settings}
-              focus={item.extra?.focus}
-              initialKey={item.extra?.key}
+              settings={item.options}
+              focus={item.focus}
+              initialKey={item.key}
             />
           </ItemComponent>
         );
@@ -127,7 +156,8 @@ export const ReportBuilderPage: React.FC = () => {
             moveItem={moveItem}
           >
             <ReportBuilderPageGrid
-              length={4}
+              columns={item.data.columns}
+              rows={item.data.rows}
               id={item.id}
               setEditor={setActiveRTE}
             />
@@ -153,7 +183,8 @@ export const ReportBuilderPage: React.FC = () => {
             moveItem={moveItem}
           >
             <ReportBuilderPageGrid
-              length={2}
+              rows={1}
+              columns={item.data.columns}
               id={item.id}
               setEditor={setActiveRTE}
             />
@@ -191,7 +222,7 @@ export const ReportBuilderPage: React.FC = () => {
           </ItemComponent>
         );
       default:
-        return <React.Fragment key={item.id} />;
+        return <React.Fragment />;
     }
   };
 
@@ -208,8 +239,10 @@ export const ReportBuilderPage: React.FC = () => {
         id: uniqueId(),
         type: "text",
         open: true,
-        extra: { focus: true, key: e.key },
-        settings: {
+        focus: true,
+        key: e.key,
+        data: { rte: null },
+        options: {
           paddingTop: "10px",
           paddingLeft: "10px",
           paddingRight: "10px",
@@ -293,7 +326,7 @@ export const ReportBuilderPage: React.FC = () => {
             maxWidth: "100%",
             overflow: "overlay",
             height: "fit-content",
-            bgcolor: reportData.data?.data.settings.backgroundColor,
+            bgcolor: reportData?.settings.backgroundColor,
           }}
         >
           <Box
@@ -304,14 +337,14 @@ export const ReportBuilderPage: React.FC = () => {
               flexDirection: "column",
               alignItems: "flex-start",
               justifyContent: "flex-start",
-              width: `${reportData.data?.data.settings.width}px`,
-              height: `${reportData.data?.data.settings.height}px`,
-              bgcolor: reportData.data?.data.settings.backgroundColor,
-              borderRadius: `${reportData.data?.data.settings.borderRadius}px`,
-              p: reportData.data?.data.settings.padding
+              width: `${reportData?.settings.width}px`,
+              // height: `${reportData?.settings.height}px`,
+              bgcolor: reportData?.settings.backgroundColor,
+              borderRadius: `${reportData?.settings.borderRadius}px`,
+              p: reportData?.settings.padding
                 .map((p: string) => `${p}px`)
                 .join(" "),
-              border: `${reportData.data?.data.settings.stroke}px solid ${reportData.data?.data.settings.strokeColor}`,
+              border: `${reportData?.settings.stroke}px solid ${reportData?.settings.strokeColor}`,
               ".top-right-actions": {
                 top: 4,
                 right: 4,

@@ -1,5 +1,8 @@
 import { Box } from "@mui/material";
-import { ChartProperty } from "app/state/api/action-reducers/report-builder/sync";
+import {
+  ChartProperty,
+  ReportItemOf,
+} from "app/state/api/action-reducers/report-builder/sync";
 import React from "react";
 import { chartInfo } from "../data";
 import { AssetSelect } from "./asset-select";
@@ -11,8 +14,10 @@ export function SelectChartAssetList() {
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const item = items.find((i) => i.id === selectedController?.id);
-  const chartExtra = item?.extra?.chart || {};
+  const item = items.find(
+    (i) => i.id === selectedController?.id,
+  ) as ReportItemOf<"chart">;
+  const chartExtra = item?.data || {};
 
   const getSelectedItem = (type: "chartType" | "dataset") => {
     if (type === "chartType") {

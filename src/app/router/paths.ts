@@ -76,8 +76,13 @@ export const ROUTE_CONFIGS: RouteConfig[] = [
     importFrom: "app/pages/report-builder/main",
   },
   {
-    path: "/report-builder/:id/edit",
+    path: "/report-builder/reports/:id/edit",
     componentName: "ReportBuilderPage",
     importFrom: "app/pages/report-builder/builder",
+  },
+  {
+    path: "/report-builder/reports/:id",
+    componentName: "ReportBuilderPreviewPage",
+    importFrom: "app/pages/report-builder/preview",
   },
 ];

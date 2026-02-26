@@ -8,6 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import { datasetItems } from "../../../../../chart/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import FullscreenIcon from "app/assets/vectors/TableToolbarFullscreen.svg?react";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 
 export default function DatasetList() {
   const [selectedDatasetId, setSelectedDatasetId] = React.useState<string>("");
@@ -21,7 +22,9 @@ export default function DatasetList() {
     (actions) => actions.RBReportItemsState.editItem,
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const item = items.find((i) => i.id === selectedController?.id);
+  const item = items.find(
+    (i) => i.id === selectedController?.id,
+  ) as ReportItemOf<"chart">;
 
   const selectedDataset = datasetItems.find(
     (item) => item.id === selectedDatasetId,
@@ -37,16 +40,13 @@ export default function DatasetList() {
       ...item,
       id: selectedController?.id || "",
       type: "chart",
-      extra: {
-        ...item?.extra,
-        chart: {
-          ...item?.extra?.chart,
-          dataset: selectedDataset?.id,
-          mapping:
-            item?.extra?.chart?.dataset === selectedDataset?.id
-              ? item?.extra?.chart?.mapping
-              : {},
-        },
+      data: {
+        ...item?.data,
+        dataset: selectedDataset?.id,
+        mapping:
+          item?.data?.dataset === selectedDataset?.id
+            ? item?.data?.mapping
+            : {},
       },
     });
     handleBack();

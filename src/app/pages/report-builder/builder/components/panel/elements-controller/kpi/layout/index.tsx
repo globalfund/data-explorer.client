@@ -8,6 +8,7 @@ import StyledMenu from "../../common/menu-popup";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { alignHOptions } from "../data";
 import { set } from "lodash";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 
 export function PaddingSize() {
   const selectedItemController = useStoreState(
@@ -18,10 +19,12 @@ export function PaddingSize() {
   );
 
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find((i) => i.id === selectedItemController?.id);
+  const selectedItem = items.find(
+    (i) => i.id === selectedItemController?.id,
+  ) as ReportItemOf<"kpi_box">;
 
   const [alignHorizontal, setAlignHorizontal] = React.useState(
-    selectedItem?.extra?.kpi_box?.options?.alignHorizontal || "left",
+    selectedItem?.options?.alignHorizontal || "left",
   );
 
   const [alignHorizontalAnchorEl, setAlignHorizontalAnchorEl] =
@@ -29,9 +32,7 @@ export function PaddingSize() {
   const isAlignHorizontalMenuActive = Boolean(alignHorizontalAnchorEl);
 
   React.useEffect(() => {
-    setAlignHorizontal(
-      selectedItem?.extra?.kpi_box?.options?.alignHorizontal || "left",
-    );
+    setAlignHorizontal(selectedItem?.options?.alignHorizontal || "left");
   }, [selectedItem]);
 
   const handleChange = (key: string, value: any) => {
@@ -64,20 +65,11 @@ export function PaddingSize() {
       open: selectedItem?.open || false,
       id: selectedItemController?.id || "",
       type: "kpi_box",
-      settings: {
-        ...selectedItem?.settings,
+      options: {
+        ...selectedItem?.options,
         display: "flex",
         justifyContent,
-      },
-      extra: {
-        ...selectedItem?.extra,
-        kpi_box: {
-          ...selectedItem?.extra?.kpi_box,
-          options: {
-            ...selectedItem?.extra?.kpi_box?.options,
-            alignHorizontal: value,
-          },
-        },
+        alignHorizontal: value,
       },
     });
     setAlignHorizontal(value);
@@ -183,8 +175,8 @@ export function PaddingSize() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.settings?.paddingLeft ?? ""}
-            onChange={(value) => handleChange("settings.paddingLeft", value)}
+            value={selectedItem?.options?.paddingLeft ?? ""}
+            onChange={(value) => handleChange("options.paddingLeft", value)}
           />
 
           <TextField
@@ -206,8 +198,8 @@ export function PaddingSize() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.settings?.paddingTop ?? ""}
-            onChange={(value) => handleChange("settings.paddingTop", value)}
+            value={selectedItem?.options?.paddingTop ?? ""}
+            onChange={(value) => handleChange("options.paddingTop", value)}
           />
         </Box>
 
@@ -236,8 +228,8 @@ export function PaddingSize() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.settings?.paddingRight ?? ""}
-            onChange={(value) => handleChange("settings.paddingRight", value)}
+            value={selectedItem?.options?.paddingRight ?? ""}
+            onChange={(value) => handleChange("options.paddingRight", value)}
           />
 
           <TextField
@@ -256,8 +248,8 @@ export function PaddingSize() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.settings?.paddingBottom ?? ""}
-            onChange={(value) => handleChange("settings.paddingBottom", value)}
+            value={selectedItem?.options?.paddingBottom ?? ""}
+            onChange={(value) => handleChange("options.paddingBottom", value)}
           />
         </Box>
 
@@ -273,14 +265,14 @@ export function PaddingSize() {
           >
             <TextField
               label="Width"
-              value={selectedItem?.settings?.width ?? ""}
-              onChange={(value) => handleChange("settings.width", value)}
+              value={selectedItem?.options?.width ?? ""}
+              onChange={(value) => handleChange("options.width", value)}
             />
 
             <TextField
               label="Height"
-              value={selectedItem?.settings?.height ?? ""}
-              onChange={(value) => handleChange("settings.height", value)}
+              value={selectedItem?.options?.height ?? ""}
+              onChange={(value) => handleChange("options.height", value)}
             />
           </Box>
         </Box>

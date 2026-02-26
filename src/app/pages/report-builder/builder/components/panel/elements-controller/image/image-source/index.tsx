@@ -3,6 +3,7 @@ import SearchIcon from "app/assets/vectors/Search_grants.svg?react";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import React from "react";
 import { remoteImages } from "app/pages/report-builder/builder/components/image/data";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 
 export function ImageSource() {
   const selectedItemController = useStoreState(
@@ -12,7 +13,9 @@ export function ImageSource() {
     (actions) => actions.RBReportItemsState.editItem,
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find((i) => i.id === selectedItemController?.id);
+  const selectedItem = items.find(
+    (i) => i.id === selectedItemController?.id,
+  ) as ReportItemOf<"image">;
 
   const handleImageSelect = (url: string) => {
     editItem({
@@ -20,12 +23,9 @@ export function ImageSource() {
       open: selectedItem?.open || false,
       id: selectedItemController?.id || "",
       type: "image",
-      extra: {
-        ...selectedItem?.extra,
-        image: {
-          ...selectedItem?.extra?.image,
-          src: url,
-        },
+      data: {
+        ...selectedItem?.data,
+        src: url,
       },
     });
   };
@@ -67,6 +67,8 @@ export function ImageSource() {
           gap: "16px",
           display: "flex",
           flexDirection: "column",
+          maxHeight: "600px",
+          overflow: "auto",
         }}
       >
         {remoteImages.map((src) => (
@@ -87,12 +89,16 @@ export function ImageSource() {
             }}
           >
             <Box
+              component={"img"}
               sx={{
-                width: "256px",
-                height: "108.8px",
+                width: "100%",
+                height: "100%",
                 bgcolor: "#fff",
                 borderRadius: "8px",
+                objectFit: "cover",
               }}
+              alt="Image preview"
+              src={src}
             />
           </Box>
         ))}

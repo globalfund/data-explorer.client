@@ -7,7 +7,7 @@ export const sizingModes = [
 
 export const objectFitMap: Record<string, string> = {
   "fit-proportional": "contain",
-  fill: "cover",
+  fill: "fill",
   crop: "none",
-  auto: "none",
+  auto: "contain",
 };

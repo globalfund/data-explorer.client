@@ -16,6 +16,7 @@ import { Grants } from "app/pages/grants";
 import { ROUTE_CONFIGS } from "app/router/paths";
 import { ReportBuilder } from "app/pages/report-builder/main";
 import { ReportBuilderPage } from "app/pages/report-builder/builder";
+import { ReportBuilderPreviewPage } from "app/pages/report-builder/preview";
 
 const DetailPageRedirect: React.FC<{
   type: "location" | "partner" | "grant";
@@ -85,6 +86,7 @@ const COMPONENT_MAP: Record<string, React.ComponentType> = {
   AnnualResultsPage,
   ReportBuilder,
   ReportBuilderPage,
+  ReportBuilderPreviewPage,
 };
 
 const NON_REDIRECT_ROUTES = ROUTE_CONFIGS.map((config) => {

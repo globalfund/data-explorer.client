@@ -10,8 +10,7 @@ export type RBReportItemTypes =
   | "kpi_box"
   | "grid"
   | "column"
-  | "section_divider"
-  | null;
+  | "section_divider";
 
 export type ObjectFitTypes =
   | "contain"
@@ -53,11 +52,6 @@ export interface RBRKPIBoxField {
   optionalText?: AdvancedTextFormatting;
 }
 
-export interface ChartField {
-  chartName?: AdvancedTextFormatting;
-  showLegend?: AdvancedTextFormatting;
-}
-
 export interface MappedDimension {
   [key: string]: {
     value: string[];
@@ -68,81 +62,75 @@ export interface MappedDimension {
   };
 }
 
-export interface RBReportItem {
+type RBReportItemDataByType = {
+  text: {
+    rte: any;
+  };
+
+  image: {
+    src?: string;
+    cropCoordinates?: {
+      top: number;
+      left: number;
+      width: number;
+      height: number;
+    };
+  };
+
+  kpi_box: RBRKPIBoxField;
+
+  chart: {
+    dataset?: string | null;
+    chartType?: ChartType;
+    mapping?: MappedDimension;
+    appliedFilters?: Record<string, any[]>;
+    renderedChartData?: RBRenderedChartData | null;
+  };
+
+  table: null;
+
+  grid: {
+    rows: number;
+    columns: number;
+    items: Record<string, RBReportItem>;
+  };
+
+  column: { columns: number; items: Record<string, RBReportItem> };
+
+  section_divider: null;
+  null: null;
+};
+
+// 2) Base fields shared by every item
+type RBReportItemBase<T extends RBReportItemTypes> = {
   id: string;
-  type: RBReportItemTypes;
+  type: T;
   open: boolean;
-  extra?: {
-    focus?: boolean;
-    key?: string;
-    text?: {
-      rte: any;
-    };
-    image?: {
-      src?: string;
-      sizingMode?: "fit-proportional" | "fill" | "crop" | "auto";
-      alignVertical?: AlignVertical;
-      alignHorizontal?: AlignHorizontal;
-    };
-    kpi_box?: {
-      field?: RBRKPIBoxField;
-      options?: {
-        alignVertical?: AlignVertical;
-        alignHorizontal?: AlignHorizontal;
-        innerLine?: {
-          type?: "line" | "box" | "simple";
-          borderWidth?: string;
-          borderColor?: string;
-        };
-      };
-    };
-    chart?: {
-      dataset?: string | null;
-      chartType?: ChartType;
-      field?: ChartField;
-      alignVertical?: AlignVertical;
-      alignHorizontal?: AlignHorizontal;
-      mapping?: MappedDimension;
-      visualOptions?: Record<string, any>;
-      appliedFilters?: Record<string, any[]>;
-      type?: {
-        bar?: {
-          donutChecked?: boolean;
-          barWidthChecked?: boolean;
-          donutThickness?: number;
-          barWidth?: number;
-        };
-      };
-      renderedChartData?: RBRenderedChartData | null;
-    };
+  focus?: boolean;
+  key?: string;
+  options?: Record<string, any>;
+};
+
+// 3) Discriminated union: RBReportItem is now “type-aware”
+export type RBReportItem = {
+  [T in RBReportItemTypes]: RBReportItemBase<T> & {
+    data: RBReportItemDataByType[T];
   };
-  settings?: {
-    width?: string;
-    height?: string;
-    paddingTop?: string;
-    paddingBottom?: string;
-    paddingLeft?: string;
-    paddingRight?: string;
-    borderWidth?: string;
-    borderColor?: string;
-    borderRadius?: string;
-    borderStyle?: string;
-    backgroundColor?: string;
-    display?: string;
-    alignItems?: string;
-    justifyContent?: string;
-    img?: {
-      opacity?: number;
-      objectFit?: ObjectFitTypes;
-      width?: string;
-    };
-  };
-}
+}[RBReportItemTypes];
+
+export type ReportItemOf<T extends RBReportItemTypes> = Extract<
+  RBReportItem,
+  { type: T }
+>;
 
 export interface RBReportItemController {
   open: boolean;
   type: RBReportItemTypes | null;
   id: string;
+  parent?: {
+    id: string;
+    type: RBReportItemTypes | null;
+  } | null;
   extra?: {
     chart?: {
       listToDisplay?: ChartProperty | null;
@@ -162,12 +150,26 @@ export interface RBReportItemControllerModel {
 
 export interface RBReportItemsModel {
   items: RBReportItem[];
+  settings: {
+    width: string;
+    height: string;
+    stroke: string;
+    strokeColor: string;
+    padding: string[];
+    backgroundColor: string;
+    borderRadius: string;
+  };
+  name: string;
+  description: string;
   clearItems: Action<RBReportItemsModel>;
   addItem: Action<RBReportItemsModel, RBReportItem>;
   removeItem: Action<RBReportItemsModel, string>;
   setItems: Action<RBReportItemsModel, RBReportItem[]>;
   editItem: Action<RBReportItemsModel, RBReportItem>;
   duplicateItem: Action<RBReportItemsModel, string>;
+  resetSettings: Action<RBReportItemsModel>;
+  resetReport: Action<RBReportItemsModel>;
+  setReport: Action<RBReportItemsModel, RBReportModel>;
 }
 
 export interface RBReportRTEModel {
@@ -252,6 +254,15 @@ export interface RBRenderChartDataRequest {
   datasetId: string;
 }
 
+export interface RBReportModel {
+  id?: string;
+  items: RBReportItem[];
+  settings: RBReportItemsModel["settings"];
+  name: string;
+  description: string;
+  updatedDate?: string;
+  createdDate?: string;
+}
 export interface RBRenderedChartData {
   renderedContent: string;
   appliedFilters: any;
@@ -260,34 +271,6 @@ export interface RBRenderedChartData {
   mappedData: any;
   dimensions: IChartDimension[];
   ssr: false;
-}
-
-export interface RBReportModel {
-  id: string;
-  name: string;
-  title: string;
-  description: string;
-  rows: {
-    items: any[];
-    structure: string;
-    contentWidths: {
-      id: string;
-      widths: number[];
-    }[];
-    contentHeights: {
-      id: string;
-      heights: number[];
-    }[];
-  }[];
-  public: boolean;
-  baseline: boolean;
-  backgroundColor: string;
-  owner: string;
-  createdDate: string;
-  updatedDate: string;
-  settings: {
-    [key: string]: any;
-  };
 }
 
 export interface RBChartModel {
@@ -352,6 +335,17 @@ export interface RBDatasetResponse {
 
 export const RBReportItemsState: RBReportItemsModel = {
   items: [],
+  settings: {
+    width: "0",
+    height: "0",
+    padding: ["50", "50", "50", "50"],
+    stroke: "0",
+    strokeColor: "#000000",
+    backgroundColor: "#FFFFFF",
+    borderRadius: "0",
+  },
+  name: "",
+  description: "",
   addItem: action((state, payload) => {
     state.items.push(payload);
   }),
@@ -379,6 +373,37 @@ export const RBReportItemsState: RBReportItemsModel = {
       };
       state.items.splice(index + 1, 0, newItem);
     }
+  }),
+  resetSettings: action((state) => {
+    state.settings = {
+      width: "0",
+      height: "0",
+      padding: ["50", "50", "50", "50"],
+      stroke: "0",
+      strokeColor: "#000000",
+      backgroundColor: "#FFFFFF",
+      borderRadius: "0",
+    };
+  }),
+  setReport: action((state, payload) => {
+    state.settings = payload.settings;
+    state.name = payload.name;
+    state.description = payload.description;
+    state.items = payload.items;
+  }),
+  resetReport: action((state) => {
+    state.items = [];
+    state.name = "";
+    state.description = "";
+    state.settings = {
+      width: "0",
+      height: "0",
+      padding: ["50", "50", "50", "50"],
+      stroke: "0",
+      strokeColor: "#000000",
+      backgroundColor: "#FFFFFF",
+      borderRadius: "0",
+    };
   }),
 };
 
@@ -409,46 +434,6 @@ export const RBReportItemOrderState: RBReportItemOrderModel = {
   setIsDragging: action((state, payload) => {
     state.itemId = payload.rowId;
     state.isDragging = payload.isDragging;
-  }),
-};
-
-export const RBReportSettings: RBReportSettingsModel = {
-  width: "0",
-  setWidth: action((state, payload) => {
-    state.width = payload;
-  }),
-  height: "0",
-  setHeight: action((state, payload) => {
-    state.height = payload;
-  }),
-  padding: ["50", "50", "50", "50"],
-  setPadding: action((state, payload) => {
-    state.padding = payload;
-  }),
-  stroke: "0",
-  setStroke: action((state, payload) => {
-    state.stroke = payload;
-  }),
-  strokeColor: "#000000",
-  setStrokeColor: action((state, payload) => {
-    state.strokeColor = payload;
-  }),
-  backgroundColor: "#ffffff",
-  setBackgroundColor: action((state, payload) => {
-    state.backgroundColor = payload;
-  }),
-  borderRadius: "0",
-  setBorderRadius: action((state, payload) => {
-    state.borderRadius = payload;
-  }),
-  resetSettings: action((state) => {
-    state.width = "0";
-    state.height = "0";
-    state.padding = ["50", "50", "50", "50"];
-    state.stroke = "0";
-    state.strokeColor = "#000000";
-    state.backgroundColor = "#ffffff";
-    state.borderRadius = "0";
   }),
 };
 

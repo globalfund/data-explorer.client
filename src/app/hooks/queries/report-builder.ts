@@ -9,6 +9,43 @@ import {
   RBChartModel,
 } from "app/state/api/action-reducers/report-builder/sync";
 
+export const useCreateReport = () => {
+  return useMutation({
+    mutationKey: ["ReportBuilderCreateReport"],
+    mutationFn: (data: RBReportModel) =>
+      axiosInstance.post<RBReportModel>(`/report-builder/reports`, data),
+  });
+};
+
+export const useGetReport = (reportId?: string) => {
+  return useQuery({
+    queryKey: ["ReportBuilderGetReport"],
+    queryFn: () =>
+      axiosInstance.get<RBReportModel>(`/report-builder/reports/${reportId}`),
+    enabled: !!reportId,
+  });
+};
+
+export const useGetReports = () => {
+  // TODO: cache and manage invalidation
+  return useQuery({
+    queryKey: ["ReportBuilderGetReports"],
+    queryFn: () =>
+      axiosInstance.get<RBReportModel[]>(`/report-builder/reports`),
+  });
+};
+
+export const usePatchReport = (reportId?: string) => {
+  return useMutation({
+    mutationKey: ["ReportBuilderPatchReport"],
+    mutationFn: (data: RBReportModel) =>
+      axiosInstance.patch<RBReportModel>(
+        `/report-builder/reports/${reportId}`,
+        data,
+      ),
+  });
+};
+
 export const useRenderChartData = () => {
   return useMutation({
     mutationKey: ["ReportBuilderRenderChartData"],

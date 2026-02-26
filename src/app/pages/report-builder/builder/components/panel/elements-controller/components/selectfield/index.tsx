@@ -40,7 +40,11 @@ export default function SelectField({
   };
 
   return (
-    <Box>
+    <Box
+      sx={{
+        width,
+      }}
+    >
       {label ? (
         <Typography
           sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
@@ -97,7 +101,7 @@ export default function SelectField({
         }}
         sx={{
           "& .MuiPaper-root": {
-            width: width ?? (anchorEl ? anchorEl.clientWidth : undefined),
+            width: anchorEl ? anchorEl.clientWidth : undefined,
             borderRadius: "4px",
             border: "1px solid #98A1AA",
             boxShadow: "0 2px 6px rgba(0, 0, 0, 0.30)",

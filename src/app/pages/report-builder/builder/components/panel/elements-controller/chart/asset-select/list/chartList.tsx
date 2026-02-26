@@ -3,7 +3,10 @@ import Box from "@mui/material/Box";
 import { Typography, Button } from "@mui/material";
 import { chartTypes } from "../../../../../chart/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import { ChartType } from "app/state/api/action-reducers/report-builder/sync";
+import {
+  ChartType,
+  ReportItemOf,
+} from "app/state/api/action-reducers/report-builder/sync";
 import { getDefaultVisualOptions } from "../../utils";
 
 export default function ChartList() {
@@ -18,30 +21,26 @@ export default function ChartList() {
     (actions) => actions.RBReportItemsState.editItem,
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const item = items.find((i) => i.id === selectedController?.id);
+  const item = items.find(
+    (i) => i.id === selectedController?.id,
+  ) as ReportItemOf<"chart">;
 
   const handleApply = () => {
     if (!item || !selectedChartType) return;
-    const chartTypeUnchanged =
-      item?.extra?.chart?.chartType === selectedChartType;
+    const chartTypeUnchanged = item?.data?.chartType === selectedChartType;
     editItem({
       ...item,
       id: selectedController?.id || "",
       type: "chart",
-      extra: {
-        ...item?.extra,
-        chart: {
-          ...item?.extra?.chart,
-          mapping: chartTypeUnchanged ? item?.extra?.chart?.mapping : {},
-          chartType: selectedChartType as ChartType,
-          visualOptions: chartTypeUnchanged
-            ? item?.extra?.chart?.visualOptions
-            : getDefaultVisualOptions(selectedChartType),
-          appliedFilters: chartTypeUnchanged
-            ? item?.extra?.chart?.appliedFilters
-            : {},
-        },
+      data: {
+        ...item?.data,
+        mapping: chartTypeUnchanged ? item?.data?.mapping : {},
+        chartType: selectedChartType as ChartType,
+        appliedFilters: chartTypeUnchanged ? item?.data?.appliedFilters : {},
       },
+      options: chartTypeUnchanged
+        ? item?.options
+        : getDefaultVisualOptions(selectedChartType),
     });
 
     handleBack();

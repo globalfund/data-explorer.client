@@ -11,6 +11,7 @@ import { appColors } from "app/theme";
 import { SearchInput } from "app/components/filters/list/data";
 import { get, isEqual } from "lodash";
 import ExpandedFilterGroup from "./expanded-filter-group";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 
 export default function Filtering() {
   const selectedController = useStoreState(
@@ -22,9 +23,11 @@ export default function Filtering() {
   );
 
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const item = items.find((i) => i.id === selectedController?.id);
+  const item = items.find(
+    (i) => i.id === selectedController?.id,
+  ) as ReportItemOf<"chart">;
 
-  const chartExtra = item?.extra?.chart;
+  const chartExtra = item?.data;
 
   const renderedChartData = chartExtra?.renderedChartData;
 
@@ -56,12 +59,9 @@ export default function Filtering() {
       ...item,
       id: selectedController?.id || "",
       type: "chart",
-      extra: {
-        ...item?.extra,
-        chart: {
-          ...item?.extra?.chart,
-          appliedFilters: reset ? {} : tmpAppliedFilters,
-        },
+      data: {
+        ...item?.data,
+        appliedFilters: reset ? {} : tmpAppliedFilters,
       },
     });
 

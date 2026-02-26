@@ -3,13 +3,15 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { useTooltip } from "app/hooks/useTooltip";
 import { createPortal } from "react-dom";
+import { CropComponent } from "./crop";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 
 export const ReportBuilderPageImage: React.FC<{
   id: string;
-}> = ({ id }) => {
+  viewMode?: boolean;
+}> = ({ id, viewMode }) => {
   const { visible, coords, triggerTooltip, setAnchor } = useTooltip({
     hideAfter: 5000,
     position: "bottom",
@@ -28,33 +30,21 @@ export const ReportBuilderPageImage: React.FC<{
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
 
-  const selectedItem = items.find((i) => i.id === id);
+  const selectedItem = items.find((i) => i.id === id) as ReportItemOf<"image">;
+
   const editItem = useStoreActions(
     (actions) => actions.RBReportItemsState.editItem,
   );
-  const { img: imgStyle, ...settings } = selectedItem?.settings || {};
+  const settings = selectedItem?.options || {};
+  const imgStyle = {
+    opacity: settings.imgOpacity || 1,
+    objectFit: settings.imgObjectFit || "none",
+  };
 
-  const { image: imageExtra } = selectedItem?.extra || {};
+  const imageExtra = selectedItem?.data;
   const imageSrc = imageExtra?.src;
   const tooltipWidth =
     document.getElementById("tooltip-image-move-pan")?.clientWidth || 0;
-
-  // Adjust image size when sizing mode is auto
-  React.useEffect(() => {
-    if (imageExtra?.sizingMode === "auto") {
-      editItem({
-        ...selectedItem,
-        open: selectedItem!.open,
-        id,
-        type: "image",
-        settings: {
-          ...selectedItem?.settings,
-          width: `100%`,
-          height: "auto",
-        },
-      });
-    }
-  }, [imageExtra?.sizingMode]);
 
   React.useEffect(() => {
     if (triggeredTooltip.visible && triggeredTooltip.id === id) {
@@ -67,6 +57,24 @@ export const ReportBuilderPageImage: React.FC<{
     };
   }, [triggeredTooltip]);
 
+  const handleChangeCropCoordinates = (coordinates: {
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+  }) => {
+    editItem({
+      ...selectedItem,
+      id: id || "",
+      open: selectedItem?.open || false,
+      type: "image",
+      data: {
+        ...selectedItem?.data,
+        cropCoordinates: coordinates,
+      },
+    });
+  };
+
   useClickOutsideEditor({
     editorId: "image-render",
     toolbarId: "image-controller",
@@ -76,11 +84,12 @@ export const ReportBuilderPageImage: React.FC<{
   });
 
   const triggerImageController = (open: boolean) => {
+    if (viewMode) return;
     setSelectedController({ id, type: "image", open });
   };
 
   const getUniqueStyle = () => {
-    if (imageExtra?.sizingMode === "fill") {
+    if (settings?.sizingMode === "fill") {
       return {
         display: "block",
         height: `calc(${settings.height} + ${settings.paddingTop} + ${
@@ -88,7 +97,7 @@ export const ReportBuilderPageImage: React.FC<{
         })`,
       };
     }
-    if (imageExtra?.sizingMode === "auto") {
+    if (settings?.sizingMode === "auto") {
       return {
         display: "block",
       };
@@ -105,32 +114,55 @@ export const ReportBuilderPageImage: React.FC<{
             <img
               src={imageSrc}
               alt="random"
-              style={{ ...imgStyle, maxHeight: "100%", maxWidth: "100%" }}
+              style={{ ...imgStyle, maxHeight: "100%", width: "100%" }}
             />
           );
         case "fill":
+          // return (
+          //   <TransformWrapper
+          //     initialScale={1}
+          //     centerOnInit={true}
+          //     limitToBounds={true}
+          //   >
+          //     <TransformComponent
+          //       wrapperStyle={{
+          //         width: settings.width,
+          //         height: settings.height,
+          //       }}
+          //     >
+          //       {imageSrc && (
+          //         <img src={imageSrc} alt="random" style={{ ...imgStyle }} />
+          //       )}
+          //     </TransformComponent>
+          //   </TransformWrapper>
+          // );
           return (
-            <TransformWrapper
-              initialScale={1}
-              centerOnInit={true}
-              limitToBounds={true}
-            >
-              <TransformComponent
-                wrapperStyle={{
-                  width: settings.width,
-                  height: settings.height,
-                }}
-              >
-                {imageSrc && (
-                  <img src={imageSrc} alt="random" style={{ ...imgStyle }} />
-                )}
-              </TransformComponent>
-            </TransformWrapper>
+            <img
+              src={imageSrc}
+              alt="random"
+              style={{ ...imgStyle, height: "100%", width: "100%" }}
+            />
           );
         case "crop":
-          return <img src={imageSrc} alt="random" style={{ ...imgStyle }} />;
+          return (
+            <CropComponent
+              image={imageSrc}
+              width={selectedItem?.options?.width}
+              height={selectedItem?.options?.height}
+              cropMode={selectedItem?.options?.enableCrop}
+              cropCoordinates={selectedItem?.data?.cropCoordinates}
+              onCropChange={handleChangeCropCoordinates}
+              imgStyle={imgStyle}
+            />
+          );
         case "auto":
-          return <img src={imageSrc} alt="random" style={{ ...imgStyle }} />;
+          return (
+            <img
+              src={imageSrc}
+              alt="random"
+              style={{ ...imgStyle, height: "auto", width: "100%" }}
+            />
+          );
         default:
           return null;
       }
@@ -143,8 +175,10 @@ export const ReportBuilderPageImage: React.FC<{
       settings.paddingRight,
       settings.paddingTop,
       settings.paddingBottom,
-      imageExtra?.sizingMode,
+      settings.sizingMode,
       imgStyle,
+      selectedItem?.options?.enableCrop,
+      selectedItem?.data?.cropCoordinates,
     ],
   );
 
@@ -155,7 +189,7 @@ export const ReportBuilderPageImage: React.FC<{
         id="image-render"
         onClick={() => triggerImageController(true)}
       >
-        {!imageSrc && (
+        {!imageSrc && !viewMode && (
           <Box
             sx={{
               gap: "10px",
@@ -193,9 +227,10 @@ export const ReportBuilderPageImage: React.FC<{
 
               ...settings,
               ...getUniqueStyle(),
+              ...(viewMode ? { border: "none" } : {}),
             }}
           >
-            {renderImage(imageExtra?.sizingMode || "fit-proportional")}
+            {renderImage(settings?.sizingMode || "fit-proportional")}
           </Box>
         )}
       </Box>

@@ -13,7 +13,7 @@ import ColorPickerfield from "../../components/colorpickerfield";
 import AdvancedOptions from "../../common/advanced-text-field/advancedOptions";
 import { Box, Divider, Typography } from "@mui/material";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 import { Slider } from "../../components/slider";
 import { ColorPalette } from "../../components/colorpalette";
 import { useDebounce } from "react-use";
@@ -32,7 +32,7 @@ const VisualOptions = ({
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const selectedItem = items.find(
     (i) => i.id === selectedItemController?.id,
-  ) as RBReportItem;
+  ) as ReportItemOf<"chart">;
   const editItem = useStoreActions(
     (actions) => actions.RBReportItemsState.editItem,
   );
@@ -42,7 +42,7 @@ const VisualOptions = ({
     any
   > | null>(null);
 
-  const visualOptionsState = selectedItem?.extra?.chart?.visualOptions ?? {};
+  const visualOptionsState = selectedItem?.options ?? {};
 
   const visualOptions = visualOptionsTemp ?? visualOptionsState;
 
@@ -52,13 +52,7 @@ const VisualOptions = ({
       ...selectedItem,
       id: selectedItemController?.id || "",
       type: "chart",
-      extra: {
-        ...selectedItem.extra,
-        chart: {
-          ...selectedItem.extra?.chart,
-          visualOptions: newVisualOptions,
-        },
-      },
+      options: newVisualOptions,
     });
   };
 

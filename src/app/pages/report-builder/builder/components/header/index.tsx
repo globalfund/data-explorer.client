@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams, Link } from "react-router-dom";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Snackbar from "@mui/material/Snackbar";
@@ -47,6 +47,7 @@ export const menuSx = {
 };
 
 export const ReportBuilderPageHeader: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -187,7 +188,10 @@ export const ReportBuilderPageHeader: React.FC = () => {
                   },
                 }}
               >
-                <IconButton>
+                <IconButton
+                  component={Link}
+                  to={`/report-builder/reports/${id}`}
+                >
                   <PreviewIcon />
                 </IconButton>
                 <Tooltip title="Export" enterDelay={500} leaveDelay={200}>

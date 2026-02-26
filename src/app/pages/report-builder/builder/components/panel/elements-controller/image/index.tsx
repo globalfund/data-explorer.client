@@ -10,11 +10,15 @@ import { ImageSource } from "./image-source";
 import { PaddingSize } from "./padding-size";
 import { Customise } from "./customise";
 import { Options } from "../common/elementOptions";
+import { useStoreState } from "app/state/store/hooks";
 
 type ImageControllerTab = "source" | "style" | "layout";
 export default function ImageController() {
   const [value, setValue] = React.useState<ImageControllerTab>("source");
   const [isExpanded, setIsExpanded] = React.useState(true);
+  const selectedItemController = useStoreState(
+    (state) => state.RBReportItemsControllerState.item,
+  );
 
   const handleExpandToggle = () => {
     setIsExpanded(!isExpanded);
@@ -38,10 +42,12 @@ export default function ImageController() {
         return null;
     }
   };
+  console.log("ImageController rendered", selectedItemController?.id);
 
   return (
     <Box
       id="image-controller"
+      key={selectedItemController?.id}
       sx={{
         border: "1px solid #98A1AA",
         borderRadius: "4px",

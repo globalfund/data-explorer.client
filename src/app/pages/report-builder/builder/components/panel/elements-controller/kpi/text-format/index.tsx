@@ -1,5 +1,5 @@
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 import { Box, Typography, Checkbox } from "@mui/material";
 import TextField from "../../components/textfield";
 import AdvancedOptions from "../../common/advanced-text-field/advancedOptions";
@@ -19,13 +19,11 @@ export default function KPITextFormatting() {
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const selectedItem = items.find(
     (i) => i.id === selectedItemController?.id,
-  ) as RBReportItem;
+  ) as ReportItemOf<"kpi_box">;
   const editItem = useStoreActions(
     (actions) => actions.RBReportItemsState.editItem,
   );
-  const textFormattingOptions = Object.keys(
-    selectedItem.extra?.kpi_box?.field ?? {},
-  );
+  const textFormattingOptions = Object.keys(selectedItem?.data ?? {});
 
   const handleCheck =
     (option: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,19 +32,11 @@ export default function KPITextFormatting() {
         open: selectedItem?.open || false,
         id: selectedItemController?.id || "",
         type: "kpi_box",
-        extra: {
-          ...selectedItem.extra,
-          kpi_box: {
-            ...selectedItem.extra?.kpi_box,
-            field: {
-              ...selectedItem.extra?.kpi_box?.field,
-              [option]: {
-                ...selectedItem.extra?.kpi_box?.field?.[
-                  option as keyof typeof selectedItem.extra.kpi_box.field
-                ],
-                enabled: e.target.checked,
-              },
-            },
+        data: {
+          ...selectedItem.data,
+          [option]: {
+            ...selectedItem.data[option as keyof typeof selectedItem.data],
+            enabled: e.target.checked,
           },
         },
       });
@@ -72,42 +62,27 @@ export default function KPITextFormatting() {
       open: selectedItem?.open || false,
       id: selectedItem?.id || "",
       type: "kpi_box",
-      extra: {
-        ...selectedItem?.extra,
-        kpi_box: {
-          ...selectedItem?.extra?.kpi_box,
-          field: {
-            ...selectedItem?.extra?.kpi_box?.field,
-            [type]: {
-              ...selectedItem?.extra?.kpi_box?.field?.[
-                type as keyof typeof selectedItem.extra.kpi_box.field
-              ],
-              ...fontWeight,
-            },
-          },
+      data: {
+        ...selectedItem?.data,
+        [type]: {
+          ...selectedItem?.data?.[type as keyof typeof selectedItem.data],
+          ...fontWeight,
         },
       },
     });
   };
+
   const handleSizeChange = (value: string, type: string) => {
     editItem({
       ...selectedItem,
       open: selectedItem?.open || false,
       id: selectedItem?.id || "",
       type: "kpi_box",
-      extra: {
-        ...selectedItem?.extra,
-        kpi_box: {
-          ...selectedItem?.extra?.kpi_box,
-          field: {
-            ...selectedItem?.extra?.kpi_box?.field,
-            [type]: {
-              ...selectedItem?.extra?.kpi_box?.field?.[
-                type as keyof typeof selectedItem.extra.kpi_box.field
-              ],
-              fontSize: `${value}px`,
-            },
-          },
+      data: {
+        ...selectedItem?.data,
+        [type]: {
+          ...selectedItem?.data?.[type as keyof typeof selectedItem.data],
+          fontSize: `${value}px`,
         },
       },
     });
@@ -118,19 +93,11 @@ export default function KPITextFormatting() {
       open: selectedItem?.open || false,
       id: selectedItem?.id || "",
       type: "kpi_box",
-      extra: {
-        ...selectedItem?.extra,
-        kpi_box: {
-          ...selectedItem?.extra?.kpi_box,
-          field: {
-            ...selectedItem?.extra?.kpi_box?.field,
-            [type]: {
-              ...selectedItem?.extra?.kpi_box?.field?.[
-                type as keyof typeof selectedItem.extra.kpi_box.field
-              ],
-              fontFamily: value,
-            },
-          },
+      data: {
+        ...selectedItem?.data,
+        [type]: {
+          ...selectedItem?.data?.[type as keyof typeof selectedItem.data],
+          fontFamily: value,
         },
       },
     });
@@ -152,19 +119,11 @@ export default function KPITextFormatting() {
       open: selectedItem?.open || false,
       id: selectedItem?.id || "",
       type: "kpi_box",
-      extra: {
-        ...selectedItem?.extra,
-        kpi_box: {
-          ...selectedItem?.extra?.kpi_box,
-          field: {
-            ...selectedItem?.extra?.kpi_box?.field,
-            [type]: {
-              ...selectedItem?.extra?.kpi_box?.field?.[
-                type as keyof typeof selectedItem.extra.kpi_box.field
-              ],
-              [field]: color,
-            },
-          },
+      data: {
+        ...selectedItem?.data,
+        [type]: {
+          ...selectedItem?.data?.[type as keyof typeof selectedItem.data],
+          [field]: color,
         },
       },
     });
@@ -193,9 +152,8 @@ export default function KPITextFormatting() {
     >
       {textFormattingOptions.map((option: string, index) => {
         const checked =
-          selectedItem.extra?.kpi_box?.field?.[
-            option as keyof typeof selectedItem.extra.kpi_box.field
-          ]?.enabled ?? true;
+          selectedItem?.data?.[option as keyof typeof selectedItem.data]
+            ?.enabled ?? true;
         return (
           <Box
             key={option}
@@ -236,9 +194,8 @@ export default function KPITextFormatting() {
               </Box>{" "}
               <TextField
                 value={
-                  selectedItem.extra?.kpi_box?.field?.[
-                    option as keyof typeof selectedItem.extra.kpi_box.field
-                  ]?.value ?? ""
+                  selectedItem.data?.[option as keyof typeof selectedItem.data]
+                    ?.value ?? ""
                 }
                 width="100%"
                 onChange={(value) =>
@@ -247,19 +204,13 @@ export default function KPITextFormatting() {
                     open: selectedItem?.open || false,
                     id: selectedItem?.id || "",
                     type: "kpi_box",
-                    extra: {
-                      ...selectedItem?.extra,
-                      kpi_box: {
-                        ...selectedItem?.extra?.kpi_box,
-                        field: {
-                          ...selectedItem?.extra?.kpi_box?.field,
-                          [option]: {
-                            ...selectedItem?.extra?.kpi_box?.field?.[
-                              option as keyof typeof selectedItem.extra.kpi_box.field
-                            ],
-                            value: value,
-                          },
-                        },
+                    data: {
+                      ...selectedItem?.data,
+                      [option]: {
+                        ...selectedItem?.data?.[
+                          option as keyof typeof selectedItem.data
+                        ],
+                        value: value,
                       },
                     },
                   })
@@ -282,8 +233,8 @@ export default function KPITextFormatting() {
                   <SelectField
                     label="Font Family"
                     value={
-                      selectedItem.extra?.kpi_box?.field?.[
-                        option as keyof typeof selectedItem.extra.kpi_box.field
+                      selectedItem.data?.[
+                        option as keyof typeof selectedItem.data
                       ]?.fontFamily ?? ""
                     }
                     onChange={(value) => handleFontFamilyChange(value, option)}
@@ -294,8 +245,8 @@ export default function KPITextFormatting() {
                 <SelectField
                   label="Font Size"
                   value={
-                    selectedItem.extra?.kpi_box?.field?.[
-                      option as keyof typeof selectedItem.extra.kpi_box.field
+                    selectedItem.data?.[
+                      option as keyof typeof selectedItem.data
                     ]?.fontSize.replace("px", "") ?? ""
                   }
                   onChange={(value) => handleSizeChange(value, option)}
@@ -304,8 +255,8 @@ export default function KPITextFormatting() {
                 <SelectField
                   label="Font Weight"
                   value={
-                    selectedItem.extra?.kpi_box?.field?.[
-                      option as keyof typeof selectedItem.extra.kpi_box.field
+                    selectedItem.data?.[
+                      option as keyof typeof selectedItem.data
                     ]?.fontWeightLabel ?? ""
                   }
                   onChange={(value) => handleWeightChange(value, option)}
@@ -314,8 +265,8 @@ export default function KPITextFormatting() {
                 <ColorPickerfield
                   label="Text Color"
                   color={
-                    selectedItem.extra?.kpi_box?.field?.[
-                      option as keyof typeof selectedItem.extra.kpi_box.field
+                    selectedItem.data?.[
+                      option as keyof typeof selectedItem.data
                     ]?.color ?? ""
                   }
                   onChange={(color) => handleColorChange(color, "text", option)}
@@ -323,8 +274,8 @@ export default function KPITextFormatting() {
                 <ColorPickerfield
                   label="Background Color"
                   color={
-                    selectedItem.extra?.kpi_box?.field?.[
-                      option as keyof typeof selectedItem.extra.kpi_box.field
+                    selectedItem.data?.[
+                      option as keyof typeof selectedItem.data
                     ]?.bgColor ?? ""
                   }
                   onChange={(color) =>
