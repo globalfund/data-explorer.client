@@ -8,7 +8,7 @@ import Close from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGFDeleteReport } from "app/hooks/queries/report-builder";
+import { useDeleteReport } from "app/hooks/queries/report-builder";
 import ChevronRightOutlined from "@mui/icons-material/ChevronRightOutlined";
 import {
   RenamePanel,
@@ -25,7 +25,7 @@ import {
 
 export const SettingsTabView: React.FC = () => {
   const navigate = useNavigate();
-  const deleteReport = useGFDeleteReport();
+  const deleteReport = useDeleteReport();
   const { id } = useParams<{ id: string }>();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

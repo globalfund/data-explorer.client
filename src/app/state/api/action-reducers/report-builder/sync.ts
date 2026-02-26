@@ -263,6 +263,33 @@ export interface RBReportModel {
   updatedDate?: string;
   createdDate?: string;
 }
+
+export interface RBReportPatchModel {
+  id?: string;
+  items?: RBReportItem[];
+  settings?: {
+    width?: string;
+    height?: string;
+    stroke?: string;
+    strokeColor?: string;
+    padding?: string[];
+    backgroundColor?: string;
+    borderRadius?: string;
+  };
+  name?: string;
+  description?: string;
+  updatedDate?: string;
+  createdDate?: string;
+}
+export interface RBReportModelResponse {
+  id: string;
+  items: RBReportItem[];
+  settings: RBReportItemsModel["settings"];
+  name: string;
+  description: string;
+  updatedDate: string;
+  createdDate: string;
+}
 export interface RBRenderedChartData {
   renderedContent: string;
   appliedFilters: any;

@@ -2,8 +2,7 @@ import React from "react";
 import get from "lodash/get";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { useQuery } from "@tanstack/react-query";
-import { GFGetReportsQueryOptions } from "app/hooks/queries/report-builder";
+import { useGetReports } from "app/hooks/queries/report-builder";
 import { ReportBuilderSidebar } from "app/pages/report-builder/main/components/sidebar";
 import { ReportBuilderToolbar } from "app/pages/report-builder/main/components/toolbar";
 import { AllAssetsView } from "app/pages/report-builder/main/components/all-assets-view";
@@ -29,9 +28,7 @@ export const ReportBuilder: React.FC = () => {
   const [newReportModalDescriptionValue, setNewReportModalDescriptionValue] =
     React.useState("");
 
-  const getReports = useQuery(
-    GFGetReportsQueryOptions({ search: search, sort: selectedSort }),
-  );
+  const getReports = useGetReports({ search: search, sort: selectedSort });
 
   const handleNewFolderModalOpen = () => {
     setNewFolderModalOpen(true);

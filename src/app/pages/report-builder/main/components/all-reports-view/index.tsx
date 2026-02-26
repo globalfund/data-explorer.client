@@ -9,8 +9,8 @@ import MoreVert from "@mui/icons-material/MoreVert";
 import CircularProgress from "@mui/material/CircularProgress";
 import { ReportBuilderItemMenu } from "app/pages/report-builder/main/components/item-menu";
 import {
-  useGFDeleteReport,
-  useGFDuplicateReport,
+  useDeleteReport,
+  useDuplicateReport,
 } from "app/hooks/queries/report-builder";
 import {
   Copy,
@@ -36,8 +36,8 @@ export const AllReportsView: React.FC<{
   };
 }> = ({ selectedView, reports, refetch }) => {
   const navigate = useNavigate();
-  const deleteReport = useGFDeleteReport();
-  const duplicateReport = useGFDuplicateReport();
+  const deleteReport = useDeleteReport();
+  const duplicateReport = useDuplicateReport();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
@@ -138,45 +138,6 @@ export const AllReportsView: React.FC<{
                 >
                   <MoreVert />
                 </IconButton>
-                <ReportBuilderItemMenu
-                  anchorEl={anchorEl}
-                  handleClose={handleClose}
-                  menuItems={[
-                    {
-                      label: "Edit",
-                      icon: <Pencil />,
-                      onClick: handleEdit,
-                    },
-                    {
-                      label: "Settings",
-                      icon: <Settings />,
-                      onClick: handleClose,
-                      disabled: true,
-                    },
-                    {
-                      label: "Share",
-                      icon: <Share />,
-                      onClick: handleClose,
-                      disabled: true,
-                    },
-                    {
-                      label: "Move to Folder",
-                      icon: <Folder />,
-                      onClick: handleClose,
-                      disabled: true,
-                    },
-                    {
-                      label: "Duplicate",
-                      icon: <Copy />,
-                      onClick: handleDuplicate,
-                    },
-                    {
-                      label: "Delete",
-                      icon: <Backspace />,
-                      onClick: handleDelete,
-                    },
-                  ]}
-                />
               </Box>
               <Typography
                 variant="body2"
@@ -187,6 +148,45 @@ export const AllReportsView: React.FC<{
               </Typography>
             </Grid>
           ))}
+          <ReportBuilderItemMenu
+            anchorEl={anchorEl}
+            handleClose={handleClose}
+            menuItems={[
+              {
+                label: "Edit",
+                icon: <Pencil />,
+                onClick: handleEdit,
+              },
+              {
+                label: "Settings",
+                icon: <Settings />,
+                onClick: handleClose,
+                disabled: true,
+              },
+              {
+                label: "Share",
+                icon: <Share />,
+                onClick: handleClose,
+                disabled: true,
+              },
+              {
+                label: "Move to Folder",
+                icon: <Folder />,
+                onClick: handleClose,
+                disabled: true,
+              },
+              {
+                label: "Duplicate",
+                icon: <Copy />,
+                onClick: handleDuplicate,
+              },
+              {
+                label: "Delete",
+                icon: <Backspace />,
+                onClick: handleDelete,
+              },
+            ]}
+          />
         </Grid>
       );
     }
