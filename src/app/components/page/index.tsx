@@ -21,14 +21,18 @@ export const Page: React.FC = () => {
   }, [location.pathname]);
 
   if (inReportBuilder) {
+    const previewMode =
+      location.pathname.includes("/reports/") &&
+      !location.pathname.includes("edit");
     return (
       <React.Fragment>
-        <ReportBuilderPageHeader />
+        {previewMode ? <Header /> : <ReportBuilderPageHeader />}
         <Box
           sx={{
             width: "100%",
             display: "flex",
             paddingTop: "50px",
+            paddingBottom: "50px",
             bgcolor: "#495057",
             minHeight: "calc(100vh - 60px)",
           }}
