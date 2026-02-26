@@ -98,10 +98,10 @@ export default function ChartList() {
               display: "flex",
               height: "61px",
               border: "0.5px solid #ADB5BD",
+              bgcolor: item.id === selectedChartType ? "#EFF1FE" : "#fff",
               borderColor:
                 item.id === selectedChartType ? "#3154F4" : "#ADB5BD",
               borderRadius: "4px",
-              background: "#FFFFFF",
               cursor: "pointer",
             }}
           >

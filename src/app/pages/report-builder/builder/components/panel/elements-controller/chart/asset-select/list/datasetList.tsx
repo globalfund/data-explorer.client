@@ -168,9 +168,12 @@ export default function DatasetList() {
               width: "100%",
               padding: "8px",
               display: "flex",
+              cursor: "pointer",
               borderRadius: "5px",
               flexDirection: "column",
               border: "1px solid #adb5bd",
+              bgcolor:
+                item.id === selectedDatasetId ? "#EFF1FE" : "transparent",
               borderColor:
                 item.id === selectedDatasetId ? "#3154F4" : "#ADB5BD",
             }}

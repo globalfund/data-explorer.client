@@ -153,7 +153,13 @@ export const ReportBuilderPageHeader: React.FC = () => {
                   },
                 }}
               >
-                <Button variant="outlined" startIcon={<LibraryIcon />}>
+                <Button
+                  component={Link}
+                  variant="outlined"
+                  LinkComponent={Link}
+                  to="/report-builder"
+                  startIcon={<LibraryIcon />}
+                >
                   My Reports
                 </Button>
                 <Button variant="outlined" startIcon={<FolderIcon />}>

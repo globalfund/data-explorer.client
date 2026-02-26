@@ -276,54 +276,46 @@ export const ReportBuilderPreviewPage: React.FC = () => {
         </svg>
       </Box>
       <Box
+        id="items-container"
+        className="scrollbar"
         sx={{
+          gap: "10px",
+          display: "flex",
           maxWidth: "100%",
           overflow: "overlay",
-          bgcolor: "#ffffff",
-          height: "fit-content",
-          paddingBottom: "40px",
-          boxShadow: "0 0 10px 0 rgba(152, 161, 170, 0.60)",
-        }}
-      >
-        <Box
-          id="report-builder-canvas"
-          sx={{
-            gap: "10px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            justifyContent: "flex-start",
-            width: `${reportData?.settings.width}px`,
-            height: `${reportData?.settings.height}px`,
-            bgcolor: reportData?.settings?.backgroundColor,
-            borderRadius: `${reportData?.settings.borderRadius}px`,
-            p: reportData?.settings?.padding
-              ?.map((p: string) => `${p}px`)
-              .join(" "),
-            border: `${reportData?.settings?.stroke}px solid ${reportData?.settings?.strokeColor}`,
-            ".top-right-actions": {
-              top: 4,
-              right: 4,
-              position: "absolute",
-              ".MuiIconButton-root": {
-                width: "38px",
-                height: "38px",
-                bgcolor: "#fff",
-                borderRadius: "4px",
-                border: "1px solid #cfd4da",
-                "&:hover": {
-                  bgcolor: "#f8f8f8",
-                  borderColor: "#000000",
-                },
+          flexDirection: "column",
+          alignItems: "flex-start",
+          justifyContent: "flex-start",
+          width: `${reportData?.settings.width}px`,
+          height: `${reportData?.settings.height}px`,
+          bgcolor: reportData?.settings?.backgroundColor,
+          borderRadius: `${reportData?.settings.borderRadius}px`,
+          p: reportData?.settings?.padding
+            ?.map((p: string) => `${p}px`)
+            .join(" "),
+          border: `${reportData?.settings?.stroke}px solid ${reportData?.settings?.strokeColor}`,
+          ".top-right-actions": {
+            top: 4,
+            right: 4,
+            position: "absolute",
+            ".MuiIconButton-root": {
+              width: "38px",
+              height: "38px",
+              bgcolor: "#fff",
+              borderRadius: "4px",
+              border: "1px solid #cfd4da",
+              "&:hover": {
+                bgcolor: "#f8f8f8",
+                borderColor: "#000000",
               },
             },
-          }}
-        >
-          {items.length === 0 && <Empty />}
-          {items.map((item) => (
-            <React.Fragment key={item.id}>{getItemByType(item)}</React.Fragment>
-          ))}
-        </Box>
+          },
+        }}
+      >
+        {items.length === 0 && <Empty />}
+        {items.map((item) => (
+          <React.Fragment key={item.id}>{getItemByType(item)}</React.Fragment>
+        ))}
       </Box>
 
       <Typography
