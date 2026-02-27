@@ -173,10 +173,7 @@ export default function DatasetList() {
               borderRadius: "5px",
               flexDirection: "column",
               border: "1px solid #adb5bd",
-              bgcolor:
-                item.id === selectedItem?.data?.dataset
-                  ? "#EFF1FE"
-                  : "transparent",
+              bgcolor: item.id === selectedId ? "#EFF1FE" : "transparent",
               borderColor: item.id === selectedId ? "#3154F4" : "#ADB5BD",
             }}
           >
