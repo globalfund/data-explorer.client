@@ -31,6 +31,7 @@ import { keyframes } from "@mui/system";
 import { usePatchReport } from "app/hooks/queries/report-builder";
 import { useDebounce } from "react-use";
 import { useStoreState } from "app/state/store/hooks";
+import { exportReport } from "app/utils/exportReport";
 
 export const menuSx = {
   zIndex: 1400,
@@ -93,10 +94,16 @@ export const ReportBuilderPageHeader: React.FC = () => {
     setSnackbarOpen(true);
   };
 
-  const handleDownloadShareableFile = (type: "png" | "svg" | "pdf") => () => {
-    setSnackbarMessage(`${type.toUpperCase()} downloaded!`);
-    setSnackbarOpen(true);
-  };
+  const handleDownloadShareableFile =
+    (type: "png" | "svg" | "pdf") => async () => {
+      await exportReport(
+        type,
+        reportState.settings.backgroundColor,
+        reportState.name,
+      );
+      setSnackbarMessage(`${type.toUpperCase()} downloaded!`);
+      setSnackbarOpen(true);
+    };
 
   const handleSnackbarClose = (
     e: React.SyntheticEvent | Event,
@@ -214,7 +221,6 @@ export const ReportBuilderPageHeader: React.FC = () => {
                 alignItems: "center",
               }}
             >
-              {" "}
               <Typography
                 variant="body1"
                 component="span"

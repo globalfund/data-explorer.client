@@ -8,7 +8,10 @@ import Close from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { useNavigate, useParams } from "react-router-dom";
-import { useDeleteReport } from "app/hooks/queries/report-builder";
+import {
+  useDeleteReport,
+  useDuplicateReport,
+} from "app/hooks/queries/report-builder";
 import ChevronRightOutlined from "@mui/icons-material/ChevronRightOutlined";
 import {
   RenamePanel,
@@ -27,6 +30,7 @@ export const SettingsTabView: React.FC = () => {
   const navigate = useNavigate();
   const deleteReport = useDeleteReport();
   const { id } = useParams<{ id: string }>();
+  const duplicateReport = useDuplicateReport();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [selectedOption, setSelectedOption] = React.useState<
@@ -43,6 +47,15 @@ export const SettingsTabView: React.FC = () => {
   const closePanel = () => {
     setAnchorEl(null);
     setSelectedOption(null);
+  };
+
+  const handleDuplicateReportClick = () => {
+    if (id) {
+      duplicateReport.mutate(id, {
+        onSuccess: (data) =>
+          window.open(`/report-builder/reports/${data.data.id}`, "_blank"),
+      });
+    }
   };
 
   const handleDeleteReportClick = () => {
@@ -178,7 +191,7 @@ export const SettingsTabView: React.FC = () => {
         <Button
           fullWidth
           startIcon={<Copy />}
-          onClick={handleOptionSelect(null)}
+          onClick={handleDuplicateReportClick}
         >
           <div>Duplicate Report</div>
         </Button>
