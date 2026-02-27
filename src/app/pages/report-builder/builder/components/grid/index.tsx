@@ -1,6 +1,5 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import { Editor } from "@tiptap/react";
 import Close from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -26,21 +25,16 @@ const containerSx = {
 
 const GridItem: React.FC<{
   index: number;
-  setActiveRTE: (id: Editor | null) => void;
   id: string;
   type: null | "text" | "chart" | "table" | "image";
   viewMode?: boolean;
-}> = ({ type, setActiveRTE, id, viewMode }) => {
+}> = ({ type, id, viewMode }) => {
   const content = React.useMemo(() => {
     switch (type) {
       case "text":
         return (
           <Box sx={containerSx}>
-            <ReportBuilderPageText
-              id={id}
-              setEditor={setActiveRTE}
-              viewMode={viewMode}
-            />
+            <ReportBuilderPageText id={id} viewMode={viewMode} />
           </Box>
         );
       case "chart":
@@ -107,9 +101,8 @@ export const ReportBuilderPageGrid: React.FC<{
   id: string;
   columns: number;
   rows: number;
-  setEditor: (id: Editor | null) => void;
   viewMode?: boolean;
-}> = ({ id, columns, rows, setEditor, viewMode }) => {
+}> = ({ id, columns, rows, viewMode }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const items = useStoreState((state) => state.RBReportItemsState.items);
@@ -176,7 +169,6 @@ export const ReportBuilderPageGrid: React.FC<{
                 index={i}
                 id={item?.id}
                 type={item?.type as any}
-                setActiveRTE={setEditor}
                 viewMode={viewMode}
               />
             );

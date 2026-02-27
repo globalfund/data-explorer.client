@@ -11,8 +11,7 @@ import { ReportBuilderPageTable } from "app/pages/report-builder/builder/compone
 import { ReportBuilderPageImage } from "app/pages/report-builder/builder/components/image";
 
 import { useParams } from "react-router-dom";
-import { useGetReport, usePatchReport } from "app/hooks/queries/report-builder";
-import { useDebounce } from "react-use";
+import { useGetReport } from "app/hooks/queries/report-builder";
 import KPIBox from "../builder/components/kpi";
 import { Typography } from "@mui/material";
 
@@ -21,8 +20,6 @@ export const ReportBuilderPreviewPage: React.FC = () => {
 
   const reportQuery = useGetReport(id);
   const reportData = reportQuery?.data?.data;
-
-  const updateReport = usePatchReport(id);
 
   const setActiveReport = useStoreActions(
     (actions) => actions.RBReportItemsState.setReport,
@@ -34,9 +31,7 @@ export const ReportBuilderPreviewPage: React.FC = () => {
 
   const reportState = useStoreState((state) => state.RBReportItemsState);
   const items = reportState.items;
-  const setActiveRTE = useStoreActions(
-    (actions) => actions.RBReportRTEState.setActiveRTE,
-  );
+
   const addedItemRef = React.useRef(items.length > 0);
 
   useEffect(() => {
@@ -48,31 +43,12 @@ export const ReportBuilderPreviewPage: React.FC = () => {
     };
   }, [reportData]);
 
-  useDebounce(
-    () => {
-      updateReport.mutate({
-        items: reportState.items,
-        description: reportState.description,
-        settings: reportState.settings,
-        name: reportState.name,
-      });
-    },
-    2000,
-    [
-      reportState.items,
-      reportState.description,
-      reportState.settings,
-      reportState.name,
-    ],
-  );
-
   const getItemByType = (item: RBReportItem) => {
     switch (item.type) {
       case "text":
         return (
           <ReportBuilderPageText
             id={item.id}
-            setEditor={setActiveRTE}
             settings={item.options}
             focus={item.focus}
             initialKey={item.key}
@@ -91,7 +67,6 @@ export const ReportBuilderPreviewPage: React.FC = () => {
             columns={item.data.columns}
             rows={item.data.rows}
             id={item.id}
-            setEditor={setActiveRTE}
             viewMode
           />
         );
@@ -103,7 +78,6 @@ export const ReportBuilderPreviewPage: React.FC = () => {
             rows={1}
             columns={item.data.columns}
             id={item.id}
-            setEditor={setActiveRTE}
             viewMode
           />
         );

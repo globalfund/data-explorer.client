@@ -297,7 +297,7 @@ const storeContent: StoreModel = {
   RBReportItemsState: persist(RBReportItemsState),
   RBTooltipTriggerState: persist(RBTooltipTriggerState),
   RBReportItemsControllerState: persist(RBReportItemsControllerState),
-  RBReportRTEState: persist(RBReportRTEState),
+  RBReportRTEState: RBReportRTEState,
   RBReportItemOrderState: persist(RBReportItemOrderState),
   RBReportNotesState: persist(RBReportNotesState),
   // CMS API

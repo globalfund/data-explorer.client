@@ -49,7 +49,7 @@ export const useGetReports = (params: { sort: string; search: string }) => {
 export const usePatchReport = (reportId?: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ["ReportBuilderPatchReport"],
+    mutationKey: ["ReportBuilderPatchReport", reportId],
     mutationFn: (data: RBReportPatchModel) =>
       axiosInstance.patch<RBReportPatchModel>(`/report/${reportId}`, data),
     onSuccess: () => {

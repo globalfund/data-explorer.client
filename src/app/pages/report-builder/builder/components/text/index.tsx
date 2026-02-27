@@ -1,6 +1,5 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import { Editor } from "@tiptap/react";
 import Typography from "@mui/material/Typography";
 import { RichEditor } from "app/components/rich-text-editor";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
@@ -11,9 +10,8 @@ export const ReportBuilderPageText: React.FC<{
   settings?: any;
   focus?: boolean;
   initialKey?: string;
-  setEditor: (editor: Editor | null) => void;
   viewMode?: boolean;
-}> = ({ id, setEditor, settings, viewMode }) => {
+}> = ({ id, settings, viewMode }) => {
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const setSelectedController = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
@@ -68,7 +66,6 @@ export const ReportBuilderPageText: React.FC<{
       {selectedItem?.open && (
         <RichEditor
           itemId={id}
-          setEditor={setEditor}
           visualSettings={settings}
           initialContent={undefined}
           viewMode={viewMode}

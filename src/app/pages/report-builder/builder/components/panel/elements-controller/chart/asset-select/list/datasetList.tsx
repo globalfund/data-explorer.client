@@ -22,7 +22,7 @@ export default function DatasetList() {
     (actions) => actions.RBReportItemsState.editItem,
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const item = items.find(
+  const selectedItem = items.find(
     (i) => i.id === selectedController?.id,
   ) as ReportItemOf<"chart">;
 
@@ -35,17 +35,17 @@ export default function DatasetList() {
   };
 
   const handleApply = () => {
-    if (!item || !selectedDataset) return;
+    if (!selectedItem || !selectedDataset) return;
     editItem({
-      ...item,
+      ...selectedItem,
       id: selectedController?.id || "",
       type: "chart",
       data: {
-        ...item?.data,
+        ...selectedItem?.data,
         dataset: selectedDataset?.id,
         mapping:
-          item?.data?.dataset === selectedDataset?.id
-            ? item?.data?.mapping
+          selectedItem?.data?.dataset === selectedDataset?.id
+            ? selectedItem?.data?.mapping
             : {},
       },
     });
@@ -127,6 +127,7 @@ export default function DatasetList() {
     );
   };
 
+  const selectedId = selectedDatasetId || selectedItem?.data?.dataset;
   return (
     <Box
       sx={{
@@ -173,9 +174,10 @@ export default function DatasetList() {
               flexDirection: "column",
               border: "1px solid #adb5bd",
               bgcolor:
-                item.id === selectedDatasetId ? "#EFF1FE" : "transparent",
-              borderColor:
-                item.id === selectedDatasetId ? "#3154F4" : "#ADB5BD",
+                item.id === selectedItem?.data?.dataset
+                  ? "#EFF1FE"
+                  : "transparent",
+              borderColor: item.id === selectedId ? "#3154F4" : "#ADB5BD",
             }}
           >
             <Box

@@ -22,6 +22,9 @@ export const ReportBuilderPageImage: React.FC<{
   const setTooltipTrigger = useStoreActions(
     (actions) => actions.RBTooltipTriggerState.setValue,
   );
+  const selectedController = useStoreState(
+    (state) => state.RBReportItemsControllerState.item,
+  );
   const setSelectedController = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
   );
@@ -29,6 +32,8 @@ export const ReportBuilderPageImage: React.FC<{
     (actions) => actions.RBReportItemsControllerState.clearItem,
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
+
+  const active = selectedController?.id === id;
 
   const selectedItem = items.find((i) => i.id === id) as ReportItemOf<"image">;
 
@@ -228,6 +233,7 @@ export const ReportBuilderPageImage: React.FC<{
               ...settings,
               ...getUniqueStyle(),
               ...(viewMode ? { border: "none" } : {}),
+              ...(active ? { borderColor: "#3154f4" } : {}),
             }}
           >
             {renderImage(settings?.sizingMode || "fit-proportional")}

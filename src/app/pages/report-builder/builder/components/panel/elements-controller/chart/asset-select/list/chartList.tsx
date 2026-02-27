@@ -21,25 +21,28 @@ export default function ChartList() {
     (actions) => actions.RBReportItemsState.editItem,
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const item = items.find(
+  const selectedItem = items.find(
     (i) => i.id === selectedController?.id,
   ) as ReportItemOf<"chart">;
 
   const handleApply = () => {
-    if (!item || !selectedChartType) return;
-    const chartTypeUnchanged = item?.data?.chartType === selectedChartType;
+    if (!selectedItem || !selectedChartType) return;
+    const chartTypeUnchanged =
+      selectedItem?.data?.chartType === selectedChartType;
     editItem({
-      ...item,
+      ...selectedItem,
       id: selectedController?.id || "",
       type: "chart",
       data: {
-        ...item?.data,
-        mapping: chartTypeUnchanged ? item?.data?.mapping : {},
+        ...selectedItem?.data,
+        mapping: chartTypeUnchanged ? selectedItem?.data?.mapping : {},
         chartType: selectedChartType as ChartType,
-        appliedFilters: chartTypeUnchanged ? item?.data?.appliedFilters : {},
+        appliedFilters: chartTypeUnchanged
+          ? selectedItem?.data?.appliedFilters
+          : {},
       },
       options: chartTypeUnchanged
-        ? item?.options
+        ? selectedItem?.options
         : getDefaultVisualOptions(selectedChartType),
     });
 
@@ -57,6 +60,8 @@ export default function ChartList() {
       },
     });
   };
+
+  const selectedType = selectedChartType || selectedItem?.data?.chartType;
 
   return (
     <Box
@@ -98,9 +103,9 @@ export default function ChartList() {
               display: "flex",
               height: "61px",
               border: "0.5px solid #ADB5BD",
-              bgcolor: item.id === selectedChartType ? "#EFF1FE" : "#fff",
-              borderColor:
-                item.id === selectedChartType ? "#3154F4" : "#ADB5BD",
+              bgcolor:
+                item.id === selectedItem?.data?.chartType ? "#EFF1FE" : "#fff",
+              borderColor: item.id === selectedType ? "#3154F4" : "#ADB5BD",
               borderRadius: "4px",
               cursor: "pointer",
             }}
@@ -181,7 +186,7 @@ export default function ChartList() {
           Back
         </Button>
         <Button
-          disabled={!selectedChartType}
+          disabled={!selectedType}
           onClick={handleApply}
           sx={{
             width: "71px",

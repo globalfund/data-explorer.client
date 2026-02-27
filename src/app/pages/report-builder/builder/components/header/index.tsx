@@ -21,8 +21,16 @@ import LibraryIcon from "app/assets/vectors/Library.svg?react";
 import DownloadIcon from "app/assets/vectors/Download.svg?react";
 import ChevronRight from "@mui/icons-material/ChevronRightOutlined";
 import HeaderToolbarMiniLogo from "app/assets/vectors/HeaderToolbarMiniLogo.svg?react";
+import LoaderSpinner from "app/assets/vectors/ReportBuilderAutoSaveSpinner.svg?react";
+import ErrorIcon from "app/assets/vectors/ReportBuilderAutoSaveError.svg?react";
+import WarningIcon from "app/assets/vectors/ReportBuilderAutoSaveWarning.svg?react";
+import CompleteIcon from "app/assets/vectors/ReportBuilderCompleteIcon.svg?react";
 import AddComponent from "./add-component";
-import { Divider } from "@mui/material";
+import { Divider, Typography } from "@mui/material";
+import { keyframes } from "@mui/system";
+import { usePatchReport } from "app/hooks/queries/report-builder";
+import { useDebounce } from "react-use";
+import { useStoreState } from "app/state/store/hooks";
 
 export const menuSx = {
   zIndex: 1400,
@@ -52,6 +60,10 @@ export const ReportBuilderPageHeader: React.FC = () => {
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [anchorEl2, setAnchorEl2] = React.useState<null | HTMLElement>(null);
+
+  const reportState = useStoreState((state) => state.RBReportItemsState);
+
+  const updateReport = usePatchReport(id);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -99,8 +111,35 @@ export const ReportBuilderPageHeader: React.FC = () => {
     }, 200);
   };
 
+  useDebounce(
+    () => {
+      updateReport.mutate({
+        items: reportState.items,
+        description: reportState.description,
+        settings: reportState.settings,
+        name: reportState.name,
+      });
+    },
+    2000,
+    [
+      reportState.items,
+      reportState.description,
+      reportState.settings,
+      reportState.name,
+    ],
+  );
+
   const open = Boolean(anchorEl);
   const open2 = Boolean(anchorEl2);
+
+  const spin = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
 
   return (
     <React.Fragment>
@@ -172,8 +211,50 @@ export const ReportBuilderPageHeader: React.FC = () => {
                 gap: "10px",
                 display: "flex",
                 flexDirection: "row",
+                alignItems: "center",
               }}
             >
+              {" "}
+              <Typography
+                variant="body1"
+                component="span"
+                fontSize="14px"
+                marginRight={"14px"}
+                sx={{
+                  span: {
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  },
+                }}
+              >
+                {updateReport.isPending ? (
+                  <Box component={"span"}>
+                    <Box
+                      sx={{
+                        display: "inline-flex",
+                        animation: `${spin} 1s linear infinite`,
+                      }}
+                    >
+                      <LoaderSpinner />
+                    </Box>
+                    Saving...
+                  </Box>
+                ) : updateReport.isSuccess ? (
+                  <Box component={"span"}>
+                    <CompleteIcon /> Saved
+                  </Box>
+                ) : updateReport.isError ? (
+                  <Box component={"span"}>
+                    <ErrorIcon /> Couldn&apos;t save changes
+                  </Box>
+                ) : updateReport.isPaused ? (
+                  <Box component={"span"}>
+                    <WarningIcon />
+                    Offline — changes will sync when connection is restored
+                  </Box>
+                ) : null}
+              </Typography>
               <Box
                 sx={{
                   display: "flex",
@@ -216,9 +297,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                   </IconButton>
                 </Tooltip>
               </Box>
-
               <AddComponent />
-
               <Menu
                 open={open}
                 keepMounted

@@ -120,7 +120,6 @@ export const ItemComponent = (props: ItemComponentProps) => {
 
   return (
     <Box
-      ref={ref}
       id={`container-${id}`}
       sx={{ ...style, opacity: isDragging ? 0.5 : 1, position: "relative" }}
     >

@@ -2,7 +2,7 @@ import React from "react";
 import Box from "@mui/material/Box";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { extensions } from "app/components/rich-text-editor/extensions";
-import { Editor, useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent } from "@tiptap/react";
 import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
 import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 
@@ -10,9 +10,11 @@ export const RichEditor: React.FC<{
   itemId: string;
   visualSettings: any;
   initialContent?: string;
-  setEditor: (editor: Editor | null) => void;
   viewMode?: boolean;
-}> = ({ setEditor, itemId, viewMode }) => {
+}> = ({ itemId, viewMode }) => {
+  const selectedController = useStoreState(
+    (state) => state.RBReportItemsControllerState.item,
+  );
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const selectedItem = items.find(
     (i) => i.id === itemId,
@@ -24,6 +26,12 @@ export const RichEditor: React.FC<{
   const clearSelectedItem = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.clearItem,
   );
+
+  const setActiveRTE = useStoreActions(
+    (actions) => actions.RBReportRTEState.setActiveRTE,
+  );
+
+  const active = selectedController?.id === itemId;
 
   const editor = useEditor({
     extensions,
@@ -47,26 +55,35 @@ export const RichEditor: React.FC<{
     editorId: "rte-editor",
     toolbarId: "rte-toolbar",
     onOutsideClick: () => {
-      setEditor(null);
+      setActiveRTE(null);
       clearSelectedItem();
     },
   });
   const setEditorStateAndController = () => {
-    setEditor(editor);
+    setActiveRTE(editor);
   };
 
   return (
     <Box
-      id="rte-editor"
       sx={{
-        ...selectedItem?.options,
-        "*": { margin: "0 !important" },
-        blockquote: { margin: "0 40px !important" },
+        border: viewMode ? "none" : "solid",
+        borderWidth: "0.5px",
+        borderColor: active ? "#3154F4" : "#98A1AA",
+        borderRadius: selectedItem?.options?.borderRadius || "4px",
       }}
-      onFocus={() => setEditorStateAndController()}
-      onClick={() => setEditorStateAndController()}
     >
-      <EditorContent editor={editor} width="100%" />
+      <Box
+        id="rte-editor"
+        sx={{
+          ...selectedItem?.options,
+          "*": { margin: "0 !important" },
+          blockquote: { margin: "0 40px !important" },
+        }}
+        onFocus={() => setEditorStateAndController()}
+        onClick={() => setEditorStateAndController()}
+      >
+        <EditorContent editor={editor} width="100%" />
+      </Box>
     </Box>
   );
 };

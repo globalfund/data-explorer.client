@@ -2,7 +2,6 @@ import React from "react";
 import { colors } from "app/theme";
 import Box from "@mui/material/Box";
 import { DndProvider } from "react-dnd";
-import { useDebounce } from "react-use";
 import update from "immutability-helper";
 import Divider from "@mui/material/Divider";
 import { useParams } from "react-router-dom";
@@ -14,7 +13,7 @@ import KPIBox from "app/pages/report-builder/builder/components/kpi";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { Empty } from "app/pages/report-builder/builder/components/empty";
 import { ReportBuilderPageReportSettings } from "./components/report-settings";
-import { useGetReport, usePatchReport } from "app/hooks/queries/report-builder";
+import { useGetReport } from "app/hooks/queries/report-builder";
 import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
 import { ReportBuilderPageGrid } from "app/pages/report-builder/builder/components/grid";
 import { ReportBuilderPageText } from "app/pages/report-builder/builder/components/text";
@@ -30,17 +29,12 @@ export const ReportBuilderPage: React.FC = () => {
   const reportQuery = useGetReport(id);
   const reportData = reportQuery?.data?.data;
 
-  const updateReport = usePatchReport(id);
-
   const setActiveReport = useStoreActions(
     (actions) => actions.RBReportItemsState.setReport,
   );
 
   const reportState = useStoreState((state) => state.RBReportItemsState);
   const items = reportState.items;
-  const setActiveRTE = useStoreActions(
-    (actions) => actions.RBReportRTEState.setActiveRTE,
-  );
   const addedItemRef = React.useRef(items.length > 0);
 
   const setItems = useStoreActions(
@@ -62,31 +56,6 @@ export const ReportBuilderPage: React.FC = () => {
       setActiveReport(reportData);
     }
   }, [reportData]);
-
-  useDebounce(
-    () => {
-      updateReport.mutate(
-        {
-          items: reportState.items,
-          description: reportState.description,
-          settings: reportState.settings,
-          name: reportState.name,
-        },
-        {
-          onSuccess: () => {
-            reportQuery.refetch();
-          },
-        },
-      );
-    },
-    2000,
-    [
-      reportState.items,
-      reportState.description,
-      reportState.settings,
-      reportState.name,
-    ],
-  );
 
   const moveItem = React.useCallback(
     (dragIndex: number, hoverIndex: number) => {
@@ -114,7 +83,6 @@ export const ReportBuilderPage: React.FC = () => {
           >
             <ReportBuilderPageText
               id={item.id}
-              setEditor={setActiveRTE}
               settings={item.options}
               focus={item.focus}
               initialKey={item.key}
@@ -166,7 +134,6 @@ export const ReportBuilderPage: React.FC = () => {
               columns={item.data.columns}
               rows={item.data.rows}
               id={item.id}
-              setEditor={setActiveRTE}
             />
           </ItemComponent>
         );
@@ -193,7 +160,6 @@ export const ReportBuilderPage: React.FC = () => {
               rows={1}
               columns={item.data.columns}
               id={item.id}
-              setEditor={setActiveRTE}
             />
           </ItemComponent>
         );
