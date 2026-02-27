@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Table } from "app/components/table";
 import { useNavigate } from "react-router-dom";
+import { CellComponent } from "tabulator-tables";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MoreVert from "@mui/icons-material/MoreVert";
@@ -76,6 +77,11 @@ export const AllReportsView: React.FC<{
     navigate(`/report-builder/reports/${id}`);
   };
 
+  const handleTableCellClick = (_e: UIEvent, cell: CellComponent) => {
+    const id = cell.getRow().getData()?.id;
+    if (id) handleItemClick(id)();
+  };
+
   const view = React.useMemo(() => {
     if (reports.isLoading) {
       return (
@@ -103,6 +109,7 @@ export const AllReportsView: React.FC<{
                   height: "180px",
                   display: "flex",
                   paddingTop: "8px",
+                  cursor: "pointer",
                   borderRadius: "2px",
                   justifyContent: "center",
                   border: "1px solid #cfd4da",
@@ -127,6 +134,7 @@ export const AllReportsView: React.FC<{
                   variant="h6"
                   fontSize="16px"
                   lineHeight="normal"
+                  sx={{ cursor: "pointer" }}
                   onClick={handleItemClick(item.id)}
                 >
                   {item.name}
@@ -142,6 +150,7 @@ export const AllReportsView: React.FC<{
               <Typography
                 variant="body2"
                 width="calc(100% - 40px)"
+                sx={{ cursor: "pointer" }}
                 onClick={handleItemClick(item.id)}
               >
                 {item.description}
@@ -198,14 +207,22 @@ export const AllReportsView: React.FC<{
           const edate = new Date(item.updatedDate);
           return {
             id: item.id,
-            title: item.name,
+            name: item.name,
             description: item.description,
             dateCreated: `${cdate.getDate()}-${cdate.getMonth() + 1}-${cdate.getFullYear()}`,
             dateEdited: `${edate.getDate()}-${edate.getMonth() + 1}-${edate.getFullYear()}`,
           };
         })}
         columns={[
-          { title: "Report name", field: "name", width: "30%" },
+          { title: "", field: "id", visible: false },
+          {
+            title: "Report name",
+            field: "name",
+            width: "30%",
+            cellClick: handleTableCellClick,
+            formatter: (cell) =>
+              `<u style="color: #3154F4;">${cell.getValue()}</u>`,
+          },
           { title: "Description", field: "description", width: "40%" },
           { title: "Date Created", field: "dateCreated", width: "15%" },
           { title: "Last Edited", field: "dateEdited", width: "15%" },
