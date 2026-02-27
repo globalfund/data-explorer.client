@@ -303,8 +303,12 @@ export const ReportBuilderPage: React.FC = () => {
             flexDirection: "column",
             alignItems: "flex-start",
             justifyContent: "flex-start",
-            width: `${reportData?.settings.width}px`,
-            height: `${reportData?.settings.height}px`,
+            width: reportData?.settings.width
+              ? `${reportData?.settings.width}px`
+              : "100%",
+            height: reportData?.settings.height
+              ? `${reportData?.settings.height}px`
+              : "100%",
             bgcolor: reportData?.settings.backgroundColor,
             borderRadius: `${reportData?.settings.borderRadius}px`,
             p: reportData?.settings.padding

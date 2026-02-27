@@ -1,15 +1,14 @@
 import React from "react";
-import BarChartPlaceholderImage from "./bar.svg?react";
-import LineChartPlaceholderImage from "./line.svg?react";
-import PieChartPlaceholderImage from "./pie.svg?react";
-import GeoMapPlaceholderImage from "./geomap.svg?react";
-import SankeyChartPlaceholderImage from "./sankey.svg?react";
-import ScatterChartPlaceholderImage from "./scatter.svg?react";
-import TreemapPlaceholderImage from "./treemap.svg?react";
-import RadarChartPlaceholderImage from "./radar.svg?react";
-import HeatmapPlaceholderImage from "./heatmap.svg?react";
-
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
+import BarChartPlaceholderImage from "app/pages/report-builder/builder/components/chart/placeholders/bar.svg?react";
+import PieChartPlaceholderImage from "app/pages/report-builder/builder/components/chart/placeholders/pie.svg?react";
+import GeoMapPlaceholderImage from "app/pages/report-builder/builder/components/chart/placeholders/geomap.svg?react";
+import LineChartPlaceholderImage from "app/pages/report-builder/builder/components/chart/placeholders/line.svg?react";
+import HeatmapPlaceholderImage from "app/pages/report-builder/builder/components/chart/placeholders/heatmap.svg?react";
+import TreemapPlaceholderImage from "app/pages/report-builder/builder/components/chart/placeholders/treemap.svg?react";
+import RadarChartPlaceholderImage from "app/pages/report-builder/builder/components/chart/placeholders/radar.svg?react";
+import SankeyChartPlaceholderImage from "app/pages/report-builder/builder/components/chart/placeholders/sankey.svg?react";
+import ScatterChartPlaceholderImage from "app/pages/report-builder/builder/components/chart/placeholders/scatter.svg?react";
 
 const ChartPlaceholder = ({ chartType }: { chartType: string }) => {
   const chartPlaceholders: { [key: string]: React.ReactNode } = {
@@ -27,14 +26,16 @@ const ChartPlaceholder = ({ chartType }: { chartType: string }) => {
   const getPlaceholder = (chartType: string) => {
     return chartPlaceholders[chartType] || <>No Placeholder Available</>;
   };
+
   return (
     <Box
       sx={{
-        display: "flex",
-        justifyContent: "center",
         width: "100%",
-        alignItems: "center",
         height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        "> svg": { width: "100%" },
       }}
     >
       {getPlaceholder(chartType)}
