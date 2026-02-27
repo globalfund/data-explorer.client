@@ -12,9 +12,6 @@ export const RichEditor: React.FC<{
   initialContent?: string;
   viewMode?: boolean;
 }> = ({ itemId, viewMode }) => {
-  const selectedController = useStoreState(
-    (state) => state.RBReportItemsControllerState.item,
-  );
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const selectedItem = items.find(
     (i) => i.id === itemId,
@@ -30,8 +27,6 @@ export const RichEditor: React.FC<{
   const setActiveRTE = useStoreActions(
     (actions) => actions.RBReportRTEState.setActiveRTE,
   );
-
-  const active = selectedController?.id === itemId;
 
   const editor = useEditor({
     extensions,
@@ -65,25 +60,16 @@ export const RichEditor: React.FC<{
 
   return (
     <Box
+      id="rte-editor"
       sx={{
-        border: viewMode ? "none" : "solid",
-        borderWidth: "0.5px",
-        borderColor: active ? "#3154F4" : "#98A1AA",
-        borderRadius: selectedItem?.options?.borderRadius || "4px",
+        ...selectedItem?.options,
+        "*": { margin: "0 !important" },
+        blockquote: { margin: "0 40px !important" },
       }}
+      onFocus={() => setEditorStateAndController()}
+      onClick={() => setEditorStateAndController()}
     >
-      <Box
-        id="rte-editor"
-        sx={{
-          ...selectedItem?.options,
-          "*": { margin: "0 !important" },
-          blockquote: { margin: "0 40px !important" },
-        }}
-        onFocus={() => setEditorStateAndController()}
-        onClick={() => setEditorStateAndController()}
-      >
-        <EditorContent editor={editor} width="100%" />
-      </Box>
+      <EditorContent editor={editor} width="100%" />
     </Box>
   );
 };

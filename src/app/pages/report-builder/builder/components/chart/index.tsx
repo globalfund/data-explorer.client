@@ -78,6 +78,12 @@ export const ReportBuilderPageChart: React.FC<{
     },
   });
 
+  const canRender =
+    checkValidDimensionMapping(
+      chartExtra.chartType || "",
+      chartExtra.mapping,
+    ) && renderedChartData;
+
   return (
     <Box
       id="chart-render"
@@ -109,17 +115,14 @@ export const ReportBuilderPageChart: React.FC<{
       }}
     >
       {selectedItem?.open && chartExtra?.chartType ? (
-        <Box
-          sx={{
-            width: selectedItem?.options?.width,
-            height: selectedItem?.options?.height,
-            position: "relative",
-          }}
-        >
-          {checkValidDimensionMapping(
-            chartExtra.chartType || "",
-            chartExtra.mapping,
-          ) && renderedChartData ? (
+        canRender ? (
+          <Box
+            sx={{
+              width: selectedItem?.options?.width,
+              height: selectedItem?.options?.height,
+              position: "relative",
+            }}
+          >
             <ChartComponent
               data={renderedChartData?.mappedData}
               mapping={chartExtra?.mapping}
@@ -127,27 +130,34 @@ export const ReportBuilderPageChart: React.FC<{
               visualOptions={selectedItem.options || {}}
               id={id}
             />
-          ) : (
+            {chartExtra.chartType === "geomap" &&
+            selectedItem.options?.showLegend ? (
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: 0,
+                  right: 0,
+                }}
+              >
+                <GeomapLegend
+                  data={renderedChartData?.mappedData}
+                  visualOptions={selectedItem.options}
+                  mapping={chartExtra.mapping}
+                />
+              </Box>
+            ) : null}
+          </Box>
+        ) : viewMode ? null : (
+          <Box
+            sx={{
+              width: selectedItem?.options?.width,
+              height: selectedItem?.options?.height,
+              position: "relative",
+            }}
+          >
             <ChartPlaceholder chartType={chartExtra.chartType} />
-          )}
-
-          {chartExtra.chartType === "geomap" &&
-          selectedItem.options?.showLegend ? (
-            <Box
-              sx={{
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-              }}
-            >
-              <GeomapLegend
-                data={renderedChartData?.mappedData}
-                visualOptions={selectedItem.options}
-                mapping={chartExtra.mapping}
-              />
-            </Box>
-          ) : null}
-        </Box>
+          </Box>
+        )
       ) : viewMode ? null : (
         <Box
           sx={{
