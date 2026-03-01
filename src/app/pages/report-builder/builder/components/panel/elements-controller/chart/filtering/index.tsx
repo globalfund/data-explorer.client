@@ -11,7 +11,12 @@ import { appColors } from "app/theme";
 import { SearchInput } from "app/components/filters/list/data";
 import { get, isEqual } from "lodash";
 import ExpandedFilterGroup from "./expanded-filter-group";
-import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
+import {
+  FilterGroupOptionModel,
+  FilterGroupModel,
+  ReportItemOf,
+} from "app/state/api/action-reducers/report-builder/sync";
+import { useDebounce } from "react-use";
 
 export default function Filtering() {
   const selectedController = useStoreState(
@@ -31,7 +36,11 @@ export default function Filtering() {
 
   const renderedChartData = chartExtra?.renderedChartData;
 
-  const filterOptionGroups = renderedChartData?.filterOptionGroups;
+  const [searchValue, setSearchValue] = React.useState("");
+
+  const [optionGroupsToShow, setOptionGroupsToShow] = React.useState<
+    FilterGroupModel[]
+  >(renderedChartData?.filterOptionGroups || []);
 
   const [expandedGroupNames, setExpandedGroupNames] = React.useState<string[]>(
     [],
@@ -67,8 +76,67 @@ export default function Filtering() {
 
     if (reset) {
       setTmpAppliedFilters({});
+      setSearchValue("");
     }
   };
+
+  const searchOptions = (options: FilterGroupOptionModel[], value: string) => {
+    const results: FilterGroupOptionModel[] = [];
+    options.forEach((option) => {
+      if (
+        option.label.toString().toLowerCase().indexOf(value.toLowerCase()) > -1
+      ) {
+        results.push(option);
+      } else if (option?.subOptions) {
+        const searchResponse = searchOptions(option.subOptions, value);
+
+        if (searchResponse.length) {
+          results.push({
+            ...option,
+            subOptions: searchResponse,
+          });
+        }
+      }
+    });
+    return results;
+  };
+
+  const handleSearch = (value: string) => {
+    if (value.length === 0) {
+      setOptionGroupsToShow(renderedChartData?.filterOptionGroups || []);
+      return;
+    }
+
+    try {
+      setOptionGroupsToShow(
+        renderedChartData?.filterOptionGroups?.map((group) => {
+          const searchResults = searchOptions(group.options, value);
+          return { ...group, options: searchResults };
+        }) || [],
+      );
+    } catch (e) {
+      console.error(e);
+      setOptionGroupsToShow(renderedChartData?.filterOptionGroups || []);
+      return;
+    }
+  };
+  useDebounce(
+    () => {
+      handleSearch(searchValue);
+    },
+    500,
+    [searchValue, renderedChartData?.filterOptionGroups],
+  );
+
+  useDebounce(
+    () => {
+      if (tmpAppliedFilters) {
+        handleApply();
+      }
+    },
+    1000,
+    [tmpAppliedFilters],
+  );
 
   return (
     <Box
@@ -104,7 +172,8 @@ export default function Filtering() {
           type="text"
           placeholder="Search"
           style={{ height: "24px", padding: 0, background: "transparent" }}
-          onChange={() => {}}
+          onChange={(e) => setSearchValue(e.target.value)}
+          value={searchValue}
         />
       </Box>
 
@@ -132,7 +201,7 @@ export default function Filtering() {
       </Box>
 
       <Box>
-        {filterOptionGroups?.map((group) => (
+        {optionGroupsToShow?.map((group) => (
           <Accordion
             key={group.name}
             expanded={expandedGroupNames.includes(group.name)}
@@ -170,7 +239,12 @@ export default function Filtering() {
                 gap: "8px",
               }}
             >
-              <Typography fontSize="14px" fontWeight="400">
+              <Typography
+                fontSize="14px"
+                fontWeight={
+                  expandedGroupNames.includes(group.name) ? "700" : "400"
+                }
+              >
                 {group.name}
               </Typography>
             </AccordionSummary>
@@ -183,10 +257,17 @@ export default function Filtering() {
                     get(tmpAppliedFilters, group.name, []) as string[]
                   }
                   setSelectedFilters={(filters: string[]) => {
-                    setTmpAppliedFilters((prev) => ({
-                      ...prev,
-                      [group.name]: filters,
-                    }));
+                    setTmpAppliedFilters((prev) => {
+                      const tempPrev = structuredClone(prev);
+                      if (filters.length === 0) {
+                        delete tempPrev[group.name];
+                        return tempPrev;
+                      }
+                      return {
+                        ...prev,
+                        [group.name]: filters,
+                      };
+                    });
                   }}
                 />
               </AccordionDetails>
@@ -204,11 +285,11 @@ export default function Filtering() {
           display: "flex",
           borderTop: `0.5px solid ${appColors.COMMON.SECONDARY_COLOR_6}`,
 
-          padding: "11px 0",
+          padding: "5px 0",
           "& > button": {
             fontSize: "14px",
             lineHeight: "1.5",
-            padding: "7px 12px",
+            padding: "9px 12px",
           },
         }}
       >
@@ -244,38 +325,11 @@ export default function Filtering() {
           }
           sx={{
             border: "none",
-            marginRight: "auto",
+            width: "100%",
+            justifyContent: "flex-start",
           }}
         >
           Reset
-        </Button>
-        <Button
-          onClick={() => {
-            setTmpAppliedFilters(chartExtra?.appliedFilters || {});
-            setExpandedGroupNames([]);
-          }}
-          variant="outlined"
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={() => handleApply()}
-          variant="outlined"
-          sx={{
-            color: "#fff",
-            bgcolor: "#3154f4",
-            "&:hover": { bgcolor: "#3154f4" },
-            "&:disabled": {
-              bgcolor: "#CFD4DA",
-              color: appColors.COMMON.SECONDARY_COLOR_2,
-            },
-          }}
-          disabled={isEqual(
-            tmpAppliedFilters,
-            chartExtra?.appliedFilters || {},
-          )}
-        >
-          Apply
         </Button>
       </Box>
     </Box>
