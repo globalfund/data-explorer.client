@@ -1,5 +1,4 @@
-import { Close } from "@mui/icons-material";
-import { Box, Divider, IconButton } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
 import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
@@ -12,25 +11,14 @@ interface Props {
 
 const SectionDivider = ({ id, viewMode }: Readonly<Props>) => {
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItemController = useStoreState(
-    (state) => state.RBReportItemsControllerState.item,
-  );
   const setSelectedController = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
   );
   const selectedItem = items.find(
     (i) => i.id === id,
   ) as ReportItemOf<"section_divider">;
-
-  console.log(
-    selectedItem,
-    selectedItemController,
-    setSelectedController,
-    viewMode,
-  );
-
-  const removeItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.removeItem,
+  const editItem = useStoreActions(
+    (actions) => actions.RBReportItemsState.editItem,
   );
 
   const clearSelectedItem = useStoreActions(
@@ -44,28 +32,57 @@ const SectionDivider = ({ id, viewMode }: Readonly<Props>) => {
       clearSelectedItem();
     },
   });
+
+  const {
+    paddingLeft,
+    paddingTop,
+    paddingRight,
+    paddingBottom,
+    borderWidth,
+    borderColor,
+    borderStyle,
+    strokeLinecap,
+    width,
+  } = selectedItem?.options || {};
+
   return (
     <Box
       id="section-divider-render"
       sx={{
-        width: "100%",
+        width,
         display: "flex",
-        position: "relative",
-        flexDirection: "column",
-        ".top-right-actions": {
-          top: -19,
-          right: -45,
-          display: "flex",
-          height: "fit-content",
-        },
+        alignItems: "center",
+        boxSizing: "border-box",
+        paddingLeft,
+        paddingTop,
+        paddingRight,
+        paddingBottom,
+      }}
+      onClick={() => {
+        if (viewMode) return;
+        editItem({
+          ...selectedItem,
+          id,
+          type: "section_divider",
+          open: true,
+        });
+        setSelectedController({
+          id,
+          type: "section_divider",
+          open: true,
+        });
       }}
     >
-      <Divider key={id} flexItem />
-      <Box className="top-right-actions">
-        <IconButton onClick={() => removeItem(id)}>
-          <Close fontSize="small" />
-        </IconButton>
-      </Box>
+      <Divider
+        sx={{
+          width: "100%",
+          borderWidth,
+          borderStyle,
+          borderColor,
+          strokeLinecap,
+          borderBottom: "none",
+        }}
+      />
     </Box>
   );
 };

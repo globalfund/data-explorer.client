@@ -114,6 +114,18 @@ export default function AddComponent() {
           type: "section_divider",
           open: false,
           data: null,
+          options: {
+            paddingLeft: "10px",
+            paddingTop: "10px",
+            paddingRight: "10px",
+            paddingBottom: "10px",
+            width: "100%",
+            borderWidth: "1px",
+            borderRadius: "1px",
+            borderColor: "#373D43",
+            borderStyle: "solid",
+            strokeLinecap: "round",
+          },
         };
         break;
       case "kpi_box":

@@ -1,0 +1,175 @@
+import { Box, Typography } from "@mui/material";
+import Direction from "app/assets/vectors/RBAlignBottom.svg?react";
+import React from "react";
+import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { set } from "lodash";
+import TextField from "../../components/textfield";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
+
+export default function LayoutTab() {
+  const selectedItemController = useStoreState(
+    (state) => state.RBReportItemsControllerState.item,
+  );
+  const editItem = useStoreActions(
+    (actions) => actions.RBReportItemsState.editItem,
+  );
+
+  const items = useStoreState((state) => state.RBReportItemsState.items);
+  const selectedItem = items.find(
+    (i) => i.id === selectedItemController?.id,
+  ) as ReportItemOf<"section_divider">;
+
+  const handleChange = (key: string, value: any) => {
+    if (!selectedItem) return;
+    const currentItem = structuredClone(selectedItem);
+    set(currentItem, key, value);
+    editItem({
+      ...currentItem,
+      id: selectedItemController?.id || "",
+      open: currentItem?.open || false,
+      type: "section_divider",
+    });
+  };
+  return (
+    <Box sx={{ padding: "8px" }}>
+      <Typography fontWeight={700} marginBottom={"16px"}>
+        Padding
+      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "16px",
+          marginTop: "8px",
+          ".MuiInputBase-root": {
+            "&:before": {
+              borderBottom: "none",
+            },
+          },
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <TextField
+            label={
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  marginBottom: "8px",
+                  svg: {
+                    transform: "rotate(90deg)",
+                  },
+                }}
+              >
+                <Direction />
+                <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
+                  Left
+                </Typography>
+              </Box>
+            }
+            value={selectedItem?.options?.paddingLeft ?? ""}
+            onChange={(value) => handleChange("options.paddingLeft", value)}
+          />
+
+          <TextField
+            label={
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  marginBottom: "8px",
+                  svg: {
+                    transform: "rotate(180deg)",
+                  },
+                }}
+              >
+                <Direction />
+                <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
+                  Top
+                </Typography>
+              </Box>
+            }
+            value={selectedItem?.options?.paddingTop ?? ""}
+            onChange={(value) => handleChange("options.paddingTop", value)}
+          />
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <TextField
+            label={
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  marginBottom: "8px",
+                  svg: {
+                    transform: "rotate(270deg)",
+                  },
+                }}
+              >
+                <Direction />
+                <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
+                  Right
+                </Typography>
+              </Box>
+            }
+            value={selectedItem?.options?.paddingRight ?? ""}
+            onChange={(value) => handleChange("options.paddingRight", value)}
+          />
+
+          <TextField
+            label={
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  marginBottom: "8px",
+                }}
+              >
+                <Direction />
+                <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
+                  Bottom
+                </Typography>
+              </Box>
+            }
+            value={selectedItem?.options?.paddingBottom ?? ""}
+            onChange={(value) => handleChange("options.paddingBottom", value)}
+          />
+        </Box>
+
+        <Box>
+          <Typography fontWeight={700} marginBottom={"8px"}>
+            Size
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <TextField
+              label="Width"
+              value={selectedItem?.options?.width ?? ""}
+              onChange={(value) => handleChange("options.width", value)}
+              width="100%"
+            />
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
+}

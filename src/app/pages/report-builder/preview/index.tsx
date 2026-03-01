@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { Empty } from "app/pages/report-builder/builder/components/empty";
 import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
@@ -14,6 +13,7 @@ import { useParams } from "react-router-dom";
 import { useGetReport } from "app/hooks/queries/report-builder";
 import KPIBox from "../builder/components/kpi";
 import { Typography } from "@mui/material";
+import SectionDivider from "../builder/components/section-divider";
 
 export const ReportBuilderPreviewPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -82,24 +82,7 @@ export const ReportBuilderPreviewPage: React.FC = () => {
           />
         );
       case "section_divider":
-        return (
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              position: "relative",
-              flexDirection: "column",
-              ".top-right-actions": {
-                top: -19,
-                right: -45,
-                display: "flex",
-                height: "fit-content",
-              },
-            }}
-          >
-            <Divider key={item.id} flexItem />
-          </Box>
-        );
+        return <SectionDivider id={item.id} viewMode />;
       default:
         return <React.Fragment />;
     }

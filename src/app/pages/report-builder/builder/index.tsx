@@ -3,11 +3,8 @@ import { colors } from "app/theme";
 import Box from "@mui/material/Box";
 import { DndProvider } from "react-dnd";
 import update from "immutability-helper";
-import Divider from "@mui/material/Divider";
 import { useParams } from "react-router-dom";
 import { uniqueId } from "app/utils/uniqueId";
-import Close from "@mui/icons-material/Close";
-import IconButton from "@mui/material/IconButton";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import KPIBox from "app/pages/report-builder/builder/components/kpi";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
@@ -22,6 +19,7 @@ import { ReportBuilderPageTable } from "app/pages/report-builder/builder/compone
 import { ReportBuilderPageImage } from "app/pages/report-builder/builder/components/image";
 import { ItemComponent } from "app/pages/report-builder/builder/components/order-container";
 import ElementsController from "app/pages/report-builder/builder/components/panel/elements-controller";
+import SectionDivider from "./components/section-divider";
 
 export const ReportBuilderPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -39,9 +37,6 @@ export const ReportBuilderPage: React.FC = () => {
 
   const setItems = useStoreActions(
     (actions) => actions.RBReportItemsState.setItems,
-  );
-  const removeItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.removeItem,
   );
 
   const setNotes = useStoreActions(
@@ -171,27 +166,7 @@ export const ReportBuilderPage: React.FC = () => {
             childrenData={[]}
             moveItem={moveItem}
           >
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                position: "relative",
-                flexDirection: "column",
-                ".top-right-actions": {
-                  top: -19,
-                  right: -45,
-                  display: "flex",
-                  height: "fit-content",
-                },
-              }}
-            >
-              <Divider key={item.id} flexItem />
-              <Box className="top-right-actions">
-                <IconButton onClick={() => removeItem(item.id)}>
-                  <Close fontSize="small" />
-                </IconButton>
-              </Box>
-            </Box>
+            <SectionDivider id={item.id} />
           </ItemComponent>
         );
       default:
