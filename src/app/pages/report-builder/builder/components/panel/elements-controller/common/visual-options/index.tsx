@@ -18,6 +18,7 @@ import { Slider } from "../../components/slider";
 import { ColorPalette } from "../../components/colorpalette";
 import { useDebounce } from "react-use";
 import { IDefaultChartVisualOptions } from "../../chart/utils";
+import { appendPx, removePx } from "app/utils/formatPx";
 
 const VisualOptions = ({
   defaultOptionsToDisplay,
@@ -205,6 +206,18 @@ const VisualOptions = ({
             disabled={optionDisabled}
             value={optionValue}
             placeholder={option.placeholder}
+          />
+        );
+      case "number":
+        return (
+          <TextField
+            label={optionLabel}
+            width={"100%"}
+            onChange={(value) => onChange(appendPx(value))}
+            disabled={optionDisabled}
+            value={removePx(optionValue)}
+            placeholder={option.placeholder}
+            type="number"
           />
         );
       case "color":

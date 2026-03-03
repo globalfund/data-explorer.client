@@ -7,6 +7,7 @@ import { IColor } from "app/components/color-picker/types";
 import { set } from "lodash";
 import TextField from "../components/textfield";
 import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
+import { appendPx, removePx } from "app/utils/formatPx";
 
 export default function StyleTab() {
   const selectedController = useStoreState(
@@ -82,8 +83,11 @@ export default function StyleTab() {
         >
           <TextField
             label="Stroke"
-            value={item?.options?.borderWidth ?? ""}
-            onChange={(value) => handleChange("options.borderWidth", value)}
+            value={removePx(item?.options?.borderWidth ?? "")}
+            onChange={(value) =>
+              handleChange("options.borderWidth", appendPx(value))
+            }
+            type="number"
           />
           <Box>
             <Typography
@@ -114,8 +118,11 @@ export default function StyleTab() {
         >
           <TextField
             label="Corner Radius"
-            value={item?.options?.borderRadius ?? ""}
-            onChange={(value) => handleChange("options.borderRadius", value)}
+            value={removePx(item?.options?.borderRadius ?? "")}
+            onChange={(value) =>
+              handleChange("options.borderRadius", appendPx(value))
+            }
+            type="number"
           />
           <Box>
             <Typography

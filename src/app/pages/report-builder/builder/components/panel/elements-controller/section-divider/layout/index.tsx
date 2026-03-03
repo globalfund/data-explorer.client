@@ -5,6 +5,7 @@ import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { set } from "lodash";
 import TextField from "../../components/textfield";
 import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
+import { appendPx, removePx } from "app/utils/formatPx";
 
 export default function LayoutTab() {
   const selectedItemController = useStoreState(
@@ -73,8 +74,11 @@ export default function LayoutTab() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.options?.paddingLeft ?? ""}
-            onChange={(value) => handleChange("options.paddingLeft", value)}
+            value={removePx(selectedItem?.options?.paddingLeft ?? "")}
+            onChange={(value) =>
+              handleChange("options.paddingLeft", appendPx(value))
+            }
+            type="number"
           />
 
           <TextField
@@ -96,8 +100,11 @@ export default function LayoutTab() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.options?.paddingTop ?? ""}
-            onChange={(value) => handleChange("options.paddingTop", value)}
+            value={removePx(selectedItem?.options?.paddingTop ?? "")}
+            onChange={(value) =>
+              handleChange("options.paddingTop", appendPx(value))
+            }
+            type="number"
           />
         </Box>
 
@@ -126,8 +133,11 @@ export default function LayoutTab() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.options?.paddingRight ?? ""}
-            onChange={(value) => handleChange("options.paddingRight", value)}
+            value={removePx(selectedItem?.options?.paddingRight ?? "")}
+            onChange={(value) =>
+              handleChange("options.paddingRight", appendPx(value))
+            }
+            type="number"
           />
 
           <TextField
@@ -146,8 +156,11 @@ export default function LayoutTab() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.options?.paddingBottom ?? ""}
-            onChange={(value) => handleChange("options.paddingBottom", value)}
+            value={removePx(selectedItem?.options?.paddingBottom ?? "")}
+            onChange={(value) =>
+              handleChange("options.paddingBottom", appendPx(value))
+            }
+            type="number"
           />
         </Box>
 

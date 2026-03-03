@@ -12,6 +12,7 @@ import { get, set } from "lodash";
 import TextField from "../../components/textfield";
 import SelectField from "../../components/selectfield";
 import Checkfield from "../../components/checkfield";
+import { appendPx, removePx } from "app/utils/formatPx";
 
 export function PaddingSize() {
   const selectedItemController = useStoreState(
@@ -212,8 +213,11 @@ export function PaddingSize() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.options?.paddingLeft ?? ""}
-            onChange={(value) => handleChange("settings.paddingLeft", value)}
+            value={removePx(selectedItem?.options?.paddingLeft ?? "")}
+            onChange={(value) =>
+              handleChange("settings.paddingLeft", appendPx(value))
+            }
+            type="number"
           />
 
           <TextField
@@ -235,8 +239,11 @@ export function PaddingSize() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.options?.paddingTop ?? ""}
-            onChange={(value) => handleChange("settings.paddingTop", value)}
+            value={removePx(selectedItem?.options?.paddingTop ?? "")}
+            onChange={(value) =>
+              handleChange("settings.paddingTop", appendPx(value))
+            }
+            type="number"
           />
         </Box>
 
@@ -265,8 +272,11 @@ export function PaddingSize() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.options?.paddingRight ?? ""}
-            onChange={(value) => handleChange("settings.paddingRight", value)}
+            value={removePx(selectedItem?.options?.paddingRight ?? "")}
+            onChange={(value) =>
+              handleChange("settings.paddingRight", appendPx(value))
+            }
+            type="number"
           />
 
           <TextField
@@ -285,8 +295,11 @@ export function PaddingSize() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.options?.paddingBottom ?? ""}
-            onChange={(value) => handleChange("settings.paddingBottom", value)}
+            value={removePx(selectedItem?.options?.paddingBottom ?? "")}
+            onChange={(value) =>
+              handleChange("settings.paddingBottom", appendPx(value))
+            }
+            type="number"
           />
         </Box>
 
@@ -303,13 +316,16 @@ export function PaddingSize() {
             <TextField
               label="Width"
               value={selectedItem?.options?.width ?? ""}
-              onChange={(value) => handleChange("settings.width", value)}
+              onChange={(value) => handleChange("options.width", value)}
             />
 
             <TextField
               label="Height"
-              value={selectedItem?.options?.height ?? ""}
-              onChange={(value) => handleChange("settings.height", value)}
+              value={removePx(selectedItem?.options?.height ?? "")}
+              onChange={(value) =>
+                handleChange("options.height", appendPx(value))
+              }
+              type="number"
             />
           </Box>
         </Box>

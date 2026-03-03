@@ -8,6 +8,7 @@ import { set } from "lodash";
 import TextField from "../../components/textfield";
 import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 import SelectField from "../../components/selectfield";
+import { appendPx, removePx } from "app/utils/formatPx";
 
 export default function Customise() {
   const selectedController = useStoreState(
@@ -101,8 +102,10 @@ export default function Customise() {
         >
           <TextField
             label="Line Stroke"
-            value={item?.options?.borderWidth ?? ""}
-            onChange={(value) => handleChange("options.borderWidth", value)}
+            value={removePx(item?.options?.borderWidth ?? "")}
+            onChange={(value) =>
+              handleChange("options.borderWidth", appendPx(value))
+            }
           />
           <Box>
             <Typography
