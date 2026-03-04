@@ -3,7 +3,10 @@ import Box from "@mui/material/Box";
 import { Typography, Button } from "@mui/material";
 import { chartTypes } from "../../../../../chart/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import { ChartType } from "app/state/api/action-reducers/report-builder/sync";
+import {
+  ChartType,
+  ReportItemOf,
+} from "app/state/api/action-reducers/report-builder/sync";
 import { getDefaultVisualOptions } from "../../utils";
 
 export default function ChartList() {
@@ -18,30 +21,29 @@ export default function ChartList() {
     (actions) => actions.RBReportItemsState.editItem,
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const item = items.find((i) => i.id === selectedController?.id);
+  const selectedItem = items.find(
+    (i) => i.id === selectedController?.id,
+  ) as ReportItemOf<"chart">;
 
   const handleApply = () => {
-    if (!item || !selectedChartType) return;
+    if (!selectedItem || !selectedChartType) return;
     const chartTypeUnchanged =
-      item?.extra?.chart?.chartType === selectedChartType;
+      selectedItem?.data?.chartType === selectedChartType;
     editItem({
-      ...item,
+      ...selectedItem,
       id: selectedController?.id || "",
       type: "chart",
-      extra: {
-        ...item?.extra,
-        chart: {
-          ...item?.extra?.chart,
-          mapping: chartTypeUnchanged ? item?.extra?.chart?.mapping : {},
-          chartType: selectedChartType as ChartType,
-          visualOptions: chartTypeUnchanged
-            ? item?.extra?.chart?.visualOptions
-            : getDefaultVisualOptions(selectedChartType),
-          appliedFilters: chartTypeUnchanged
-            ? item?.extra?.chart?.appliedFilters
-            : {},
-        },
+      data: {
+        ...selectedItem?.data,
+        mapping: chartTypeUnchanged ? selectedItem?.data?.mapping : {},
+        chartType: selectedChartType as ChartType,
+        appliedFilters: chartTypeUnchanged
+          ? selectedItem?.data?.appliedFilters
+          : {},
       },
+      options: chartTypeUnchanged
+        ? selectedItem?.options
+        : getDefaultVisualOptions(selectedChartType),
     });
 
     handleBack();
@@ -58,6 +60,8 @@ export default function ChartList() {
       },
     });
   };
+
+  const selectedType = selectedChartType || selectedItem?.data?.chartType;
 
   return (
     <Box
@@ -99,10 +103,9 @@ export default function ChartList() {
               display: "flex",
               height: "61px",
               border: "0.5px solid #ADB5BD",
-              borderColor:
-                item.id === selectedChartType ? "#3154F4" : "#ADB5BD",
+              bgcolor: item.id === selectedType ? "#EFF1FE" : "#fff",
+              borderColor: item.id === selectedType ? "#3154F4" : "#ADB5BD",
               borderRadius: "4px",
-              background: "#FFFFFF",
               cursor: "pointer",
             }}
           >
@@ -182,7 +185,7 @@ export default function ChartList() {
           Back
         </Button>
         <Button
-          disabled={!selectedChartType}
+          disabled={!selectedType}
           onClick={handleApply}
           sx={{
             width: "71px",

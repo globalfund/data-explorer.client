@@ -1,7 +1,7 @@
 import React from "react";
 import { colors } from "app/theme";
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material";
+import { Divider, styled } from "@mui/material";
 import Button from "@mui/material/Button";
 import Drawer from "@mui/material/Drawer";
 import Popover from "@mui/material/Popover";
@@ -181,7 +181,7 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
     <Box
       id="header-menu-tabs-container"
       sx={{
-        gap: "50px",
+        gap: "15px",
         width: "100%",
         height: "100%",
         display: "flex",
@@ -189,7 +189,7 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
         justifyContent: "center",
       }}
     >
-      {PAGES.map((page) => (
+      {PAGES.slice(0, 3).map((page) => (
         <HeaderMenuButton
           id={page.id}
           key={page.id}
@@ -208,14 +208,40 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
           sx={
             isNavButtonActive(page.id, location.pathname) ||
             (page.subPages && Boolean(anchorEl))
-              ? activeButtonStateStyle
-              : { "&:hover": activeButtonStateStyle }
+              ? (page.activeButtonStateStyle ?? activeButtonStateStyle)
+              : {
+                  "&:hover":
+                    page.activeButtonStateStyle ?? activeButtonStateStyle,
+                }
           }
           data-cy="header-menu-button"
+          style={page.style}
         >
           {page.label}
         </HeaderMenuButton>
       ))}
+      <Divider
+        orientation="vertical"
+        sx={{ borderColor: "#98A1AA", height: "30px", mt: "15px" }}
+      />
+      <HeaderMenuButton
+        id={PAGES[3].id}
+        key={PAGES[3].id}
+        disableRipple
+        onClick={handleClick(false, PAGES[3])}
+        sx={
+          isNavButtonActive(PAGES[3].id, location.pathname)
+            ? (PAGES[3].activeButtonStateStyle ?? activeButtonStateStyle)
+            : {
+                "&:hover":
+                  PAGES[3].activeButtonStateStyle ?? activeButtonStateStyle,
+              }
+        }
+        data-cy="header-menu-button"
+        style={PAGES[3].style}
+      >
+        {PAGES[3].label}
+      </HeaderMenuButton>
       <Popover
         disableScrollLock
         open={Boolean(anchorEl)}

@@ -1,5 +1,5 @@
 import { useStoreState } from "app/state/store/hooks";
-import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 import { getVisualOptionsToDisplay } from "../utils";
 import VisualOptions from "../../common/visual-options";
 
@@ -10,10 +10,10 @@ export default function LayoutTab() {
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const selectedItem = items.find(
     (i) => i.id === selectedItemController?.id,
-  ) as RBReportItem;
+  ) as ReportItemOf<"chart">;
 
   const defaultOptionsToDisplay = getVisualOptionsToDisplay(
-    selectedItem?.extra?.chart?.chartType as string,
+    selectedItem?.data?.chartType as string,
   );
 
   return (

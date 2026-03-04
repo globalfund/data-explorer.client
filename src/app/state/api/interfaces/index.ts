@@ -6,7 +6,6 @@ import {
   RBReportItemsModel,
   RBReportNotesModel,
   RBReportRTEModel,
-  RBReportSettingsModel,
   RBReportTooltipModel,
 } from "app/state/api/action-reducers/report-builder/sync";
 import {
@@ -255,7 +254,6 @@ export interface StoreModel {
   RBReportItemsControllerState: RBReportItemControllerModel;
   RBReportRTEState: RBReportRTEModel;
   RBReportItemOrderState: RBReportItemOrderModel;
-  RBReportSettingsState: RBReportSettingsModel;
   RBReportNotesState: RBReportNotesModel;
   // CMS
   CMSData: CMSDataModel;

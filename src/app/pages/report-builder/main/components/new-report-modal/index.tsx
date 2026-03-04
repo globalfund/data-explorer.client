@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import { useGFCreateReport } from "app/hooks/queries/report-builder";
+import { useCreateReport } from "app/hooks/queries/report-builder";
+import { PageLoader } from "app/components/page-loader";
 
 export const ReportBuilderNewReportModal: React.FC<{
   open: boolean;
@@ -24,45 +25,45 @@ export const ReportBuilderNewReportModal: React.FC<{
   setDescriptionValue,
 }) => {
   const navigate = useNavigate();
-  const createReport = useGFCreateReport();
-
   const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length <= 100) {
       setNameValue(e.target.value);
     }
   };
 
-  const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (e.target.value.length <= 250) {
       setDescriptionValue(e.target.value);
     }
   };
 
-  const onCreateReportClick = () => {
+  const createReport = useCreateReport();
+
+  const onSubmit = () => {
     if (nameValue && descriptionValue) {
-      createReport.mutate(
-        {
-          name: nameValue,
-          description: descriptionValue,
-          settings: {
-            width: (window.innerWidth > 1440
-              ? 1392
-              : window.innerWidth - 32
-            ).toString(),
-            height: (window.innerHeight - 160).toString(),
-            padding: ["50", "50", "50", "50"],
-            stroke: "0",
-            strokeColor: "#000000",
-            backgroundColor: "#ffffff",
-            borderRadius: "0",
-          },
+      const newReport = {
+        name: nameValue,
+        description: descriptionValue,
+        items: [],
+        settings: {
+          width: (window.innerWidth > 1440
+            ? 1392
+            : window.innerWidth - 32
+          ).toString(),
+          height: (window.innerHeight - 160).toString(),
+          padding: ["50", "50", "50", "50"],
+          stroke: "0",
+          strokeColor: "#000000",
+          backgroundColor: "#ffffff",
+          borderRadius: "0",
         },
-        {
-          onSuccess: (data) => {
-            navigate(`/report-builder/${data.data.id}/edit`);
-          },
+      };
+
+      createReport.mutate(newReport, {
+        onSuccess: (data) => {
+          navigate(`/report-builder/reports/${data?.data?.id}/edit`);
         },
-      );
+      });
     }
   };
 
@@ -78,6 +79,7 @@ export const ReportBuilderNewReportModal: React.FC<{
           transform: "translate(-50%, -50%)",
         }}
       >
+        {createReport.isPending && <PageLoader />}
         <Box
           sx={{
             width: "100%",
@@ -158,9 +160,10 @@ export const ReportBuilderNewReportModal: React.FC<{
           <Box
             sx={{
               width: "100%",
-              input: {
+              textarea: {
                 width: "100%",
-                padding: "11px 16px",
+                height: "129px",
+                padding: "16px",
                 background: "#f1f3f5",
                 border: "2px solid #f1f3f5",
                 borderBottomColor: "#868e96",
@@ -170,8 +173,7 @@ export const ReportBuilderNewReportModal: React.FC<{
               },
             }}
           >
-            <input
-              type="text"
+            <textarea
               value={descriptionValue}
               onChange={onDescriptionChange}
               placeholder="Report description"
@@ -191,7 +193,6 @@ export const ReportBuilderNewReportModal: React.FC<{
             </Button>
             <Button
               variant="contained"
-              onClick={onCreateReportClick}
               disabled={!nameValue || !descriptionValue}
               sx={{
                 fontWeight: "400",
@@ -199,6 +200,7 @@ export const ReportBuilderNewReportModal: React.FC<{
                 textTransform: "none",
                 background: "#3154f4",
               }}
+              onClick={onSubmit}
             >
               Create Report
             </Button>

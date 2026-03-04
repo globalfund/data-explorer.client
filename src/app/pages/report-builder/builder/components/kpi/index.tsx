@@ -1,13 +1,15 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import React from "react";
 
 interface Props {
   id: string;
+  viewMode?: boolean;
 }
-export default function KPIBox({ id }: Readonly<Props>) {
+export default function KPIBox({ id, viewMode }: Readonly<Props>) {
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const selectedItemController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
@@ -15,15 +17,16 @@ export default function KPIBox({ id }: Readonly<Props>) {
   const setSelectedController = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
   );
-  const selectedItem = items.find((i) => i.id === id);
+  const selectedItem = items.find(
+    (i) => i.id === id,
+  ) as ReportItemOf<"kpi_box">;
   const isActive = selectedItemController?.id === id;
-  const border = `${selectedItem?.settings?.borderWidth || "0.5px"} solid ${
-    selectedItem?.settings?.borderColor || "#000000"
+  const border = `${selectedItem?.options?.borderWidth || "0.5px"} solid ${
+    selectedItem?.options?.borderColor || "#000000"
   }`;
-  const settings = selectedItem?.settings || {};
-  const alignHorizontal =
-    selectedItem?.extra?.kpi_box?.options?.alignHorizontal;
-  const innerLine = selectedItem?.extra?.kpi_box?.options?.innerLine;
+  const settings = selectedItem?.options || {};
+  const alignHorizontal = selectedItem?.options?.alignHorizontal;
+  const innerLine = selectedItem?.options?.innerLine;
   const clearSelectedItem = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.clearItem,
   );
@@ -41,6 +44,7 @@ export default function KPIBox({ id }: Readonly<Props>) {
     <Box
       id="kpi-render"
       onClick={() => {
+        if (viewMode) return;
         editItem({
           ...selectedItem,
           id,
@@ -101,7 +105,9 @@ export default function KPIBox({ id }: Readonly<Props>) {
             borderRadius: "4px",
             display: "flex",
             gap: "8px",
+
             ...settings,
+            ...(viewMode ? { border: "none !important" } : {}),
           }}
         >
           <Box
@@ -125,36 +131,16 @@ export default function KPIBox({ id }: Readonly<Props>) {
             >
               <Typography
                 display={
-                  selectedItem?.extra?.kpi_box?.field?.topLabel?.enabled
-                    ? "block"
-                    : "none"
+                  selectedItem?.data?.topLabel?.enabled ? "block" : "none"
                 }
-                fontSize={
-                  selectedItem?.extra?.kpi_box?.field?.topLabel?.fontSize ??
-                  "14px"
-                }
-                color={
-                  selectedItem?.extra?.kpi_box?.field?.topLabel?.color ??
-                  "#70777E"
-                }
-                bgcolor={
-                  selectedItem?.extra?.kpi_box?.field?.topLabel?.bgColor ??
-                  "transparent"
-                }
-                fontFamily={
-                  selectedItem?.extra?.kpi_box?.field?.topLabel?.fontFamily ??
-                  "Inter"
-                }
-                fontWeight={
-                  selectedItem?.extra?.kpi_box?.field?.topLabel?.fontWeight ??
-                  400
-                }
-                fontStyle={
-                  selectedItem?.extra?.kpi_box?.field?.topLabel?.fontStyle ??
-                  "normal"
-                }
+                fontSize={selectedItem?.data?.topLabel?.fontSize ?? "14px"}
+                color={selectedItem?.data?.topLabel?.color ?? "#70777E"}
+                bgcolor={selectedItem?.data?.topLabel?.bgColor ?? "transparent"}
+                fontFamily={selectedItem?.data?.topLabel?.fontFamily ?? "Inter"}
+                fontWeight={selectedItem?.data?.topLabel?.fontWeight ?? 400}
+                fontStyle={selectedItem?.data?.topLabel?.fontStyle ?? "normal"}
               >
-                {selectedItem?.extra?.kpi_box?.field?.topLabel?.value}
+                {selectedItem?.data?.topLabel?.value}
               </Typography>
             </Box>
 
@@ -176,75 +162,49 @@ export default function KPIBox({ id }: Readonly<Props>) {
             >
               <Typography
                 display={
-                  selectedItem?.extra?.kpi_box?.field?.bigNumberText?.enabled
-                    ? "block"
-                    : "none"
+                  selectedItem?.data?.bigNumberText?.enabled ? "block" : "none"
                 }
-                fontSize={
-                  selectedItem?.extra?.kpi_box?.field?.bigNumberText
-                    ?.fontSize ?? "44px"
-                }
-                color={
-                  selectedItem?.extra?.kpi_box?.field?.bigNumberText?.color ??
-                  "#373D43"
-                }
+                fontSize={selectedItem?.data?.bigNumberText?.fontSize ?? "44px"}
+                color={selectedItem?.data?.bigNumberText?.color ?? "#373D43"}
                 fontWeight={
-                  selectedItem?.extra?.kpi_box?.field?.bigNumberText
-                    ?.fontWeight ?? 700
+                  selectedItem?.data?.bigNumberText?.fontWeight ?? 700
                 }
                 fontFamily={
-                  selectedItem?.extra?.kpi_box?.field?.bigNumberText
-                    ?.fontFamily ?? "Inter"
+                  selectedItem?.data?.bigNumberText?.fontFamily ?? "Inter"
                 }
                 bgcolor={
-                  selectedItem?.extra?.kpi_box?.field?.bigNumberText?.bgColor ??
-                  "transparent"
+                  selectedItem?.data?.bigNumberText?.bgColor ?? "transparent"
                 }
                 fontStyle={
-                  selectedItem?.extra?.kpi_box?.field?.bigNumberText
-                    ?.fontStyle ?? "normal"
+                  selectedItem?.data?.bigNumberText?.fontStyle ?? "normal"
                 }
                 height={"53px"}
                 // py={"9px"}
                 lineHeight={"normal"}
               >
-                {selectedItem?.extra?.kpi_box?.field?.bigNumberText?.value}
+                {selectedItem?.data?.bigNumberText?.value}
               </Typography>
               <Typography
                 display={
-                  selectedItem?.extra?.kpi_box?.field?.optionalText?.enabled
-                    ? "block"
-                    : "none"
+                  selectedItem?.data?.optionalText?.enabled ? "block" : "none"
                 }
-                fontSize={
-                  selectedItem?.extra?.kpi_box?.field?.optionalText?.fontSize ??
-                  "14px"
-                }
-                color={
-                  selectedItem?.extra?.kpi_box?.field?.optionalText?.color ??
-                  "#70777E"
-                }
-                fontWeight={
-                  selectedItem?.extra?.kpi_box?.field?.optionalText
-                    ?.fontWeight ?? 400
-                }
+                fontSize={selectedItem?.data?.optionalText?.fontSize ?? "14px"}
+                color={selectedItem?.data?.optionalText?.color ?? "#70777E"}
+                fontWeight={selectedItem?.data?.optionalText?.fontWeight ?? 400}
                 fontStyle={
-                  selectedItem?.extra?.kpi_box?.field?.optionalText
-                    ?.fontStyle ?? "normal"
+                  selectedItem?.data?.optionalText?.fontStyle ?? "normal"
                 }
                 fontFamily={
-                  selectedItem?.extra?.kpi_box?.field?.optionalText
-                    ?.fontFamily ?? "Inter"
+                  selectedItem?.data?.optionalText?.fontFamily ?? "Inter"
                 }
                 bgcolor={
-                  selectedItem?.extra?.kpi_box?.field?.optionalText?.bgColor ??
-                  "transparent"
+                  selectedItem?.data?.optionalText?.bgColor ?? "transparent"
                 }
                 height={settings.justifyContent === "left" ? "35px" : "auto"}
                 py={settings.justifyContent === "left" ? "9px" : "0px"}
                 lineHeight={"normal"}
               >
-                {selectedItem?.extra?.kpi_box?.field?.optionalText?.value}
+                {selectedItem?.data?.optionalText?.value}
               </Typography>
             </Box>
             <Box
@@ -257,36 +217,22 @@ export default function KPIBox({ id }: Readonly<Props>) {
             >
               <Typography
                 display={
-                  selectedItem?.extra?.kpi_box?.field?.bottomLabel?.enabled
-                    ? "block"
-                    : "none"
+                  selectedItem?.data?.bottomLabel?.enabled ? "block" : "none"
                 }
-                fontSize={
-                  selectedItem?.extra?.kpi_box?.field?.bottomLabel?.fontSize ??
-                  "14px"
-                }
-                color={
-                  selectedItem?.extra?.kpi_box?.field?.bottomLabel?.color ??
-                  "#70777E"
-                }
+                fontSize={selectedItem?.data?.bottomLabel?.fontSize ?? "14px"}
+                color={selectedItem?.data?.bottomLabel?.color ?? "#70777E"}
                 bgcolor={
-                  selectedItem?.extra?.kpi_box?.field?.bottomLabel?.bgColor ??
-                  "transparent"
+                  selectedItem?.data?.bottomLabel?.bgColor ?? "transparent"
                 }
                 fontStyle={
-                  selectedItem?.extra?.kpi_box?.field?.bottomLabel?.fontStyle ??
-                  "normal"
+                  selectedItem?.data?.bottomLabel?.fontStyle ?? "normal"
                 }
-                fontWeight={
-                  selectedItem?.extra?.kpi_box?.field?.bottomLabel
-                    ?.fontWeight ?? 400
-                }
+                fontWeight={selectedItem?.data?.bottomLabel?.fontWeight ?? 400}
                 fontFamily={
-                  selectedItem?.extra?.kpi_box?.field?.bottomLabel
-                    ?.fontFamily ?? "Inter"
+                  selectedItem?.data?.bottomLabel?.fontFamily ?? "Inter"
                 }
               >
-                {selectedItem?.extra?.kpi_box?.field?.bottomLabel?.value}
+                {selectedItem?.data?.bottomLabel?.value}
               </Typography>
             </Box>
           </Box>

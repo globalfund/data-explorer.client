@@ -7,10 +7,7 @@ import { useParams } from "react-router-dom";
 import InputLabel from "@mui/material/InputLabel";
 import Typography from "@mui/material/Typography";
 import FormHelperText from "@mui/material/FormHelperText";
-import {
-  useGFGetReport,
-  useGFUpdateReport,
-} from "app/hooks/queries/report-builder";
+import { useGetReport, usePatchReport } from "app/hooks/queries/report-builder";
 import {
   TopPadding,
   LeftPadding,
@@ -73,8 +70,8 @@ const panelSx = {
 export const RenamePanel: React.FC<{ closePanel: () => void }> = (props) => {
   const { id } = useParams<{ id: string }>();
 
-  const reportData = useGFGetReport(id);
-  const updateReport = useGFUpdateReport();
+  const reportData = useGetReport(id);
+  const updateReport = usePatchReport(id);
 
   const [name, setName] = React.useState(reportData?.data?.data.name ?? "");
   const [description, setDescription] = React.useState(
@@ -90,7 +87,7 @@ export const RenamePanel: React.FC<{ closePanel: () => void }> = (props) => {
   const handleApply = () => {
     if (id) {
       updateReport.mutate(
-        { reportId: id, name, description },
+        { name, description },
         {
           onSuccess: () => {
             console.log("Report updated successfully");
@@ -175,8 +172,9 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
 ) => {
   const { id } = useParams<{ id: string }>();
 
-  const reportData = useGFGetReport(id);
-  const updateReport = useGFUpdateReport();
+  const reportData = useGetReport(id);
+  console.log(reportData.data);
+  const updateReport = usePatchReport(id);
 
   const [widthError, setWidthError] = React.useState("");
   const [heightError, setHeightError] = React.useState("");
@@ -297,14 +295,15 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
     if (id) {
       updateReport.mutate(
         {
-          reportId: id,
-          width,
-          height,
-          padding,
-          stroke: reportData.data?.data.settings.stroke,
-          strokeColor: reportData.data?.data.settings.strokeColor,
-          borderRadius: reportData.data?.data.settings.borderRadius,
-          backgroundColor: reportData.data?.data.settings.backgroundColor,
+          settings: {
+            width,
+            height,
+            padding,
+            stroke: reportData.data?.data.settings.stroke,
+            strokeColor: reportData.data?.data.settings.strokeColor,
+            borderRadius: reportData.data?.data.settings.borderRadius,
+            backgroundColor: reportData.data?.data.settings.backgroundColor,
+          },
         },
         {
           onSuccess: () => {
@@ -381,7 +380,7 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
           <input
             type="text"
             id="l-padding-input"
-            value={padding[3]}
+            value={padding?.[3]}
             onBlur={handleLeftPaddingBlur}
             onChange={handleLeftPaddingChange}
           />
@@ -393,7 +392,7 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
           <input
             type="text"
             id="t-padding-input"
-            value={padding[0]}
+            value={padding?.[0]}
             onBlur={handleTopPaddingBlur}
             onChange={handleTopPaddingChange}
           />
@@ -405,7 +404,7 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
           <input
             type="text"
             id="r-padding-input"
-            value={padding[1]}
+            value={padding?.[1]}
             onBlur={handleRightPaddingBlur}
             onChange={handleRightPaddingChange}
           />
@@ -417,7 +416,7 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
           <input
             type="text"
             id="b-padding-input"
-            value={padding[2]}
+            value={padding?.[2]}
             onBlur={handleBottomPaddingBlur}
             onChange={handleBottomPaddingChange}
           />
@@ -458,8 +457,8 @@ export const BorderFillPanel: React.FC<{ closePanel: () => void }> = (
 ) => {
   const { id } = useParams<{ id: string }>();
 
-  const reportData = useGFGetReport(id);
-  const updateReport = useGFUpdateReport();
+  const reportData = useGetReport(id);
+  const updateReport = usePatchReport(id);
 
   const [stroke, setStroke] = React.useState(
     reportData?.data?.data.settings.stroke,
@@ -526,14 +525,15 @@ export const BorderFillPanel: React.FC<{ closePanel: () => void }> = (
     if (id) {
       updateReport.mutate(
         {
-          reportId: id,
-          stroke,
-          strokeColor,
-          borderRadius,
-          backgroundColor,
-          width: reportData.data?.data.settings.width,
-          height: reportData.data?.data.settings.height,
-          padding: reportData.data?.data.settings.padding,
+          settings: {
+            stroke,
+            strokeColor,
+            borderRadius,
+            backgroundColor,
+            width: reportData.data?.data.settings.width,
+            height: reportData.data?.data.settings.height,
+            padding: reportData.data?.data.settings.padding,
+          },
         },
         {
           onSuccess: () => {

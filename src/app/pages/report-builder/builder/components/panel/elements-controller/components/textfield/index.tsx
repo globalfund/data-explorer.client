@@ -12,6 +12,7 @@ export interface TextFieldProps {
   disabled?: boolean;
   label?: React.ReactNode;
   placeholder?: string;
+  type?: React.HTMLInputTypeAttribute | undefined;
 }
 export default function TextField(props: Readonly<TextFieldProps>) {
   return (
@@ -53,6 +54,7 @@ export default function TextField(props: Readonly<TextFieldProps>) {
           }}
           disabled={props.disabled}
           placeholder={props.placeholder}
+          type={props.type}
         />
       </Box>
     </Box>

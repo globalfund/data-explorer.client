@@ -6,6 +6,8 @@ import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { IColor } from "app/components/color-picker/types";
 import { set } from "lodash";
 import TextField from "../components/textfield";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
+import { appendPx, removePx } from "app/utils/formatPx";
 
 export default function StyleTab() {
   const selectedController = useStoreState(
@@ -15,7 +17,9 @@ export default function StyleTab() {
     (actions) => actions.RBReportItemsState.editItem,
   );
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const item = items.find((i) => i.id === selectedController?.id);
+  const item = items.find(
+    (i) => i.id === selectedController?.id,
+  ) as ReportItemOf<"text">;
 
   const handleChange = (key: string, value: any) => {
     if (!item) return;
@@ -34,8 +38,8 @@ export default function StyleTab() {
       open: selectedController?.open || false,
       id: selectedController?.id || "",
       type: "text",
-      settings: {
-        ...item?.settings,
+      options: {
+        ...item?.options,
         backgroundColor: ColorService.convert("hex", color.hex).hex,
       },
     });
@@ -46,8 +50,8 @@ export default function StyleTab() {
       open: selectedController?.open || false,
       id: selectedController?.id || "",
       type: "text",
-      settings: {
-        ...item?.settings,
+      options: {
+        ...item?.options,
         borderColor: ColorService.convert("hex", color.hex).hex,
         borderStyle: "solid",
       },
@@ -79,8 +83,11 @@ export default function StyleTab() {
         >
           <TextField
             label="Stroke"
-            value={item?.settings?.borderWidth ?? ""}
-            onChange={(value) => handleChange("settings.borderWidth", value)}
+            value={removePx(item?.options?.borderWidth ?? "")}
+            onChange={(value) =>
+              handleChange("options.borderWidth", appendPx(value))
+            }
+            type="number"
           />
           <Box>
             <Typography
@@ -91,7 +98,7 @@ export default function StyleTab() {
             <ColorPicker
               color={ColorService.convert(
                 "hex",
-                item?.settings?.borderColor || "#000000",
+                item?.options?.borderColor || "#000000",
               )}
               onChange={handleBorderColorChange}
               disabled={false}
@@ -111,8 +118,11 @@ export default function StyleTab() {
         >
           <TextField
             label="Corner Radius"
-            value={item?.settings?.borderRadius ?? ""}
-            onChange={(value) => handleChange("settings.borderRadius", value)}
+            value={removePx(item?.options?.borderRadius ?? "")}
+            onChange={(value) =>
+              handleChange("options.borderRadius", appendPx(value))
+            }
+            type="number"
           />
           <Box>
             <Typography
@@ -123,7 +133,7 @@ export default function StyleTab() {
             <ColorPicker
               color={ColorService.convert(
                 "hex",
-                item?.settings?.backgroundColor ?? "#FFFFFF",
+                item?.options?.backgroundColor ?? "#FFFFFF",
               )}
               onChange={handleBackgroundColorChange}
               disabled={false}

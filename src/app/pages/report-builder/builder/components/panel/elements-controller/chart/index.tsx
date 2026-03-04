@@ -15,6 +15,7 @@ import Filtering from "./filtering";
 import LayoutTab from "./layout";
 import Customise from "./customise";
 import Advanced from "./advanced";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 
 type ChartControllerTab =
   | "mapping"
@@ -32,12 +33,13 @@ export default function ChartController() {
   );
 
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const item = items.find((i) => i.id === selectedController?.id);
+  const item = items.find(
+    (i) => i.id === selectedController?.id,
+  ) as ReportItemOf<"chart">;
 
   const chartExtra = selectedController?.extra?.chart || {};
 
-  const chartConfigured =
-    item?.extra?.chart?.dataset && item?.extra?.chart?.chartType;
+  const chartConfigured = item?.data?.dataset && item?.data?.chartType;
 
   const handleExpandToggle = () => {
     setIsExpanded(!isExpanded);
@@ -82,11 +84,7 @@ export default function ChartController() {
     if (chartConfigured) {
       setValue("mapping");
     }
-  }, [
-    chartConfigured,
-    item?.extra?.chart?.dataset,
-    item?.extra?.chart?.chartType,
-  ]);
+  }, [chartConfigured, item?.data?.dataset, item?.data?.chartType]);
 
   return (
     <Box

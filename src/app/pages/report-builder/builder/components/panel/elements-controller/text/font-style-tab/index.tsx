@@ -32,6 +32,7 @@ import { ColorService } from "app/components/color-picker/utils/color";
 import StyledMenu from "../../common/menu-popup";
 import AlignButtons from "./align-buttons";
 import TextField from "../../components/textfield";
+import { appendPx, removePx } from "app/utils/formatPx";
 
 export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
   const [fontFamilyAnchorEl, setFontFamilyAnchorEl] =
@@ -376,9 +377,10 @@ export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
         <Box>
           <TextField
             label="Letter Spacing"
-            value={editorState.letterSpacing}
-            onChange={onLetterSpacingChange}
+            value={removePx(editorState.letterSpacing)}
+            onChange={(value) => onLetterSpacingChange(appendPx(value))}
             width="134px"
+            type="number"
           />
         </Box>
       </Box>

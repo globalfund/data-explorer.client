@@ -10,6 +10,7 @@ interface ItemComponentProps {
   childrenData: any[];
   children: React.ReactNode;
   moveItem: (dragIndex: number, hoverIndex: number) => void;
+  viewMode?: boolean;
 }
 
 export const StoryElementsType = {
@@ -29,6 +30,12 @@ const style = {
 
 export const ItemComponent = (props: ItemComponentProps) => {
   const { id, children: content, index, moveItem } = props;
+
+  const selectedController = useStoreState(
+    (state) => state.RBReportItemsControllerState.item,
+  );
+
+  const active = !props.viewMode && selectedController?.id === id;
 
   const ref = React.useRef<HTMLDivElement>(null);
 
@@ -120,13 +127,19 @@ export const ItemComponent = (props: ItemComponentProps) => {
 
   return (
     <Box
-      ref={ref}
       id={`container-${id}`}
-      data-handler-id={handlerId}
-      sx={{ ...style, opacity: isDragging ? 0.5 : 1, position: "relative" }}
+      sx={{
+        ...style,
+        opacity: isDragging ? 0.5 : 1,
+        position: "relative",
+        border: active ? "0.5px solid #3154F4" : "0.5px solid transparent",
+        borderRadius: "4px",
+      }}
     >
       <Box
         id={`item-${id}`}
+        ref={ref}
+        data-handler-id={handlerId}
         sx={{
           top: 0,
           zIndex: 1,

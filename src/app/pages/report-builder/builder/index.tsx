@@ -3,16 +3,14 @@ import { colors } from "app/theme";
 import Box from "@mui/material/Box";
 import { DndProvider } from "react-dnd";
 import update from "immutability-helper";
-import Divider from "@mui/material/Divider";
 import { useParams } from "react-router-dom";
 import { uniqueId } from "app/utils/uniqueId";
-import Close from "@mui/icons-material/Close";
-import IconButton from "@mui/material/IconButton";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import KPIBox from "app/pages/report-builder/builder/components/kpi";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { Empty } from "app/pages/report-builder/builder/components/empty";
 import { ReportBuilderPageReportSettings } from "./components/report-settings";
+import { useGetReport } from "app/hooks/queries/report-builder";
 import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
 import { ReportBuilderPageGrid } from "app/pages/report-builder/builder/components/grid";
 import { ReportBuilderPageText } from "app/pages/report-builder/builder/components/text";
@@ -21,28 +19,24 @@ import { ReportBuilderPageTable } from "app/pages/report-builder/builder/compone
 import { ReportBuilderPageImage } from "app/pages/report-builder/builder/components/image";
 import { ItemComponent } from "app/pages/report-builder/builder/components/order-container";
 import ElementsController from "app/pages/report-builder/builder/components/panel/elements-controller";
-import {
-  useGFGetReport,
-  // useGFUpdateReport,
-} from "app/hooks/queries/report-builder";
+import SectionDivider from "./components/section-divider";
 
 export const ReportBuilderPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
-  const reportData = useGFGetReport(id);
-  // const updateReport = useGFUpdateReport();
+  const reportQuery = useGetReport(id);
+  const reportData = reportQuery?.data?.data;
 
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const setActiveRTE = useStoreActions(
-    (actions) => actions.RBReportRTEState.setActiveRTE,
+  const setActiveReport = useStoreActions(
+    (actions) => actions.RBReportItemsState.setReport,
   );
+
+  const reportState = useStoreState((state) => state.RBReportItemsState);
+  const items = reportState.items;
   const addedItemRef = React.useRef(items.length > 0);
 
   const setItems = useStoreActions(
     (actions) => actions.RBReportItemsState.setItems,
-  );
-  const removeItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.removeItem,
   );
 
   const setNotes = useStoreActions(
@@ -51,6 +45,12 @@ export const ReportBuilderPage: React.FC = () => {
   const addItem = useStoreActions(
     (actions) => actions.RBReportItemsState.addItem,
   );
+
+  React.useEffect(() => {
+    if (reportData) {
+      setActiveReport(reportData);
+    }
+  }, [reportData]);
 
   const moveItem = React.useCallback(
     (dragIndex: number, hoverIndex: number) => {
@@ -78,10 +78,9 @@ export const ReportBuilderPage: React.FC = () => {
           >
             <ReportBuilderPageText
               id={item.id}
-              setEditor={setActiveRTE}
-              settings={item.settings}
-              focus={item.extra?.focus}
-              initialKey={item.extra?.key}
+              settings={item.options}
+              focus={item.focus}
+              initialKey={item.key}
             />
           </ItemComponent>
         );
@@ -127,9 +126,9 @@ export const ReportBuilderPage: React.FC = () => {
             moveItem={moveItem}
           >
             <ReportBuilderPageGrid
-              length={4}
+              columns={item.data.columns}
+              rows={item.data.rows}
               id={item.id}
-              setEditor={setActiveRTE}
             />
           </ItemComponent>
         );
@@ -153,9 +152,9 @@ export const ReportBuilderPage: React.FC = () => {
             moveItem={moveItem}
           >
             <ReportBuilderPageGrid
-              length={2}
+              rows={1}
+              columns={item.data.columns}
               id={item.id}
-              setEditor={setActiveRTE}
             />
           </ItemComponent>
         );
@@ -167,31 +166,11 @@ export const ReportBuilderPage: React.FC = () => {
             childrenData={[]}
             moveItem={moveItem}
           >
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                position: "relative",
-                flexDirection: "column",
-                ".top-right-actions": {
-                  top: -19,
-                  right: -45,
-                  display: "flex",
-                  height: "fit-content",
-                },
-              }}
-            >
-              <Divider key={item.id} flexItem />
-              <Box className="top-right-actions">
-                <IconButton onClick={() => removeItem(item.id)}>
-                  <Close fontSize="small" />
-                </IconButton>
-              </Box>
-            </Box>
+            <SectionDivider id={item.id} />
           </ItemComponent>
         );
       default:
-        return <React.Fragment key={item.id} />;
+        return <React.Fragment />;
     }
   };
 
@@ -208,8 +187,10 @@ export const ReportBuilderPage: React.FC = () => {
         id: uniqueId(),
         type: "text",
         open: true,
-        extra: { focus: true, key: e.key },
-        settings: {
+        focus: true,
+        key: e.key,
+        data: { rte: null },
+        options: {
           paddingTop: "10px",
           paddingLeft: "10px",
           paddingRight: "10px",
@@ -289,54 +270,50 @@ export const ReportBuilderPage: React.FC = () => {
       <DndProvider backend={HTML5Backend}>
         <Box
           id="items-container"
+          className="scrollbar"
           sx={{
-            maxWidth: "100%",
+            gap: "10px",
+            display: "flex",
             overflow: "overlay",
-            height: "fit-content",
-            bgcolor: reportData.data?.data.settings.backgroundColor,
-          }}
-        >
-          <Box
-            id="report-builder-canvas"
-            sx={{
-              gap: "10px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              justifyContent: "flex-start",
-              width: `${reportData.data?.data.settings.width}px`,
-              height: `${reportData.data?.data.settings.height}px`,
-              bgcolor: reportData.data?.data.settings.backgroundColor,
-              borderRadius: `${reportData.data?.data.settings.borderRadius}px`,
-              p: reportData.data?.data.settings.padding
-                .map((p: string) => `${p}px`)
-                .join(" "),
-              border: `${reportData.data?.data.settings.stroke}px solid ${reportData.data?.data.settings.strokeColor}`,
-              ".top-right-actions": {
-                top: 4,
-                right: 4,
-                position: "absolute",
-                ".MuiIconButton-root": {
-                  width: "38px",
-                  height: "38px",
-                  bgcolor: "#fff",
-                  borderRadius: "4px",
-                  border: "1px solid #cfd4da",
-                  "&:hover": {
-                    bgcolor: "#f8f8f8",
-                    borderColor: "#000000",
-                  },
+            flexDirection: "column",
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
+            width: reportData?.settings.width
+              ? `${reportData?.settings.width}px`
+              : "100%",
+            height: reportData?.settings.height
+              ? `${reportData?.settings.height}px`
+              : "100%",
+            bgcolor: reportData?.settings.backgroundColor,
+            borderRadius: `${reportData?.settings.borderRadius}px`,
+            p: reportData?.settings.padding
+              .map((p: string) => `${p}px`)
+              .join(" "),
+            border: `${reportData?.settings.stroke}px solid ${reportData?.settings.strokeColor}`,
+            ".top-right-actions": {
+              top: 4,
+              right: 4,
+              position: "absolute",
+              ".MuiIconButton-root": {
+                width: "38px",
+                height: "38px",
+                bgcolor: "#fff",
+                borderRadius: "4px",
+                border: "1px solid #cfd4da",
+                "&:hover": {
+                  bgcolor: "#f8f8f8",
+                  borderColor: "#000000",
                 },
               },
-            }}
-          >
-            {items.length === 0 && <Empty />}
-            {items.map((item, index) => (
-              <React.Fragment key={item.id}>
-                {getItemByType(item, index)}
-              </React.Fragment>
-            ))}
-          </Box>
+            },
+          }}
+        >
+          {items.length === 0 && <Empty />}
+          {items.map((item, index) => (
+            <React.Fragment key={item.id}>
+              {getItemByType(item, index)}
+            </React.Fragment>
+          ))}
         </Box>
       </DndProvider>
     </Box>

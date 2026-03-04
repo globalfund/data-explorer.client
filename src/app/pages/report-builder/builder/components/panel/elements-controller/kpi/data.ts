@@ -9,3 +9,9 @@ export const alignHOptions = [
   { label: "Align Center", value: "center" },
   { label: "Align Right", value: "right" },
 ];
+
+export const alignVOptions = [
+  { label: "Align Top", value: "top" },
+  { label: "Align Middle", value: "middle" },
+  { label: "Align Bottom", value: "bottom" },
+];

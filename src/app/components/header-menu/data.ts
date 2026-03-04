@@ -12,6 +12,8 @@ export interface HeaderMenuPage {
   link?: string;
   description?: string;
   subPages?: HeaderMenuPage[];
+  style?: React.CSSProperties;
+  activeButtonStateStyle?: React.CSSProperties;
 }
 
 export const getPages = (cmsData: any): HeaderMenuPage[] => {
@@ -101,6 +103,17 @@ export const getPages = (cmsData: any): HeaderMenuPage[] => {
       label: getCMSDataField(cmsData, "componentsHeader.grantsLabel", "Grants"),
       link: "/grants",
     },
+    {
+      id: "my-reports",
+      label: getCMSDataField(
+        cmsData,
+        "componentsHeader.myReportsLabel",
+        "My Reports",
+      ),
+      link: "/report-builder",
+      style: { color: "#3154F4" },
+      activeButtonStateStyle: { borderBottom: "4px solid #3154F4" },
+    },
   ];
 
   return PAGES;
@@ -121,6 +134,8 @@ export function isNavButtonActive(id: string, path: string): boolean {
       return path.includes("/geography") || path.includes("/location");
     case "grants":
       return path.includes("/grants") || path.includes("/grant");
+    case "my-reports":
+      return path.includes("/report-builder");
     default:
       return id === path.split("/")[1];
   }

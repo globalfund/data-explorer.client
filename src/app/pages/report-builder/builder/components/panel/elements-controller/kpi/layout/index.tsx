@@ -1,13 +1,14 @@
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Direction from "app/assets/vectors/RBAlignBottom.svg?react";
-import Button from "@mui/material/Button";
-import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
 import React from "react";
-import StyledMenu from "../../common/menu-popup";
 
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import { alignHOptions } from "../data";
+import { alignHOptions, alignVOptions } from "../data";
 import { set } from "lodash";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
+import TextField from "../../components/textfield";
+import { appendPx, removePx } from "app/utils/formatPx";
+import SelectField from "../../components/selectfield";
 
 export function PaddingSize() {
   const selectedItemController = useStoreState(
@@ -18,20 +19,20 @@ export function PaddingSize() {
   );
 
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find((i) => i.id === selectedItemController?.id);
+  const selectedItem = items.find(
+    (i) => i.id === selectedItemController?.id,
+  ) as ReportItemOf<"kpi_box">;
 
   const [alignHorizontal, setAlignHorizontal] = React.useState(
-    selectedItem?.extra?.kpi_box?.options?.alignHorizontal || "left",
+    selectedItem?.options?.alignHorizontal || "left",
   );
 
-  const [alignHorizontalAnchorEl, setAlignHorizontalAnchorEl] =
-    React.useState<null | HTMLElement>(null);
-  const isAlignHorizontalMenuActive = Boolean(alignHorizontalAnchorEl);
-
+  const [alignVertical, setAlignVertical] = React.useState(
+    selectedItem?.options?.alignVertical || "top",
+  );
   React.useEffect(() => {
-    setAlignHorizontal(
-      selectedItem?.extra?.kpi_box?.options?.alignHorizontal || "left",
-    );
+    setAlignHorizontal(selectedItem?.options?.alignHorizontal || "left");
+    setAlignVertical(selectedItem?.options?.alignVertical || "top");
   }, [selectedItem]);
 
   const handleChange = (key: string, value: any) => {
@@ -64,31 +65,42 @@ export function PaddingSize() {
       open: selectedItem?.open || false,
       id: selectedItemController?.id || "",
       type: "kpi_box",
-      settings: {
-        ...selectedItem?.settings,
+      options: {
+        ...selectedItem?.options,
         display: "flex",
         justifyContent,
-      },
-      extra: {
-        ...selectedItem?.extra,
-        kpi_box: {
-          ...selectedItem?.extra?.kpi_box,
-          options: {
-            ...selectedItem?.extra?.kpi_box?.options,
-            alignHorizontal: value,
-          },
-        },
+        alignHorizontal: value,
       },
     });
     setAlignHorizontal(value);
   };
 
-  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAlignHorizontalAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseMenu = () => {
-    setAlignHorizontalAnchorEl(null);
+  const handleSelectAlignVertical = (value: "top" | "middle" | "bottom") => {
+    let alignItems = "";
+    switch (value) {
+      case "top":
+        alignItems = "flex-start";
+        break;
+      case "middle":
+        alignItems = "center";
+        break;
+      case "bottom":
+        alignItems = "flex-end";
+        break;
+    }
+    editItem({
+      ...selectedItem,
+      open: selectedItem?.open || false,
+      id: selectedItemController?.id || "",
+      type: "kpi_box",
+      options: {
+        ...selectedItem?.options,
+        display: "flex",
+        alignItems,
+        alignVertical: value,
+      },
+    });
+    setAlignVertical(value);
   };
 
   return (
@@ -100,57 +112,12 @@ export function PaddingSize() {
         padding: "16px 8px",
       }}
     >
-      <Box>
-        <Typography
-          sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
-        >
-          Align
-        </Typography>
-        <Button
-          variant="text"
-          onClick={(event) => handleOpenMenu(event)}
-          endIcon={
-            isAlignHorizontalMenuActive ? (
-              <KeyboardArrowUp />
-            ) : (
-              <KeyboardArrowDown />
-            )
-          }
-          sx={{
-            fontWeight: "400",
-            textTransform: "none",
-            color: "#000",
-            bgcolor: "#fff",
-            width: "100%",
-            height: "40px",
-            justifyContent: "space-between",
-            borderRadius: "4px",
-            border: "0.5px solid #98A1AA",
-          }}
-        >
-          {
-            alignHOptions.find((option) => option.value === alignHorizontal)
-              ?.label
-          }
-        </Button>
-
-        <StyledMenu
-          open={isAlignHorizontalMenuActive}
-          anchorEl={alignHorizontalAnchorEl}
-          onClose={() => handleCloseMenu()}
-          options={alignHOptions}
-          activeValue={alignHorizontal}
-          onSelect={handleSelectAlignHorizontal}
-        />
-      </Box>
-
       <Typography fontWeight={700}>Padding</Typography>
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           gap: "16px",
-          marginTop: "8px",
           ".MuiInputBase-root": {
             "&:before": {
               borderBottom: "none",
@@ -161,7 +128,7 @@ export function PaddingSize() {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            gap: "16px",
           }}
         >
           <TextField
@@ -183,8 +150,11 @@ export function PaddingSize() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.settings?.paddingLeft ?? ""}
-            onChange={(value) => handleChange("settings.paddingLeft", value)}
+            value={removePx(selectedItem?.options?.paddingLeft ?? "")}
+            onChange={(value) =>
+              handleChange("options.paddingLeft", appendPx(value))
+            }
+            type="number"
           />
 
           <TextField
@@ -206,15 +176,18 @@ export function PaddingSize() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.settings?.paddingTop ?? ""}
-            onChange={(value) => handleChange("settings.paddingTop", value)}
+            value={removePx(selectedItem?.options?.paddingTop ?? "")}
+            onChange={(value) =>
+              handleChange("options.paddingTop", appendPx(value))
+            }
+            type="number"
           />
         </Box>
 
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            gap: "16px",
           }}
         >
           <TextField
@@ -236,8 +209,11 @@ export function PaddingSize() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.settings?.paddingRight ?? ""}
-            onChange={(value) => handleChange("settings.paddingRight", value)}
+            value={removePx(selectedItem?.options?.paddingRight ?? "")}
+            onChange={(value) =>
+              handleChange("options.paddingRight", appendPx(value))
+            }
+            type="number"
           />
 
           <TextField
@@ -256,33 +232,66 @@ export function PaddingSize() {
                 </Typography>
               </Box>
             }
-            value={selectedItem?.settings?.paddingBottom ?? ""}
-            onChange={(value) => handleChange("settings.paddingBottom", value)}
+            value={removePx(selectedItem?.options?.paddingBottom ?? "")}
+            onChange={(value) =>
+              handleChange("options.paddingBottom", appendPx(value))
+            }
+            type="number"
           />
         </Box>
+      </Box>
 
-        <Box>
-          <Typography fontWeight={700} marginBottom={"8px"}>
-            Size
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <TextField
-              label="Width"
-              value={selectedItem?.settings?.width ?? ""}
-              onChange={(value) => handleChange("settings.width", value)}
-            />
+      <Typography fontWeight={700}>Align</Typography>
 
-            <TextField
-              label="Height"
-              value={selectedItem?.settings?.height ?? ""}
-              onChange={(value) => handleChange("settings.height", value)}
-            />
-          </Box>
+      <Box
+        sx={{
+          display: "flex",
+          gap: "16px",
+          width: "100%",
+        }}
+      >
+        <SelectField
+          label="Horizontal"
+          options={alignHOptions}
+          value={alignHorizontal}
+          onChange={handleSelectAlignHorizontal}
+          width={"100%"}
+        />
+        <SelectField
+          label="Vertical"
+          options={alignVOptions}
+          value={alignVertical}
+          onChange={handleSelectAlignVertical}
+          width={"100%"}
+        />
+      </Box>
+
+      <Box>
+        <Typography fontWeight={700} marginBottom={"8px"}>
+          Size
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            gap: "16px",
+          }}
+        >
+          <TextField
+            label="Width"
+            value={selectedItem?.options?.width ?? ""}
+            onChange={(value) => handleChange("options.width", value)}
+            width={"100%"}
+          />
+
+          <TextField
+            label="Height"
+            value={removePx(selectedItem?.options?.height ?? "")}
+            onChange={(value) =>
+              handleChange("options.height", appendPx(value))
+            }
+            type="number"
+            width={"100%"}
+          />
         </Box>
       </Box>
     </Box>

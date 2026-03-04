@@ -1679,7 +1679,7 @@ export function useEcharts({
     );
 
     const chart = echarts.init(node, undefined, {
-      renderer: "canvas",
+      renderer: "svg",
       height: visualOptions.height,
     });
 

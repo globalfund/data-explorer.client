@@ -4,6 +4,7 @@ import TextController from "./text";
 import ImageController from "./image";
 import KPIController from "./kpi";
 import ChartController from "./chart";
+import SectionDividerController from "./section-divider";
 
 export default function ElementsController() {
   const selectedItem = useStoreState(
@@ -22,6 +23,8 @@ export default function ElementsController() {
         return <KPIController />;
       case "chart":
         return <ChartController />;
+      case "section_divider":
+        return <SectionDividerController />;
       default:
         return null;
     }

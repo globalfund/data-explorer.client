@@ -56,6 +56,7 @@ export const MobileBackButton = styled.span`
 `;
 
 export const CategoryButton = styled(Button)<CategoryButtonProps>`
+  gap: 8px;
   width: 200px;
   display: flex;
   font-size: 14px;
@@ -88,6 +89,6 @@ export const CategoryButton = styled(Button)<CategoryButtonProps>`
     text-overflow: ellipsis;
   }
   svg:nth-of-type(2) {
-    transform: ${(props) => ` rotate(${props.anchorEl ? -180 : 0}deg);`};
+    transform: ${(props) => ` rotate(${props.theme.anchorEl ? -180 : 0}deg);`};
   }
 `;

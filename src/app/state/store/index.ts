@@ -144,7 +144,6 @@ import {
   RBReportItemsState,
   RBReportNotesState,
   RBReportRTEState,
-  RBReportSettings,
   RBTooltipTriggerState,
 } from "../api/action-reducers/report-builder/sync";
 
@@ -298,9 +297,8 @@ const storeContent: StoreModel = {
   RBReportItemsState: persist(RBReportItemsState),
   RBTooltipTriggerState: persist(RBTooltipTriggerState),
   RBReportItemsControllerState: persist(RBReportItemsControllerState),
-  RBReportRTEState: persist(RBReportRTEState),
+  RBReportRTEState: RBReportRTEState,
   RBReportItemOrderState: persist(RBReportItemOrderState),
-  RBReportSettingsState: persist(RBReportSettings),
   RBReportNotesState: persist(RBReportNotesState),
   // CMS API
   CMSData: persist(CMSData),

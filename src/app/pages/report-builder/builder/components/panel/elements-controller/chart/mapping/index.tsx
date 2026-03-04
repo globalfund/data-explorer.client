@@ -5,7 +5,10 @@ import Aggregation from "./aggregation";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { getDimensions } from "../utils";
 import { useGFSampleDataset } from "app/hooks/queries/report-builder";
-import { MappedDimension } from "app/state/api/action-reducers/report-builder/sync";
+import {
+  MappedDimension,
+  ReportItemOf,
+} from "app/state/api/action-reducers/report-builder/sync";
 import { isEmpty } from "lodash";
 
 export default function Mapping() {
@@ -21,8 +24,10 @@ export default function Mapping() {
     React.useState<string>("sum");
 
   const items = useStoreState((state) => state.RBReportItemsState.items);
-  const item = items.find((i) => i.id === selectedController?.id);
-  const chartExtra = item?.extra?.chart;
+  const item = items.find(
+    (i) => i.id === selectedController?.id,
+  ) as ReportItemOf<"chart">;
+  const chartExtra = item?.data;
   const dimensions = getDimensions(chartExtra?.chartType || "");
 
   const sampledDatasetQuery = useGFSampleDataset(chartExtra?.dataset || "");
@@ -62,33 +67,28 @@ export default function Mapping() {
       id: selectedController?.id || "",
       type: "chart" as const,
       open: true,
-      extra: {
-        ...item?.extra,
-        chart: {
-          ...item?.extra?.chart,
-          mapping: {
-            ...filteredMapping,
-            [dimensionId]: {
-              value,
-              mappedType: types,
-              ...(dimension.aggregation
-                ? {
-                    config: {
-                      aggregation: (value as string[])?.map(
-                        () => currentAggregation || selectedAggregation,
-                      ),
-                    },
-                  }
-                : {}),
-            },
+      data: {
+        ...item?.data,
+        mapping: {
+          ...filteredMapping,
+          [dimensionId]: {
+            value,
+            mappedType: types,
+            ...(dimension.aggregation
+              ? {
+                  config: {
+                    aggregation: (value as string[])?.map(
+                      () => currentAggregation || selectedAggregation,
+                    ),
+                  },
+                }
+              : {}),
           },
-          //dataset: fetched datasetId
-          //chartType: fetched chart type
         },
       },
     };
     if (isEmpty(value) || !value) {
-      delete newItem.extra?.chart?.mapping?.[dimensionId];
+      delete newItem.data?.mapping?.[dimensionId];
     }
 
     editItem(newItem);
@@ -128,12 +128,9 @@ export default function Mapping() {
       id: selectedController?.id || "",
       type: "chart",
       open: true,
-      extra: {
-        ...item?.extra,
-        chart: {
-          ...item?.extra?.chart,
-          mapping: newMapping,
-        },
+      data: {
+        ...item?.data,
+        mapping: newMapping,
       },
     });
   };
