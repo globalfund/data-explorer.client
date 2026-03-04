@@ -191,6 +191,7 @@ export default function Pagination(props: {
             <Input
               type="text"
               value={props.pageSearchValue}
+              aria-label="Page pagination input"
               onChange={props.handlePageSearchChange}
             />
           </Box>

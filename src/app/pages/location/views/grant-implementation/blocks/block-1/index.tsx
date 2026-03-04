@@ -180,7 +180,7 @@ export const LocationGrantImplementationBlock1 = () => {
       <Box position="relative">
         <Typography
           bottom="20px"
-          fontSize="10px"
+          fontSize="12px"
           padding="7px 12px"
           borderRadius="4px"
           position="absolute"
@@ -196,7 +196,7 @@ export const LocationGrantImplementationBlock1 = () => {
         <Typography
           left="40px"
           bottom="-20px"
-          fontSize="10px"
+          fontSize="12px"
           padding="7px 12px"
           borderRadius="4px"
           position="absolute"

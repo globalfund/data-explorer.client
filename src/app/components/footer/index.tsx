@@ -46,7 +46,12 @@ export const Footer: React.FC = () => {
                 }}
               >
                 {SM.map((sm) => (
-                  <FooterSM key={sm.name} href={sm.link} target="_blank">
+                  <FooterSM
+                    key={sm.name}
+                    href={sm.link}
+                    target="_blank"
+                    aria-label={sm.name}
+                  >
                     {sm.icon}
                   </FooterSM>
                 ))}

@@ -114,9 +114,8 @@ export const GrantImplementation: React.FC = () => {
             "&:hover": {
               color: appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_TEXT_COLOR,
               background:
-                appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR,
-              borderColor:
-                appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR,
+                appColors.CHART_BLOCK_CYCLES.BUTTON_HOVER_BACKGROUND_COLOR,
+              borderColor: appColors.CHART_BLOCK_CYCLES.BUTTON_BORDER_COLOR,
             },
           },
         }}

@@ -81,19 +81,11 @@ export const ChartBlockButtonToolbar: React.FC<ChartBlockButtonToolbarProps> = (
               background: "transparent",
               border: "1px solid #98A1AA",
               "&:hover": {
-                background: "#000000",
-                borderColor: "#000000",
-                svg: {
-                  filter: "invert(1)",
-                },
+                background: "#F8F9FA",
               },
             },
             "#active": {
-              background: "#000000",
-              borderColor: "#000000",
-              svg: {
-                filter: "invert(1)",
-              },
+              background: "#F8F9FA",
             },
           }}
         >

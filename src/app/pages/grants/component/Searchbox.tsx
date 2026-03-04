@@ -9,6 +9,7 @@ interface SearchboxProps {
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleSearchIconClick: (showSearch: boolean) => () => void;
 }
+
 export default function Searchbox(props: SearchboxProps) {
   return (
     <Box
@@ -47,6 +48,7 @@ export default function Searchbox(props: SearchboxProps) {
         onChange={props.handleSearch}
         placeholder="e.g. Kenya"
         data-cy="grants-search-input"
+        aria-label="Search grants"
       />
 
       <IconButton
@@ -72,6 +74,7 @@ export default function Searchbox(props: SearchboxProps) {
           },
         }}
         data-cy="grants-search-btn"
+        aria-label="Search grants"
       >
         <SearchIcon htmlColor="#000" fontSize="small" />
       </IconButton>
