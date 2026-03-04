@@ -442,7 +442,7 @@ export const GrantImplementationPageBlock2: React.FC<
               padding="7px 12px"
               borderRadius="4px"
               position="absolute"
-              border="1px solid #DFE3E5"
+              border="1px solid #98A1AA"
               sx={{
                 transformOrigin: "left",
                 transform: "rotate(-90deg)",
@@ -469,7 +469,7 @@ export const GrantImplementationPageBlock2: React.FC<
               padding="7px 12px"
               borderRadius="4px"
               position="absolute"
-              border="1px solid #DFE3E5"
+              border="1px solid #98A1AA"
               sx={{
                 "@media (max-width: 767px)": {
                   bottom: 0,
@@ -497,7 +497,7 @@ export const GrantImplementationPageBlock2: React.FC<
               padding="7px 12px"
               borderRadius="4px"
               position="absolute"
-              border="1px solid #DFE3E5"
+              border="1px solid #98A1AA"
               sx={{
                 transformOrigin: "left",
                 transform: "rotate(-90deg)",
@@ -516,7 +516,7 @@ export const GrantImplementationPageBlock2: React.FC<
               padding="7px 12px"
               borderRadius="4px"
               position="absolute"
-              border="1px solid #DFE3E5"
+              border="1px solid #98A1AA"
             >
               X Axis/<b>Years</b>
             </Typography>

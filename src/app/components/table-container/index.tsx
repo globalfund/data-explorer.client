@@ -158,7 +158,7 @@ export const TableContainer: React.FC<TableContainerProps> = (
                 padding: "0px 12px",
                 borderRadius: "4px",
                 textTransform: "none",
-                border: "1px solid #DFE3E5",
+                border: "1px solid #98A1AA",
                 "&:hover": {
                   color: "#fff",
                   background: "#000",
@@ -193,7 +193,7 @@ export const TableContainer: React.FC<TableContainerProps> = (
               height: "35px",
               borderRadius: "4px",
               background: "transparent",
-              border: "1px solid #DFE3E5",
+              border: "1px solid #98A1AA",
               "&:hover": {
                 background: "#000000",
                 borderColor: "#000000",
@@ -214,7 +214,7 @@ export const TableContainer: React.FC<TableContainerProps> = (
               style={{
                 padding: "6px 8px",
                 borderRadius: "4px",
-                border: "1px solid #DFE3E5",
+                border: "1px solid #98A1AA",
               }}
             />
           )}

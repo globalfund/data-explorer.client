@@ -395,7 +395,7 @@ const theme = createTheme({
           fontWeight: "400",
           padding: "4px 12px",
           textTransform: "none",
-          borderColor: "#cfd4da",
+          borderColor: "#98A1AA",
         },
       },
     },
@@ -796,7 +796,7 @@ export const appColors = {
     DROPDOWN_ITEM_HOVER_BACKGROUND_COLOR: "#000000",
     DROPDOWN_ITEM_ACTIVE_BACKGROUND_COLOR: "#000000",
     DROPDOWN_BUTTON_BACKGROUND_COLOR: "transparent",
-    DROPDOWN_BUTTON_BORDER_COLOR: "#DFE3E5",
+    DROPDOWN_BUTTON_BORDER_COLOR: "#98A1AA",
     DROPDOWN_BUTTON_TEXT_HOVER_COLOR: WHITE,
     DROPDOWN_BUTTON_BACKGROUND_HOVER_COLOR: BLACK,
     DROPDOWN_BUTTON_TEXT_COLOR: BLACK,
@@ -927,7 +927,7 @@ export const appColors = {
   },
   TOOLTIP: {
     TEXT_COLOR: "#262C34",
-    BORDER_COLOR: "#DFE3E5",
+    BORDER_COLOR: "#98A1AA",
     BACKGROUND_COLOR: WHITE,
   },
   PIE_CHART: {

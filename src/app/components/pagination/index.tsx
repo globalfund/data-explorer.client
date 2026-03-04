@@ -90,7 +90,7 @@ export default function Pagination(props: {
                   {...item}
                   sx={{
                     borderRadius: "4px",
-                    border: "1px solid #DFE3E5",
+                    border: "1px solid #98A1AA",
                     display: "flex",
                     padding: "9px 12px",
                     justifyContent: "center",
@@ -114,7 +114,7 @@ export default function Pagination(props: {
                   {...item}
                   sx={{
                     borderRadius: "4px",
-                    border: "1px solid #DFE3E5",
+                    border: "1px solid #98A1AA",
                     display: "flex",
                     padding: "9px 12px",
                     justifyContent: "center",
@@ -147,7 +147,7 @@ export default function Pagination(props: {
                   {...item}
                   sx={{
                     borderRadius: "4px",
-                    border: "1px solid #DFE3E5",
+                    border: "1px solid #98A1AA",
                     display: "flex",
                     padding: "9px 12px",
                     justifyContent: "center",
@@ -199,7 +199,7 @@ export default function Pagination(props: {
             sx={{
               height: "31px",
               width: "44px",
-              border: "1px solid #DFE3E5",
+              border: "1px solid #98A1AA",
               borderRadius: "4px",
               background: "none",
               fontFamily: "Inter",

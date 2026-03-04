@@ -17,7 +17,7 @@ export default function Searchbox(props: SearchboxProps) {
       sx={{
         height: "31px",
         borderRadius: "4px",
-        border: "1px solid #DFE3E5",
+        border: "1px solid #98A1AA",
         width: "100%",
         input: {
           background: "#F8F8F8",
@@ -51,8 +51,8 @@ export default function Searchbox(props: SearchboxProps) {
 
       <IconButton
         sx={{
-          height: "95%",
           width: "40px",
+          height: "100%",
           display: "flex",
           padding: "8px 12px",
           borderRadius: "4px",

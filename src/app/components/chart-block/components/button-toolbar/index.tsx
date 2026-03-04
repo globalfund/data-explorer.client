@@ -79,7 +79,7 @@ export const ChartBlockButtonToolbar: React.FC<ChartBlockButtonToolbarProps> = (
               height: "35px",
               borderRadius: "4px",
               background: "transparent",
-              border: "1px solid #DFE3E5",
+              border: "1px solid #98A1AA",
               "&:hover": {
                 background: "#000000",
                 borderColor: "#000000",

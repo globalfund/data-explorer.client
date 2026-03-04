@@ -30,7 +30,7 @@ export const ChartBlockCycles: React.FC<ChartBlockCyclesProps> = (
           padding: "9px 12px",
           borderRadius: "4px",
           textTransform: "none",
-          border: "1px solid #DFE3E5",
+          border: "1px solid #98A1AA",
           color: appColors.CHART_BLOCK_CYCLES.BUTTON_TEXT_COLOR,
           "&:hover": {
             borderColor:
