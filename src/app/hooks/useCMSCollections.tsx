@@ -13,6 +13,8 @@ export function useCMSCollections(props: Props) {
     (actions) => actions.cms.formattedCollections.setPagesData,
   );
 
+  const currentLanguage = "en";
+
   // Collections state
   const countrySummaryCMSData = useStoreState(
     (state) => state.cms.collections.countrySummary.data,
@@ -24,7 +26,6 @@ export function useCMSCollections(props: Props) {
   );
 
   function formatCMSData() {
-    const currentLanguage = "en";
     const items = [
       {
         key: "countrySummary",
@@ -37,11 +38,9 @@ export function useCMSCollections(props: Props) {
     };
     items.forEach((item) => {
       // @ts-expect-error TypeScript does not know the structure of item.data
-      formattedData[item.key] = item.data.data
-        ?.filter((d: any) => d.attributes.locale === currentLanguage)
-        .map((d: any) => ({
-          ...d.attributes,
-        }));
+      formattedData[item.key] = item.data.data?.filter(
+        (d: any) => d.locale === currentLanguage,
+      );
     });
     setCMSData(formattedData);
   }
@@ -50,7 +49,7 @@ export function useCMSCollections(props: Props) {
     if (props.loadData) {
       countrySummaryCMSAction({
         isCMSfetch: true,
-        filterString: `locale=all&pagination[page]=1&pagination[pageSize]=150`,
+        filterString: `locale=${currentLanguage}&pagination[page]=1&pagination[pageSize]=150`,
       });
     }
   }, []);
