@@ -185,11 +185,11 @@ export const HomeBlock4: React.FC = () => {
       <Box position="relative">
         <Typography
           bottom="20px"
-          fontSize="10px"
+          fontSize="12px"
           padding="7px 12px"
           borderRadius="4px"
           position="absolute"
-          border="1px solid #DFE3E5"
+          border="1px solid #98A1AA"
           sx={{
             transformOrigin: "left",
             transform: "rotate(-90deg)",
@@ -201,11 +201,11 @@ export const HomeBlock4: React.FC = () => {
         <Typography
           left="40px"
           bottom="-20px"
-          fontSize="10px"
+          fontSize="12px"
           padding="7px 12px"
           borderRadius="4px"
           position="absolute"
-          border="1px solid #DFE3E5"
+          border="1px solid #98A1AA"
         >
           X Axis/<b>Years</b>
         </Typography>

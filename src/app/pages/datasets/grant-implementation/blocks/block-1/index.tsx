@@ -64,7 +64,7 @@ export const GrantImplementationPageBlock1: React.FC<
             width: "calc(100% / 3)",
             padding: "0 10px",
             "&:not(:last-child)": {
-              borderRight: "1px solid #DFE3E5",
+              borderRight: "1px solid #98A1AA",
             },
             "&:first-of-type": {
               paddingLeft: 0,
@@ -80,7 +80,7 @@ export const GrantImplementationPageBlock1: React.FC<
               padding: "16px 0",
               "&:not(:last-child)": {
                 borderRightStyle: "none",
-                borderBottom: "1px solid #DFE3E5",
+                borderBottom: "1px solid #98A1AA",
               },
             },
           },

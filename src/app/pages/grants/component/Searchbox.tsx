@@ -9,6 +9,7 @@ interface SearchboxProps {
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleSearchIconClick: (showSearch: boolean) => () => void;
 }
+
 export default function Searchbox(props: SearchboxProps) {
   return (
     <Box
@@ -17,7 +18,7 @@ export default function Searchbox(props: SearchboxProps) {
       sx={{
         height: "31px",
         borderRadius: "4px",
-        border: "1px solid #DFE3E5",
+        border: "1px solid #98A1AA",
         width: "100%",
         input: {
           background: "#F8F8F8",
@@ -47,12 +48,13 @@ export default function Searchbox(props: SearchboxProps) {
         onChange={props.handleSearch}
         placeholder="e.g. Kenya"
         data-cy="grants-search-input"
+        aria-label="Search grants"
       />
 
       <IconButton
         sx={{
-          height: "95%",
           width: "40px",
+          height: "100%",
           display: "flex",
           padding: "8px 12px",
           borderRadius: "4px",
@@ -72,6 +74,7 @@ export default function Searchbox(props: SearchboxProps) {
           },
         }}
         data-cy="grants-search-btn"
+        aria-label="Search grants"
       >
         <SearchIcon htmlColor="#000" fontSize="small" />
       </IconButton>

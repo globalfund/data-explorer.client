@@ -13,6 +13,8 @@ export function useCMSData(props: UseCMSDataProps) {
   const cmsData = useStoreState((state) => state.CMSData.value);
   const setCMSData = useStoreActions((actions) => actions.CMSData.setValue);
 
+  const currentLanguage = "en";
+
   // COMPONENTS
   const componentsChartsEligibilityCMSAction = useStoreActions(
     (actions) => actions.cms.componentsChartsEligibility.fetch,
@@ -184,38 +186,110 @@ export function useCMSData(props: UseCMSDataProps) {
   React.useEffect(() => {
     if (props.loadData) {
       // COMPONENTS
-      componentsChartsEligibilityCMSAction({ isCMSfetch: true });
-      componentsSearchCMSAction({ isCMSfetch: true });
-      componentsHeaderCMSAction({ isCMSfetch: true });
-      componentsFooterCMSAction({ isCMSfetch: true });
+      componentsChartsEligibilityCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      componentsSearchCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      componentsHeaderCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      componentsFooterCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
       // PAGES
-      pagesDatasetsCMSAction({ isCMSfetch: true });
-      pagesGeographyCMSAction({ isCMSfetch: true });
-      pagesGrantDetailCMSAction({ isCMSfetch: true });
-      pagesGrantsCMSAction({ isCMSfetch: true });
-      pagesHomeCMSAction({ isCMSfetch: true });
-      pagesLocationCMSAction({ isCMSfetch: true });
-      pagesDatasetsAccessToFundingCMSAction({ isCMSfetch: true });
-      pagesDatasetsAnnualResultsCMSAction({ isCMSfetch: true });
-      pagesDatasetsGrantImplementationCMSAction({ isCMSfetch: true });
-      pagesDatasetsResourceMobilizationCMSAction({ isCMSfetch: true });
-      pagesLocationAccessToFundingCMSAction({ isCMSfetch: true });
-      pagesLocationGrantImplementationCMSAction({ isCMSfetch: true });
-      pagesLocationOverviewCMSAction({ isCMSfetch: true });
-      pagesLocationResourceMobilizationCMSAction({ isCMSfetch: true });
-      pagesLocationResultsCMSAction({ isCMSfetch: true });
-      pagesGrantDocumentsCMSAction({ isCMSfetch: true });
-      pagesGrantGrantImplementationCMSAction({ isCMSfetch: true });
-      pagesGrantOverviewCMSAction({ isCMSfetch: true });
-      pagesGrantTargetResultsCMSAction({ isCMSfetch: true });
+      pagesDatasetsCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesGeographyCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesGrantDetailCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesGrantsCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesHomeCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesLocationCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesDatasetsAccessToFundingCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesDatasetsAnnualResultsCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesDatasetsGrantImplementationCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesDatasetsResourceMobilizationCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesLocationAccessToFundingCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesLocationGrantImplementationCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesLocationOverviewCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesLocationResourceMobilizationCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesLocationResultsCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesGrantDocumentsCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesGrantGrantImplementationCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesGrantOverviewCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesGrantTargetResultsCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
       // GENERAL
-      generalCMSAction({ isCMSfetch: true });
+      generalCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
     }
   }, []);
 
   function formatCMSData() {
     let newData = {};
-    const currentLanguage = "en";
+
     const items = [
       // COMPONENTS
       {
@@ -318,16 +392,9 @@ export function useCMSData(props: UseCMSDataProps) {
       },
     ];
     items.forEach((item) => {
-      let filteredData = {};
-      const data = get(item, "data.data", []) as any[];
-
-      filteredData = data?.find(
-        (d) => d.attributes.locale === currentLanguage,
-      )?.attributes;
-
       newData = {
         ...newData,
-        [item.key]: filteredData,
+        [item.key]: get(item, "data.data"),
       };
     });
     setCMSData(newData as CMSDataValueModel);

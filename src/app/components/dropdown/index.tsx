@@ -48,16 +48,13 @@ const StyledMenuItem = styled(MenuItem)(() => ({
   fontSize: "14px",
   padding: "2px 4px",
   borderRadius: "4px",
-  color: appColors.SEARCH.DROPDOWN_ITEM_BACKGROUND_COLOR,
+  color: appColors.SEARCH.DROPDOWN_ITEM_COLOR,
   "& svg": {
     marginRight: "8px",
   },
   "&:hover": {
     color: appColors.SEARCH.DROPDOWN_ITEM_HOVER_COLOR,
     background: appColors.SEARCH.DROPDOWN_ITEM_HOVER_BACKGROUND_COLOR,
-    "& svg": {
-      filter: "invert(1)",
-    },
   },
   "@media (max-width: 767px)": {
     height: "auto",
@@ -143,9 +140,6 @@ export const Dropdown: React.FC<DropdownProps> = (props: DropdownProps) => {
                     color: appColors.SEARCH.DROPDOWN_ITEM_ACTIVE_COLOR,
                     background:
                       appColors.SEARCH.DROPDOWN_ITEM_ACTIVE_BACKGROUND_COLOR,
-                    "& svg": {
-                      filter: "invert(1)",
-                    },
                   }
                 : {}),
             }}

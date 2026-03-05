@@ -112,6 +112,7 @@ export function SearchLayout(props: SearchLayoutProps) {
           ref={inputRef}
           value={props.value}
           id="general-search"
+          aria-label="Search input"
           placeholder={getCMSDataField(
             cmsData,
             "componentsSearch.placeholder",

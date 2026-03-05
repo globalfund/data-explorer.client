@@ -160,12 +160,12 @@ export const LineChart: React.FC<LineChartProps> = (props: LineChartProps) => {
           position: "left",
           alignTicks: true,
           nameTextStyle: {
-            fontSize: "12px",
+            fontSize: "14px",
             fontFamily: "Inter, sans-serif",
             color: appColors.LINE_CHART.CHART_TEXT_COLOR,
           },
           axisLabel: {
-            fontSize: "10px",
+            fontSize: "14px",
             fontFamily: "Inter, sans-serif",
             color: appColors.LINE_CHART.CHART_TEXT_COLOR,
             formatter: (value: number) => {
@@ -192,7 +192,7 @@ export const LineChart: React.FC<LineChartProps> = (props: LineChartProps) => {
           },
           axisLabel: {
             interval: 1,
-            fontSize: "10px",
+            fontSize: "14px",
             rotate: mobile ? 90 : 0,
             fontFamily: "Inter, sans-serif",
             color: appColors.LINE_CHART.CHART_TEXT_COLOR,

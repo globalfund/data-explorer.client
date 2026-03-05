@@ -218,7 +218,11 @@ export const Header: React.FC = () => {
               },
             }}
           >
-            <NavLink to="/" style={{ display: "flex" }}>
+            <NavLink
+              to="/"
+              aria-label="App logo link"
+              style={{ display: "flex" }}
+            >
               <HeaderToolbarLogo />
             </NavLink>
             <HeaderMenu
