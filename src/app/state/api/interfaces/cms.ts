@@ -154,3 +154,20 @@ export interface CMSApiCountrySummary {
     }[];
   };
 }
+
+export interface CMSApiGlossary {
+  data: {
+    meta: {
+      pagination: {
+        page: number;
+        pageSize: number;
+        totalPages: number;
+        totalRecords: number;
+      };
+    };
+    data: {
+      Content: string;
+      Keyword: string;
+    }[];
+  };
+}

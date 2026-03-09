@@ -176,6 +176,13 @@ export function useCMSData(props: UseCMSDataProps) {
     (state) => state.cms.pagesGrantTargetResults.data,
   );
 
+  const pagesGlossaryCMSAction = useStoreActions(
+    (actions) => actions.cms.pagesGlossary.fetch,
+  );
+  const pagesGlossaryCMSData = useStoreState(
+    (state) => state.cms.pagesGlossary.data,
+  );
+
   // GENERAL
 
   const generalCMSAction = useStoreActions(
@@ -276,6 +283,10 @@ export function useCMSData(props: UseCMSDataProps) {
         filterString: `locale=${currentLanguage}`,
       });
       pagesGrantTargetResultsCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesGlossaryCMSAction({
         isCMSfetch: true,
         filterString: `locale=${currentLanguage}`,
       });
@@ -385,6 +396,10 @@ export function useCMSData(props: UseCMSDataProps) {
         key: "pagesGrantTargetResults",
         data: pagesGrantTargetResultsCMSData || {},
       },
+      {
+        key: "pagesGlossary",
+        data: pagesGlossaryCMSData || {},
+      },
       // GENERAL
       {
         key: "general",
@@ -430,6 +445,7 @@ export function useCMSData(props: UseCMSDataProps) {
     pagesGrantGrantImplementationCMSData,
     pagesGrantOverviewCMSData,
     pagesGrantTargetResultsCMSData,
+    pagesGlossaryCMSData,
     // GENERAL
     generalCMSData,
   ]);

@@ -130,11 +130,16 @@ import pagesLocation, {
   pagesLocationResourceMobilization,
   pagesLocationResults,
 } from "app/state/api/action-reducers/cms/pagesLocation";
-import general from "app/state/api/action-reducers/cms/general";
+import general, {
+  pagesGlossary,
+} from "app/state/api/action-reducers/cms/general";
 import { FinancialInsightsHGISankey } from "app/state/api/action-reducers/financial-insights/hgi-sankey";
 import { FinancialInsightsHGITable } from "app/state/api/action-reducers/financial-insights/hgi-table";
 import { DatasetsLatestUpdate } from "app/state/api/action-reducers/latest-update";
-import { countrySummary } from "../api/action-reducers/cms/collections";
+import {
+  countrySummary,
+  glossary,
+} from "../api/action-reducers/cms/collections";
 import { formattedCollections } from "../api/action-reducers/cms/formatted";
 import componentHeader from "../api/action-reducers/cms/componentsHeader";
 import componentFooter from "../api/action-reducers/cms/componentsFooter";
@@ -316,8 +321,10 @@ const storeContent: StoreModel = {
     pagesGrantGrantImplementation: persist(pagesGrantGrantImplementation),
     pagesGrantOverview: persist(pagesGrantOverview),
     pagesGrantTargetResults: persist(pagesGrantTargetResults),
+    pagesGlossary: persist(pagesGlossary),
     collections: {
       countrySummary: persist(countrySummary),
+      glossary: persist(glossary),
     },
     formattedCollections: persist(formattedCollections),
   },

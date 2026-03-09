@@ -72,6 +72,11 @@ export const ROUTE_CONFIGS: RouteConfig[] = [
     importFrom: "app/pages/datasets/annual-results",
   },
   {
+    path: "/glossary",
+    componentName: "GlossaryPage",
+    importFrom: "app/pages/glossary",
+  },
+  {
     path: "/test/:id/:ip",
     componentName: "Debug",
     importFrom: "app/pages/debug",
