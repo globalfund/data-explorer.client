@@ -6,10 +6,19 @@ import Button from "@mui/material/Button";
 import CheckboxIcon from "app/assets/vectors/Checkbox_notchecked.svg?react";
 import CheckboxCheckedIcon from "app/assets/vectors/Checkbox_checked_2.svg?react";
 import { ChartBlockCyclesProps } from "app/components/chart-block/components/cycles/data";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 export const ChartBlockCycles: React.FC<ChartBlockCyclesProps> = (
   props: ChartBlockCyclesProps,
 ) => {
+  const cmsData = useCMSData({ returnData: true });
+  const allCycleOption = getCMSDataField(
+    cmsData,
+    "pagesHome.allCycleOption",
+    "All",
+  );
+
   const handleCycleClick = (cycle: { name: string; value: string }) => () => {
     props.handleCycleChange(cycle);
   };
@@ -56,7 +65,7 @@ export const ChartBlockCycles: React.FC<ChartBlockCyclesProps> = (
               : {}
           }
         >
-          All
+          {allCycleOption}
         </Button>
       )}
       {props.cycles.map((cycle) => {

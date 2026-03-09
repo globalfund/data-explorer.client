@@ -4,6 +4,8 @@ import { appColors } from "app/theme";
 import Divider from "@mui/material/Divider";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import InfoIcon from "app/assets/vectors/Info_GreyBG.svg?react";
 import ShareIcon from "app/assets/vectors/Share_GreyBG.svg?react";
@@ -19,6 +21,8 @@ import {
 export const ChartBlockButtonToolbar: React.FC<ChartBlockButtonToolbarProps> = (
   props: ChartBlockButtonToolbarProps,
 ) => {
+  const cmsData = useCMSData({ returnData: true });
+
   const [active, setActive] = React.useState<
     "download" | "share" | "favorite" | "info" | null
   >(null);
@@ -136,9 +140,13 @@ export const ChartBlockButtonToolbar: React.FC<ChartBlockButtonToolbarProps> = (
             </React.Fragment>
           )}
           <Tooltip
-            title="Info"
             data-cy="chart-info-button"
             onClick={handleButtonClick("info")}
+            title={getCMSDataField(
+              cmsData,
+              "general.chartSectionInfoButtonTooltip",
+              "Info",
+            )}
           >
             <IconButton id={active === "info" ? "active" : ""}>
               <InfoIcon />
@@ -147,7 +155,13 @@ export const ChartBlockButtonToolbar: React.FC<ChartBlockButtonToolbarProps> = (
           {active === "info" && (
             <InfoPanel close={handleClose} type={props.infoType} />
           )}
-          <Tooltip title="Share">
+          <Tooltip
+            title={getCMSDataField(
+              cmsData,
+              "general.chartSectionShareButtonTooltip",
+              "Share",
+            )}
+          >
             <IconButton
               onClick={handleButtonClick("share")}
               id={active === "share" ? "active" : ""}
@@ -155,7 +169,13 @@ export const ChartBlockButtonToolbar: React.FC<ChartBlockButtonToolbarProps> = (
               <ShareIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Download">
+          <Tooltip
+            title={getCMSDataField(
+              cmsData,
+              "general.chartSectionDownloadButtonTooltip",
+              "Download",
+            )}
+          >
             <IconButton
               onClick={handleButtonClick("download")}
               id={active === "info" ? "download" : ""}

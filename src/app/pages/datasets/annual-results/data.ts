@@ -1,12 +1,3 @@
-export const geographyGroupingOptions = [
-  { value: "Portfolio View", label: "Portfolio View" },
-];
-
-export const componentsGroupingOptions = [
-  { value: "Grouped", label: "Grouped" },
-  { value: "Un-Grouped", label: "Un-Grouped" },
-];
-
 export const stats: {
   label: string;
   value: number | string;

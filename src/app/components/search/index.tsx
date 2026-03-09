@@ -5,8 +5,9 @@ import Box from "@mui/material/Box";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { useDebounce, useUpdateEffect, useSessionStorage } from "react-use";
 /* project */
-import { categories } from "app/components/search/data";
+import { useCMSData } from "app/hooks/useCMSData";
 import { SearchLayout } from "app/components/search/layout";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 import { SearchResultsTabModel } from "app/components/search/components/results/data";
 
 export function Search(props: {
@@ -15,9 +16,18 @@ export function Search(props: {
   forceCategory?: string;
   handleSearch?: (value: string) => void;
 }) {
+  const cmsData = useCMSData({ returnData: true });
+  const categories = getCMSDataField(
+    cmsData,
+    "componentsSearch.categories",
+    [],
+  );
+
   const [open, setOpen] = React.useState(false);
   const [category, setCategory] = React.useState(
-    props.forceCategory ? props.forceCategory : categories[0].value,
+    props.forceCategory
+      ? props.forceCategory
+      : get(categories, "[0].value", ""),
   );
   const [storedValue, setStoredValue] = useSessionStorage(
     "stored-search-string",
@@ -70,6 +80,12 @@ export function Search(props: {
       props.hocClose();
     }
   }
+
+  React.useEffect(() => {
+    if (categories.length > 0) {
+      setCategory(get(categories, "[0].value", ""));
+    }
+  }, [categories]);
 
   return (
     <Box

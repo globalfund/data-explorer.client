@@ -1,23 +1,27 @@
 import {
-  // AllCategoriesIcon,
-  // DocumentsIcon,
-  // DonorsIcon,
+  DocumentsIcon,
+  DonorsIcon,
   GrantsIcon,
   LocationsIcon,
-  // PartnersIcon,
-  // ResultsIcon,
+  PartnersIcon,
+  ResultsIcon,
 } from "app/components/search/icons";
 
-export const categories = [
-  {
-    value: "All Categories",
-    label: "All Categories",
-    // icon: <AllCategoriesIcon />,
-  },
-  { value: "Locations", label: "Locations", icon: <LocationsIcon /> },
-  { value: "Grants", label: "Grants", icon: <GrantsIcon /> },
-  // { value: "Partners", label: "Partners", icon: <PartnersIcon /> },
-  // { value: "Donors", label: "Donors", icon: <DonorsIcon /> },
-  // { value: "Results", label: "Results", icon: <ResultsIcon /> },
-  // { value: "Documents", label: "Documents", icon: <DocumentsIcon /> },
-];
+export const getCategoryIcon = (label: string): JSX.Element | undefined => {
+  switch (label) {
+    case "Locations":
+      return <LocationsIcon />;
+    case "Grants":
+      return <GrantsIcon />;
+    case "Partners":
+      return <PartnersIcon />;
+    case "Donors":
+      return <DonorsIcon />;
+    case "Results":
+      return <ResultsIcon />;
+    case "Documents":
+      return <DocumentsIcon />;
+    default:
+      return undefined;
+  }
+};
