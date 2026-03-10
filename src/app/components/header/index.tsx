@@ -13,6 +13,7 @@ import IconSearch from "@mui/icons-material/Search";
 import { HeaderMenu } from "app/components/header-menu";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { NavLink, useLocation } from "react-router-dom";
+import HeaderSearchIcon from "app/assets/vectors/HeaderSearch.svg?react";
 import HeaderToolbarLogo from "app/assets/vectors/HeaderToolbarLogo.svg?react";
 
 export const Header: React.FC = () => {
@@ -123,7 +124,6 @@ export const Header: React.FC = () => {
     return (
       <Box
         sx={{
-          top: "16px",
           right: "0px",
           display: "flex",
           flexDirection: "row",
@@ -142,11 +142,11 @@ export const Header: React.FC = () => {
               borderRadius: "23px",
               "#search-container": {
                 width: "100%",
-                height: "24px",
-                borderRadius: "23px",
+                height: "38px",
+                borderRadius: "4px",
                 input: {
                   fontSize: "14px",
-                  borderRadius: "23px",
+                  borderRadius: "4px",
                   background: colors.primary.white,
                 },
               },
@@ -157,7 +157,7 @@ export const Header: React.FC = () => {
                 display: "none",
               },
               "#search-results-container": {
-                top: "35px",
+                top: "49px",
                 width: "500px",
               },
               "> div": {
@@ -173,24 +173,13 @@ export const Header: React.FC = () => {
           <IconButton
             data-cy="header-search-btn"
             onClick={onSearchBtnClick}
-            sx={{
-              padding: 0,
-              marginLeft: "-24px",
-              background: colors.primary.black,
-              "> svg": {
-                transform: "scale(0.7)",
-                color: colors.primary.white,
-              },
-              "&:hover": {
-                opacity: 0.8,
-                background: colors.primary.black,
-                "> svg": {
-                  color: colors.primary.white,
-                },
-              },
-            }}
+            sx={{ padding: "6px" }}
           >
-            {!searchOpen ? <IconSearch /> : <IconClose />}
+            {!searchOpen ? (
+              <HeaderSearchIcon />
+            ) : (
+              <IconClose htmlColor="#000" />
+            )}
           </IconButton>
         </Tooltip>
       </Box>
@@ -219,6 +208,7 @@ export const Header: React.FC = () => {
         <Container maxWidth="lg" disableGutters sx={{ background: "#F8F8F8" }}>
           <Toolbar
             sx={{
+              height: "77px",
               background: "#F8F8F8",
               "@media (max-width: 1279px)": {
                 width: "100%",
