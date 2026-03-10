@@ -22,6 +22,9 @@ export function useCMSCollections(props: Props) {
   const glossaryCMSData = useStoreState(
     (state) => state.cms.collections.glossary.data,
   );
+  const changelogCMSData = useStoreState(
+    (state) => state.cms.collections.changelog.data,
+  );
 
   // Collections actions
   const countrySummaryCMSAction = useStoreActions(
@@ -29,6 +32,9 @@ export function useCMSCollections(props: Props) {
   );
   const glossaryCMSAction = useStoreActions(
     (actions) => actions.cms.collections.glossary.fetch,
+  );
+  const changelogCMSAction = useStoreActions(
+    (actions) => actions.cms.collections.changelog.fetch,
   );
 
   function formatCMSData() {
@@ -41,11 +47,16 @@ export function useCMSCollections(props: Props) {
         key: "glossary",
         data: glossaryCMSData ?? {},
       },
+      {
+        key: "changelog",
+        data: changelogCMSData ?? {},
+      },
     ];
 
     const formattedData: any = {
       countrySummary: [],
       glossary: [],
+      changelog: [],
     };
     items.forEach((item) => {
       // @ts-expect-error TypeScript does not know the structure of item.data
@@ -66,6 +77,10 @@ export function useCMSCollections(props: Props) {
         isCMSfetch: true,
         filterString: `locale=${currentLanguage}&pagination[page]=1&pagination[pageSize]=150`,
       });
+      changelogCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}&pagination[page]=1&pagination[pageSize]=150`,
+      });
     }
   }, []);
 
@@ -73,7 +88,7 @@ export function useCMSCollections(props: Props) {
     if (props.loadData) {
       formatCMSData();
     }
-  }, [countrySummaryCMSData, glossaryCMSData]);
+  }, [countrySummaryCMSData, glossaryCMSData, changelogCMSData]);
 
   if (props.returnData) {
     return cmsData;

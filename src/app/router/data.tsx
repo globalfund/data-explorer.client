@@ -16,6 +16,7 @@ import { Grants } from "app/pages/grants";
 import { ROUTE_CONFIGS } from "./paths";
 import { Debug } from "app/pages/debug";
 import { GlossaryPage } from "app/pages/glossary";
+import { ChangelogPage } from "app/pages/changelog";
 
 const DetailPageRedirect: React.FC<{
   type: "location" | "partner" | "grant";
@@ -84,6 +85,7 @@ const COMPONENT_MAP: Record<string, React.ComponentType> = {
   GrantImplementationPage,
   AnnualResultsPage,
   GlossaryPage,
+  ChangelogPage,
   Debug,
 };
 

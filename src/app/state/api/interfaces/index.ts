@@ -31,6 +31,7 @@ import {
   CMSApiComponentsHeader,
   CMSApiComponentsFooter,
   CMSApiGlossary,
+  CMSApiChangelog,
 } from "app/state/api/interfaces/cms";
 
 export interface RequestValues<T> {
@@ -91,14 +92,22 @@ export interface CMSFormattedCollectionsModel {
   glossary: {
     [key: string]: string;
   }[];
+  changelog: {
+    date: string;
+    title: string;
+    version: string;
+    notes: string[];
+  }[];
   setPagesData: Action<
     CMSFormattedCollectionsModel,
     {
-      countrySummary: {
-        [key: string]: string;
-      };
-      glossary: {
-        [key: string]: string;
+      countrySummary: { [key: string]: string };
+      glossary: { [key: string]: string }[];
+      changelog: {
+        date: string;
+        title: string;
+        version: string;
+        notes: string[];
       }[];
     }
   >;
@@ -132,6 +141,7 @@ export type CMSApiCallModel = ApiModel<
   | CMSApiPagesGrantTargetResults
   | CMSApiCountrySummary
   | CMSApiGlossary
+  | CMSApiChangelog
 >;
 
 export interface StoreModel {
@@ -276,10 +286,12 @@ export interface StoreModel {
     pagesGrantOverview: CMSApiCallModel;
     pagesGrantTargetResults: CMSApiCallModel;
     pagesGlossary: CMSApiCallModel;
+    pagesChangelog: CMSApiCallModel;
     formattedCollections: CMSFormattedCollectionsModel;
     collections: {
       countrySummary: CMSApiCallModel;
       glossary: CMSApiCallModel;
+      changelog: CMSApiCallModel;
     };
   };
 }

@@ -17,7 +17,9 @@ export type RouteComponentName =
   | "ResourceMobilizationPage"
   | "AccessToFundingPage"
   | "GrantImplementationPage"
-  | "AnnualResultsPage";
+  | "AnnualResultsPage"
+  | "GlossaryPage"
+  | "ChangelogPage";
 
 export const ROUTE_CONFIGS: RouteConfig[] = [
   { path: "/", componentName: "Home", importFrom: "app/pages/home" },
@@ -50,7 +52,6 @@ export const ROUTE_CONFIGS: RouteConfig[] = [
     componentName: "Location",
     importFrom: "app/pages/location",
   },
-
   {
     path: "/resource-mobilization",
     componentName: "ResourceMobilizationPage",
@@ -75,6 +76,11 @@ export const ROUTE_CONFIGS: RouteConfig[] = [
     path: "/glossary",
     componentName: "GlossaryPage",
     importFrom: "app/pages/glossary",
+  },
+  {
+    path: "/changelog",
+    componentName: "ChangelogPage",
+    importFrom: "app/pages/changelog",
   },
   {
     path: "/test/:id/:ip",

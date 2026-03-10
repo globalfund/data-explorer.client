@@ -9,4 +9,8 @@ export const pagesGlossary: CMSApiCallModel = {
   ...APIModel(`${import.meta.env.VITE_CMS_API}/pages-glossary`),
 };
 
+export const pagesChangelog: CMSApiCallModel = {
+  ...APIModel(`${import.meta.env.VITE_CMS_API}/pages-changelog`),
+};
+
 export default general;

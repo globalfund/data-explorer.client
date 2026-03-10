@@ -131,12 +131,15 @@ import pagesLocation, {
   pagesLocationResults,
 } from "app/state/api/action-reducers/cms/pagesLocation";
 import general, {
+  pagesChangelog,
   pagesGlossary,
 } from "app/state/api/action-reducers/cms/general";
 import { FinancialInsightsHGISankey } from "app/state/api/action-reducers/financial-insights/hgi-sankey";
 import { FinancialInsightsHGITable } from "app/state/api/action-reducers/financial-insights/hgi-table";
 import { DatasetsLatestUpdate } from "app/state/api/action-reducers/latest-update";
 import {
+  changelog,
+  changelog,
   countrySummary,
   glossary,
 } from "../api/action-reducers/cms/collections";
@@ -322,9 +325,11 @@ const storeContent: StoreModel = {
     pagesGrantOverview: persist(pagesGrantOverview),
     pagesGrantTargetResults: persist(pagesGrantTargetResults),
     pagesGlossary: persist(pagesGlossary),
+    pagesChangelog: persist(pagesChangelog),
     collections: {
       countrySummary: persist(countrySummary),
       glossary: persist(glossary),
+      changelog: persist(changelog),
     },
     formattedCollections: persist(formattedCollections),
   },

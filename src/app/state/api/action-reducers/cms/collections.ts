@@ -8,3 +8,7 @@ export const countrySummary: CMSApiCallModel = {
 export const glossary: CMSApiCallModel = {
   ...APIModel(`${import.meta.env.VITE_CMS_API}/glossaries`),
 };
+
+export const changelog: CMSApiCallModel = {
+  ...APIModel(`${import.meta.env.VITE_CMS_API}/changelogs`),
+};

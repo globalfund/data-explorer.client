@@ -1,12 +1,12 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import { useTitle } from "react-use";
+import orderBy from "lodash/orderBy";
 import { appColors } from "app/theme";
 import { Helmet } from "react-helmet-async";
 import Divider from "@mui/material/Divider";
 import { useCMSData } from "app/hooks/useCMSData";
 import Typography from "@mui/material/Typography";
-import { ALPHABET } from "app/pages/glossary/data";
 import SearchIcon from "@mui/icons-material/Search";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import { useCMSCollections } from "app/hooks/useCMSCollections";
@@ -26,54 +26,118 @@ const fullWidthDivider = (
   />
 );
 
-export const GlossaryPage: React.FC = () => {
-  useTitle("The Data Explorer - Glossary");
+const ChangelogItem: React.FC<{
+  date: Date;
+  title: string;
+  notes: string[];
+  version: string;
+}> = (props) => {
+  return (
+    <Box
+      sx={{
+        gap: "24px",
+        display: "flex",
+        position: "relative",
+        flexDirection: "column",
+      }}
+    >
+      <Box
+        sx={{
+          top: "6px",
+          left: "-58px",
+          width: "16px",
+          height: "16px",
+          borderRadius: "50%",
+          position: "absolute",
+          bgcolor: "#144bc0",
+        }}
+      />
+      <Box
+        sx={{
+          gap: "8px",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{
+            fontSize: "16px",
+            fontWeight: "700",
+            padding: "2px 8px",
+            borderRadius: "4px",
+            bgcolor: "#f1f3f5",
+          }}
+        >
+          {props.version}
+        </Typography>
+        <Typography fontSize="14px">
+          {props.date.toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </Typography>
+      </Box>
+      <Typography variant="h4">{props.title}</Typography>
+      <Box
+        sx={{
+          pl: "20px",
+          gap: "16px",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {props.notes.map((note) => (
+          <Typography key={note} fontSize="16px">
+            {note}
+          </Typography>
+        ))}
+      </Box>
+    </Box>
+  );
+};
+
+export const ChangelogPage: React.FC = () => {
+  useTitle("The Data Explorer - Changelog");
   const cmsData = useCMSData({ returnData: true });
   const cmsCollections = useCMSCollections({ returnData: true });
 
   const [searchValue, setSearchValue] = React.useState("");
   const [items, setItems] = React.useState<
-    { keyword: string; content: string }[]
+    { notes: string[]; title: string; version: string; date: Date }[]
   >([]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
   };
 
-  const alphabetItems = React.useMemo(() => {
-    const itemsWLetter: {
-      letter: string;
-      items: { keyword: string; content: string }[];
-    }[] = [];
-    ALPHABET.forEach((letter) => {
-      const itemsWithLetter = items.filter((item) =>
-        item.keyword.toUpperCase().startsWith(letter),
-      );
-      if (itemsWithLetter.length > 0) {
-        itemsWLetter.push({ letter, items: itemsWithLetter });
-      }
-    });
-    return itemsWLetter.filter((item) => item.items.length > 0);
-  }, [items]);
-
   React.useEffect(() => {
-    const newItems = cmsCollections?.glossary?.filter(
+    const newItems = cmsCollections?.changelog?.filter(
       (item) =>
-        item.Keyword.toLowerCase().includes(searchValue.toLowerCase()) ||
-        item.Content.toLowerCase().includes(searchValue.toLowerCase()),
+        item.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+        item.version.toLowerCase().includes(searchValue.toLowerCase()) ||
+        item.notes.some((note) =>
+          note.toLowerCase().includes(searchValue.toLowerCase()),
+        ),
     );
     setItems(
-      newItems?.map((item) => ({
-        keyword: item.Keyword,
-        content: item.Content,
-      })) || [],
+      orderBy(
+        newItems?.map((item) => ({
+          ...item,
+          date: new Date(item.date),
+        })) || [],
+        "date",
+        "desc",
+      ),
     );
-  }, [searchValue, cmsCollections?.glossary]);
+  }, [searchValue, cmsCollections?.changelog]);
 
   return (
     <>
       <Helmet>
-        <link rel="canonical" href={`${window.location.origin}/glossary`} />
+        <link rel="canonical" href={`${window.location.origin}/changelog`} />
       </Helmet>
       <Box
         padding="50px 0"
@@ -91,7 +155,7 @@ export const GlossaryPage: React.FC = () => {
             },
           }}
         >
-          {getCMSDataField(cmsData, "pagesGlossary.title", "Glossary")}
+          {getCMSDataField(cmsData, "pagesChangelog.title", "Changelog")}
         </Typography>
         <Typography
           variant="h4"
@@ -103,8 +167,8 @@ export const GlossaryPage: React.FC = () => {
         >
           {getCMSDataField(
             cmsData,
-            "pagesGlossary.description",
-            "Key terminology to help interpret the charts and datasets.",
+            "pagesChangelog.description",
+            "Latest updates and improvements to the Data Explorer.",
           )}
         </Typography>
         <Box
@@ -139,7 +203,7 @@ export const GlossaryPage: React.FC = () => {
                 aria-label="Search input"
                 placeholder={getCMSDataField(
                   cmsData,
-                  "pagesGlossary.searchPlaceholder",
+                  "pagesChangelog.searchPlaceholder",
                   "Search",
                 )}
                 onChange={handleSearchChange}
@@ -165,49 +229,36 @@ export const GlossaryPage: React.FC = () => {
             </Container>
           </Box>
         </Box>
+      </Box>
+      <Box
+        sx={{
+          pb: "100px",
+          gap: "50px",
+          width: "100%",
+          display: "flex",
+          flexDirection: "row",
+        }}
+      >
+        <Divider
+          flexItem
+          orientation="vertical"
+          sx={{ borderColor: "#cfd4da" }}
+        />
         <Box
           sx={{
-            gap: "30px",
-            width: "100%",
+            gap: "40px",
             display: "flex",
-            maxWidth: "1000px",
             flexDirection: "column",
           }}
         >
-          {alphabetItems.map((item) => (
-            <Box
-              key={item.letter}
-              sx={{
-                gap: "30px",
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-              }}
-            >
-              <Typography variant="h4" color="#144BC0">
-                {item.letter}
-              </Typography>
-              <Divider
-                flexItem
-                orientation="vertical"
-                sx={{ borderColor: "#cfd4da" }}
-              />
-              <Box
-                sx={{
-                  gap: "30px",
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                {item.items.map((item2) => (
-                  <Box key={item2.keyword} sx={{ pb: "24px" }}>
-                    <Typography variant="h4">{item2.keyword}</Typography>
-                    <Typography fontSize="16px">{item2.content}</Typography>
-                  </Box>
-                ))}
-              </Box>
-            </Box>
+          {items.map((item) => (
+            <ChangelogItem
+              date={item.date}
+              key={item.version}
+              notes={item.notes}
+              title={item.title}
+              version={item.version}
+            />
           ))}
         </Box>
       </Box>

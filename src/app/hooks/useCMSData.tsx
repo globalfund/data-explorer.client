@@ -183,6 +183,13 @@ export function useCMSData(props: UseCMSDataProps) {
     (state) => state.cms.pagesGlossary.data,
   );
 
+  const pagesChangelogCMSAction = useStoreActions(
+    (actions) => actions.cms.pagesChangelog.fetch,
+  );
+  const pagesChangelogCMSData = useStoreState(
+    (state) => state.cms.pagesChangelog.data,
+  );
+
   // GENERAL
 
   const generalCMSAction = useStoreActions(
@@ -287,6 +294,10 @@ export function useCMSData(props: UseCMSDataProps) {
         filterString: `locale=${currentLanguage}`,
       });
       pagesGlossaryCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesChangelogCMSAction({
         isCMSfetch: true,
         filterString: `locale=${currentLanguage}`,
       });
@@ -399,6 +410,10 @@ export function useCMSData(props: UseCMSDataProps) {
       {
         key: "pagesGlossary",
         data: pagesGlossaryCMSData || {},
+      },
+      {
+        key: "pagesChangelog",
+        data: pagesChangelogCMSData || {},
       },
       // GENERAL
       {
