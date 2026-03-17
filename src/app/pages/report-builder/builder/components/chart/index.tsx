@@ -80,6 +80,7 @@ export const ReportBuilderPageChart: React.FC<{
   useClickOutsideEditor({
     editorId: "chart-render",
     toolbarId: "chart-controller",
+    modalId: "save-as-asset-modal",
     onOutsideClick: () => {
       clearSelectedItem();
     },

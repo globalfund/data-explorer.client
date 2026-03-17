@@ -270,6 +270,14 @@ export interface RBReportModel {
   createdDate?: string;
 }
 
+export interface RBAssetModel {
+  id?: string;
+  name: string;
+  description: string;
+  type: RBReportItemTypes;
+  options?: Record<string, any>;
+  data: any;
+}
 export interface RBReportPatchModel {
   id?: string;
   items?: RBReportItem[];

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 interface UseClickOutsideEditorOptions {
   editorId: string;
   toolbarId: string;
+  modalId?: string;
   onOutsideClick: () => void;
   ignorePortalSelector?: string; // default: ".rte-keep-open"
 }
@@ -10,6 +11,7 @@ interface UseClickOutsideEditorOptions {
 export function useClickOutsideEditor({
   editorId,
   toolbarId,
+  modalId,
   onOutsideClick,
   ignorePortalSelector = ".rte-keep-open",
 }: UseClickOutsideEditorOptions) {
@@ -17,6 +19,7 @@ export function useClickOutsideEditor({
     function handleMouseDown(e: MouseEvent) {
       const editorEls = document.querySelectorAll("#" + editorId);
       const toolbarEl = document.getElementById(toolbarId);
+      const modalEl = modalId ? document.getElementById(modalId) : null;
 
       if (!editorEls.length || !toolbarEl) return;
 
@@ -26,6 +29,7 @@ export function useClickOutsideEditor({
         .entries()
         .some(([, el]) => el.contains(target));
       const clickedInsideToolbar = toolbarEl.contains(target);
+      const clickedInsideModal = modalEl ? modalEl.contains(target) : false;
 
       const insidePortal = !!target.closest(ignorePortalSelector);
 
@@ -36,6 +40,7 @@ export function useClickOutsideEditor({
       const shouldClose =
         !clickedInsideEditor &&
         !clickedInsideToolbar &&
+        !clickedInsideModal &&
         !insidePortal &&
         !isBackdrop;
 
