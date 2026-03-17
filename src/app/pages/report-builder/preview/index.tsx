@@ -12,7 +12,7 @@ import { ReportBuilderPageImage } from "app/pages/report-builder/builder/compone
 import { useParams } from "react-router-dom";
 import { useGetReport } from "app/hooks/queries/report-builder";
 import KPIBox from "../builder/components/kpi";
-import { Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import SectionDivider from "../builder/components/section-divider";
 import ViewModeContainer from "../builder/components/order-container/view";
 
@@ -258,53 +258,67 @@ export const ReportBuilderPreviewPage: React.FC = () => {
           />
         </svg>
       </Box>
-      <Box
-        id="items-container"
-        className="scrollbar"
-        sx={{
-          gap: "10px",
-          display: "flex",
-          maxWidth: "100%",
-          overflow: "overlay",
-          flexDirection: "column",
-          alignItems: "flex-start",
-          justifyContent: "flex-start",
-          width: reportData?.settings.width
-            ? `${reportData?.settings.width}px`
-            : "100%",
-          height: reportData?.settings.height
-            ? `${reportData?.settings.height}px`
-            : "100%",
-          bgcolor: reportData?.settings?.backgroundColor,
-          borderRadius: `${reportData?.settings.borderRadius}px`,
-          p: reportData?.settings?.padding
-            ?.map((p: string) => `${p}px`)
-            .join(" "),
-          border: `${reportData?.settings?.stroke}px solid ${reportData?.settings?.strokeColor}`,
-          ".top-right-actions": {
-            top: 4,
-            right: 4,
-            position: "absolute",
-            ".MuiIconButton-root": {
-              width: "38px",
-              height: "38px",
-              bgcolor: "#fff",
-              borderRadius: "4px",
-              border: "1px solid #cfd4da",
-              "&:hover": {
-                bgcolor: "#f8f8f8",
-                borderColor: "#000000",
+      {reportQuery.isLoading && (
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
+      {!reportQuery.isLoading && (
+        <Box
+          id="items-container"
+          className="scrollbar"
+          sx={{
+            gap: "10px",
+            display: "flex",
+            maxWidth: "100%",
+            overflow: "overlay",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
+            width: reportData?.settings.width
+              ? `${reportData?.settings.width}px`
+              : "100%",
+            height: reportData?.settings.height
+              ? `${reportData?.settings.height}px`
+              : "100%",
+            bgcolor: reportData?.settings?.backgroundColor,
+            borderRadius: `${reportData?.settings.borderRadius}px`,
+            p: reportData?.settings?.padding
+              ?.map((p: string) => `${p}px`)
+              .join(" "),
+            border: `${reportData?.settings?.stroke}px solid ${reportData?.settings?.strokeColor}`,
+            ".top-right-actions": {
+              top: 4,
+              right: 4,
+              position: "absolute",
+              ".MuiIconButton-root": {
+                width: "38px",
+                height: "38px",
+                bgcolor: "#fff",
+                borderRadius: "4px",
+                border: "1px solid #cfd4da",
+                "&:hover": {
+                  bgcolor: "#f8f8f8",
+                  borderColor: "#000000",
+                },
               },
             },
-          },
-        }}
-      >
-        {items.length === 0 && <Empty />}
-        {items.map((item) => (
-          <React.Fragment key={item.id}>{getItemByType(item)}</React.Fragment>
-        ))}
-      </Box>
-
+          }}
+        >
+          {items.length === 0 && <Empty />}
+          {items.map((item) => (
+            <React.Fragment key={item.id}>{getItemByType(item)}</React.Fragment>
+          ))}
+        </Box>
+      )}
       <Typography
         variant="body2"
         color="white"
