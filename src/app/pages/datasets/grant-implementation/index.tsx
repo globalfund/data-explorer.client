@@ -1,6 +1,8 @@
 import React from "react";
 import get from "lodash/get";
 import Box from "@mui/material/Box";
+import isEqual from "lodash/isEqual";
+import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import { useTitle, useUnmount } from "react-use";
 import { useCMSData } from "app/hooks/useCMSData";
@@ -19,16 +21,34 @@ import { GrantImplementationPageBlock5 } from "app/pages/datasets/grant-implemen
 import { GrantImplementationPageBlock6 } from "app/pages/datasets/grant-implementation/blocks/block-6";
 import {
   FullWidthDivider,
-  geographyGroupingOptions,
-  componentsGroupingOptions,
+  defaultGeographyGroupingOptions,
+  defaultComponentsGroupingOptions,
 } from "app/pages/datasets/grant-implementation/data";
-import isEqual from "lodash/isEqual";
-import { Helmet } from "react-helmet-async";
 
 export const GrantImplementationPage: React.FC = () => {
-  const cmsData = useCMSData({ returnData: true });
-  useTitle("The Data Explorer - Financial Insights");
   const location = useLocation();
+  useTitle("The Data Explorer - Financial Insights");
+  const cmsData = useCMSData({ returnData: true });
+
+  const geographyGroupingOptions = React.useMemo(
+    () =>
+      getCMSDataField(
+        cmsData,
+        "pagesDatasetsGrantImplementation.geographyGroupingDropdownOptions",
+        defaultGeographyGroupingOptions,
+      ),
+    [cmsData],
+  );
+
+  const componentsGroupingOptions = React.useMemo(
+    () =>
+      getCMSDataField(
+        cmsData,
+        "pagesDatasetsGrantImplementation.componentsGroupingDropdownOptions",
+        defaultComponentsGroupingOptions,
+      ),
+    [cmsData],
+  );
 
   const [geographyGrouping, setGeographyGrouping] = React.useState(
     geographyGroupingOptions[0].value,
@@ -160,7 +180,7 @@ export const GrantImplementationPage: React.FC = () => {
             )}
           </Typography>
           <Dropdown
-            width={150}
+            width={250}
             dropdownSelected={geographyGrouping}
             dropdownItems={geographyGroupingOptions}
             handleDropdownChange={handleGeographyGroupingChange}

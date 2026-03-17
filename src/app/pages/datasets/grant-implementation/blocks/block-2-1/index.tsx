@@ -8,11 +8,12 @@ import { useCMSData } from "app/hooks/useCMSData";
 import { SankeyChart } from "app/components/charts/sankey";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import { TableContainer } from "app/components/table-container";
+import TableIcon from "app/assets/vectors/Select_Table.svg?react";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { DatasetChartBlock } from "app/pages/datasets/common/chart-block";
+import SankeyChartIcon from "app/assets/vectors/Select_SankeyChart.svg?react";
 import { useGetDatasetLatestUpdate } from "app/hooks/useGetDatasetLatestUpdate";
 import { defaultAppliedFilters } from "app/state/api/action-reducers/sync/filters";
-import { dropdownItemsHolisticGrantInvestments } from "app/pages/datasets/grant-implementation/data";
 import {
   TableDataItem,
   TABLE_VARIATION_16_COLUMNS as HGI_TABLE_COLUMNS,
@@ -24,6 +25,30 @@ export const GrantImplementationPageBlock21: React.FC = () => {
   const latestUpdateDate = useGetDatasetLatestUpdate({
     dataset: "disbursements",
   });
+
+  const dropdownItemsHolisticGrantInvestments = React.useMemo(
+    () => [
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.sankeyChartDropdownOptionLabel",
+          "Sankey Chart",
+        ),
+        value: "Sankey Chart",
+        icon: <SankeyChartIcon />,
+      },
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.tableViewDropdownOptionLabel",
+          "Table View",
+        ),
+        value: "Table View",
+        icon: <TableIcon />,
+      },
+    ],
+    [cmsData],
+  );
 
   const [dropdownSelected, setDropdownSelected] = React.useState(
     dropdownItemsHolisticGrantInvestments[0].value,

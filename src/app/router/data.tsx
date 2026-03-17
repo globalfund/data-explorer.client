@@ -17,6 +17,9 @@ import { ROUTE_CONFIGS } from "app/router/paths";
 import { ReportBuilder } from "app/pages/report-builder/main";
 import { ReportBuilderPage } from "app/pages/report-builder/builder";
 import { ReportBuilderPreviewPage } from "app/pages/report-builder/preview";
+import { Debug } from "app/pages/debug";
+import { GlossaryPage } from "app/pages/glossary";
+import { ChangelogPage } from "app/pages/changelog";
 
 const DetailPageRedirect: React.FC<{
   type: "location" | "partner" | "grant";
@@ -87,6 +90,9 @@ const COMPONENT_MAP: Record<string, React.ComponentType> = {
   ReportBuilder,
   ReportBuilderPage,
   ReportBuilderPreviewPage,
+  GlossaryPage,
+  ChangelogPage,
+  Debug,
 };
 
 const NON_REDIRECT_ROUTES = ROUTE_CONFIGS.map((config) => {

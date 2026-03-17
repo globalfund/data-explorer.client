@@ -15,12 +15,13 @@ import {
   FooterExternalLink,
   FooterBottomBgBlock,
   FooterLinkSeparator,
+  FooterLink,
 } from "app/components/footer/styles";
 
 export const Footer: React.FC = () => {
   const cmsData = useCMSData({ returnData: true });
   return (
-    <React.Fragment>
+    <Box sx={{ bgcolor: "#f1f3f5" }}>
       <FooterContainer>
         <Container
           maxWidth="lg"
@@ -152,6 +153,20 @@ export const Footer: React.FC = () => {
                     "ABOUT THE WEBSITE",
                   )}
                 </FooterHeader>
+                <FooterLink to="/glossary">
+                  {getCMSDataField(
+                    cmsData,
+                    "componentsFooter.glossaryText",
+                    "Glossary",
+                  )}
+                </FooterLink>
+                {/* <FooterLink to="/changelog">
+                  {getCMSDataField(
+                    cmsData,
+                    "componentsFooter.changelogText",
+                    "Changelog",
+                  )}
+                </FooterLink> */}
                 <FooterExternalLink
                   target="_blank"
                   href="https://www.theglobalfund.org/en/site/phishing-and-scam-alert/"
@@ -250,6 +265,6 @@ export const Footer: React.FC = () => {
       <Container maxWidth="lg" disableGutters>
         <FooterBottomBgBlock />
       </Container>
-    </React.Fragment>
+    </Box>
   );
 };

@@ -33,6 +33,7 @@ export const Input = styled.input`
   font-size: 16px;
   font-weight: 400;
   border-style: none;
+  border-radius: 4px;
   padding: 8px 12px !important;
   color: ${appColors.SEARCH.INPUT_COLOR};
   background: ${appColors.SEARCH.INPUT_BACKGROUND_COLOR};

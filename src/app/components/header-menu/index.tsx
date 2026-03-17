@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 import IconClose from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import { useCMSData } from "app/hooks/useCMSData";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import ChevronRight from "@mui/icons-material/ChevronRight";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -22,12 +23,11 @@ import {
   isNavButtonActive,
   activeButtonStateStyle,
 } from "app/components/header-menu/data";
-import { useCMSData } from "app/hooks/useCMSData";
 
 const HeaderMenuButton = styled(Button)({
   height: "100%",
   borderRadius: 0,
-  fontSize: "16px",
+  fontSize: "18px",
   padding: "6px 15px",
   textTransform: "none",
   color: colors.primary.black,
@@ -259,7 +259,7 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
           "& .MuiPopover-paper": {
             maxWidth: "100vw",
             left: "0 !important",
-            top: "57px !important",
+            top: "77px !important",
           },
         }}
       >
