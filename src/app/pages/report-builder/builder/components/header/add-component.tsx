@@ -7,12 +7,24 @@ import { uniqueId } from "app/utils/uniqueId";
 import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
 import { ComponentOptions } from "app/pages/report-builder/builder/components/toolbar/data";
 import { useStoreActions } from "app/state/store/hooks";
+import { ReportBuilderSelectGridModal } from "app/pages/report-builder/main/components/select-grid-modal";
+import { ReportBuilderSelectColumnModal } from "app/pages/report-builder/main/components/select-column-modal";
 
 export default function AddComponent() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const addItem = useStoreActions(
     (actions) => actions.RBReportItemsState.addItem,
   );
+  const [gridModalOpen, setGridModalOpen] = React.useState(false);
+  const [columnModalOpen, setColumnModalOpen] = React.useState(false);
+
+  const handleCloseGridModal = () => {
+    setGridModalOpen(false);
+  };
+
+  const handleCloseColumnModal = () => {
+    setColumnModalOpen(false);
+  };
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -20,6 +32,67 @@ export default function AddComponent() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const selectGrid = (rows: number, columns: number) => {
+    const newItem: RBReportItem = {
+      id: uniqueId(),
+      type: "grid",
+      open: false,
+      data: {
+        rows,
+        columns,
+        items: Array.from({ length: rows * columns }, () => ({
+          id: uniqueId(),
+          type: "unknown",
+          open: false,
+          data: null,
+          options: {
+            width: `${Math.floor(100 / columns)}%`,
+            height: `${Math.floor(100 / rows)}%`,
+          },
+        })),
+      },
+      options: {
+        width: "100%",
+        height: "280px",
+        paddingTop: "10px",
+        paddingLeft: "10px",
+        paddingRight: "10px",
+        paddingBottom: "10px",
+      },
+    };
+    addItem(newItem);
+  };
+
+  const selectColumn = (columns: number) => {
+    const newItem: RBReportItem = {
+      id: uniqueId(),
+      type: "column",
+      open: false,
+      data: {
+        columns,
+        items: Array.from({ length: columns }, () => ({
+          id: uniqueId(),
+          type: "unknown",
+          open: false,
+          data: null,
+          options: {
+            width: `${Math.floor(100 / columns)}%`,
+            height: "100%",
+          },
+        })),
+      },
+      options: {
+        width: "100%",
+        height: "220px",
+        paddingTop: "10px",
+        paddingLeft: "10px",
+        paddingRight: "10px",
+        paddingBottom: "10px",
+      },
+    };
+    addItem(newItem);
   };
 
   const handleMenuItemClick = (value: string) => {
@@ -203,28 +276,11 @@ export default function AddComponent() {
         };
         break;
       case "grid":
-        newItem = {
-          id: uniqueId(),
-          type: "grid",
-          open: false,
-          data: {
-            rows: 2,
-            columns: 2,
-            items: {},
-          },
-        };
-        break;
+        setGridModalOpen(true);
+        return;
       case "column":
-        newItem = {
-          id: uniqueId(),
-          type: "column",
-          open: false,
-          data: {
-            columns: 2,
-            items: {},
-          },
-        };
-        break;
+        setColumnModalOpen(true);
+        return;
       default:
         break;
     }
@@ -284,6 +340,7 @@ export default function AddComponent() {
         {ComponentOptions.map((option) => (
           <MenuItem
             key={option.value}
+            disabled={option.disabled}
             onClick={() => handleMenuItemClick(option.value)}
           >
             {option.icon}
@@ -291,6 +348,16 @@ export default function AddComponent() {
           </MenuItem>
         ))}
       </Menu>
+      <ReportBuilderSelectGridModal
+        onSelect={selectGrid}
+        open={gridModalOpen}
+        onClose={handleCloseGridModal}
+      />
+      <ReportBuilderSelectColumnModal
+        onSelect={selectColumn}
+        open={columnModalOpen}
+        onClose={handleCloseColumnModal}
+      />
     </React.Fragment>
   );
 }

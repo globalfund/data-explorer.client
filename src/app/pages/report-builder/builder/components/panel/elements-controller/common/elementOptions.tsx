@@ -7,6 +7,8 @@ import Copy from "app/assets/vectors/Duplicate.svg?react";
 import Folder from "app/assets/vectors/Folder2.svg?react";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { SaveAsAssetModal } from "app/pages/report-builder/main/components/save-as-an-asset-modal";
+import { useCreateAsset } from "app/hooks/queries/report-builder";
+import { PageLoader } from "app/components/page-loader";
 
 const DeleteIcon = (
   <svg
@@ -75,6 +77,9 @@ export function Options() {
     (actions) => actions.RBReportItemsState.removeItem,
   );
 
+  const items = useStoreState((state) => state.RBReportItemsState.items);
+  const selectedItem = items.find((i) => i.id === selectedItemController?.id);
+
   const duplicateItem = useStoreActions(
     (actions) => actions.RBReportItemsState.duplicateItem,
   );
@@ -83,12 +88,17 @@ export function Options() {
   const [nameValue, setNameValue] = React.useState("");
   const [descriptionValue, setDescriptionValue] = React.useState("");
 
+  const createAsset = useCreateAsset();
+
   const handleClose = () => {
     setAnchorEl(null);
   };
   const handleChange = (value: string) => {
     if (value === "delete") {
-      removeItem(selectedItemController?.id as string);
+      removeItem(
+        selectedItemController?.parent?.id ??
+          (selectedItemController?.id as string),
+      );
       setSelectedItemController({ id: "", type: null, open: false });
       handleClose();
     }
@@ -101,6 +111,27 @@ export function Options() {
     }
   };
 
+  const onSaveAsset = () => {
+    if (!selectedItem) return;
+    if (!nameValue) return;
+    createAsset.mutate(
+      {
+        name: nameValue,
+        description: descriptionValue,
+        type: selectedItem.type,
+        options: selectedItem.options,
+        data: selectedItem.data,
+      },
+      {
+        onSuccess: () => {
+          setSaveAsModalOpen(false);
+          setNameValue("");
+          setDescriptionValue("");
+        },
+      },
+    );
+  };
+
   return (
     <Box
       sx={{
@@ -110,6 +141,7 @@ export function Options() {
         },
       }}
     >
+      {createAsset.isPending && <PageLoader />}
       <IconButton onClick={handleOpen}>
         <MoreVert htmlColor="#252C34" />
       </IconButton>
@@ -130,6 +162,7 @@ export function Options() {
         nameValue={nameValue}
         setDescriptionValue={setDescriptionValue}
         setNameValue={setNameValue}
+        onSubmit={onSaveAsset}
       />
     </Box>
   );

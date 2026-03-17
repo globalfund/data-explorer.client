@@ -11,12 +11,20 @@ import StyleTab from "./border-fill-tab";
 import LayoutTab from "./padding-size-tab";
 import { Options } from "../common/elementOptions";
 import { RTEToolbar } from "./font-style-tab";
+import { AssetSwitch } from "../grid/switchAsset";
+import { GridLayoutTab } from "../grid/gridTab";
+import { ColumnLayoutTab } from "../column/columnTab";
+import { ColumnOptionIcon, GridOptionIcon } from "../../../toolbar/data";
 
-type TextControllerTab = "font" | "style" | "layout";
+type TextControllerTab = "font" | "style" | "layout" | "grid" | "column";
 export default function TextController() {
   const [value, setValue] = React.useState<TextControllerTab>("font");
   const [isExpanded, setIsExpanded] = React.useState(true);
   const activeRTE = useStoreState((state) => state.RBReportRTEState.activeRTE);
+
+  const selectedController = useStoreState(
+    (state) => state.RBReportItemsControllerState.item,
+  );
 
   const handleExpandToggle = () => {
     setIsExpanded(!isExpanded);
@@ -37,6 +45,10 @@ export default function TextController() {
         return <StyleTab />;
       case "layout":
         return <LayoutTab />;
+      case "grid":
+        return <GridLayoutTab />;
+      case "column":
+        return <ColumnLayoutTab />;
       default:
         return null;
     }
@@ -54,45 +66,46 @@ export default function TextController() {
         bgcolor: "#F8F9FA",
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          height: "50px",
-          padding: "8px",
-          borderBottom: "1px solid #CFD4DA",
-          ".MuiIconButton-root": {
-            backgroundColor: "#FFFFFF",
-            borderRadius: "4px",
-            border: "1px solid #CFD4DA",
-            width: "34px",
-            height: "34px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          },
-        }}
-      >
+      <Box sx={{ padding: "8px", borderBottom: "1px solid #CFD4DA" }}>
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            gap: "10px",
+            height: "50px",
+
+            ".MuiIconButton-root": {
+              backgroundColor: "#FFFFFF",
+              borderRadius: "4px",
+              border: "1px solid #CFD4DA",
+              width: "34px",
+              height: "34px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            },
           }}
         >
-          <IconButton onClick={handleExpandToggle}>
-            {isExpanded ? <MinimizeIcon /> : <MaximizeIcon />}
-          </IconButton>
-          <LetterTextIcon />
-          <Typography fontSize="16px" color="#000000" fontWeight={700}>
-            Text
-          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "10px",
+            }}
+          >
+            <IconButton onClick={handleExpandToggle}>
+              {isExpanded ? <MinimizeIcon /> : <MaximizeIcon />}
+            </IconButton>
+            <LetterTextIcon />
+            <Typography fontSize="16px" color="#000000" fontWeight={700}>
+              Text
+            </Typography>
+          </Box>
+          <Options />
         </Box>
-        <Options />
+        {selectedController?.parent?.id ? <AssetSwitch /> : null}
       </Box>
-
       <Box sx={{ display: isExpanded ? "block" : "none" }}>
         <Box>
           <Tabs
@@ -104,12 +117,31 @@ export default function TextController() {
             sx={{
               gap: "8px",
               display: "flex",
+              width: "100%",
+              "& .MuiTabs-flexContainer": { width: "100%", gap: "8px" },
+              "& .MuiTab-root": { flex: 1, maxWidth: "none" },
               "& .MuiTabs-indicator": {
                 backgroundColor: "#0F62FE",
                 height: "2px",
               },
             }}
           >
+            {" "}
+            {selectedController?.parent?.type === "grid" ? (
+              <Tab
+                value="grid"
+                aria-label="Grid"
+                sx={{ borderBottom: "2px solid #98A1AA" }}
+                icon={<GridOptionIcon />}
+              />
+            ) : selectedController?.parent?.type === "column" ? (
+              <Tab
+                value="column"
+                aria-label="Column"
+                sx={{ borderBottom: "2px solid #98A1AA" }}
+                icon={<ColumnOptionIcon />}
+              />
+            ) : null}
             <Tab
               value="font"
               aria-label="Text"

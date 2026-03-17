@@ -13,6 +13,7 @@ import {
   RBSampledDatasetResponse,
   RBReportModelResponse,
   RBReportPatchModel,
+  RBAssetModel,
 } from "app/state/api/action-reducers/report-builder/sync";
 
 export const useCreateReport = () => {
@@ -20,6 +21,14 @@ export const useCreateReport = () => {
     mutationKey: ["ReportBuilderCreateReport"],
     mutationFn: (data: RBReportModel) =>
       axiosInstance.post<RBReportModel>(`/report`, data),
+  });
+};
+
+export const useCreateAsset = () => {
+  return useMutation({
+    mutationKey: ["ReportBuilderCreateAsset"],
+    mutationFn: (data: RBAssetModel) =>
+      axiosInstance.post<RBAssetModel>(`/asset`, data),
   });
 };
 
@@ -38,6 +47,19 @@ export const useGetReports = (params: { sort: string; search: string }) => {
     queryKey: ["ReportBuilderGetReports", params.search, params.sort],
     queryFn: () =>
       axiosInstance.get<RBReportModelResponse[]>(`/reports`, {
+        params: {
+          filter: `{"where":{"name":{"like":".*${params.search}.*","options":"i"}},"order":["${params.sort}"]}`,
+        },
+      }),
+    staleTime: 1000 * 60 * 5,
+  });
+};
+
+export const useGetAssets = (params: { sort: string; search: string }) => {
+  return useQuery({
+    queryKey: ["ReportBuilderGetAssets", params.search, params.sort],
+    queryFn: () =>
+      axiosInstance.get<RBAssetModel[]>(`/assets`, {
         params: {
           filter: `{"where":{"name":{"like":".*${params.search}.*","options":"i"}},"order":["${params.sort}"]}`,
         },

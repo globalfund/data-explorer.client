@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { useStoreState } from "app/state/store/hooks";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -14,23 +14,19 @@ import ExpandedFilterGroup from "./expanded-filter-group";
 import {
   FilterGroupOptionModel,
   FilterGroupModel,
-  ReportItemOf,
 } from "app/state/api/action-reducers/report-builder/sync";
 import { useDebounce } from "react-use";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export default function Filtering() {
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
 
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
-
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const item = items.find(
-    (i) => i.id === selectedController?.id,
-  ) as ReportItemOf<"chart">;
+  const { selectedItem: item, editItem } = useGetReportItemState<"chart">({
+    id: selectedController?.id || "",
+    parent: selectedController?.parent ?? undefined,
+  });
 
   const chartExtra = item?.data;
 

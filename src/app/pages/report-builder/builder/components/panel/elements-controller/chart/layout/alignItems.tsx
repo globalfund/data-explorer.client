@@ -1,26 +1,26 @@
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { useStoreState } from "app/state/store/hooks";
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
 import { alignHOptions, alignVOptions } from "../../common/data";
 import Button from "@mui/material/Button";
 import StyledMenu from "../../common/menu-popup";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export default function AlignItems() {
   const selectedItemController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find((i) => i.id === selectedItemController?.id);
+  const { selectedItem, editItem } = useGetReportItemState<"chart">({
+    id: selectedItemController?.id || "",
+    parent: selectedItemController?.parent ?? undefined,
+  });
 
   const [alignHorizontal, setAlignHorizontal] = React.useState(
-    selectedItem?.extra?.chart?.alignHorizontal || "left",
+    selectedItem?.options?.alignHorizontal || "left",
   );
   const [alignVertical, setAlignVertical] = React.useState(
-    selectedItem?.extra?.chart?.alignVertical || "top",
+    selectedItem?.options?.alignVertical || "top",
   );
   const [alignHorizontalAnchorEl, setAlignHorizontalAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -47,17 +47,11 @@ export default function AlignItems() {
       id: selectedItemController?.id || "",
       open: selectedItem?.open || false,
       type: "chart",
-      settings: {
-        ...selectedItem?.settings,
+      options: {
+        ...selectedItem?.options,
         display: "flex",
         justifyContent,
-      },
-      extra: {
-        ...selectedItem?.extra,
-        chart: {
-          ...selectedItem?.extra?.chart,
-          alignHorizontal: value,
-        },
+        alignHorizontal: value,
       },
     });
     setAlignHorizontal(value);
@@ -81,17 +75,11 @@ export default function AlignItems() {
       id: selectedItemController?.id || "",
       type: "chart",
       open: selectedItem?.open || false,
-      settings: {
-        ...selectedItem?.settings,
+      options: {
+        ...selectedItem?.options,
         display: "flex",
         alignItems,
-      },
-      extra: {
-        ...selectedItem?.extra,
-        chart: {
-          ...selectedItem?.extra?.chart,
-          alignVertical: value,
-        },
+        alignVertical: value,
       },
     });
     setAlignVertical(value);

@@ -1,7 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { useStoreActions } from "app/state/store/hooks";
 import ChartIcon from "app/assets/vectors/RBChart.svg?react";
 import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
 import ChartPlaceholder from "./placeholders/placeholder";
@@ -9,20 +9,27 @@ import { checkValidDimensionMapping } from "../panel/elements-controller/chart/u
 import ChartComponent from "./chart-component";
 import { useRenderChartData } from "app/hooks/queries/report-builder";
 import GeomapLegend from "./geomap-legend";
-import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export const ReportBuilderPageChart: React.FC<{
   id: string;
   viewMode?: boolean;
-}> = ({ id, viewMode }) => {
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
+  parent?: {
+    id: string;
+    type: "grid" | "column";
+  };
+}> = ({ id, viewMode, parent }) => {
+  const { selectedItem, editItem } = useGetReportItemState<"chart">({
+    id,
+    parent,
+  });
+
+  const hasParent = !!parent?.id;
+
   const clearSelectedItem = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.clearItem,
   );
-  const selectedItem = items.find((i) => i.id === id) as ReportItemOf<"chart">;
+
   const setSelectedController = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
   );
@@ -73,6 +80,7 @@ export const ReportBuilderPageChart: React.FC<{
   useClickOutsideEditor({
     editorId: "chart-render",
     toolbarId: "chart-controller",
+    modalId: "save-as-asset-modal",
     onOutsideClick: () => {
       clearSelectedItem();
     },
@@ -95,11 +103,24 @@ export const ReportBuilderPageChart: React.FC<{
             type: "chart",
             open: true,
           });
-          setSelectedController({
-            id,
-            type: "chart",
-            open: true,
-          });
+          if (parent?.id) {
+            setSelectedController({
+              type: "chart",
+              open: true,
+              id,
+              parent: {
+                id: parent.id,
+                type: parent.type,
+                open: false,
+              },
+            });
+          } else {
+            setSelectedController({
+              type: "chart",
+              open: true,
+              id,
+            });
+          }
         }
       }}
       sx={{
@@ -118,8 +139,8 @@ export const ReportBuilderPageChart: React.FC<{
         canRender ? (
           <Box
             sx={{
-              width: selectedItem?.options?.width,
-              height: selectedItem?.options?.height,
+              width: hasParent ? "100%" : selectedItem?.options?.width,
+              height: hasParent ? "100%" : selectedItem?.options?.height,
               position: "relative",
             }}
           >
@@ -150,8 +171,8 @@ export const ReportBuilderPageChart: React.FC<{
         ) : viewMode ? null : (
           <Box
             sx={{
-              width: selectedItem?.options?.width,
-              height: selectedItem?.options?.height,
+              width: hasParent ? "100%" : selectedItem?.options?.width,
+              height: hasParent ? "100%" : selectedItem?.options?.height,
               position: "relative",
             }}
           >
@@ -173,7 +194,7 @@ export const ReportBuilderPageChart: React.FC<{
             justifyContent: "center",
             border: "1px dashed #3154f4",
             transition: "all 0.3s ease-in-out",
-            height: "220px",
+            height: selectedItem?.options?.height,
           }}
         >
           <ChartIcon />

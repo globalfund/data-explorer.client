@@ -161,11 +161,16 @@ export const DividerOptionIcon = () => (
 export const ComponentOptions = [
   { label: "Text", icon: <TextOptionIcon />, value: "text" },
   { label: "Chart", icon: <ChartOptionIcon />, value: "chart" },
-  { label: "Table", icon: <TableOptionIcon />, value: "table" },
+  { label: "Table", icon: <TableOptionIcon />, value: "table", disabled: true },
   { label: "Image", icon: <ImageOptionIcon />, value: "image" },
   { label: "Key Metrics Box", icon: <KPIOptionIcon />, value: "kpi_box" },
-  { label: "Grid", icon: <GridOptionIcon />, value: "grid" },
-  { label: "Column", icon: <ColumnOptionIcon />, value: "column" },
+  { label: "Grid", icon: <GridOptionIcon />, value: "grid", disabled: true },
+  {
+    label: "Column",
+    icon: <ColumnOptionIcon />,
+    value: "column",
+    disabled: true,
+  },
   {
     label: "Section Divider",
     icon: <DividerOptionIcon />,

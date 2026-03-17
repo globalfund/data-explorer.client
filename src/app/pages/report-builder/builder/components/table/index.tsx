@@ -21,6 +21,10 @@ export const ReportBuilderPageTable: React.FC<{
   id: string;
   extRemoveItem?: (e: React.MouseEvent) => void;
   viewMode?: boolean;
+  parent?: {
+    id: string;
+    type: "grid" | "column";
+  };
 }> = ({ id, extRemoveItem }) => {
   const [step, setStep] = React.useState(1);
   const [clicked, setClicked] = React.useState(false);

@@ -1,29 +1,30 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { useStoreActions } from "app/state/store/hooks";
 import { extensions } from "app/components/rich-text-editor/extensions";
 import { useEditor, EditorContent } from "@tiptap/react";
 import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
-import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
+import {
+  RBReportItem,
+  ReportItemOf,
+} from "app/state/api/action-reducers/report-builder/sync";
+import { ActionCreator } from "easy-peasy";
 
 export const RichEditor: React.FC<{
   itemId: string;
-  visualSettings: any;
   initialContent?: string;
   viewMode?: boolean;
-}> = ({ itemId, viewMode }) => {
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find(
-    (i) => i.id === itemId,
-  ) as ReportItemOf<"text">;
-
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
-  const clearSelectedItem = useStoreActions(
-    (actions) => actions.RBReportItemsControllerState.clearItem,
-  );
-
+  editItem: (payload: RBReportItem) => void;
+  selectedItem: ReportItemOf<"text">;
+  clearSelectedController: ActionCreator<void>;
+  hasParent?: boolean;
+}> = ({
+  clearSelectedController,
+  viewMode,
+  editItem,
+  selectedItem,
+  hasParent,
+}) => {
   const setActiveRTE = useStoreActions(
     (actions) => actions.RBReportRTEState.setActiveRTE,
   );
@@ -51,7 +52,7 @@ export const RichEditor: React.FC<{
     toolbarId: "rte-toolbar",
     onOutsideClick: () => {
       setActiveRTE(null);
-      clearSelectedItem();
+      clearSelectedController();
     },
   });
   const setEditorStateAndController = () => {
@@ -65,6 +66,12 @@ export const RichEditor: React.FC<{
         ...selectedItem?.options,
         "*": { margin: "0 !important" },
         blockquote: { margin: "0 40px !important" },
+        ...(hasParent
+          ? {
+              width: "100%",
+              height: "100%",
+            }
+          : {}),
       }}
       onFocus={() => setEditorStateAndController()}
       onClick={() => setEditorStateAndController()}

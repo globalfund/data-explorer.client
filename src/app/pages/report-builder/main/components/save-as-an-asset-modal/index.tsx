@@ -13,6 +13,7 @@ export const SaveAsAssetModal: React.FC<{
   descriptionValue: string;
   setNameValue: (value: string) => void;
   setDescriptionValue: (value: string) => void;
+  onSubmit?: () => void;
 }> = ({
   open,
   onClose,
@@ -20,6 +21,7 @@ export const SaveAsAssetModal: React.FC<{
   setNameValue,
   descriptionValue,
   setDescriptionValue,
+  onSubmit,
 }) => {
   const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length <= 100) {
@@ -44,6 +46,7 @@ export const SaveAsAssetModal: React.FC<{
           background: "#ffffff",
           transform: "translate(-50%, -50%)",
         }}
+        id={"save-as-asset-modal"}
       >
         <Box
           sx={{
@@ -174,6 +177,11 @@ export const SaveAsAssetModal: React.FC<{
                 color: "#ffffff",
                 textTransform: "none",
                 background: "#3154f4",
+              }}
+              onClick={() => {
+                if (onSubmit) {
+                  onSubmit();
+                }
               }}
             >
               Save

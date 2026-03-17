@@ -1,25 +1,22 @@
 import { Box, Divider } from "@mui/material";
 import React from "react";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { useStoreState } from "app/state/store/hooks";
 import { Slider } from "../../components/slider";
-import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export function Customise() {
-  const selectedController = useStoreState(
+  const selectedItemController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const item = items.find(
-    (i) => i.id === selectedController?.id,
-  ) as ReportItemOf<"image">;
+  const { selectedItem: item, editItem } = useGetReportItemState<"image">({
+    id: selectedItemController?.id || "",
+    parent: selectedItemController?.parent ?? undefined,
+  });
 
   const handleOpacityChange = (value: number | number[]) => {
     editItem({
       ...item,
-      id: selectedController?.id || "",
+      id: selectedItemController?.id || "",
       open: item?.open || false,
       type: "image",
       options: {

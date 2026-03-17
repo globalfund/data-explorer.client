@@ -4,22 +4,22 @@ import AlignCenter from "app/assets/vectors/RBAlignCenter.svg?react";
 import AlignBottom from "app/assets/vectors/RBAlignBottom.svg?react";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { useStoreState } from "app/state/store/hooks";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export default function AlignButtons() {
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const item = items.find((i) => i.id === selectedController?.id);
+  const { selectedItem: item, editItem } = useGetReportItemState<"text">({
+    id: selectedController?.id || "",
+    parent: selectedController?.parent ?? undefined,
+  });
 
   const handleAlignChange = (align: "start" | "center" | "end") => {
     if (!item) return;
 
-    const currentAlign = item?.settings?.alignItems;
+    const currentAlign = item?.options?.alignItems;
     const isRemoving = currentAlign === align;
     const newAlign = isRemoving ? undefined : align;
     const newDisplay = isRemoving ? "block" : "flex";
@@ -29,8 +29,8 @@ export default function AlignButtons() {
       open: selectedController?.open || false,
       id: selectedController?.id || "",
       type: "text",
-      settings: {
-        ...item?.settings,
+      options: {
+        ...item?.options,
         alignItems: newAlign,
         display: newDisplay,
       },
@@ -42,7 +42,7 @@ export default function AlignButtons() {
       <IconButton
         onClick={() => handleAlignChange("start")}
         className={
-          item?.settings?.alignItems === "start"
+          item?.options?.alignItems === "start"
             ? "active-icon-button"
             : "icon-button"
         }
@@ -52,7 +52,7 @@ export default function AlignButtons() {
       <IconButton
         onClick={() => handleAlignChange("center")}
         className={
-          item?.settings?.alignItems === "center"
+          item?.options?.alignItems === "center"
             ? "active-icon-button"
             : "icon-button"
         }
@@ -63,7 +63,7 @@ export default function AlignButtons() {
       <IconButton
         onClick={() => handleAlignChange("end")}
         className={
-          item?.settings?.alignItems === "end"
+          item?.options?.alignItems === "end"
             ? "active-icon-button"
             : "icon-button"
         }

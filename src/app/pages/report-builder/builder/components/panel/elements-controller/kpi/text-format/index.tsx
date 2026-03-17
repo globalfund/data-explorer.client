@@ -1,5 +1,4 @@
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
+import { useStoreState } from "app/state/store/hooks";
 import { Box, Typography, Checkbox } from "@mui/material";
 import TextField from "../../components/textfield";
 import AdvancedOptions from "../../common/advanced-text-field/advancedOptions";
@@ -10,19 +9,17 @@ import {
   weightOptions,
 } from "app/components/rich-text-editor/data";
 import ColorPickerfield from "../../components/colorpickerfield";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export default function KPITextFormatting() {
   const label = { slotProps: { input: { "aria-label": "Checkbox demo" } } };
   const selectedItemController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find(
-    (i) => i.id === selectedItemController?.id,
-  ) as ReportItemOf<"kpi_box">;
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
+  const { selectedItem, editItem } = useGetReportItemState<"kpi_box">({
+    id: selectedItemController?.id || "",
+    parent: selectedItemController?.parent ?? undefined,
+  });
   const textFormattingOptions = Object.keys(selectedItem?.data ?? {});
 
   const handleCheck =

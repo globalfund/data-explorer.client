@@ -1,27 +1,22 @@
 import { Box, Typography } from "@mui/material";
 import Direction from "app/assets/vectors/RBAlignBottom.svg?react";
 import React from "react";
-
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { useStoreState } from "app/state/store/hooks";
 import { alignHOptions, alignVOptions } from "../data";
 import { set } from "lodash";
-import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 import TextField from "../../components/textfield";
 import { appendPx, removePx } from "app/utils/formatPx";
 import SelectField from "../../components/selectfield";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export function PaddingSize() {
   const selectedItemController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
-
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find(
-    (i) => i.id === selectedItemController?.id,
-  ) as ReportItemOf<"kpi_box">;
+  const { selectedItem, editItem } = useGetReportItemState<"kpi_box">({
+    id: selectedItemController?.id || "",
+    parent: selectedItemController?.parent ?? undefined,
+  });
 
   const [alignHorizontal, setAlignHorizontal] = React.useState(
     selectedItem?.options?.alignHorizontal || "left",
@@ -285,11 +280,8 @@ export function PaddingSize() {
 
           <TextField
             label="Height"
-            value={removePx(selectedItem?.options?.height ?? "")}
-            onChange={(value) =>
-              handleChange("options.height", appendPx(value))
-            }
-            type="number"
+            value={selectedItem?.options?.height ?? ""}
+            onChange={(value) => handleChange("options.height", value)}
             width={"100%"}
           />
         </Box>
