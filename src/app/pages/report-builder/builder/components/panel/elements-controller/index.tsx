@@ -12,7 +12,6 @@ export default function ElementsController() {
   const selectedItem = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  console.log("Selected item in ElementsController:", selectedItem);
   const activeRTE = useStoreState((state) => state.RBReportRTEState.activeRTE);
 
   const renderItem = () => {

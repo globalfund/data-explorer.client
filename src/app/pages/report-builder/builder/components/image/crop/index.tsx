@@ -48,7 +48,6 @@ export const CropComponent: React.FC<{
     if (!cropCoordinates) return;
 
     cropperRef.current?.setCoordinates(cropCoordinates);
-    console.log("onChange", cropCoordinates, "here");
     setPreviewSrc(getImageSrc(cropperRef.current));
     setLoaded(true);
   }, [isReady, cropCoordinates]);

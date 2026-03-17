@@ -50,7 +50,6 @@ export default function ImageController() {
         return null;
     }
   };
-  console.log("ImageController rendered", selectedItemController?.id);
 
   return (
     <Box

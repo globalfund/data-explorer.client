@@ -31,7 +31,21 @@ export const ReportBuilderPreviewPage: React.FC = () => {
   );
 
   const reportState = useStoreState((state) => state.RBReportItemsState);
-  const items = reportState.items;
+
+  const items = React.useMemo(() => {
+    return reportState.items.filter((item) => {
+      switch (item.type) {
+        case "text":
+          return item.data.rte;
+        case "chart":
+          return item.data.chartType;
+        case "kpi_box":
+          return item.open;
+        default:
+          return true;
+      }
+    });
+  }, [reportState.items]);
 
   const addedItemRef = React.useRef(items.length > 0);
 

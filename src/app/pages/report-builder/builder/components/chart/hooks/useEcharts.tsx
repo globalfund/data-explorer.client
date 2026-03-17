@@ -674,8 +674,6 @@ export function useEcharts({
       : (mapping?.y?.value?.[0] ?? "");
     const isMonetaryValue = !!monetaryValueTooltip;
 
-    console.log(get(vo, "chartTitleOptions.backgroundColor", "transparent"));
-
     const title = showChartName
       ? {
           show: true,
@@ -1577,8 +1575,6 @@ export function useEcharts({
     const left = parseEchartsLayout(paddingLeft, 20);
     const bottom = parseEchartsLayout(paddingBottom, 20);
     const right = parseEchartsLayout(paddingRight, 20);
-
-    console.log(data, "treemap data");
 
     return {
       backgroundColor: background ?? "transparent",

@@ -173,7 +173,6 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
   const { id } = useParams<{ id: string }>();
 
   const reportData = useGetReport(id);
-  console.log(reportData.data);
   const updateReport = usePatchReport(id);
 
   const [widthError, setWidthError] = React.useState("");

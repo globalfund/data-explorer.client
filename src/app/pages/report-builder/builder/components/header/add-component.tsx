@@ -340,6 +340,7 @@ export default function AddComponent() {
         {ComponentOptions.map((option) => (
           <MenuItem
             key={option.value}
+            disabled={option.disabled}
             onClick={() => handleMenuItemClick(option.value)}
           >
             {option.icon}

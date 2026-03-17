@@ -42,7 +42,6 @@ export default function KPIBox({ id, viewMode, parent }: Readonly<Props>) {
       id="kpi-render"
       onClick={() => {
         if (viewMode) return;
-        console.log("kpi box clicked");
         editItem({
           ...selectedItem,
           id,

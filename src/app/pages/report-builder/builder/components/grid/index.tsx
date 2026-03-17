@@ -280,8 +280,6 @@ export const ReportBuilderPageGrid: React.FC<{
         {Array.from({ length: rows * columns }).map((_, i) => {
           const item = selectedItem.data.items?.[i];
 
-          console.log("Rendering grid item", { index: i, item });
-
           return (
             <Box
               key={i}

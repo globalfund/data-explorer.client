@@ -36,6 +36,7 @@ export const ReportBuilderItemMenu: React.FC<{
   return (
     <Menu
       id="rb-item-menu"
+      disableScrollLock
       anchorEl={props.anchorEl}
       onClose={props.handleClose}
       open={Boolean(props.anchorEl)}

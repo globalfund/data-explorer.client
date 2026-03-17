@@ -288,8 +288,6 @@ const VisualOptions = ({
     }
   };
 
-  console.log("visualOptions", visualOptions);
-
   const groupsToDisplay = groupBy(
     optionsToDisplay,
     (option) => option.group || "",
