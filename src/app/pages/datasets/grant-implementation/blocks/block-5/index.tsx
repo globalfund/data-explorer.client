@@ -2,6 +2,7 @@ import React from "react";
 import get from "lodash/get";
 import uniq from "lodash/uniq";
 import Box from "@mui/material/Box";
+import isEqual from "lodash/isEqual";
 import { useLocation } from "react-router-dom";
 import { useCMSData } from "app/hooks/useCMSData";
 import { Dropdown } from "app/components/dropdown";
@@ -12,14 +13,13 @@ import { FinancialMetric } from "app/components/charts/financial-metric";
 import { DatasetChartBlock } from "app/pages/datasets/common/chart-block";
 import { useGetDatasetLatestUpdate } from "app/hooks/useGetDatasetLatestUpdate";
 import { defaultAppliedFilters } from "app/state/api/action-reducers/sync/filters";
-import { componentsGroupingOptions } from "app/pages/datasets/grant-implementation/data";
+import { defaultComponentsGroupingOptions } from "app/pages/datasets/grant-implementation/data";
 import {
   FinancialMetricExpandableItemProps,
   STORY_DATA_VARIANT_1 as FINANCIAL_METRICS_DATA_1,
   STORY_DATA_VARIANT_2 as FINANCIAL_METRICS_DATA_2,
   STORY_DATA_VARIANT_3 as FINANCIAL_METRICS_DATA_3,
 } from "app/components/charts/financial-metric/data";
-import isEqual from "lodash/isEqual";
 
 interface GrantImplementationPageBlock5Props {
   geographyGrouping: string;
@@ -35,6 +35,16 @@ export const GrantImplementationPageBlock5: React.FC<
   const latestUpdateDate = useGetDatasetLatestUpdate({
     dataset: "budgets",
   });
+
+  const componentsGroupingOptions = React.useMemo(
+    () =>
+      getCMSDataField(
+        cmsData,
+        "pagesDatasetsGrantImplementation.componentsGroupingDropdownOptions",
+        defaultComponentsGroupingOptions,
+      ),
+    [cmsData],
+  );
 
   const [chart3AppliedFilters, setChart3AppliedFilters] = React.useState<
     string[]
@@ -276,6 +286,111 @@ export const GrantImplementationPageBlock5: React.FC<
     setChart3AppliedFilters(chart3TempAppliedFilters);
   };
 
+  const financialMetric1CMSInfo = React.useMemo(() => {
+    return {
+      title: getCMSDataField(
+        cmsData,
+        "pagesDatasetsGrantImplementation.budgetUtilisationTitle",
+        "Budget Utilisation",
+      ),
+      legends: [
+        {
+          name: getCMSDataField(
+            cmsData,
+            "pagesDatasetsGrantImplementation.budgetUtilisationLegend1",
+            "Disbursement + Cash balance",
+          ),
+          color: "#013E77",
+        },
+        {
+          name: getCMSDataField(
+            cmsData,
+            "pagesDatasetsGrantImplementation.budgetUtilisationLegend2",
+            "Budget",
+          ),
+          color: "#CFD4DA",
+        },
+      ],
+      donutChart: {
+        label: getCMSDataField(
+          cmsData,
+          "pagesDatasetsGrantImplementation.budgetUtilisationPieChartLabel",
+          "utilised",
+        ),
+      },
+    };
+  }, [cmsData]);
+
+  const financialMetric2CMSInfo = React.useMemo(() => {
+    return {
+      title: getCMSDataField(
+        cmsData,
+        "pagesDatasetsGrantImplementation.inCountryAbsorptionTitle",
+        "In-Country Absorption",
+      ),
+      legends: [
+        {
+          name: getCMSDataField(
+            cmsData,
+            "pagesDatasetsGrantImplementation.inCountryAbsorptionLegend1",
+            "Expenditure",
+          ),
+          color: "#00B5AE",
+        },
+        {
+          name: getCMSDataField(
+            cmsData,
+            "pagesDatasetsGrantImplementation.inCountryAbsorptionLegend2",
+            "Budget",
+          ),
+          color: "#CFD4DA",
+        },
+      ],
+      donutChart: {
+        label: getCMSDataField(
+          cmsData,
+          "pagesDatasetsGrantImplementation.inCountryAbsorptionPieChartLabel",
+          "reported",
+        ),
+      },
+    };
+  }, [cmsData]);
+
+  const financialMetric3CMSInfo = React.useMemo(() => {
+    return {
+      title: getCMSDataField(
+        cmsData,
+        "pagesDatasetsGrantImplementation.disbursementUtilisationTitle",
+        "Disbursement Utilisation",
+      ),
+      legends: [
+        {
+          name: getCMSDataField(
+            cmsData,
+            "pagesDatasetsGrantImplementation.disbursementUtilisationLegend1",
+            "Expenditure",
+          ),
+          color: "#013E77",
+        },
+        {
+          name: getCMSDataField(
+            cmsData,
+            "pagesDatasetsGrantImplementation.disbursementUtilisationLegend2",
+            "Disbursement",
+          ),
+          color: "#CFD4DA",
+        },
+      ],
+      donutChart: {
+        label: getCMSDataField(
+          cmsData,
+          "pagesDatasetsGrantImplementation.disbursementUtilisationPieChartLabel",
+          "utilised",
+        ),
+      },
+    };
+  }, [cmsData]);
+
   const financialMetricsContent = React.useMemo(() => {
     return (
       <Box
@@ -291,32 +406,38 @@ export const GrantImplementationPageBlock5: React.FC<
       >
         {dataBudgetUtilisation.items.length > 0 && (
           <FinancialMetric
-            {...FINANCIAL_METRICS_DATA_1}
+            items={dataBudgetUtilisation.items}
+            title={financialMetric1CMSInfo.title}
+            legends={financialMetric1CMSInfo.legends}
             donutChart={{
               ...FINANCIAL_METRICS_DATA_1.donutChart,
               value: dataBudgetUtilisation.value,
+              label: financialMetric1CMSInfo.donutChart.label,
             }}
-            items={dataBudgetUtilisation.items}
           />
         )}
         {dataInCountryAbsorption.items.length > 0 && (
           <FinancialMetric
-            {...FINANCIAL_METRICS_DATA_2}
+            items={dataInCountryAbsorption.items}
+            title={financialMetric2CMSInfo.title}
+            legends={financialMetric2CMSInfo.legends}
             donutChart={{
               ...FINANCIAL_METRICS_DATA_2.donutChart,
               value: dataInCountryAbsorption.value,
+              label: financialMetric2CMSInfo.donutChart.label,
             }}
-            items={dataInCountryAbsorption.items}
           />
         )}
         {dataDisbursementUtilisation.items.length > 0 && (
           <FinancialMetric
-            {...FINANCIAL_METRICS_DATA_3}
+            items={dataDisbursementUtilisation.items}
+            title={financialMetric3CMSInfo.title}
+            legends={financialMetric3CMSInfo.legends}
             donutChart={{
               ...FINANCIAL_METRICS_DATA_3.donutChart,
               value: dataDisbursementUtilisation.value,
+              label: financialMetric3CMSInfo.donutChart.label,
             }}
-            items={dataDisbursementUtilisation.items}
           />
         )}
       </Box>
@@ -325,6 +446,9 @@ export const GrantImplementationPageBlock5: React.FC<
     dataBudgetUtilisation,
     dataInCountryAbsorption,
     dataDisbursementUtilisation,
+    financialMetric1CMSInfo,
+    financialMetric2CMSInfo,
+    financialMetric3CMSInfo,
   ]);
 
   const financialMetricsEmpty = React.useMemo(() => {

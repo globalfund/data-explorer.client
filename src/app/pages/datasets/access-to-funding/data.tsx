@@ -1,16 +1,4 @@
 import Divider from "@mui/material/Divider";
-import TableIcon from "app/assets/vectors/Select_Table.svg?react";
-import TreemapIcon from "app/assets/vectors/Select_Treemap.svg?react";
-import SunburstChartIcon from "app/assets/vectors/Select_SunburstChart.svg?react";
-
-export const geographyGroupingOptions = [
-  { value: "Portfolio View", label: "Portfolio View" },
-];
-
-export const componentsGroupingOptions = [
-  { value: "Grouped", label: "Grouped" },
-  { value: "Un-Grouped", label: "Un-Grouped" },
-];
 
 export const stats: {
   label: string;
@@ -28,16 +16,6 @@ export const stats: {
     value: "220 Million",
     label: "Insecticide-treated mosquito nets distributed in 2022.",
   },
-];
-
-export const dropdownItemsAllocations = [
-  {
-    label: "Sunburst Chart",
-    value: "Sunburst Chart",
-    icon: <SunburstChartIcon />,
-  },
-  { label: "Treemap", value: "Treemap", icon: <TreemapIcon /> },
-  { label: "Table View", value: "Table View", icon: <TableIcon /> },
 ];
 
 export const FullWidthDivider = () => (

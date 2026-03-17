@@ -17,7 +17,9 @@ export type RouteComponentName =
   | "ResourceMobilizationPage"
   | "AccessToFundingPage"
   | "GrantImplementationPage"
-  | "AnnualResultsPage";
+  | "AnnualResultsPage"
+  | "GlossaryPage"
+  | "ChangelogPage";
 
 export const ROUTE_CONFIGS: RouteConfig[] = [
   { path: "/", componentName: "Home", importFrom: "app/pages/home" },
@@ -84,5 +86,20 @@ export const ROUTE_CONFIGS: RouteConfig[] = [
     path: "/report-builder/reports/:id",
     componentName: "ReportBuilderPreviewPage",
     importFrom: "app/pages/report-builder/preview",
+  },
+  {
+    path: "/glossary",
+    componentName: "GlossaryPage",
+    importFrom: "app/pages/glossary",
+  },
+  {
+    path: "/changelog",
+    componentName: "ChangelogPage",
+    importFrom: "app/pages/changelog",
+  },
+  {
+    path: "/test/:id/:ip",
+    componentName: "Debug",
+    importFrom: "app/pages/debug",
   },
 ];

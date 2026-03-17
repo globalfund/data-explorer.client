@@ -2,6 +2,7 @@ import React from "react";
 import get from "lodash/get";
 import uniq from "lodash/uniq";
 import Box from "@mui/material/Box";
+import isEqual from "lodash/isEqual";
 import { useLocation } from "react-router-dom";
 import { useCMSData } from "app/hooks/useCMSData";
 import { Dropdown } from "app/components/dropdown";
@@ -9,19 +10,20 @@ import { Treemap } from "app/components/charts/treemap";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import { SunburstChart } from "app/components/charts/sunburst";
 import { TableContainer } from "app/components/table-container";
+import TableIcon from "app/assets/vectors/Select_Table.svg?react";
 import { FilterGroupModel } from "app/components/filters/list/data";
 import { TreemapDataItem } from "app/components/charts/treemap/data";
+import TreemapIcon from "app/assets/vectors/Select_Treemap.svg?react";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { SunburstDataItem } from "app/components/charts/sunburst/data";
 import { DatasetChartBlock } from "app/pages/datasets/common/chart-block";
 import { useGetDatasetLatestUpdate } from "app/hooks/useGetDatasetLatestUpdate";
+import SunburstChartIcon from "app/assets/vectors/Select_SunburstChart.svg?react";
 import { defaultAppliedFilters } from "app/state/api/action-reducers/sync/filters";
-import { dropdownItemsAllocations } from "app/pages/datasets/access-to-funding/data";
 import {
   financialFormatter,
   cellBGColorFormatter,
 } from "app/components/table/data";
-import { SunburstDataItem } from "app/components/charts/sunburst/data";
-import isEqual from "lodash/isEqual";
 
 interface AccessToFundingBlock3Props {
   filterGroups: FilterGroupModel[];
@@ -36,8 +38,41 @@ export const AccessToFundingBlock3: React.FC<AccessToFundingBlock3Props> = (
     dataset: "allocations",
   });
 
+  const dropdownItems = React.useMemo(
+    () => [
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.sunburstChartDropdownOptionLabel",
+          "Sunburst Chart",
+        ),
+        value: "Sunburst Chart",
+        icon: <SunburstChartIcon />,
+      },
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.treemapDropdownOptionLabel",
+          "Treemap",
+        ),
+        value: "Treemap",
+        icon: <TreemapIcon />,
+      },
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.tableViewDropdownOptionLabel",
+          "Table View",
+        ),
+        value: "Table View",
+        icon: <TableIcon />,
+      },
+    ],
+    [cmsData],
+  );
+
   const [dropdownSelected, setDropdownSelected] = React.useState(
-    dropdownItemsAllocations[0].value,
+    dropdownItems[0].value,
   );
   const [allocationCycleDropdownSelected, setAllocationCycleDropdownSelected] =
     React.useState<string | null>(null);
@@ -84,11 +119,11 @@ export const AccessToFundingBlock3: React.FC<AccessToFundingBlock3Props> = (
   );
   const loadingAllocations = useStoreState((state) => {
     switch (dropdownSelected) {
-      case dropdownItemsAllocations[0].value:
+      case dropdownItems[0].value:
         return state.AccessToFundingAllocationSunburst.loading;
-      case dropdownItemsAllocations[1].value:
+      case dropdownItems[1].value:
         return state.AccessToFundingAllocationTreemap.loading;
-      case dropdownItemsAllocations[2].value:
+      case dropdownItems[2].value:
         return state.AccessToFundingAllocationTable.loading;
       default:
         return false;
@@ -179,7 +214,7 @@ export const AccessToFundingBlock3: React.FC<AccessToFundingBlock3Props> = (
 
   const chartContent = React.useMemo(() => {
     switch (dropdownSelected) {
-      case dropdownItemsAllocations[0].value:
+      case dropdownItems[0].value:
         return (
           <SunburstChart
             tooltipLabel="Allocation"
@@ -189,9 +224,9 @@ export const AccessToFundingBlock3: React.FC<AccessToFundingBlock3Props> = (
             setSelectedItem={setSelectedItem}
           />
         );
-      case dropdownItemsAllocations[1].value:
+      case dropdownItems[1].value:
         return <Treemap data={dataAllocationsTreemap} />;
-      case dropdownItemsAllocations[2].value:
+      case dropdownItems[2].value:
         return (
           <TableContainer
             dataTree
@@ -232,7 +267,7 @@ export const AccessToFundingBlock3: React.FC<AccessToFundingBlock3Props> = (
     const result: (string | number)[][] = [];
     let headers: string[] = [];
     switch (dropdownSelected) {
-      case dropdownItemsAllocations[0].value:
+      case dropdownItems[0].value:
         headers = ["Sub-Region", "Country", "Amount"];
         dataAllocationsSunburst.forEach((item: any) => {
           const items = get(item, "children", []);
@@ -245,13 +280,13 @@ export const AccessToFundingBlock3: React.FC<AccessToFundingBlock3Props> = (
           }
         });
         break;
-      case dropdownItemsAllocations[1].value:
+      case dropdownItems[1].value:
         headers = ["Component", "Amount"];
         dataAllocationsTreemap.forEach((item: any) => {
           result.push([item.name, item.value]);
         });
         break;
-      case dropdownItemsAllocations[2].value:
+      case dropdownItems[2].value:
         headers = ["Geography", "Component", "Period", "Amount"];
         dataAllocationsTable.forEach((item: any) => {
           get(item, "_children", []).forEach((child: any) => {
@@ -279,11 +314,11 @@ export const AccessToFundingBlock3: React.FC<AccessToFundingBlock3Props> = (
 
   const chartEmpty = React.useMemo(() => {
     switch (dropdownSelected) {
-      case dropdownItemsAllocations[0].value:
+      case dropdownItems[0].value:
         return dataAllocationsSunburst.length === 0;
-      case dropdownItemsAllocations[1].value:
+      case dropdownItems[1].value:
         return dataAllocationsTreemap.length === 0;
-      case dropdownItemsAllocations[2].value:
+      case dropdownItems[2].value:
         return dataAllocationsTable.length === 0 && tableSearch.length === 0;
       default:
         return false;
@@ -434,13 +469,13 @@ export const AccessToFundingBlock3: React.FC<AccessToFundingBlock3Props> = (
         )}
         handleApplyFilters={handleApplyChartFilters}
         handleCancelFilters={handleCancelChartFilters}
-        dropdownItems={dropdownItemsAllocations}
+        dropdownItems={dropdownItems}
         latestUpdate={latestUpdateDate}
         dropdownSelected={dropdownSelected}
         handleDropdownChange={handleSelectionChange}
         loading={loadingAllocations}
         empty={chartEmpty}
-        disableCollapse={dropdownSelected === dropdownItemsAllocations[2].value}
+        disableCollapse={dropdownSelected === dropdownItems[2].value}
         filterGroups={props.filterGroups}
         appliedFilters={chart2TempAppliedFilters}
         toggleFilter={handleToggleChartFilter}

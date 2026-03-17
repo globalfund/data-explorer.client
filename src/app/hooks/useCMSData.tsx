@@ -176,6 +176,20 @@ export function useCMSData(props: UseCMSDataProps) {
     (state) => state.cms.pagesGrantTargetResults.data,
   );
 
+  const pagesGlossaryCMSAction = useStoreActions(
+    (actions) => actions.cms.pagesGlossary.fetch,
+  );
+  const pagesGlossaryCMSData = useStoreState(
+    (state) => state.cms.pagesGlossary.data,
+  );
+
+  const pagesChangelogCMSAction = useStoreActions(
+    (actions) => actions.cms.pagesChangelog.fetch,
+  );
+  const pagesChangelogCMSData = useStoreState(
+    (state) => state.cms.pagesChangelog.data,
+  );
+
   // GENERAL
 
   const generalCMSAction = useStoreActions(
@@ -276,6 +290,14 @@ export function useCMSData(props: UseCMSDataProps) {
         filterString: `locale=${currentLanguage}`,
       });
       pagesGrantTargetResultsCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesGlossaryCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesChangelogCMSAction({
         isCMSfetch: true,
         filterString: `locale=${currentLanguage}`,
       });
@@ -385,6 +407,14 @@ export function useCMSData(props: UseCMSDataProps) {
         key: "pagesGrantTargetResults",
         data: pagesGrantTargetResultsCMSData || {},
       },
+      {
+        key: "pagesGlossary",
+        data: pagesGlossaryCMSData || {},
+      },
+      {
+        key: "pagesChangelog",
+        data: pagesChangelogCMSData || {},
+      },
       // GENERAL
       {
         key: "general",
@@ -430,6 +460,7 @@ export function useCMSData(props: UseCMSDataProps) {
     pagesGrantGrantImplementationCMSData,
     pagesGrantOverviewCMSData,
     pagesGrantTargetResultsCMSData,
+    pagesGlossaryCMSData,
     // GENERAL
     generalCMSData,
   ]);

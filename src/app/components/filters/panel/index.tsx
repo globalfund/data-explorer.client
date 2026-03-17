@@ -8,9 +8,11 @@ import Button from "@mui/material/Button";
 import Add from "@mui/icons-material/Add";
 import Divider from "@mui/material/Divider";
 import Close from "@mui/icons-material/Close";
+import { useCMSData } from "app/hooks/useCMSData";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import { FilterList } from "app/components/filters/list";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 import { FiltersApplied } from "app/components/filters/applied";
 import { FilterPanelProps } from "app/components/filters/panel/data";
 import SearchIcon from "app/assets/vectors/Search_grants.svg?react";
@@ -24,6 +26,7 @@ import {
 export const FilterPanel: React.FC<FilterPanelProps> = (
   props: FilterPanelProps,
 ) => {
+  const cmsData = useCMSData({ returnData: true });
   const [collapseAll, setCollapseAll] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState("");
   const handleCollapseAll = () => {
@@ -34,7 +37,15 @@ export const FilterPanel: React.FC<FilterPanelProps> = (
 
   const appliedFiltersContent = React.useMemo(() => {
     if (props.appliedFilters.length === 0) {
-      return <Typography fontSize="14px">No filters applied.</Typography>;
+      return (
+        <Typography fontSize="14px">
+          {getCMSDataField(
+            cmsData,
+            "generic.noFiltersAppliedLabel",
+            "No filters applied.",
+          )}
+        </Typography>
+      );
     }
     return (
       <FiltersApplied
@@ -44,7 +55,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = (
         appliedFilterBgColors={props.appliedFilterBgColors}
       />
     );
-  }, [props.appliedFilters]);
+  }, [props.appliedFilters, cmsData]);
 
   const filterGroupOptions = React.useMemo(
     () => props.filterGroups.find((group) => group.id === tabValue)?.options,
@@ -294,7 +305,13 @@ export const FilterPanel: React.FC<FilterPanelProps> = (
         {FilterGroupsTabs}
       </Box>
       {!props.toggleFilter && (
-        <Typography fontSize="14px">Filter the data page-wide.</Typography>
+        <Typography fontSize="14px">
+          {getCMSDataField(
+            cmsData,
+            "generic.filterPageWideLabel",
+            "Filter the data page-wide.",
+          )}
+        </Typography>
       )}
       <Box
         sx={{
@@ -355,10 +372,18 @@ export const FilterPanel: React.FC<FilterPanelProps> = (
             </svg>
           }
         >
-          Reset Changes
+          {getCMSDataField(
+            cmsData,
+            "generic.filterPanelResetChanges",
+            "Reset Changes",
+          )}
         </Button>
         <Button onClick={props.handleCancelFilters} variant="outlined">
-          Cancel
+          {getCMSDataField(
+            cmsData,
+            "generic.filterPanelCancelButton",
+            "Cancel",
+          )}
         </Button>
         <Button
           onClick={props.handleApplyFilters}
@@ -369,7 +394,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = (
             "&:hover": { bgcolor: "#3154f4" },
           }}
         >
-          Apply
+          {getCMSDataField(cmsData, "generic.filterPanelApplyButton", "Apply")}
         </Button>
       </Box>
     </Box>

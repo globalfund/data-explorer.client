@@ -9,7 +9,7 @@ import { getCMSDataField } from "app/utils/getCMSDataField";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { useGetDatasetLatestUpdate } from "app/hooks/useGetDatasetLatestUpdate";
-import { componentsGroupingOptions } from "app/pages/datasets/grant-implementation/data";
+import { defaultComponentsGroupingOptions } from "app/pages/datasets/grant-implementation/data";
 
 interface GrantImplementationPageBlock4Props {
   filterString: string;
@@ -24,6 +24,16 @@ export const GrantImplementationPageBlock4: React.FC<
   const latestUpdateDate = useGetDatasetLatestUpdate({
     dataset: "budgets",
   });
+
+  const componentsGroupingOptions = React.useMemo(
+    () =>
+      getCMSDataField(
+        cmsData,
+        "pagesDatasetsGrantImplementation.componentsGroupingDropdownOptions",
+        defaultComponentsGroupingOptions,
+      ),
+    [cmsData],
+  );
 
   const dataBudgetBreakdown = useStoreState(
     (state) =>

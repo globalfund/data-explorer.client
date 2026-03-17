@@ -3,10 +3,12 @@ import get from "lodash/get";
 import uniq from "lodash/uniq";
 import sumBy from "lodash/sumBy";
 import Box from "@mui/material/Box";
-import { useTitle, useUnmount } from "react-use";
+import isEqual from "lodash/isEqual";
 import Grid from "@mui/material/Grid";
+import { Helmet } from "react-helmet-async";
 import Divider from "@mui/material/Divider";
 import { useLocation } from "react-router-dom";
+import { useTitle, useUnmount } from "react-use";
 import { useCMSData } from "app/hooks/useCMSData";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -25,13 +27,6 @@ import { defaultAppliedFilters } from "app/state/api/action-reducers/sync/filter
 import BarChartIcon from "app/assets/vectors/Select_BarChart.svg?react";
 import { ExpandableHorizontalBar } from "app/components/charts/expandable-horizontal-bar";
 import { ExpandableHorizontalBarChartDataItem } from "app/components/charts/expandable-horizontal-bar/data";
-import isEqual from "lodash/isEqual";
-import { Helmet } from "react-helmet-async";
-
-const dropdownItems = [
-  { label: "Bar Chart", value: "Bar Chart", icon: <BarChartIcon /> },
-  { label: "Table View", value: "Table View", icon: <TableIcon /> },
-];
 
 export const ResourceMobilizationPage: React.FC = () => {
   useTitle("The Data Explorer - Resource Mobilization");
@@ -45,6 +40,30 @@ export const ResourceMobilizationPage: React.FC = () => {
   });
   const tabletScreen = useMediaQuery(
     "(min-width: 768px) and (max-width:920px)",
+  );
+
+  const dropdownItems = React.useMemo(
+    () => [
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.barChartDropdownOptionLabel",
+          "Bar Chart",
+        ),
+        value: "Bar Chart",
+        icon: <BarChartIcon />,
+      },
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.tableViewDropdownOptionLabel",
+          "Table View",
+        ),
+        value: "Table View",
+        icon: <TableIcon />,
+      },
+    ],
+    [cmsData],
   );
 
   const [dropdownSelected, setDropdownSelected] = React.useState(
