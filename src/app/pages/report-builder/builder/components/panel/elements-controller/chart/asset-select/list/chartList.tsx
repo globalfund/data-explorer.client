@@ -3,11 +3,9 @@ import Box from "@mui/material/Box";
 import { Typography, Button } from "@mui/material";
 import { chartTypes } from "../../../../../chart/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import {
-  ChartType,
-  ReportItemOf,
-} from "app/state/api/action-reducers/report-builder/sync";
+import { ChartType } from "app/state/api/action-reducers/report-builder/sync";
 import { getDefaultVisualOptions } from "../../utils";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export default function ChartList() {
   const [selectedChartType, setSelectedChartType] = React.useState<string>("");
@@ -17,18 +15,16 @@ export default function ChartList() {
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find(
-    (i) => i.id === selectedController?.id,
-  ) as ReportItemOf<"chart">;
+  const { selectedItem, editItem } = useGetReportItemState<"chart">({
+    id: selectedController?.id || "",
+    parent: selectedController?.parent ?? undefined,
+  });
 
   const handleApply = () => {
     if (!selectedItem || !selectedChartType) return;
     const chartTypeUnchanged =
       selectedItem?.data?.chartType === selectedChartType;
+    const defaultOptions = getDefaultVisualOptions(selectedChartType);
     editItem({
       ...selectedItem,
       id: selectedController?.id || "",
@@ -43,7 +39,12 @@ export default function ChartList() {
       },
       options: chartTypeUnchanged
         ? selectedItem?.options
-        : getDefaultVisualOptions(selectedChartType),
+        : {
+            // prioritise existing width and height if chart type is unchanged, otherwise use default options
+            ...defaultOptions,
+            width: selectedItem?.options?.width || defaultOptions.width,
+            height: selectedItem?.options?.height || defaultOptions.height,
+          },
     });
 
     handleBack();

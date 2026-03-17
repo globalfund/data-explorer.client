@@ -14,6 +14,7 @@ import { useGetReport } from "app/hooks/queries/report-builder";
 import KPIBox from "../builder/components/kpi";
 import { Typography } from "@mui/material";
 import SectionDivider from "../builder/components/section-divider";
+import ViewModeContainer from "../builder/components/order-container/view";
 
 export const ReportBuilderPreviewPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -47,42 +48,67 @@ export const ReportBuilderPreviewPage: React.FC = () => {
     switch (item.type) {
       case "text":
         return (
-          <ReportBuilderPageText
-            id={item.id}
-            settings={item.options}
-            focus={item.focus}
-            initialKey={item.key}
-            viewMode
-          />
+          <ViewModeContainer>
+            <ReportBuilderPageText
+              id={item.id}
+              focus={item.focus}
+              initialKey={item.key}
+              viewMode
+            />
+          </ViewModeContainer>
         );
       case "chart":
-        return <ReportBuilderPageChart id={item.id} viewMode />;
+        return (
+          <ViewModeContainer>
+            <ReportBuilderPageChart id={item.id} viewMode />
+          </ViewModeContainer>
+        );
       case "table":
-        return <ReportBuilderPageTable id={item.id} viewMode />;
+        return (
+          <ViewModeContainer>
+            <ReportBuilderPageTable id={item.id} viewMode />
+          </ViewModeContainer>
+        );
       case "image":
-        return <ReportBuilderPageImage id={item.id} viewMode />;
+        return (
+          <ViewModeContainer>
+            <ReportBuilderPageImage id={item.id} viewMode />
+          </ViewModeContainer>
+        );
       case "grid":
         return (
-          <ReportBuilderPageGrid
-            columns={item.data.columns}
-            rows={item.data.rows}
-            id={item.id}
-            viewMode
-          />
+          <ViewModeContainer>
+            <ReportBuilderPageGrid
+              columns={item.data.columns}
+              rows={item.data.rows}
+              id={item.id}
+              viewMode
+            />
+          </ViewModeContainer>
         );
       case "kpi_box":
-        return <KPIBox id={item.id} viewMode />;
+        return (
+          <ViewModeContainer>
+            <KPIBox id={item.id} viewMode />
+          </ViewModeContainer>
+        );
       case "column":
         return (
-          <ReportBuilderPageGrid
-            rows={1}
-            columns={item.data.columns}
-            id={item.id}
-            viewMode
-          />
+          <ViewModeContainer>
+            <ReportBuilderPageGrid
+              rows={1}
+              columns={item.data.columns}
+              id={item.id}
+              viewMode
+            />
+          </ViewModeContainer>
         );
       case "section_divider":
-        return <SectionDivider id={item.id} viewMode />;
+        return (
+          <ViewModeContainer>
+            <SectionDivider id={item.id} viewMode />
+          </ViewModeContainer>
+        );
       default:
         return <React.Fragment />;
     }

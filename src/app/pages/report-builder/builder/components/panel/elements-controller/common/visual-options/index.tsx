@@ -12,13 +12,13 @@ import TextField from "../../components/textfield";
 import ColorPickerfield from "../../components/colorpickerfield";
 import AdvancedOptions from "../../common/advanced-text-field/advancedOptions";
 import { Box, Divider, Typography } from "@mui/material";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
+import { useStoreState } from "app/state/store/hooks";
 import { Slider } from "../../components/slider";
 import { ColorPalette } from "../../components/colorpalette";
 import { useDebounce } from "react-use";
 import { IDefaultChartVisualOptions } from "../../chart/utils";
 import { appendPx, removePx } from "app/utils/formatPx";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 const VisualOptions = ({
   defaultOptionsToDisplay,
@@ -30,13 +30,10 @@ const VisualOptions = ({
   const selectedItemController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find(
-    (i) => i.id === selectedItemController?.id,
-  ) as ReportItemOf<"chart">;
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
+  const { selectedItem, editItem } = useGetReportItemState<"chart">({
+    id: selectedItemController?.id || "",
+    parent: selectedItemController?.parent ?? undefined,
+  });
 
   const [visualOptionsTemp, setVisualOptionsTemp] = React.useState<Record<
     string,

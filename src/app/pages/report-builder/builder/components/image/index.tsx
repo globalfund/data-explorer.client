@@ -6,12 +6,16 @@ import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent"
 import { useTooltip } from "app/hooks/useTooltip";
 import { createPortal } from "react-dom";
 import { CropComponent } from "./crop";
-import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export const ReportBuilderPageImage: React.FC<{
   id: string;
   viewMode?: boolean;
-}> = ({ id, viewMode }) => {
+  parent?: {
+    id: string;
+    type: "grid" | "column";
+  };
+}> = ({ id, viewMode, parent }) => {
   const { visible, coords, triggerTooltip, setAnchor } = useTooltip({
     hideAfter: 5000,
     position: "bottom",
@@ -29,13 +33,13 @@ export const ReportBuilderPageImage: React.FC<{
   const clearSelectedItem = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.clearItem,
   );
-  const items = useStoreState((state) => state.RBReportItemsState.items);
+  const { selectedItem, editItem } = useGetReportItemState<"image">({
+    id,
+    parent,
+  });
 
-  const selectedItem = items.find((i) => i.id === id) as ReportItemOf<"image">;
+  const hasParent = !!parent?.id;
 
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
   const settings = selectedItem?.options || {};
   const imgStyle = {
     opacity: settings.imgOpacity || 1,
@@ -86,7 +90,24 @@ export const ReportBuilderPageImage: React.FC<{
 
   const triggerImageController = (open: boolean) => {
     if (viewMode) return;
-    setSelectedController({ id, type: "image", open });
+    if (parent) {
+      setSelectedController({
+        type: "image",
+        open,
+        id,
+        parent: {
+          id: parent.id,
+          open: false,
+          type: parent.type,
+        },
+      });
+    } else {
+      setSelectedController({
+        type: "image",
+        open,
+        id,
+      });
+    }
   };
 
   const getUniqueStyle = () => {
@@ -148,8 +169,8 @@ export const ReportBuilderPageImage: React.FC<{
           return (
             <CropComponent
               image={imageSrc}
-              width={selectedItem?.options?.width}
-              height={selectedItem?.options?.height}
+              width={hasParent ? "100%" : selectedItem?.options?.width}
+              height={hasParent ? "100%" : selectedItem?.options?.height}
               cropMode={selectedItem?.options?.enableCrop}
               cropCoordinates={selectedItem?.data?.cropCoordinates}
               onCropChange={handleChangeCropCoordinates}
@@ -195,7 +216,7 @@ export const ReportBuilderPageImage: React.FC<{
             sx={{
               gap: "10px",
               width: "100%",
-              height: "220px",
+              height: hasParent ? "100%" : "220px",
               display: "flex",
               cursor: "pointer",
               borderRadius: "4px",

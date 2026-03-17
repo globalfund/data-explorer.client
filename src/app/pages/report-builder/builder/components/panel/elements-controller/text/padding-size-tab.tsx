@@ -1,24 +1,20 @@
 import { Box, Typography } from "@mui/material";
 import Direction from "app/assets/vectors/RBAlignBottom.svg?react";
 import React from "react";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { useStoreState } from "app/state/store/hooks";
 import { set } from "lodash";
 import TextField from "../components/textfield";
-import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 import { appendPx, removePx } from "app/utils/formatPx";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export default function LayoutTab() {
   const selectedItemController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
-
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find(
-    (i) => i.id === selectedItemController?.id,
-  ) as ReportItemOf<"text">;
+  const { selectedItem, editItem } = useGetReportItemState<"text">({
+    id: selectedItemController?.id || "",
+    parent: selectedItemController?.parent ?? undefined,
+  });
 
   const handleChange = (key: string, value: any) => {
     if (!selectedItem) return;

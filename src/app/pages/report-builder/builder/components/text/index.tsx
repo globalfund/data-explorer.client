@@ -2,24 +2,32 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { RichEditor } from "app/components/rich-text-editor";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
+import { useStoreActions } from "app/state/store/hooks";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export const ReportBuilderPageText: React.FC<{
   id: string;
-  settings?: any;
   focus?: boolean;
   initialKey?: string;
   viewMode?: boolean;
-}> = ({ id, settings, viewMode }) => {
-  const items = useStoreState((state) => state.RBReportItemsState.items);
+  parent?: {
+    id: string;
+    type: "grid" | "column";
+  };
+}> = ({ id, viewMode, parent }) => {
   const setSelectedController = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
   );
-  const selectedItem = items.find((i) => i.id === id) as ReportItemOf<"text">;
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
+
+  const clearSelectedController = useStoreActions(
+    (actions) => actions.RBReportItemsControllerState.clearItem,
   );
+
+  const { selectedItem, editItem } = useGetReportItemState<"text">({
+    id,
+    parent,
+  });
+
   return (
     <Box
       sx={{
@@ -40,7 +48,24 @@ export const ReportBuilderPageText: React.FC<{
           type: "text",
           open: true,
         });
-        setSelectedController({ type: "text", open: true, id });
+        if (parent?.id) {
+          setSelectedController({
+            type: "text",
+            open: true,
+            id,
+            parent: {
+              id: parent.id,
+              open: false,
+              type: parent.type,
+            },
+          });
+        } else {
+          setSelectedController({
+            type: "text",
+            open: true,
+            id,
+          });
+        }
       }}
     >
       {!selectedItem?.open && (
@@ -66,9 +91,12 @@ export const ReportBuilderPageText: React.FC<{
       {selectedItem?.open && (
         <RichEditor
           itemId={id}
-          visualSettings={settings}
           initialContent={undefined}
           viewMode={viewMode}
+          editItem={editItem}
+          selectedItem={selectedItem}
+          clearSelectedController={clearSelectedController}
+          hasParent={!!parent?.id}
         />
       )}
     </Box>

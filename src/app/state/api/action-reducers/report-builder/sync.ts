@@ -10,7 +10,8 @@ export type RBReportItemTypes =
   | "kpi_box"
   | "grid"
   | "column"
-  | "section_divider";
+  | "section_divider"
+  | "unknown";
 
 export type ObjectFitTypes =
   | "contain"
@@ -92,13 +93,13 @@ type RBReportItemDataByType = {
   grid: {
     rows: number;
     columns: number;
-    items: Record<string, RBReportItem>;
+    items: RBReportItem[];
   };
 
-  column: { columns: number; items: Record<string, RBReportItem> };
+  column: { columns: number; items: RBReportItem[] };
 
   section_divider: null;
-  null: null;
+  unknown: null;
 };
 
 // 2) Base fields shared by every item
@@ -129,7 +130,8 @@ export interface RBReportItemController {
   id: string;
   parent?: {
     id: string;
-    type: RBReportItemTypes | null;
+    type: "grid" | "column";
+    open: boolean;
   } | null;
   extra?: {
     chart?: {
@@ -166,6 +168,10 @@ export interface RBReportItemsModel {
   removeItem: Action<RBReportItemsModel, string>;
   setItems: Action<RBReportItemsModel, RBReportItem[]>;
   editItem: Action<RBReportItemsModel, RBReportItem>;
+  editGridItem: Action<
+    RBReportItemsModel,
+    { gridId: string; item: RBReportItem }
+  >;
   duplicateItem: Action<RBReportItemsModel, string>;
   resetSettings: Action<RBReportItemsModel>;
   resetReport: Action<RBReportItemsModel>;
@@ -391,14 +397,42 @@ export const RBReportItemsState: RBReportItemsModel = {
       state.items[index] = payload;
     }
   }),
+  editGridItem: action((state, payload) => {
+    const { gridId, item } = payload;
+    const gridIndex = state.items.findIndex((i) => i.id === gridId);
+    if (
+      gridIndex !== -1 &&
+      (state.items[gridIndex].type === "grid" ||
+        state.items[gridIndex].type === "column")
+    ) {
+      const itemIndex = state.items[gridIndex].data.items.findIndex(
+        (i) => i?.id === item.id,
+      );
+      if (itemIndex !== -1) {
+        state.items[gridIndex].data.items[itemIndex] = item;
+      }
+    }
+  }),
   duplicateItem: action((state, payload) => {
     const index = state.items.findIndex((item) => item.id === payload);
     if (index !== -1) {
       const newItem = {
         ...state.items[index],
         id: uniqueId(),
+        ...(state.items[index].type === "grid" ||
+        state.items[index].type === "column"
+          ? {
+              data: {
+                ...state.items[index].data,
+                items: state.items[index].data.items.map((i) => ({
+                  ...i,
+                  id: uniqueId(),
+                })),
+              },
+            }
+          : {}),
       };
-      state.items.splice(index + 1, 0, newItem);
+      state.items.splice(index + 1, 0, newItem as RBReportItem);
     }
   }),
   resetSettings: action((state) => {

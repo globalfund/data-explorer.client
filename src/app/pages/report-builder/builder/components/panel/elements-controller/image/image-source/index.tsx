@@ -1,21 +1,18 @@
 import { Box, TextField, Typography } from "@mui/material";
 import SearchIcon from "app/assets/vectors/Search_grants.svg?react";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { useStoreState } from "app/state/store/hooks";
 import React from "react";
 import { remoteImages } from "app/pages/report-builder/builder/components/image/data";
-import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export function ImageSource() {
   const selectedItemController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find(
-    (i) => i.id === selectedItemController?.id,
-  ) as ReportItemOf<"image">;
+  const { selectedItem, editItem } = useGetReportItemState<"image">({
+    id: selectedItemController?.id || "",
+    parent: selectedItemController?.parent ?? undefined,
+  });
 
   const handleImageSelect = (url: string) => {
     editItem({

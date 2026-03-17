@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { ColorPicker } from "app/components/color-picker/example";
 import { ColorService } from "app/components/color-picker/utils/color";
 import React from "react";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { useStoreState } from "app/state/store/hooks";
 import { IColor } from "app/components/color-picker/types";
 import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
 import Button from "@mui/material/Button";
@@ -10,19 +10,16 @@ import StyledMenu from "../../common/menu-popup";
 import { lineOptions } from "../data";
 import TextField from "../../components/textfield";
 import { set } from "lodash";
-import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export function Customise() {
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find(
-    (i) => i.id === selectedController?.id,
-  ) as ReportItemOf<"kpi_box">;
+  const { selectedItem, editItem } = useGetReportItemState<"kpi_box">({
+    id: selectedController?.id || "",
+    parent: selectedController?.parent ?? undefined,
+  });
   // const handleBackgroundColorChange = (color: IColor) => {
   //   editItem({
   //     ...selectedItem,

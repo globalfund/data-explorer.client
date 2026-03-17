@@ -1,34 +1,20 @@
 import { Box, Typography } from "@mui/material";
 import Direction from "app/assets/vectors/RBAlignBottom.svg?react";
-import React from "react";
 import { useStoreState } from "app/state/store/hooks";
-import { alignHOptions, alignVOptions } from "../data";
-import { set } from "lodash";
-import TextField from "../../components/textfield";
+import { set, uniqueId } from "lodash";
 import { appendPx, removePx } from "app/utils/formatPx";
-import SelectField from "../../components/selectfield";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
+import TextField from "../components/textfield";
+import SelectField from "../components/selectfield";
+import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
 
-export function PaddingSize() {
+export function ColumnLayoutTab() {
   const selectedItemController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const { selectedItem, editItem } = useGetReportItemState<"kpi_box">({
-    id: selectedItemController?.id || "",
-    parent: selectedItemController?.parent ?? undefined,
+  const { selectedItem, editItem } = useGetReportItemState<"grid">({
+    id: selectedItemController?.parent?.id || "",
   });
-
-  const [alignHorizontal, setAlignHorizontal] = React.useState(
-    selectedItem?.options?.alignHorizontal || "left",
-  );
-
-  const [alignVertical, setAlignVertical] = React.useState(
-    selectedItem?.options?.alignVertical || "top",
-  );
-  React.useEffect(() => {
-    setAlignHorizontal(selectedItem?.options?.alignHorizontal || "left");
-    setAlignVertical(selectedItem?.options?.alignVertical || "top");
-  }, [selectedItem]);
 
   const handleChange = (key: string, value: any) => {
     if (!selectedItem) return;
@@ -36,66 +22,52 @@ export function PaddingSize() {
     set(currentItem, key, value);
     editItem({
       ...currentItem,
-      id: selectedItemController?.id || "",
+      id: selectedItemController?.parent?.id || "",
       open: currentItem?.open || false,
-      type: "kpi_box",
+      type: "grid",
     });
   };
 
-  const handleSelectAlignHorizontal = (value: "left" | "center" | "right") => {
-    let justifyContent = "";
-    switch (value) {
-      case "left":
-        justifyContent = "start";
-        break;
-      case "center":
-        justifyContent = "center";
-        break;
-      case "right":
-        justifyContent = "end";
-        break;
-    }
-    editItem({
-      ...selectedItem,
-      open: selectedItem?.open || false,
-      id: selectedItemController?.id || "",
-      type: "kpi_box",
-      options: {
-        ...selectedItem?.options,
-        display: "flex",
-        justifyContent,
-        alignHorizontal: value,
-      },
-    });
-    setAlignHorizontal(value);
-  };
+  const handleColumnsChange = (columnsStr: string) => {
+    const columns = Number(columnsStr);
 
-  const handleSelectAlignVertical = (value: "top" | "middle" | "bottom") => {
-    let alignItems = "";
-    switch (value) {
-      case "top":
-        alignItems = "flex-start";
-        break;
-      case "middle":
-        alignItems = "center";
-        break;
-      case "bottom":
-        alignItems = "flex-end";
-        break;
+    const required = columns;
+
+    const items = selectedItem?.data?.items || [];
+
+    let newItems;
+
+    if (items.length > required) {
+      // shrink
+      newItems = items.slice(0, required);
+    } else if (items.length < required) {
+      // expand
+      const extra: RBReportItem[] = Array(required - items.length).fill({
+        id: uniqueId(),
+        type: "unknown",
+        open: false,
+        data: null,
+        options: {
+          width: `${Math.floor(100 / columns)}%`,
+          height: `100%`,
+        },
+      });
+      newItems = [...items, ...extra];
+    } else {
+      newItems = items;
     }
+
     editItem({
       ...selectedItem,
+      id: selectedItemController?.parent?.id || "",
       open: selectedItem?.open || false,
-      id: selectedItemController?.id || "",
-      type: "kpi_box",
-      options: {
-        ...selectedItem?.options,
-        display: "flex",
-        alignItems,
-        alignVertical: value,
+      type: "grid",
+      data: {
+        ...selectedItem.data,
+        columns,
+        items: newItems,
       },
     });
-    setAlignVertical(value);
   };
 
   return (
@@ -107,6 +79,17 @@ export function PaddingSize() {
         padding: "16px 8px",
       }}
     >
+      <SelectField
+        label="Number of Columns"
+        value={String(selectedItem?.data?.columns ?? "")}
+        onChange={handleColumnsChange}
+        options={Array.from({ length: 10 }, (_, i) => ({
+          label: String(i + 1),
+          value: String(i + 1),
+        }))}
+        width={"100%"}
+      />
+
       <Typography fontWeight={700}>Padding</Typography>
       <Box
         sx={{
@@ -238,29 +221,6 @@ export function PaddingSize() {
 
       <Typography fontWeight={700}>Align</Typography>
 
-      <Box
-        sx={{
-          display: "flex",
-          gap: "16px",
-          width: "100%",
-        }}
-      >
-        <SelectField
-          label="Horizontal"
-          options={alignHOptions}
-          value={alignHorizontal}
-          onChange={handleSelectAlignHorizontal}
-          width={"100%"}
-        />
-        <SelectField
-          label="Vertical"
-          options={alignVOptions}
-          value={alignVertical}
-          onChange={handleSelectAlignVertical}
-          width={"100%"}
-        />
-      </Box>
-
       <Box>
         <Typography fontWeight={700} marginBottom={"8px"}>
           Size
@@ -280,8 +240,11 @@ export function PaddingSize() {
 
           <TextField
             label="Height"
-            value={selectedItem?.options?.height ?? ""}
-            onChange={(value) => handleChange("options.height", value)}
+            value={removePx(selectedItem?.options?.height ?? "")}
+            onChange={(value) =>
+              handleChange("options.height", appendPx(value))
+            }
+            type="number"
             width={"100%"}
           />
         </Box>

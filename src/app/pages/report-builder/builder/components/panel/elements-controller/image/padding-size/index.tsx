@@ -4,32 +4,26 @@ import React from "react";
 import { alignHOptions, alignVOptions } from "../../common/data";
 import { objectFitMap, sizingModes } from "../data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import {
-  ObjectFitTypes,
-  ReportItemOf,
-} from "app/state/api/action-reducers/report-builder/sync";
+import { ObjectFitTypes } from "app/state/api/action-reducers/report-builder/sync";
 import { get, set } from "lodash";
 import TextField from "../../components/textfield";
 import SelectField from "../../components/selectfield";
 import Checkfield from "../../components/checkfield";
 import { appendPx, removePx } from "app/utils/formatPx";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export function PaddingSize() {
   const selectedItemController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
+
   const setTooltipTrigger = useStoreActions(
     (actions) => actions.RBTooltipTriggerState.setValue,
   );
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find(
-    (i) => i.id === selectedItemController?.id,
-  ) as ReportItemOf<"image">;
-
-  console.log(selectedItem, "selectedItem");
+  const { selectedItem, editItem } = useGetReportItemState<"image">({
+    id: selectedItemController?.id || "",
+    parent: selectedItemController?.parent ?? undefined,
+  });
 
   const handleChange = (key: string, value: any) => {
     if (!selectedItem) return;
@@ -215,7 +209,7 @@ export function PaddingSize() {
             }
             value={removePx(selectedItem?.options?.paddingLeft ?? "")}
             onChange={(value) =>
-              handleChange("settings.paddingLeft", appendPx(value))
+              handleChange("options.paddingLeft", appendPx(value))
             }
             type="number"
           />
@@ -241,7 +235,7 @@ export function PaddingSize() {
             }
             value={removePx(selectedItem?.options?.paddingTop ?? "")}
             onChange={(value) =>
-              handleChange("settings.paddingTop", appendPx(value))
+              handleChange("options.paddingTop", appendPx(value))
             }
             type="number"
           />
@@ -274,7 +268,7 @@ export function PaddingSize() {
             }
             value={removePx(selectedItem?.options?.paddingRight ?? "")}
             onChange={(value) =>
-              handleChange("settings.paddingRight", appendPx(value))
+              handleChange("options.paddingRight", appendPx(value))
             }
             type="number"
           />
@@ -297,7 +291,7 @@ export function PaddingSize() {
             }
             value={removePx(selectedItem?.options?.paddingBottom ?? "")}
             onChange={(value) =>
-              handleChange("settings.paddingBottom", appendPx(value))
+              handleChange("options.paddingBottom", appendPx(value))
             }
             type="number"
           />
@@ -321,11 +315,8 @@ export function PaddingSize() {
 
             <TextField
               label="Height"
-              value={removePx(selectedItem?.options?.height ?? "")}
-              onChange={(value) =>
-                handleChange("options.height", appendPx(value))
-              }
-              type="number"
+              value={selectedItem?.options?.height ?? ""}
+              onChange={(value) => handleChange("options.height", value)}
             />
           </Box>
         </Box>

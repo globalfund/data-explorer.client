@@ -2,24 +2,21 @@ import { Box, Typography } from "@mui/material";
 import { ColorPicker } from "app/components/color-picker/example";
 import { ColorService } from "app/components/color-picker/utils/color";
 import React from "react";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { useStoreState } from "app/state/store/hooks";
 import { IColor } from "app/components/color-picker/types";
 import { set } from "lodash";
 import TextField from "../components/textfield";
-import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 import { appendPx, removePx } from "app/utils/formatPx";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export default function StyleTab() {
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const item = items.find(
-    (i) => i.id === selectedController?.id,
-  ) as ReportItemOf<"text">;
+  const { selectedItem: item, editItem } = useGetReportItemState<"text">({
+    id: selectedController?.id || "",
+    parent: selectedController?.parent ?? undefined,
+  });
 
   const handleChange = (key: string, value: any) => {
     if (!item) return;

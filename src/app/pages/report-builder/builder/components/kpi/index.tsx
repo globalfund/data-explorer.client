@@ -1,37 +1,34 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
-import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
+
+import { useStoreActions } from "app/state/store/hooks";
 import React from "react";
 
 interface Props {
   id: string;
   viewMode?: boolean;
+  parent?: {
+    id: string;
+    type: "grid" | "column";
+  };
 }
-export default function KPIBox({ id, viewMode }: Readonly<Props>) {
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItemController = useStoreState(
-    (state) => state.RBReportItemsControllerState.item,
-  );
+export default function KPIBox({ id, viewMode, parent }: Readonly<Props>) {
   const setSelectedController = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
   );
-  const selectedItem = items.find(
-    (i) => i.id === id,
-  ) as ReportItemOf<"kpi_box">;
-  const isActive = selectedItemController?.id === id;
-  const border = `${selectedItem?.options?.borderWidth || "0.5px"} solid ${
-    selectedItem?.options?.borderColor || "#000000"
-  }`;
+  const { selectedItem, editItem } = useGetReportItemState<"kpi_box">({
+    id,
+    parent,
+  });
+
+  const hasParent = !!parent?.id;
   const settings = selectedItem?.options || {};
   const alignHorizontal = selectedItem?.options?.alignHorizontal;
   const innerLine = selectedItem?.options?.innerLine;
   const clearSelectedItem = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.clearItem,
-  );
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
   );
   useClickOutsideEditor({
     editorId: "kpi-render",
@@ -45,17 +42,31 @@ export default function KPIBox({ id, viewMode }: Readonly<Props>) {
       id="kpi-render"
       onClick={() => {
         if (viewMode) return;
+        console.log("kpi box clicked");
         editItem({
           ...selectedItem,
           id,
           type: "kpi_box",
           open: true,
         });
-        setSelectedController({
-          id,
-          type: "kpi_box",
-          open: true,
-        });
+        if (parent) {
+          setSelectedController({
+            type: "kpi_box",
+            open: true,
+            id,
+            parent: {
+              id: parent.id,
+              open: false,
+              type: parent.type,
+            },
+          });
+        } else {
+          setSelectedController({
+            type: "kpi_box",
+            open: true,
+            id,
+          });
+        }
       }}
     >
       {!selectedItem?.open && (
@@ -63,7 +74,7 @@ export default function KPIBox({ id, viewMode }: Readonly<Props>) {
           sx={{
             gap: "10px",
             width: "100%",
-            height: "220px",
+            height: hasParent ? "100%" : "220px",
             display: "flex",
             cursor: "pointer",
             borderRadius: "4px",
@@ -99,15 +110,14 @@ export default function KPIBox({ id, viewMode }: Readonly<Props>) {
       {selectedItem?.open && (
         <Box
           sx={{
-            height: "141px",
             padding: "10px",
-            border: isActive ? "0.5px solid #3154F4" : border,
             borderRadius: "4px",
             display: "flex",
             gap: "8px",
-
             ...settings,
-            ...(viewMode ? { border: "none !important" } : {}),
+            border: "none",
+            height: hasParent ? "100%" : settings?.height || "141px",
+            width: hasParent ? "100%" : settings?.width || "100%",
           }}
         >
           <Box

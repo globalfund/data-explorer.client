@@ -2,31 +2,26 @@ import React from "react";
 import { Box } from "@mui/material";
 import { Dimension } from "./dimension";
 import Aggregation from "./aggregation";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { useStoreState } from "app/state/store/hooks";
 import { getDimensions } from "../utils";
 import { useGFSampleDataset } from "app/hooks/queries/report-builder";
-import {
-  MappedDimension,
-  ReportItemOf,
-} from "app/state/api/action-reducers/report-builder/sync";
+import { MappedDimension } from "app/state/api/action-reducers/report-builder/sync";
 import { isEmpty } from "lodash";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export default function Mapping() {
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
 
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
-
   const [selectedAggregation, setSelectedAggregation] =
     React.useState<string>("sum");
 
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const item = items.find(
-    (i) => i.id === selectedController?.id,
-  ) as ReportItemOf<"chart">;
+  const { selectedItem: item, editItem } = useGetReportItemState<"chart">({
+    id: selectedController?.id || "",
+    parent: selectedController?.parent ?? undefined,
+  });
+
   const chartExtra = item?.data;
   const dimensions = getDimensions(chartExtra?.chartType || "");
 

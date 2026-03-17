@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import { datasetItems } from "../../../../../chart/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import FullscreenIcon from "app/assets/vectors/TableToolbarFullscreen.svg?react";
-import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export default function DatasetList() {
   const [selectedDatasetId, setSelectedDatasetId] = React.useState<string>("");
@@ -18,14 +18,10 @@ export default function DatasetList() {
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const editItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.editItem,
-  );
-  const items = useStoreState((state) => state.RBReportItemsState.items);
-  const selectedItem = items.find(
-    (i) => i.id === selectedController?.id,
-  ) as ReportItemOf<"chart">;
-
+  const { selectedItem, editItem } = useGetReportItemState<"chart">({
+    id: selectedController?.id || "",
+    parent: selectedController?.parent ?? undefined,
+  });
   const selectedDataset = datasetItems.find(
     (item) => item.id === selectedDatasetId,
   );

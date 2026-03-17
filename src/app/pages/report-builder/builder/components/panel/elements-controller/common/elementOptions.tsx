@@ -88,7 +88,10 @@ export function Options() {
   };
   const handleChange = (value: string) => {
     if (value === "delete") {
-      removeItem(selectedItemController?.id as string);
+      removeItem(
+        selectedItemController?.parent?.id ??
+          (selectedItemController?.id as string),
+      );
       setSelectedItemController({ id: "", type: null, open: false });
       handleClose();
     }
