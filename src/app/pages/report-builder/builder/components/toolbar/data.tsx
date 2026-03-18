@@ -164,12 +164,11 @@ export const ComponentOptions = [
   { label: "Table", icon: <TableOptionIcon />, value: "table", disabled: true },
   { label: "Image", icon: <ImageOptionIcon />, value: "image" },
   { label: "Key Metrics Box", icon: <KPIOptionIcon />, value: "kpi_box" },
-  { label: "Grid", icon: <GridOptionIcon />, value: "grid", disabled: true },
+  { label: "Grid", icon: <GridOptionIcon />, value: "grid" },
   {
     label: "Column",
     icon: <ColumnOptionIcon />,
     value: "column",
-    disabled: true,
   },
   {
     label: "Section Divider",

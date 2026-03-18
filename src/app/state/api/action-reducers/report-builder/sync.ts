@@ -1,6 +1,7 @@
 import { Editor } from "@tiptap/react";
-import { action, Action } from "easy-peasy";
+import { action, Action, debug } from "easy-peasy";
 import { uniqueId } from "app/utils/uniqueId";
+import { syncGridSize } from "app/utils/syncGridSize";
 
 export type RBReportItemTypes =
   | "text"
@@ -417,7 +418,17 @@ export const RBReportItemsState: RBReportItemsModel = {
         (i) => i?.id === item.id,
       );
       if (itemIndex !== -1) {
+        const prevItem = debug(state.items[gridIndex].data.items[itemIndex]);
+
+        const prevData = debug(state.items[gridIndex]);
         state.items[gridIndex].data.items[itemIndex] = item;
+
+        if (
+          prevItem?.options?.width !== item.options?.width ||
+          prevItem?.options?.height !== item.options?.height
+        ) {
+          state.items[gridIndex] = syncGridSize(prevData, item, itemIndex);
+        }
       }
     }
   }),

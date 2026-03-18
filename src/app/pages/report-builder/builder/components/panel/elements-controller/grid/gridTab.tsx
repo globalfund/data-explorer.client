@@ -55,10 +55,7 @@ export function GridLayoutTab() {
         type: "unknown",
         open: false,
         data: null,
-        options: {
-          width: `${Math.floor(100 / columns)}%`,
-          height: `${Math.floor(100 / rows)}%`,
-        },
+        options: {},
       });
       newItems = [...items, ...extra];
     } else {
@@ -74,7 +71,14 @@ export function GridLayoutTab() {
         ...selectedItem.data,
         columns,
         rows,
-        items: newItems,
+        items: newItems.map((item) => ({
+          ...item,
+          options: {
+            ...item.options,
+            width: `${Math.floor(100 / columns)}%`,
+            height: `${Math.floor(100 / rows)}%`,
+          },
+        })),
       },
     });
   };

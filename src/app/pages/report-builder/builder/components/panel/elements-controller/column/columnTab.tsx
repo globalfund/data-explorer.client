@@ -47,10 +47,7 @@ export function ColumnLayoutTab() {
         type: "unknown",
         open: false,
         data: null,
-        options: {
-          width: `${Math.floor(100 / columns)}%`,
-          height: `100%`,
-        },
+        options: {},
       });
       newItems = [...items, ...extra];
     } else {
@@ -65,7 +62,13 @@ export function ColumnLayoutTab() {
       data: {
         ...selectedItem.data,
         columns,
-        items: newItems,
+        items: newItems.map((item) => ({
+          ...item,
+          options: {
+            ...item.options,
+            width: `${Math.floor(100 / columns)}%`,
+          },
+        })),
       },
     });
   };
