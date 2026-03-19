@@ -6,13 +6,12 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import { Search } from "app/components/search";
 import Container from "@mui/material/Container";
-import IconMenu from "@mui/icons-material/Menu";
 import IconButton from "@mui/material/IconButton";
-import IconClose from "@mui/icons-material/Close";
-import IconSearch from "@mui/icons-material/Search";
 import { HeaderMenu } from "app/components/header-menu";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { NavLink, useLocation } from "react-router-dom";
+import HeaderMenuIcon from "app/assets/vectors/HeaderMenu.svg?react";
+import HeaderCloseIcon from "app/assets/vectors/HeaderClose.svg?react";
 import HeaderSearchIcon from "app/assets/vectors/HeaderSearch.svg?react";
 import HeaderToolbarLogo from "app/assets/vectors/HeaderToolbarLogo.svg?react";
 
@@ -42,6 +41,11 @@ export const Header: React.FC = () => {
     }
   };
 
+  const onMobileMenuToggle = React.useCallback(
+    () => setMobileMenuOpen(!mobileMenuOpen),
+    [mobileMenuOpen],
+  );
+
   const searchContent = React.useMemo(() => {
     if (mobile) {
       return (
@@ -60,10 +64,10 @@ export const Header: React.FC = () => {
               sx={{
                 maxWidth: "500px",
                 borderRadius: "23px",
-                width: "calc(100% - 48px)",
+                width: "calc(100% - 100px)",
                 "#search-container": {
                   width: "100%",
-                  height: "24px",
+                  height: "32px",
                   borderRadius: "23px",
                   input: {
                     fontSize: "14px",
@@ -78,11 +82,18 @@ export const Header: React.FC = () => {
                   display: "none",
                 },
                 "#search-results-container": {
-                  top: "35px",
-                  width: "500px",
+                  top: "70px",
+                  left: "16px",
+                  width: "calc(100vw - 32px)",
+                },
+                "#search-results-progress": {
+                  top: "0px",
                 },
                 "> div": {
                   width: "100%",
+                  "> div": {
+                    position: "unset",
+                  },
                 },
               }}
             >
@@ -93,30 +104,20 @@ export const Header: React.FC = () => {
             onClick={onSearchBtnClick}
             sx={{
               padding: 0,
-              marginLeft: "-24px",
-              background: colors.primary.black,
-              "> svg": {
-                transform: "scale(0.7)",
-                color: colors.primary.white,
-              },
-              "&:hover": {
-                opacity: 0.8,
-                background: colors.primary.black,
-                "> svg": {
-                  color: colors.primary.white,
-                },
-              },
             }}
           >
-            {!searchOpen ? <IconSearch /> : <IconClose />}
+            {!searchOpen ? <HeaderSearchIcon /> : <HeaderCloseIcon />}
           </IconButton>
           <IconButton
-            onClick={() => setMobileMenuOpen(true)}
+            onClick={onMobileMenuToggle}
             sx={{
               padding: 0,
+              path: {
+                stroke: mobileMenuOpen ? "#3154f4" : colors.primary.black,
+              },
             }}
           >
-            <IconMenu htmlColor="#000" />
+            <HeaderMenuIcon />
           </IconButton>
         </Box>
       );
@@ -175,16 +176,12 @@ export const Header: React.FC = () => {
             onClick={onSearchBtnClick}
             sx={{ padding: "6px" }}
           >
-            {!searchOpen ? (
-              <HeaderSearchIcon />
-            ) : (
-              <IconClose htmlColor="#000" />
-            )}
+            {!searchOpen ? <HeaderSearchIcon /> : <HeaderCloseIcon />}
           </IconButton>
         </Tooltip>
       </Box>
     );
-  }, [mobile, searchOpen]);
+  }, [mobile, searchOpen, onMobileMenuToggle]);
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -215,6 +212,7 @@ export const Header: React.FC = () => {
               },
               "@media (max-width: 767px)": {
                 padding: "0 16px",
+                position: "relative",
               },
             }}
           >
