@@ -136,17 +136,25 @@ export const ReportBuilderPageHeader: React.FC = () => {
     ],
   );
 
+  React.useEffect(() => {
+    if (updateReport.isSuccess) {
+      setTimeout(() => {
+        updateReport.reset();
+      }, 5000);
+    }
+  }, [updateReport.isSuccess]);
+
   const open = Boolean(anchorEl);
   const open2 = Boolean(anchorEl2);
 
   const spin = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`;
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  `;
 
   return (
     <React.Fragment>
@@ -247,7 +255,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                     Saving...
                   </Box>
                 ) : updateReport.isSuccess ? (
-                  <Box component={"span"}>
+                  <Box component="span">
                     <CompleteIcon /> Saved
                   </Box>
                 ) : updateReport.isError ? (
