@@ -79,7 +79,6 @@ export const ReportBuilderPage: React.FC = () => {
           >
             <ReportBuilderPageText
               id={item.id}
-              settings={item.options}
               focus={item.focus}
               initialKey={item.key}
             />

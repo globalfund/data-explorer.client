@@ -12,7 +12,7 @@ const parseSize = (size: string | number | undefined, fallback = 0): number => {
   if (typeof size === "number") return size;
   if (typeof size === "string") {
     if (size.endsWith("%")) return Number(size.slice(0, -1));
-    return Number(size);
+    return isNaN(Number(size)) ? fallback : Number(size);
   }
   return fallback;
 };

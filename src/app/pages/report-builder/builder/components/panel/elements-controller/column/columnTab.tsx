@@ -1,12 +1,15 @@
 import { Box, Typography } from "@mui/material";
 import Direction from "app/assets/vectors/RBAlignBottom.svg?react";
 import { useStoreState } from "app/state/store/hooks";
-import { set, uniqueId } from "lodash";
+import { get, set } from "lodash";
 import { appendPx, removePx } from "app/utils/formatPx";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 import TextField from "../components/textfield";
 import SelectField from "../components/selectfield";
 import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
+import ColorPickerfield from "../components/colorpickerfield";
+import { alignHOptions, alignVOptions } from "../common/data";
+import { uniqueId } from "app/utils/uniqueId";
 
 export function ColumnLayoutTab() {
   const selectedItemController = useStoreState(
@@ -80,6 +83,11 @@ export function ColumnLayoutTab() {
         flexDirection: "column",
         gap: "16px",
         padding: "16px 8px",
+        maxHeight: "500px",
+        overflowY: "scroll",
+        "&::-webkit-scrollbar": {
+          display: "none",
+        },
       }}
     >
       <SelectField
@@ -93,136 +101,159 @@ export function ColumnLayoutTab() {
         width={"100%"}
       />
 
-      <Typography fontWeight={700}>Padding</Typography>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "16px",
-          ".MuiInputBase-root": {
-            "&:before": {
-              borderBottom: "none",
+      <Box>
+        <Typography fontWeight={700} marginBottom={"8px"}>
+          Padding
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+            ".MuiInputBase-root": {
+              "&:before": {
+                borderBottom: "none",
+              },
             },
-          },
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            gap: "16px",
           }}
         >
-          <TextField
-            label={
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                  marginBottom: "8px",
-                  svg: {
-                    transform: "rotate(90deg)",
-                  },
-                }}
-              >
-                <Direction />
-                <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
-                  Left
-                </Typography>
-              </Box>
-            }
-            value={removePx(selectedItem?.options?.paddingLeft ?? "")}
-            onChange={(value) =>
-              handleChange("options.paddingLeft", appendPx(value))
-            }
-            type="number"
-          />
+          <Box
+            sx={{
+              display: "flex",
+              gap: "16px",
+            }}
+          >
+            <TextField
+              label={
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    marginBottom: "8px",
+                    svg: {
+                      transform: "rotate(90deg)",
+                    },
+                  }}
+                >
+                  <Direction />
+                  <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
+                    Left
+                  </Typography>
+                </Box>
+              }
+              value={removePx(selectedItem?.options?.paddingLeft ?? "")}
+              onChange={(value) =>
+                handleChange("options.paddingLeft", appendPx(value))
+              }
+              type="number"
+            />
 
-          <TextField
-            label={
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                  marginBottom: "8px",
-                  svg: {
-                    transform: "rotate(180deg)",
-                  },
-                }}
-              >
-                <Direction />
-                <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
-                  Top
-                </Typography>
-              </Box>
-            }
-            value={removePx(selectedItem?.options?.paddingTop ?? "")}
-            onChange={(value) =>
-              handleChange("options.paddingTop", appendPx(value))
-            }
-            type="number"
-          />
+            <TextField
+              label={
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    marginBottom: "8px",
+                    svg: {
+                      transform: "rotate(180deg)",
+                    },
+                  }}
+                >
+                  <Direction />
+                  <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
+                    Top
+                  </Typography>
+                </Box>
+              }
+              value={removePx(selectedItem?.options?.paddingTop ?? "")}
+              onChange={(value) =>
+                handleChange("options.paddingTop", appendPx(value))
+              }
+              type="number"
+            />
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              gap: "16px",
+            }}
+          >
+            <TextField
+              label={
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    marginBottom: "8px",
+                    svg: {
+                      transform: "rotate(270deg)",
+                    },
+                  }}
+                >
+                  <Direction />
+                  <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
+                    Right
+                  </Typography>
+                </Box>
+              }
+              value={removePx(selectedItem?.options?.paddingRight ?? "")}
+              onChange={(value) =>
+                handleChange("options.paddingRight", appendPx(value))
+              }
+              type="number"
+            />
+
+            <TextField
+              label={
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <Direction />
+                  <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
+                    Bottom
+                  </Typography>
+                </Box>
+              }
+              value={removePx(selectedItem?.options?.paddingBottom ?? "")}
+              onChange={(value) =>
+                handleChange("options.paddingBottom", appendPx(value))
+              }
+              type="number"
+            />
+          </Box>
         </Box>
-
-        <Box
-          sx={{
-            display: "flex",
-            gap: "16px",
-          }}
-        >
-          <TextField
-            label={
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                  marginBottom: "8px",
-                  svg: {
-                    transform: "rotate(270deg)",
-                  },
-                }}
-              >
-                <Direction />
-                <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
-                  Right
-                </Typography>
-              </Box>
-            }
-            value={removePx(selectedItem?.options?.paddingRight ?? "")}
-            onChange={(value) =>
-              handleChange("options.paddingRight", appendPx(value))
-            }
-            type="number"
+      </Box>
+      <Box>
+        <Typography fontWeight={700} marginBottom={"8px"}>
+          Align
+        </Typography>
+        <Box sx={{ display: "flex", gap: "16px" }}>
+          <SelectField
+            label="Horizontal"
+            options={alignHOptions}
+            value={get(selectedItem, "options.alignHorizontal", "left")}
+            onChange={(value) => handleChange("options.alignHorizontal", value)}
+            width={"100%"}
           />
-
-          <TextField
-            label={
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                  marginBottom: "8px",
-                }}
-              >
-                <Direction />
-                <Typography sx={{ color: "#373D43", fontSize: "14px" }}>
-                  Bottom
-                </Typography>
-              </Box>
-            }
-            value={removePx(selectedItem?.options?.paddingBottom ?? "")}
-            onChange={(value) =>
-              handleChange("options.paddingBottom", appendPx(value))
-            }
-            type="number"
+          <SelectField
+            label="Vertical"
+            options={alignVOptions}
+            value={get(selectedItem, "options.alignVertical", "top")}
+            onChange={(value) => handleChange("options.alignVertical", value)}
+            width={"100%"}
           />
         </Box>
       </Box>
-
-      <Typography fontWeight={700}>Align</Typography>
 
       <Box>
         <Typography fontWeight={700} marginBottom={"8px"}>
@@ -250,6 +281,75 @@ export function ColumnLayoutTab() {
             type="number"
             width={"100%"}
           />
+        </Box>
+      </Box>
+
+      <Box>
+        <Typography fontWeight={700} marginBottom={"8px"}>
+          Border & Fill
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+            marginTop: "8px",
+            ".MuiInputBase-root": {
+              "&:before": {
+                borderBottom: "none",
+              },
+            },
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              gap: "16px",
+              justifyContent: "space-between",
+            }}
+          >
+            <TextField
+              label="Stroke"
+              value={removePx(selectedItem?.options?.borderWidth ?? "")}
+              onChange={(value) =>
+                handleChange("options.borderWidth", appendPx(value))
+              }
+              type="number"
+              width="100%"
+            />
+
+            <ColorPickerfield
+              label="Stroke Color"
+              color={selectedItem?.options?.borderColor || "#000000"}
+              onChange={(color) => handleChange("options.borderColor", color)}
+            />
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              gap: "16px",
+              justifyContent: "space-between",
+            }}
+          >
+            <TextField
+              label="Corner Radius"
+              value={removePx(selectedItem?.options?.borderRadius ?? "")}
+              onChange={(value) =>
+                handleChange("options.borderRadius", appendPx(value))
+              }
+              type="number"
+              width="100%"
+            />
+
+            <ColorPickerfield
+              label="Background Color"
+              color={selectedItem?.options?.backgroundColor ?? "#FFFFFF"}
+              onChange={(color) =>
+                handleChange("options.backgroundColor", color)
+              }
+            />
+          </Box>
         </Box>
       </Box>
     </Box>
