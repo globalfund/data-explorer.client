@@ -278,6 +278,17 @@ export interface RBAssetModel {
   options?: Record<string, any>;
   data: any;
 }
+
+export interface RBAssetModelResponse {
+  id: string;
+  name: string;
+  description: string;
+  type: RBReportItemTypes;
+  options?: Record<string, any>;
+  data: any;
+  updatedDate: string;
+  createdDate: string;
+}
 export interface RBReportPatchModel {
   id?: string;
   items?: RBReportItem[];

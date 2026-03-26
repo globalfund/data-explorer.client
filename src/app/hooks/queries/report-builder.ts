@@ -14,7 +14,9 @@ import {
   RBReportModelResponse,
   RBReportPatchModel,
   RBAssetModel,
+  RBAssetModelResponse,
 } from "app/state/api/action-reducers/report-builder/sync";
+import { AssetViewType } from "app/pages/report-builder/main/components/all-assets-view/toolbar";
 
 export const useCreateReport = () => {
   return useMutation({
@@ -41,6 +43,15 @@ export const useGetReport = (reportId?: string) => {
   });
 };
 
+export const useGetAsset = (assetId?: string) => {
+  return useQuery({
+    queryKey: ["ReportBuilderGetAsset", assetId],
+    queryFn: () => axiosInstance.get<RBAssetModelResponse>(`/asset/${assetId}`),
+    enabled: !!assetId,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+};
+
 export const useGetReports = (params: { sort: string; search: string }) => {
   // TODO: cache and manage invalidation
   return useQuery({
@@ -55,13 +66,22 @@ export const useGetReports = (params: { sort: string; search: string }) => {
   });
 };
 
-export const useGetAssets = (params: { sort: string; search: string }) => {
+export const useGetAssets = (params: {
+  sort: string;
+  search: string;
+  type: AssetViewType;
+}) => {
   return useQuery({
-    queryKey: ["ReportBuilderGetAssets", params.search, params.sort],
+    queryKey: [
+      "ReportBuilderGetAssets",
+      params.search,
+      params.sort,
+      params.type,
+    ],
     queryFn: () =>
-      axiosInstance.get<RBAssetModel[]>(`/assets`, {
+      axiosInstance.get<RBAssetModelResponse[]>(`/assets`, {
         params: {
-          filter: `{"where":{"name":{"like":".*${params.search}.*","options":"i"}},"order":["${params.sort}"]}`,
+          filter: `{"where":{"name":{"like":".*${params.search}.*","options":"i"}${params.type !== "all" ? `,"type":"${params.type}"` : ""}},"order":["${params.sort}"]}`,
         },
       }),
     staleTime: 1000 * 60 * 5,
@@ -83,6 +103,21 @@ export const usePatchReport = (reportId?: string) => {
   });
 };
 
+export const usePatchAsset = (assetId?: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["ReportBuilderPatchAsset", assetId],
+    mutationFn: (data: Partial<RBAssetModel>) =>
+      axiosInstance.patch<RBAssetModel>(`/asset/${assetId}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ReportBuilderGetAssets"] });
+      queryClient.invalidateQueries({
+        queryKey: ["ReportBuilderGetAsset", assetId],
+      });
+    },
+  });
+};
+
 export const useDeleteReport = () => {
   return useMutation({
     mutationKey: ["ReportBuilderDeleteReport"],
@@ -90,10 +125,32 @@ export const useDeleteReport = () => {
   });
 };
 
+export const useDeleteAsset = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["ReportBuilderDeleteAsset"],
+    mutationFn: (id: string) => axiosInstance.delete(`/asset/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ReportBuilderGetAssets"] });
+    },
+  });
+};
+
 export const useDuplicateReport = () => {
   return useMutation({
     mutationKey: ["ReportBuilderDuplicateReport"],
     mutationFn: (id: string) => axiosInstance.get(`/report/duplicate/${id}`),
+  });
+};
+
+export const useDuplicateAsset = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["ReportBuilderDuplicateAsset"],
+    mutationFn: (id: string) => axiosInstance.get(`/asset/duplicate/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ReportBuilderGetAssets"] });
+    },
   });
 };
 
