@@ -35,6 +35,7 @@ export default function AddComponent() {
   };
 
   const selectGrid = (rows: number, columns: number) => {
+    const height = rows * 280;
     const newItem: RBReportItem = {
       id: uniqueId(),
       type: "grid",
@@ -55,7 +56,7 @@ export default function AddComponent() {
       },
       options: {
         width: "100%",
-        height: "280px",
+        height: `${height}px`,
         paddingTop: "10px",
         paddingLeft: "10px",
         paddingRight: "10px",
@@ -90,7 +91,7 @@ export default function AddComponent() {
       },
       options: {
         width: "100%",
-        height: "220px",
+        height: "280px",
         paddingTop: "10px",
         paddingLeft: "10px",
         paddingRight: "10px",

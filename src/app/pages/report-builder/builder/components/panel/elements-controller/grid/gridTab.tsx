@@ -42,6 +42,7 @@ export function GridLayoutTab() {
     const columns = Number(columnsStr);
     const rows = Number(rowsStr);
     const required = columns * rows;
+    const height = rows * 280;
 
     const items = selectedItem?.data?.items || [];
 
@@ -69,6 +70,10 @@ export function GridLayoutTab() {
       id: selectedItemController?.parent?.id || "",
       open: selectedItem?.open || false,
       type: "grid",
+      options: {
+        ...selectedItem?.options,
+        height: `${height}px`,
+      },
       data: {
         ...selectedItem.data,
         columns,
