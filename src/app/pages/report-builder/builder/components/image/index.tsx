@@ -7,6 +7,13 @@ import { useTooltip } from "app/hooks/useTooltip";
 import { createPortal } from "react-dom";
 import { CropComponent } from "./crop";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
+import PanComponent from "./transform";
+
+type SavedTransform = {
+  scale: number;
+  positionX: number;
+  positionY: number;
+};
 
 export const ReportBuilderPageImage: React.FC<{
   id: string;
@@ -61,6 +68,19 @@ export const ReportBuilderPageImage: React.FC<{
       }
     };
   }, [triggeredTooltip]);
+
+  const handleChangeTransformCoordinates = (coordinates: SavedTransform) => {
+    editItem({
+      ...selectedItem,
+      id: id || "",
+      open: selectedItem?.open || false,
+      type: "image",
+      data: {
+        ...selectedItem?.data,
+        transformCoordinates: coordinates,
+      },
+    });
+  };
 
   const handleChangeCropCoordinates = (coordinates: {
     top: number;
@@ -128,7 +148,7 @@ export const ReportBuilderPageImage: React.FC<{
   };
 
   const renderImage = React.useCallback(
-    (value: "fit-proportional" | "fill" | "crop" | "auto") => {
+    (value: "fit-proportional" | "fit" | "crop" | "auto") => {
       if (!imageSrc) return null;
       switch (value) {
         case "fit-proportional":
@@ -136,33 +156,18 @@ export const ReportBuilderPageImage: React.FC<{
             <img
               src={imageSrc}
               alt="random"
-              style={{ ...imgStyle, maxHeight: "100%", width: "100%" }}
+              style={{ ...imgStyle, height: "100%", width: "100%" }}
             />
           );
-        case "fill":
-          // return (
-          //   <TransformWrapper
-          //     initialScale={1}
-          //     centerOnInit={true}
-          //     limitToBounds={true}
-          //   >
-          //     <TransformComponent
-          //       wrapperStyle={{
-          //         width: settings.width,
-          //         height: settings.height,
-          //       }}
-          //     >
-          //       {imageSrc && (
-          //         <img src={imageSrc} alt="random" style={{ ...imgStyle }} />
-          //       )}
-          //     </TransformComponent>
-          //   </TransformWrapper>
-          // );
+        case "fit":
           return (
-            <img
-              src={imageSrc}
-              alt="random"
-              style={{ ...imgStyle, height: "100%", width: "100%" }}
+            <PanComponent
+              imageSrc={imageSrc}
+              handleChangeTransformCoordinates={
+                handleChangeTransformCoordinates
+              }
+              viewMode={viewMode}
+              selectedItem={selectedItem}
             />
           );
         case "crop":
@@ -182,7 +187,12 @@ export const ReportBuilderPageImage: React.FC<{
             <img
               src={imageSrc}
               alt="random"
-              style={{ ...imgStyle, height: "auto", width: "100%" }}
+              style={{
+                ...imgStyle,
+                height: "auto",
+                width: "100%",
+                display: "block",
+              }}
             />
           );
         default:
@@ -201,6 +211,8 @@ export const ReportBuilderPageImage: React.FC<{
       imgStyle,
       selectedItem?.options?.enableCrop,
       selectedItem?.data?.cropCoordinates,
+      hasParent,
+      selectedItem,
     ],
   );
 
@@ -246,10 +258,10 @@ export const ReportBuilderPageImage: React.FC<{
           <Box
             sx={{
               backgroundColor: "#fff",
-
               ...settings,
               ...getUniqueStyle(),
               border: "none",
+              width: hasParent ? "100%" : settings.width,
             }}
           >
             {renderImage(settings?.sizingMode || "fit-proportional")}

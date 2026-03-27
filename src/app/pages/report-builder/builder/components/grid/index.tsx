@@ -41,7 +41,8 @@ const GridItem: React.FC<{
         height: "100%",
       },
     },
-    border: active ? "0.5px solid #3154F4" : "0.5px solid transparent",
+    border:
+      active && !viewMode ? "0.5px solid #3154F4" : "0.5px solid transparent",
     borderRadius: "4px",
   };
 

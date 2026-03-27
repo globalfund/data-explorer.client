@@ -1,8 +1,7 @@
 import { Box, Divider, Typography } from "@mui/material";
 import Direction from "app/assets/vectors/RBAlignBottom.svg?react";
 import React from "react";
-import { alignHOptions, alignVOptions } from "../../common/data";
-import { objectFitMap, sizingModes } from "../data";
+import { objectFitMap } from "../data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { ObjectFitTypes } from "app/state/api/action-reducers/report-builder/sync";
 import { get, set } from "lodash";
@@ -40,6 +39,9 @@ export function PaddingSize() {
   const handleSelectSizingMode = (
     value: "fit-proportional" | "fill" | "crop" | "auto",
   ) => {
+    if (selectedItemController?.parent && value === "auto") {
+      return;
+    }
     editItem({
       ...selectedItem,
       id: selectedItemController?.id || "",
@@ -48,8 +50,17 @@ export function PaddingSize() {
       options: {
         ...selectedItem?.options,
         ...(value === "auto"
-          ? { width: `100%`, height: "auto" }
-          : { height: "400px" }),
+          ? {
+              width: `100%`,
+              height: "auto",
+              imgNormHeight: selectedItem?.options?.height || "400px",
+            }
+          : {
+              height:
+                selectedItem?.options?.height !== "auto"
+                  ? selectedItem?.options?.height
+                  : selectedItem?.options?.imgNormHeight || "400px",
+            }),
         imgObjectFit: objectFitMap[value] as ObjectFitTypes,
         sizingMode: value,
       },
@@ -73,59 +84,16 @@ export function PaddingSize() {
     });
   };
 
-  const handleSelectAlignHorizontal = (value: "left" | "center" | "right") => {
-    let justifyContent = "";
-    switch (value) {
-      case "left":
-        justifyContent = "start";
-        break;
-      case "center":
-        justifyContent = "center";
-        break;
-      case "right":
-        justifyContent = "end";
-        break;
-    }
-    editItem({
-      ...selectedItem,
-      id: selectedItemController?.id || "",
-      open: selectedItem?.open || false,
-      type: "image",
-      options: {
-        ...selectedItem?.options,
-        display: "flex",
-        justifyContent,
-        alignHorizontal: value,
-      },
-    });
-  };
-
-  const handleSelectAlignVertical = (value: "top" | "middle" | "bottom") => {
-    let alignItems = "";
-    switch (value) {
-      case "top":
-        alignItems = "start";
-        break;
-      case "middle":
-        alignItems = "center";
-        break;
-      case "bottom":
-        alignItems = "end";
-        break;
-    }
-    editItem({
-      ...selectedItem,
-      id: selectedItemController?.id || "",
-      type: "image",
-      open: selectedItem?.open || false,
-      options: {
-        ...selectedItem?.options,
-        display: "flex",
-        alignItems,
-        alignVertical: value,
-      },
-    });
-  };
+  const sizingModes = [
+    { label: "Fit Proportional (Contain)", value: "fit-proportional" },
+    { label: "Fit", value: "fit" },
+    { label: "Crop", value: "crop" },
+    {
+      label: "Auto-Size (Grow)",
+      value: "auto",
+      disabled: !!selectedItemController?.parent,
+    },
+  ];
 
   return (
     <Box
@@ -151,7 +119,7 @@ export function PaddingSize() {
         />
       ) : null}
 
-      <Box sx={{ display: "flex", gap: "16px", width: "100%" }}>
+      {/* <Box sx={{ display: "flex", gap: "16px", width: "100%" }}>
         <SelectField
           label="Align Horizontal"
           options={alignHOptions}
@@ -166,7 +134,7 @@ export function PaddingSize() {
           onChange={handleSelectAlignVertical}
           width={"100%"}
         />
-      </Box>
+      </Box> */}
       <Divider sx={{ borderColor: "#CFD4DA" }} />
       <Typography fontWeight={700}>Padding</Typography>
       <Box
@@ -317,6 +285,7 @@ export function PaddingSize() {
               label="Height"
               value={selectedItem?.options?.height ?? ""}
               onChange={(value) => handleChange("options.height", value)}
+              disabled={selectedItem?.options?.sizingMode === "auto"}
             />
           </Box>
         </Box>

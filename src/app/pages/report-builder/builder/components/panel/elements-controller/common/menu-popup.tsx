@@ -8,6 +8,7 @@ export interface StyledMenuOption {
   value: string;
   icon?: React.ReactNode;
   sx?: any;
+  disabled?: boolean;
 }
 
 interface StyledMenuProps {
@@ -78,6 +79,7 @@ export default function StyledMenu({
           <MenuItem
             key={option.label}
             value={option.value}
+            disabled={option.disabled}
             onClick={() => onSelect(option.value)}
             id={`styled-menu-item-${option.value}`}
             sx={{

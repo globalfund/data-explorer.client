@@ -178,16 +178,16 @@ export default function AddComponent() {
             height: "400px",
             imgObjectFit: "contain",
             imgOpacity: 1,
+            imgNormHeight: "400px",
             sizingMode: "fit-proportional",
             enableCrop: true,
           },
           data: {
             src: "",
             cropCoordinates: {
-              left: 0,
-              top: 0,
-              width: 1000,
-              height: 1000,
+              scale: 1,
+              positionX: 0,
+              positionY: 0,
             },
           },
         };
