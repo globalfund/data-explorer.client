@@ -74,9 +74,11 @@ export const usePatchReport = (reportId?: string) => {
     mutationKey: ["ReportBuilderPatchReport", reportId],
     mutationFn: (data: RBReportPatchModel) =>
       axiosInstance.patch<RBReportPatchModel>(`/report/${reportId}`, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["ReportBuilderGetReports"] });
-      queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["ReportBuilderGetReports"],
+      });
+      await queryClient.invalidateQueries({
         queryKey: ["ReportBuilderGetReport", reportId],
       });
     },
