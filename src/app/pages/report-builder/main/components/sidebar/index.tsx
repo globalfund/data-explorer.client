@@ -22,6 +22,25 @@ export const ReportBuilderSidebar: React.FC<{
     }
   };
 
+  const items = [
+    {
+      name: "All Reports",
+      icon: <AllReportsIcon />,
+    },
+    {
+      name: "All Assets",
+      icon: <AllAssetsIcon />,
+    },
+    {
+      name: "Tutorials",
+      icon: <TutorialsIcon />,
+    },
+    {
+      name: "Templates and Layouts",
+      icon: <TemplatesLibrariesIcon />,
+    },
+  ];
+
   return (
     <Box>
       <Accordion defaultExpanded>
@@ -68,59 +87,26 @@ export const ReportBuilderSidebar: React.FC<{
               },
             }}
           >
-            <Button
-              startIcon={<AllReportsIcon />}
-              onClick={handleItemClick("All Reports")}
-              sx={{
-                background:
-                  selectedItem === "All Reports" ? "#eff1fe" : "transparent",
-                border:
-                  selectedItem === "All Reports" ? "1px solid #3154f4" : "none",
-                path: { stroke: "#252c34" },
-              }}
-            >
-              All Reports
-            </Button>
-            <Button
-              startIcon={<AllAssetsIcon />}
-              onClick={handleItemClick("All Assets")}
-              sx={{
-                background:
-                  selectedItem === "All Assets" ? "#eff1fe" : "transparent",
-                border:
-                  selectedItem === "All Assets" ? "1px solid #3154f4" : "none",
-              }}
-            >
-              All Assets
-            </Button>
-            <Button
-              startIcon={<TutorialsIcon />}
-              onClick={handleItemClick("Tutorials")}
-              sx={{
-                background:
-                  selectedItem === "Tutorials" ? "#eff1fe" : "transparent",
-                border:
-                  selectedItem === "Tutorials" ? "1px solid #3154f4" : "none",
-              }}
-            >
-              Tutorials
-            </Button>
-            <Button
-              startIcon={<TemplatesLibrariesIcon />}
-              onClick={handleItemClick("Templates and Layouts")}
-              sx={{
-                background:
-                  selectedItem === "Templates and Layouts"
-                    ? "#eff1fe"
-                    : "transparent",
-                border:
-                  selectedItem === "Templates and Layouts"
-                    ? "1px solid #3154f4"
-                    : "none",
-              }}
-            >
-              Templates and Layouts
-            </Button>
+            {items.map((item) => (
+              <Button
+                key={item.name}
+                startIcon={item.icon}
+                onClick={handleItemClick(item.name)}
+                sx={{
+                  background:
+                    selectedItem === item.name ? "#eff1fe" : "transparent",
+                  border:
+                    selectedItem === item.name
+                      ? "1px solid #3154f4"
+                      : "1px solid transparent",
+                  ...(item.name === "All Reports" && {
+                    path: { stroke: "#252c34" },
+                  }),
+                }}
+              >
+                {item.name}
+              </Button>
+            ))}
           </Box>
         </AccordionDetails>
       </Accordion>

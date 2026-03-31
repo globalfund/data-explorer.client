@@ -2,7 +2,7 @@ import React from "react";
 import get from "lodash/get";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { useGetReports } from "app/hooks/queries/report-builder";
+import { useGetAssets, useGetReports } from "app/hooks/queries/report-builder";
 import { ReportBuilderSidebar } from "app/pages/report-builder/main/components/sidebar";
 import { ReportBuilderToolbar } from "app/pages/report-builder/main/components/toolbar";
 import { AllAssetsView } from "app/pages/report-builder/main/components/all-assets-view";
@@ -10,6 +10,10 @@ import { AllReportsView } from "app/pages/report-builder/main/components/all-rep
 import { TemplatesLayoutsView } from "app/pages/report-builder/main/components/templates-layouts-view";
 import { ReportBuilderNewFolderModal } from "app/pages/report-builder/main/components/new-folder-modal";
 import { ReportBuilderNewReportModal } from "app/pages/report-builder/main/components/new-report-modal";
+import {
+  AssetViewType,
+  ReportBuilderAssetsToolbar,
+} from "./components/all-assets-view/toolbar";
 
 export const ReportBuilder: React.FC = () => {
   const [sidebarSelectedItem, setSidebarSelectedItem] =
@@ -18,6 +22,9 @@ export const ReportBuilder: React.FC = () => {
   const [selectedView, setSelectedView] = React.useState<"cards" | "list">(
     "cards",
   );
+
+  const [selectedAssetView, setSelectedAssetView] =
+    React.useState<AssetViewType>("all");
   const [selectedSort, setSelectedSort] = React.useState("createdDate DESC");
   const [newFolderModalOpen, setNewFolderModalOpen] = React.useState(false);
   const [newFolderModalNameValue, setNewFolderModalNameValue] =
@@ -29,6 +36,12 @@ export const ReportBuilder: React.FC = () => {
     React.useState("");
 
   const getReports = useGetReports({ search: search, sort: selectedSort });
+
+  const getAssets = useGetAssets({
+    search: search,
+    sort: selectedSort,
+    type: selectedAssetView,
+  });
 
   const handleNewFolderModalOpen = () => {
     setNewFolderModalOpen(true);
@@ -52,7 +65,7 @@ export const ReportBuilder: React.FC = () => {
         return (
           <AllReportsView
             reports={{
-              isLoading: getReports.isLoading,
+              isLoading: getReports.isFetching,
               data: get(getReports, "data.data", []),
             }}
             selectedView={selectedView}
@@ -67,16 +80,35 @@ export const ReportBuilder: React.FC = () => {
           />
         );
       case "All Assets":
-        return <AllAssetsView selectedView={selectedView} />;
+        return (
+          <React.Fragment>
+            <ReportBuilderAssetsToolbar
+              selectedView={selectedAssetView}
+              setSelectedView={setSelectedAssetView}
+            />
+            <Box height="20px" />
+            <AllAssetsView
+              selectedView={selectedView}
+              assets={{
+                isLoading: getAssets.isFetching,
+                data: get(getAssets, "data.data", []),
+              }}
+              refetch={getAssets.refetch}
+            />
+          </React.Fragment>
+        );
       case "Tutorials":
       default:
         return <React.Fragment />;
     }
   }, [
     selectedView,
+    selectedAssetView,
     sidebarSelectedItem,
     getReports.isLoading,
     getReports.data?.data,
+    getAssets.isLoading,
+    getAssets.data?.data,
   ]);
 
   React.useEffect(() => {
@@ -88,14 +120,14 @@ export const ReportBuilder: React.FC = () => {
   return (
     <React.Fragment>
       <Box padding="50px 0">
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={3.5} lg={2}>
+        <Grid container spacing={"14px"}>
+          <Grid item xs={12} md={3.5} lg={2.3}>
             <ReportBuilderSidebar
               selectedItem={sidebarSelectedItem}
               setSelectedItem={setSidebarSelectedItem}
             />
           </Grid>
-          <Grid item xs={12} md={8.5} lg={10}>
+          <Grid item xs={12} md={8.5} lg={9.7}>
             <ReportBuilderToolbar
               search={search}
               setSearch={setSearch}
