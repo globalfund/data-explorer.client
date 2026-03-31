@@ -41,7 +41,8 @@ const GridItem: React.FC<{
         height: "100%",
       },
     },
-    border: active ? "0.5px solid #3154F4" : "0.5px solid transparent",
+    border:
+      active && !viewMode ? "0.5px solid #3154F4" : "0.5px solid transparent",
     borderRadius: "4px",
   };
 
@@ -265,16 +266,15 @@ export const ReportBuilderPageGrid: React.FC<{
     >
       <Box
         sx={{
-          width: "100%",
-          height: "100%",
           display: "flex",
           flexWrap: "wrap",
           gap: `10px`,
           padding: `10px`,
           boxSizing: "border-box",
-          borderRadius: "4px",
-          border: viewMode ? undefined : "1px dashed #3154f4",
           transition: "all 0.3s ease-in-out",
+          ...selectedItem?.options,
+          width: "100%",
+          height: "100%",
         }}
       >
         {Array.from({ length: rows * columns }).map((_, i) => {

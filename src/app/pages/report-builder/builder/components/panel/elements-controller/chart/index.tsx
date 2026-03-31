@@ -223,10 +223,17 @@ export default function ChartController() {
                       display: "flex",
                       width: "100%",
                       "& .MuiTabs-flexContainer": { width: "100%", gap: "8px" },
-                      "& .MuiTab-root": { flex: 1, maxWidth: "none" },
+                      "& .MuiTab-root": {
+                        flex: 1,
+                        maxWidth: "none",
+                        minWidth: "30px",
+                      },
                       "& .MuiTabs-indicator": {
                         backgroundColor: "#0F62FE",
                         height: "2px",
+                      },
+                      svg: {
+                        flexShrink: 0,
                       },
                     }}
                   >

@@ -1,6 +1,7 @@
 import { Editor } from "@tiptap/react";
-import { action, Action } from "easy-peasy";
+import { action, Action, debug } from "easy-peasy";
 import { uniqueId } from "app/utils/uniqueId";
+import { syncGridSize } from "app/utils/syncGridSize";
 
 export type RBReportItemTypes =
   | "text"
@@ -75,6 +76,11 @@ type RBReportItemDataByType = {
       left: number;
       width: number;
       height: number;
+    };
+    transformCoordinates?: {
+      scale: number;
+      positionX: number;
+      positionY: number;
     };
   };
 
@@ -171,6 +177,14 @@ export interface RBReportItemsModel {
   editGridItem: Action<
     RBReportItemsModel,
     { gridId: string; item: RBReportItem }
+  >;
+  deleteGridItem: Action<
+    RBReportItemsModel,
+    { gridId: string; itemId: string }
+  >;
+  duplicateGridItem: Action<
+    RBReportItemsModel,
+    { gridId: string; itemId: string }
   >;
   duplicateItem: Action<RBReportItemsModel, string>;
   resetSettings: Action<RBReportItemsModel>;
@@ -405,6 +419,32 @@ export const RBReportItemsState: RBReportItemsModel = {
       state.items[index] = payload;
     }
   }),
+  deleteGridItem: action((state, payload) => {
+    const { gridId, itemId } = payload;
+    const gridIndex = state.items.findIndex((i) => i.id === gridId);
+    if (
+      gridIndex !== -1 &&
+      (state.items[gridIndex].type === "grid" ||
+        state.items[gridIndex].type === "column")
+    ) {
+      const itemIndex = state.items[gridIndex].data.items.findIndex(
+        (i) => i?.id === itemId,
+      );
+      const itemToDelete = state.items[gridIndex].data.items[itemIndex];
+      if (itemIndex !== -1) {
+        state.items[gridIndex].data.items.splice(itemIndex, 1, {
+          id: itemId,
+          type: "unknown",
+          open: false,
+          options: {
+            width: itemToDelete.options?.width || "100%",
+            height: itemToDelete.options?.height || "100%",
+          },
+          data: null,
+        });
+      }
+    }
+  }),
   editGridItem: action((state, payload) => {
     const { gridId, item } = payload;
     const gridIndex = state.items.findIndex((i) => i.id === gridId);
@@ -417,7 +457,17 @@ export const RBReportItemsState: RBReportItemsModel = {
         (i) => i?.id === item.id,
       );
       if (itemIndex !== -1) {
+        const prevItem = debug(state.items[gridIndex].data.items[itemIndex]);
+
+        const prevData = debug(state.items[gridIndex]);
         state.items[gridIndex].data.items[itemIndex] = item;
+
+        if (
+          prevItem?.options?.width !== item.options?.width ||
+          prevItem?.options?.height !== item.options?.height
+        ) {
+          state.items[gridIndex] = syncGridSize(prevData, item, itemIndex);
+        }
       }
     }
   }),
@@ -441,6 +491,35 @@ export const RBReportItemsState: RBReportItemsModel = {
           : {}),
       };
       state.items.splice(index + 1, 0, newItem as RBReportItem);
+    }
+  }),
+  duplicateGridItem: action((state, payload) => {
+    const { gridId, itemId } = payload;
+    const gridIndex = state.items.findIndex((i) => i.id === gridId);
+    if (
+      gridIndex !== -1 &&
+      (state.items[gridIndex].type === "grid" ||
+        state.items[gridIndex].type === "column")
+    ) {
+      const itemIndex = state.items[gridIndex].data.items.findIndex(
+        (i) => i?.id === itemId,
+      );
+      const newWidth = "100%";
+      const newHeight = `${("rows" in state.items[gridIndex].data ? state.items[gridIndex].data.rows : 1) * 280}px`;
+      if (itemIndex !== -1) {
+        const currentItem = state.items[gridIndex].data.items[itemIndex];
+        const newItem = {
+          ...currentItem,
+          id: uniqueId(),
+          options: {
+            ...currentItem?.options,
+            width: newWidth,
+            height: newHeight,
+          },
+        };
+
+        state.items.splice(gridIndex + 1, 0, newItem as RBReportItem);
+      }
     }
   }),
   resetSettings: action((state) => {

@@ -35,7 +35,9 @@ export const ItemComponent = (props: ItemComponentProps) => {
     (state) => state.RBReportItemsControllerState.item,
   );
 
-  const active = !props.viewMode && selectedController?.id === id;
+  const active =
+    !props.viewMode &&
+    (selectedController?.id === id || selectedController?.parent?.id === id);
 
   const ref = React.useRef<HTMLDivElement>(null);
 

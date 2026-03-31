@@ -31,7 +31,6 @@ export const ReportBuilderPage: React.FC = () => {
   const setActiveReport = useStoreActions(
     (actions) => actions.RBReportItemsState.setReport,
   );
-
   const reportState = useStoreState((state) => state.RBReportItemsState);
   const items = reportState.items;
   const addedItemRef = React.useRef(items.length > 0);
@@ -79,7 +78,6 @@ export const ReportBuilderPage: React.FC = () => {
           >
             <ReportBuilderPageText
               id={item.id}
-              settings={item.options}
               focus={item.focus}
               initialKey={item.key}
             />
@@ -293,18 +291,15 @@ export const ReportBuilderPage: React.FC = () => {
               flexDirection: "column",
               alignItems: "flex-start",
               justifyContent: "flex-start",
-              width: reportData?.settings.width
-                ? `${reportData?.settings.width}px`
+              width: reportState?.settings.width
+                ? `${reportState?.settings.width}px`
                 : "100%",
-              height: reportData?.settings.height
-                ? `${reportData?.settings.height}px`
-                : "100%",
-              bgcolor: reportData?.settings.backgroundColor,
-              borderRadius: `${reportData?.settings.borderRadius}px`,
-              p: reportData?.settings.padding
+              bgcolor: reportState?.settings.backgroundColor,
+              borderRadius: `${reportState?.settings.borderRadius}px`,
+              p: reportState?.settings.padding
                 .map((p: string) => `${p}px`)
                 .join(" "),
-              border: `${reportData?.settings.stroke}px solid ${reportData?.settings.strokeColor}`,
+              border: `${reportState?.settings.stroke}px solid ${reportState?.settings.strokeColor}`,
               ".top-right-actions": {
                 top: 4,
                 right: 4,

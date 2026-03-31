@@ -23,6 +23,17 @@ const useGetReportItemState = <T extends RBReportItemTypes>({
     (actions) => actions.RBReportItemsState.editItem,
   );
 
+  const removeItemMain = useStoreActions(
+    (actions) => actions.RBReportItemsState.removeItem,
+  );
+  const duplicateItem = useStoreActions(
+    (actions) => actions.RBReportItemsState.duplicateItem,
+  );
+
+  const duplicateGridItem = useStoreActions(
+    (actions) => actions.RBReportItemsState.duplicateGridItem,
+  );
+
   const selectedGridItem = useStoreState(
     (state) =>
       (
@@ -36,6 +47,10 @@ const useGetReportItemState = <T extends RBReportItemTypes>({
     (actions) => actions.RBReportItemsState.editGridItem,
   );
 
+  const deleteGridItem = useStoreActions(
+    (actions) => actions.RBReportItemsState.deleteGridItem,
+  );
+
   const editGridChildItem = (payload: RBReportItem) => {
     if (!parent?.id) return;
     editGridItem({
@@ -47,9 +62,29 @@ const useGetReportItemState = <T extends RBReportItemTypes>({
     });
   };
 
+  const deleteGridChildItem = () => {
+    if (!parent?.id) return;
+    deleteGridItem({
+      gridId: parent.id,
+      itemId: id,
+    });
+  };
+
+  const duplicateGridChildItem = () => {
+    if (!parent?.id) return;
+    duplicateGridItem({
+      gridId: parent.id,
+      itemId: id,
+    });
+  };
+
   return {
     selectedItem: parent?.id ? selectedGridItem : selectedItemMain,
     editItem: parent?.id ? editGridChildItem : editItemMain,
+    deleteItem: parent?.id ? deleteGridChildItem : () => removeItemMain(id),
+    duplicateItem: parent?.id
+      ? duplicateGridChildItem
+      : () => duplicateItem(id),
   };
 };
 

@@ -10,6 +10,7 @@ export interface SelectFieldOption {
   value: string;
   icon?: React.ReactNode;
   sx?: any;
+  disabled?: boolean;
 }
 
 interface SelectFieldProps {
@@ -32,6 +33,9 @@ export default function SelectField({
   const activeIndex = options.findIndex((o) => o.value === value);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [currentMenuWidth, setCurrentMenuWidth] = React.useState<
+    number | string
+  >("100%");
 
   const open = Boolean(anchorEl);
 
@@ -55,7 +59,10 @@ export default function SelectField({
 
       <Button
         variant="text"
-        onClick={(event) => setAnchorEl(event.currentTarget)}
+        onClick={(event) => {
+          setAnchorEl(event.currentTarget);
+          setCurrentMenuWidth(event.currentTarget.clientWidth);
+        }}
         endIcon={anchorEl ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
         sx={{
           fontWeight: "400",
@@ -101,7 +108,7 @@ export default function SelectField({
         }}
         sx={{
           "& .MuiPaper-root": {
-            width: anchorEl ? anchorEl.clientWidth : undefined,
+            width: currentMenuWidth,
             borderRadius: "4px",
             border: "1px solid #98A1AA",
             boxShadow: "0 2px 6px rgba(0, 0, 0, 0.30)",
@@ -122,7 +129,11 @@ export default function SelectField({
             <MenuItem
               key={option.label}
               value={option.value}
-              onClick={() => onChange(option.value)}
+              onClick={() => {
+                onChange(option.value);
+                handleClose();
+              }}
+              disabled={option.disabled}
               id={`styled-menu-item-${option.value}`}
               sx={{
                 position: "relative",

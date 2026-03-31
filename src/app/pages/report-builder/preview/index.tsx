@@ -300,9 +300,6 @@ export const ReportBuilderPreviewPage: React.FC = () => {
             width: reportData?.settings.width
               ? `${reportData?.settings.width}px`
               : "100%",
-            height: reportData?.settings.height
-              ? `${reportData?.settings.height}px`
-              : "100%",
             bgcolor: reportData?.settings?.backgroundColor,
             borderRadius: `${reportData?.settings.borderRadius}px`,
             p: reportData?.settings?.padding

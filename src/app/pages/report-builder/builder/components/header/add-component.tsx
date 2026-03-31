@@ -35,6 +35,7 @@ export default function AddComponent() {
   };
 
   const selectGrid = (rows: number, columns: number) => {
+    const height = rows * 280;
     const newItem: RBReportItem = {
       id: uniqueId(),
       type: "grid",
@@ -55,11 +56,16 @@ export default function AddComponent() {
       },
       options: {
         width: "100%",
-        height: "280px",
+        height: `${height}px`,
         paddingTop: "10px",
         paddingLeft: "10px",
         paddingRight: "10px",
         paddingBottom: "10px",
+        borderWidth: "0px",
+        borderColor: "#98A1AA",
+        borderRadius: "4px",
+        borderStyle: "solid",
+        backgroundColor: "#ffffff",
       },
     };
     addItem(newItem);
@@ -85,11 +91,16 @@ export default function AddComponent() {
       },
       options: {
         width: "100%",
-        height: "220px",
+        height: "280px",
         paddingTop: "10px",
         paddingLeft: "10px",
         paddingRight: "10px",
         paddingBottom: "10px",
+        borderWidth: "0px",
+        borderColor: "#98A1AA",
+        borderRadius: "4px",
+        borderStyle: "solid",
+        backgroundColor: "#ffffff",
       },
     };
     addItem(newItem);
@@ -167,16 +178,16 @@ export default function AddComponent() {
             height: "400px",
             imgObjectFit: "contain",
             imgOpacity: 1,
+            imgNormHeight: "400px",
             sizingMode: "fit-proportional",
             enableCrop: true,
           },
           data: {
             src: "",
             cropCoordinates: {
-              left: 0,
-              top: 0,
-              width: 1000,
-              height: 1000,
+              scale: 1,
+              positionX: 0,
+              positionY: 0,
             },
           },
         };

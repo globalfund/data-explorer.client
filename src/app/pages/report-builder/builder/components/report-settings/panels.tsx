@@ -92,7 +92,6 @@ export const RenamePanel: React.FC<{ closePanel: () => void }> = (props) => {
           onSuccess: () => {
             console.log("Report updated successfully");
             props.closePanel();
-            reportData.refetch();
           },
         },
       );
@@ -176,7 +175,6 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
   const updateReport = usePatchReport(id);
 
   const [widthError, setWidthError] = React.useState("");
-  const [heightError, setHeightError] = React.useState("");
   const [width, setWidth] = React.useState(
     reportData?.data?.data.settings.width,
   );
@@ -206,29 +204,6 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
       setWidthError("Minimum report width is 300px");
       setTimeout(() => {
         setWidthError("");
-      }, 3000);
-    }
-  };
-
-  const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value === "") {
-      setHeight("");
-      return;
-    }
-    if (!/^\d+$/.test(value)) return;
-    const nValue = parseInt(value, 10);
-    if (!isNaN(nValue) && nValue >= 0) {
-      setHeight(nValue.toString());
-    }
-  };
-
-  const handleHeightBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    if (e.target.value === "") {
-      setHeight("300");
-      setHeightError("Minimum report height is 300px");
-      setTimeout(() => {
-        setHeightError("");
       }, 3000);
     }
   };
@@ -308,7 +283,6 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
           onSuccess: () => {
             console.log("Report updated successfully");
             props.closePanel();
-            reportData.refetch();
           },
         },
       );
@@ -337,11 +311,6 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
         }}
       >
         <Box width="100%">
-          <Typography fontSize="14px" fontWeight="700">
-            Size
-          </Typography>
-        </Box>
-        <Box width="calc(50% - 4px)">
           <InputLabel id="width-label" htmlFor="width-input">
             Width
           </InputLabel>
@@ -352,20 +321,18 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
             onBlur={handleWidthBlur}
             onChange={handleWidthChange}
           />
-          {widthError && <FormHelperText error>{widthError}</FormHelperText>}
-        </Box>
-        <Box width="calc(50% - 4px)">
-          <InputLabel id="height-label" htmlFor="height-input">
-            Height
-          </InputLabel>
-          <input
-            type="text"
-            id="height-input"
-            value={height}
-            onBlur={handleHeightBlur}
-            onChange={handleHeightChange}
-          />
-          {heightError && <FormHelperText error>{heightError}</FormHelperText>}
+          {widthError ? (
+            <FormHelperText error>{widthError}</FormHelperText>
+          ) : (
+            <FormHelperText
+              sx={{
+                lineHeight: "normal",
+              }}
+            >
+              The canvas height is fluid and expands automatically as content is
+              added.
+            </FormHelperText>
+          )}
         </Box>
         <Box width="100%">
           <Typography fontSize="14px" fontWeight="700">
@@ -538,7 +505,6 @@ export const BorderFillPanel: React.FC<{ closePanel: () => void }> = (
           onSuccess: () => {
             console.log("Report updated successfully");
             props.closePanel();
-            reportData.refetch();
           },
         },
       );
