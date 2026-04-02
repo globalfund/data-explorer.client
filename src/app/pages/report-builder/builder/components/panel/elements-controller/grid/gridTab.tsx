@@ -82,8 +82,8 @@ export function GridLayoutTab() {
           ...item,
           options: {
             ...item.options,
-            width: `${Math.floor(100 / columns)}%`,
-            height: `${Math.floor(100 / rows)}%`,
+            width: `${(100 / columns).toFixed(2)}%`,
+            height: `${(100 / rows).toFixed(2)}%`,
           },
         })),
       },

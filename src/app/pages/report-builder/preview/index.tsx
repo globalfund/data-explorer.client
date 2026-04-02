@@ -32,18 +32,35 @@ export const ReportBuilderPreviewPage: React.FC = () => {
 
   const reportState = useStoreState((state) => state.RBReportItemsState);
 
+  const checkEmptyItem = (item: RBReportItem): boolean => {
+    if (item.type === "unknown") return false;
+    switch (item.type) {
+      case "text":
+        return !!item.data.rte;
+      case "chart":
+        return (
+          !!item.data.chartType &&
+          !!item.data.dataset &&
+          !!item.data.renderedChartData
+        );
+      case "kpi_box":
+        return item.open;
+      case "table":
+        return false; // tables are not supported in preview currently
+      case "grid":
+        return item.data.items.some((child) => checkEmptyItem(child));
+      case "column":
+        return item.data.items.some((child) => checkEmptyItem(child));
+      case "image":
+        return !!item.data.src;
+      default:
+        return false;
+    }
+  };
+
   const items = React.useMemo(() => {
     return reportState.items.filter((item) => {
-      switch (item.type) {
-        case "text":
-          return item.data.rte;
-        case "chart":
-          return item.data.chartType;
-        case "kpi_box":
-          return item.open;
-        default:
-          return true;
-      }
+      return checkEmptyItem(item);
     });
   }, [reportState.items]);
 
