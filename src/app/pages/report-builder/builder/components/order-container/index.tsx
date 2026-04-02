@@ -130,6 +130,7 @@ export const ItemComponent = (props: ItemComponentProps) => {
   return (
     <Box
       id={`container-${id}`}
+      className="order-item-container"
       sx={{
         ...style,
         opacity: isDragging ? 0.5 : 1,
@@ -141,6 +142,7 @@ export const ItemComponent = (props: ItemComponentProps) => {
       <Box
         id={`item-${id}`}
         ref={ref}
+        className="drag-indicator"
         data-handler-id={handlerId}
         sx={{
           top: 0,

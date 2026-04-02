@@ -1,29 +1,64 @@
 import JSPDF from "jspdf";
-// @ts-expect-error no types for dom-to-image
-import domtoimage from "dom-to-image";
+import * as htmlToImage from "html-to-image";
 
 export const exportReport = async (
   type: string,
   bgcolor: string,
   filename: string,
+  onlyReturnFileData?: boolean,
 ) => {
-  const node = document.getElementById("items-container");
-  if (!node) return;
+  const originalNode = document.getElementById("items-container");
+  if (!originalNode) return;
+
+  const node = originalNode.cloneNode(true) as HTMLElement;
+
+  const originalWidth = originalNode.getBoundingClientRect().width;
+  const originalHeight = originalNode.getBoundingClientRect().height;
+
+  node.style.width = `${originalWidth}px`;
+  node.style.height = `${originalHeight}px`;
+  node.style.position = "absolute";
+  node.style.top = "0";
+  node.style.left = "0";
+  node.style.zIndex = "-1000";
+
+  originalNode.parentNode?.appendChild(node);
+
+  const containers = node.getElementsByClassName(
+    "order-item-container",
+  ) as HTMLCollectionOf<HTMLElement>;
+  for (const c of containers) {
+    c.style.borderStyle = "none";
+  }
+
+  const filter = (el: HTMLElement) => {
+    return el.id !== "inline-loader" &&
+      el.id !== "page-loader" &&
+      el.tagName !== "BUTTON" &&
+      el.tagName !== "INPUT" &&
+      el.className
+      ? el.className?.toString().indexOf("drag-indicator") === -1
+      : true;
+  };
+
+  const options = {
+    filter,
+    cacheBust: true,
+    backgroundColor: bgcolor,
+  };
+
   const somethingWrong = "oops, something went wrong!";
 
   try {
     if (type === "png") {
-      const dataUrl = await domtoimage.toPng(node, {
-        backgroundColor: bgcolor,
-      });
+      if (onlyReturnFileData) return await htmlToImage.toBlob(node, options);
+      const dataUrl = await htmlToImage.toPng(node, options);
       const link = document.createElement("a");
       link.download = `${filename}.png`;
       link.href = dataUrl;
       link.click();
     } else if (type === "svg") {
-      const dataUrl = await domtoimage.toSvg(node, {
-        backgroundColor: bgcolor,
-      });
+      const dataUrl = await htmlToImage.toSvg(node, options);
       const link = document.createElement("a");
       link.download = `${filename}.svg`;
       link.href = dataUrl;
@@ -37,9 +72,7 @@ export const exportReport = async (
         format: [width, height],
       });
 
-      const png = await domtoimage.toPng(node, {
-        backgroundColor: bgcolor,
-      });
+      const png = await htmlToImage.toPng(node, options);
 
       const imgProps = pdf.getImageProperties(png);
 
@@ -57,9 +90,7 @@ export const exportReport = async (
       pdf.addImage(png, "PNG", x, 0, w, h, "png", "SLOW");
       pdf.save(`${filename}.pdf`);
     } else {
-      const dataUrl = await domtoimage.toJpeg(node, {
-        backgroundColor: bgcolor,
-      });
+      const dataUrl = await htmlToImage.toJpeg(node, options);
       const link = document.createElement("a");
       link.download = `${filename}.jpg`;
       link.href = dataUrl;
@@ -67,5 +98,9 @@ export const exportReport = async (
     }
   } catch (error) {
     console.error(somethingWrong, error);
+  } finally {
+    if (node && node.parentNode) {
+      node.parentNode.removeChild(node);
+    }
   }
 };
