@@ -6,13 +6,13 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import { Search } from "app/components/search";
 import Container from "@mui/material/Container";
-import IconMenu from "@mui/icons-material/Menu";
 import IconButton from "@mui/material/IconButton";
-import IconClose from "@mui/icons-material/Close";
-import IconSearch from "@mui/icons-material/Search";
 import { HeaderMenu } from "app/components/header-menu";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { NavLink, useLocation } from "react-router-dom";
+import HeaderMenuIcon from "app/assets/vectors/HeaderMenu.svg?react";
+import HeaderCloseIcon from "app/assets/vectors/HeaderClose.svg?react";
+import HeaderSearchIcon from "app/assets/vectors/HeaderSearch.svg?react";
 import HeaderToolbarLogo from "app/assets/vectors/HeaderToolbarLogo.svg?react";
 
 export const Header: React.FC = () => {
@@ -41,6 +41,11 @@ export const Header: React.FC = () => {
     }
   };
 
+  const onMobileMenuToggle = React.useCallback(
+    () => setMobileMenuOpen(!mobileMenuOpen),
+    [mobileMenuOpen],
+  );
+
   const searchContent = React.useMemo(() => {
     if (mobile) {
       return (
@@ -59,10 +64,10 @@ export const Header: React.FC = () => {
               sx={{
                 maxWidth: "500px",
                 borderRadius: "23px",
-                width: "calc(100% - 48px)",
+                width: "calc(100% - 100px)",
                 "#search-container": {
                   width: "100%",
-                  height: "24px",
+                  height: "32px",
                   borderRadius: "23px",
                   input: {
                     fontSize: "14px",
@@ -77,11 +82,18 @@ export const Header: React.FC = () => {
                   display: "none",
                 },
                 "#search-results-container": {
-                  top: "35px",
-                  width: "500px",
+                  top: "70px",
+                  left: "16px",
+                  width: "calc(100vw - 32px)",
+                },
+                "#search-results-progress": {
+                  top: "0px",
                 },
                 "> div": {
                   width: "100%",
+                  "> div": {
+                    position: "unset",
+                  },
                 },
               }}
             >
@@ -92,30 +104,20 @@ export const Header: React.FC = () => {
             onClick={onSearchBtnClick}
             sx={{
               padding: 0,
-              marginLeft: "-24px",
-              background: colors.primary.black,
-              "> svg": {
-                transform: "scale(0.7)",
-                color: colors.primary.white,
-              },
-              "&:hover": {
-                opacity: 0.8,
-                background: colors.primary.black,
-                "> svg": {
-                  color: colors.primary.white,
-                },
-              },
             }}
           >
-            {!searchOpen ? <IconSearch /> : <IconClose />}
+            {!searchOpen ? <HeaderSearchIcon /> : <HeaderCloseIcon />}
           </IconButton>
           <IconButton
-            onClick={() => setMobileMenuOpen(true)}
+            onClick={onMobileMenuToggle}
             sx={{
               padding: 0,
+              path: {
+                stroke: mobileMenuOpen ? "#3154f4" : colors.primary.black,
+              },
             }}
           >
-            <IconMenu htmlColor="#000" />
+            <HeaderMenuIcon />
           </IconButton>
         </Box>
       );
@@ -123,7 +125,6 @@ export const Header: React.FC = () => {
     return (
       <Box
         sx={{
-          top: "16px",
           right: "0px",
           display: "flex",
           flexDirection: "row",
@@ -142,11 +143,11 @@ export const Header: React.FC = () => {
               borderRadius: "23px",
               "#search-container": {
                 width: "100%",
-                height: "24px",
-                borderRadius: "23px",
+                height: "38px",
+                borderRadius: "4px",
                 input: {
                   fontSize: "14px",
-                  borderRadius: "23px",
+                  borderRadius: "4px",
                   background: colors.primary.white,
                 },
               },
@@ -157,7 +158,7 @@ export const Header: React.FC = () => {
                 display: "none",
               },
               "#search-results-container": {
-                top: "35px",
+                top: "49px",
                 width: "500px",
               },
               "> div": {
@@ -173,29 +174,14 @@ export const Header: React.FC = () => {
           <IconButton
             data-cy="header-search-btn"
             onClick={onSearchBtnClick}
-            sx={{
-              padding: 0,
-              marginLeft: "-24px",
-              background: colors.primary.black,
-              "> svg": {
-                transform: "scale(0.7)",
-                color: colors.primary.white,
-              },
-              "&:hover": {
-                opacity: 0.8,
-                background: colors.primary.black,
-                "> svg": {
-                  color: colors.primary.white,
-                },
-              },
-            }}
+            sx={{ padding: "6px" }}
           >
-            {!searchOpen ? <IconSearch /> : <IconClose />}
+            {!searchOpen ? <HeaderSearchIcon /> : <HeaderCloseIcon />}
           </IconButton>
         </Tooltip>
       </Box>
     );
-  }, [mobile, searchOpen]);
+  }, [mobile, searchOpen, onMobileMenuToggle]);
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -219,16 +205,22 @@ export const Header: React.FC = () => {
         <Container maxWidth="lg" disableGutters sx={{ background: "#F8F8F8" }}>
           <Toolbar
             sx={{
+              height: "77px",
               background: "#F8F8F8",
               "@media (max-width: 1279px)": {
                 width: "100%",
               },
               "@media (max-width: 767px)": {
                 padding: "0 16px",
+                position: "relative",
               },
             }}
           >
-            <NavLink to="/" style={{ display: "flex" }}>
+            <NavLink
+              to="/"
+              aria-label="App logo link"
+              style={{ display: "flex" }}
+            >
               <HeaderToolbarLogo />
             </NavLink>
             <HeaderMenu

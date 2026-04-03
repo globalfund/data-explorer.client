@@ -2,8 +2,10 @@ import React from "react";
 import get from "lodash/get";
 import uniq from "lodash/uniq";
 import Box from "@mui/material/Box";
+import isEqual from "lodash/isEqual";
 import { useTitle } from "react-use";
 import Divider from "@mui/material/Divider";
+import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import { RowComponent } from "tabulator-tables";
 import Typography from "@mui/material/Typography";
@@ -27,13 +29,6 @@ import {
   TABLE_VARIATION_9_COLUMNS,
   TABLE_VARIATION_6_COLUMNS as DOCUMENTS_TABLE_COLUMNS,
 } from "app/components/table/data";
-import isEqual from "lodash/isEqual";
-import { Helmet } from "react-helmet-async";
-
-const dropdownItems = [
-  { label: "Polyline Tree", value: "Polyline Tree", icon: <BarChartIcon /> },
-  { label: "Table View", value: "Table View", icon: <TableIcon /> },
-];
 
 export const AnnualResultsPage: React.FC = () => {
   useTitle("The Data Explorer - Annual Results");
@@ -43,6 +38,30 @@ export const AnnualResultsPage: React.FC = () => {
   const latestUpdateDate = useGetDatasetLatestUpdate({
     dataset: "results",
   });
+
+  const dropdownItems = React.useMemo(
+    () => [
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.polylineChartDropdownOptionLabel",
+          "Polyline Tree",
+        ),
+        value: "Polyline Tree",
+        icon: <BarChartIcon />,
+      },
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.tableViewDropdownOptionLabel",
+          "Table View",
+        ),
+        value: "Table View",
+        icon: <TableIcon />,
+      },
+    ],
+    [cmsData],
+  );
 
   const [dropdownSelected, setDropdownSelected] = React.useState(
     dropdownItems[0].value,

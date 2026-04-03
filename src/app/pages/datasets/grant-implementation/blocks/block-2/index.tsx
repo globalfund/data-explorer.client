@@ -2,6 +2,7 @@ import React from "react";
 import get from "lodash/get";
 import uniq from "lodash/uniq";
 import Box from "@mui/material/Box";
+import isEqual from "lodash/isEqual";
 import { appColors } from "app/theme";
 import { useLocation } from "react-router-dom";
 import Typography from "@mui/material/Typography";
@@ -10,23 +11,22 @@ import { BarChart } from "app/components/charts/bar";
 import { LineChart } from "app/components/charts/line";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import { TableContainer } from "app/components/table-container";
+import TableIcon from "app/assets/vectors/Select_Table.svg?react";
 import { BarChartDataItem } from "app/components/charts/bar/data";
 import { LineChartDataItem } from "app/components/charts/line/data";
 import { FilterGroupModel } from "app/components/filters/list/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { getRange } from "app/utils/getFinancialValueWithMetricPrefix";
+import BarChartIcon from "app/assets/vectors/Select_BarChart.svg?react";
 import { DatasetChartBlock } from "app/pages/datasets/common/chart-block";
+import LineChartIcon from "app/assets/vectors/Select_LineChart.svg?react";
 import { useGetDatasetLatestUpdate } from "app/hooks/useGetDatasetLatestUpdate";
 import { defaultAppliedFilters } from "app/state/api/action-reducers/sync/filters";
+import { defaultComponentsGroupingOptions } from "app/pages/datasets/grant-implementation/data";
 import {
   TableDataItem,
   TABLE_VARIATION_13_COLUMNS as DISBURSEMENTS_TABLE_COLUMNS,
 } from "app/components/table/data";
-import {
-  componentsGroupingOptions,
-  dropdownItemsDisbursements,
-} from "app/pages/datasets/grant-implementation/data";
-import isEqual from "lodash/isEqual";
 
 interface GrantImplementationPageBlock2Props {
   geographyGrouping: string;
@@ -42,6 +42,49 @@ export const GrantImplementationPageBlock2: React.FC<
   const latestUpdateDate = useGetDatasetLatestUpdate({
     dataset: "disbursements",
   });
+
+  const componentsGroupingOptions = React.useMemo(
+    () =>
+      getCMSDataField(
+        cmsData,
+        "pagesDatasetsGrantImplementation.componentsGroupingDropdownOptions",
+        defaultComponentsGroupingOptions,
+      ),
+    [cmsData],
+  );
+
+  const dropdownItemsDisbursements = React.useMemo(
+    () => [
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.barChartDropdownOptionLabel",
+          "Bar Chart",
+        ),
+        value: "Bar Chart",
+        icon: <BarChartIcon />,
+      },
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.lineChartDropdownOptionLabel",
+          "Line Chart",
+        ),
+        value: "Line Chart",
+        icon: <LineChartIcon />,
+      },
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.tableViewDropdownOptionLabel",
+          "Table View",
+        ),
+        value: "Table View",
+        icon: <TableIcon />,
+      },
+    ],
+    [cmsData],
+  );
 
   const [disbursementsDropdownSelected, setDisbursementsDropdownSelected] =
     React.useState(dropdownItemsDisbursements[0].value);
@@ -442,7 +485,7 @@ export const GrantImplementationPageBlock2: React.FC<
               padding="7px 12px"
               borderRadius="4px"
               position="absolute"
-              border="1px solid #DFE3E5"
+              border="1px solid #98A1AA"
               sx={{
                 transformOrigin: "left",
                 transform: "rotate(-90deg)",
@@ -469,7 +512,7 @@ export const GrantImplementationPageBlock2: React.FC<
               padding="7px 12px"
               borderRadius="4px"
               position="absolute"
-              border="1px solid #DFE3E5"
+              border="1px solid #98A1AA"
               sx={{
                 "@media (max-width: 767px)": {
                   bottom: 0,
@@ -493,11 +536,11 @@ export const GrantImplementationPageBlock2: React.FC<
             <Typography
               left="-5px"
               bottom="20px"
-              fontSize="10px"
+              fontSize="12px"
               padding="7px 12px"
               borderRadius="4px"
               position="absolute"
-              border="1px solid #DFE3E5"
+              border="1px solid #98A1AA"
               sx={{
                 transformOrigin: "left",
                 transform: "rotate(-90deg)",
@@ -512,11 +555,11 @@ export const GrantImplementationPageBlock2: React.FC<
             <Typography
               left="40px"
               bottom="-20px"
-              fontSize="10px"
+              fontSize="12px"
               padding="7px 12px"
               borderRadius="4px"
               position="absolute"
-              border="1px solid #DFE3E5"
+              border="1px solid #98A1AA"
             >
               X Axis/<b>Years</b>
             </Typography>

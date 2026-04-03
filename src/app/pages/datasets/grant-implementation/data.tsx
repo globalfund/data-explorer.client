@@ -1,18 +1,12 @@
 import Divider from "@mui/material/Divider";
-import TableIcon from "app/assets/vectors/Select_Table.svg?react";
-import TreemapIcon from "app/assets/vectors/Select_Treemap.svg?react";
-import HeatmapIcon from "app/assets/vectors/Select_Heatmap.svg?react";
-import BarChartIcon from "app/assets/vectors/Select_BarChart.svg?react";
-import LineChartIcon from "app/assets/vectors/Select_LineChart.svg?react";
-import SankeyChartIcon from "app/assets/vectors/Select_SankeyChart.svg?react";
 
-export const geographyGroupingOptions = [
+export const defaultGeographyGroupingOptions = [
   { value: "Standard View", label: "Standard View" },
   { value: "Portfolio View", label: "Portfolio View" },
   { value: "Board Constituency View", label: "Board Constituency View" },
 ];
 
-export const componentsGroupingOptions = [
+export const defaultComponentsGroupingOptions = [
   { value: "Grouped", label: "Grouped" },
   { value: "Un-Grouped", label: "Un-Grouped" },
 ];
@@ -33,50 +27,6 @@ export const stats: {
     value: "220 Million",
     label: "Insecticide-treated mosquito nets distributed in 2022.",
   },
-];
-
-export const dropdownItemsDisbursements = [
-  {
-    label: "Bar Chart",
-    value: "Bar Chart",
-    icon: <BarChartIcon />,
-  },
-  { label: "Line Chart", value: "Line Chart", icon: <LineChartIcon /> },
-  { label: "Table View", value: "Table View", icon: <TableIcon /> },
-];
-
-export const dropdownItemsHolisticGrantInvestments = [
-  {
-    label: "Sankey Chart",
-    value: "Sankey Chart",
-    icon: <SankeyChartIcon />,
-  },
-  { label: "Table View", value: "Table View", icon: <TableIcon /> },
-];
-
-export const dropdownItemsBudgets = [
-  {
-    label: "Sankey Chart",
-    value: "Sankey Chart",
-    icon: <SankeyChartIcon />,
-  },
-  { label: "Treemap", value: "Treemap", icon: <TreemapIcon /> },
-  { label: "Table View", value: "Table View", icon: <TableIcon /> },
-];
-
-export const dropdownItemsExpenditures = [
-  {
-    label: "Heatmap",
-    value: "Heatmap",
-    icon: <HeatmapIcon />,
-  },
-  { label: "Bar Chart", value: "Bar Chart", icon: <BarChartIcon /> },
-  { label: "Table View", value: "Table View", icon: <TableIcon /> },
-];
-
-export const dropdownItemsBudgetsTableDataTypes = [
-  { label: "Investment Landscape", value: "Investment Landscape" },
-  { label: "Modules & Interventions", value: "Modules & Interventions" },
 ];
 
 export const FullWidthDivider = () => (

@@ -32,6 +32,7 @@ export function SearchResults(props: SearchResultsProps) {
     >
       {props.loading && (
         <LinearProgress
+          id="search-results-progress"
           sx={{
             top: 0,
             marginLeft: "15px",

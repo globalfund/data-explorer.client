@@ -3,13 +3,22 @@ import find from "lodash/find";
 import Box from "@mui/material/Box";
 import { appColors } from "app/theme";
 import Button from "@mui/material/Button";
-import { ChartBlockCyclesProps } from "app/components/chart-block/components/cycles/data";
 import CheckboxIcon from "app/assets/vectors/Checkbox_notchecked.svg?react";
 import CheckboxCheckedIcon from "app/assets/vectors/Checkbox_checked_2.svg?react";
+import { ChartBlockCyclesProps } from "app/components/chart-block/components/cycles/data";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 export const ChartBlockCycles: React.FC<ChartBlockCyclesProps> = (
   props: ChartBlockCyclesProps,
 ) => {
+  const cmsData = useCMSData({ returnData: true });
+  const allCycleOption = getCMSDataField(
+    cmsData,
+    "pagesHome.allCycleOption",
+    "All",
+  );
+
   const handleCycleClick = (cycle: { name: string; value: string }) => () => {
     props.handleCycleChange(cycle);
   };
@@ -30,16 +39,14 @@ export const ChartBlockCycles: React.FC<ChartBlockCyclesProps> = (
           padding: "9px 12px",
           borderRadius: "4px",
           textTransform: "none",
-          border: "1px solid #DFE3E5",
+          border: `1px solid ${appColors.CHART_BLOCK_CYCLES.BUTTON_BORDER_COLOR}`,
           color: appColors.CHART_BLOCK_CYCLES.BUTTON_TEXT_COLOR,
           "&:hover": {
-            borderColor:
-              appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR,
             color: appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_TEXT_COLOR,
             background:
-              appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR,
+              appColors.CHART_BLOCK_CYCLES.BUTTON_HOVER_BACKGROUND_COLOR,
             path: {
-              fill: appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_TEXT_COLOR,
+              fill: "#3154F4",
             },
           },
         },
@@ -51,9 +58,6 @@ export const ChartBlockCycles: React.FC<ChartBlockCyclesProps> = (
           style={
             props.selectedCycles.length === 0
               ? {
-                  fontWeight: "700",
-                  borderColor:
-                    appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR,
                   color: appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_TEXT_COLOR,
                   background:
                     appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR,
@@ -61,7 +65,7 @@ export const ChartBlockCycles: React.FC<ChartBlockCyclesProps> = (
               : {}
           }
         >
-          All
+          {allCycleOption}
         </Button>
       )}
       {props.cycles.map((cycle) => {
@@ -80,15 +84,20 @@ export const ChartBlockCycles: React.FC<ChartBlockCyclesProps> = (
             style={
               selected
                 ? {
-                    fontWeight: "700",
-                    borderColor:
-                      appColors.CHART_BLOCK_CYCLES
-                        .BUTTON_ACTIVE_BACKGROUND_COLOR,
                     color:
                       appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_TEXT_COLOR,
                     background:
                       appColors.CHART_BLOCK_CYCLES
                         .BUTTON_ACTIVE_BACKGROUND_COLOR,
+                  }
+                : {}
+            }
+            sx={
+              selected
+                ? {
+                    path: {
+                      fill: "#3154F4",
+                    },
                   }
                 : {}
             }

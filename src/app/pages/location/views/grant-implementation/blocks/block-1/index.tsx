@@ -4,24 +4,37 @@ import sumBy from "lodash/sumBy";
 import Box from "@mui/material/Box";
 import findIndex from "lodash/findIndex";
 import { useParams } from "react-router-dom";
+import { useCMSData } from "app/hooks/useCMSData";
 import Typography from "@mui/material/Typography";
 import { LineChart } from "app/components/charts/line";
 import { ChartBlock } from "app/components/chart-block";
 import { CYCLES, CycleProps } from "app/pages/home/data";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 import useUpdateEffect from "react-use/lib/useUpdateEffect";
 import { LineChartProps } from "app/components/charts/line/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { useGetDatasetLatestUpdate } from "app/hooks/useGetDatasetLatestUpdate";
-import { CHART_1_DROPDOWN_ITEMS } from "app/pages/location/views/grant-implementation/data";
+import { defaultComponentsGroupingOptions } from "app/pages/datasets/grant-implementation/data";
 import {
   getRange,
   getFinancialValueWithMetricPrefix,
 } from "app/utils/getFinancialValueWithMetricPrefix";
 
 export const LocationGrantImplementationBlock1 = () => {
+  const cmsData = useCMSData({ returnData: true });
   const latestUpdateDate = useGetDatasetLatestUpdate({
     dataset: "disbursements",
   });
+
+  const componentsGroupingOptions = React.useMemo(
+    () =>
+      getCMSDataField(
+        cmsData,
+        "pagesDatasetsGrantImplementation.componentsGroupingDropdownOptions",
+        defaultComponentsGroupingOptions,
+      ),
+    [cmsData],
+  );
 
   const params = useParams<{ id: string; tab: string }>();
   const paramsId = params.id?.replace("|", "%2F");
@@ -29,7 +42,7 @@ export const LocationGrantImplementationBlock1 = () => {
   const [chart1Cycles, setChart1Cycles] = React.useState<CycleProps[]>([]);
 
   const [chart1Dropdown, setChart1Dropdown] = React.useState(
-    CHART_1_DROPDOWN_ITEMS[0].value,
+    componentsGroupingOptions[0].value,
   );
 
   const dataDisbursementsLineChart = useStoreState(
@@ -105,7 +118,7 @@ export const LocationGrantImplementationBlock1 = () => {
       filterString,
       routeParams: {
         componentField:
-          chart1Dropdown === CHART_1_DROPDOWN_ITEMS[0].value
+          chart1Dropdown === componentsGroupingOptions[0].value
             ? "activityAreaGroup"
             : "activityArea",
       },
@@ -163,9 +176,9 @@ export const LocationGrantImplementationBlock1 = () => {
       title={disbursementsTotal}
       selectedCycles={chart1Cycles}
       dropdownSelected={chart1Dropdown}
-      dropdownItems={CHART_1_DROPDOWN_ITEMS}
       loading={loadingDisbursementsLineChart}
       handleDropdownChange={setChart1Dropdown}
+      dropdownItems={componentsGroupingOptions}
       handleCycleChange={(value) => handleChartCycleChange(value)}
       empty={!showDisbursementsLineChart && chart1Cycles.length === 0}
       cycles={disbursementsCyclesAll.map((c) => ({
@@ -180,11 +193,11 @@ export const LocationGrantImplementationBlock1 = () => {
       <Box position="relative">
         <Typography
           bottom="20px"
-          fontSize="10px"
+          fontSize="12px"
           padding="7px 12px"
           borderRadius="4px"
           position="absolute"
-          border="1px solid #DFE3E5"
+          border="1px solid #98A1AA"
           sx={{
             transformOrigin: "left",
             transform: "rotate(-90deg)",
@@ -196,11 +209,11 @@ export const LocationGrantImplementationBlock1 = () => {
         <Typography
           left="40px"
           bottom="-20px"
-          fontSize="10px"
+          fontSize="12px"
           padding="7px 12px"
           borderRadius="4px"
           position="absolute"
-          border="1px solid #DFE3E5"
+          border="1px solid #98A1AA"
         >
           X Axis/<b>Years</b>
         </Typography>

@@ -6,15 +6,11 @@ import Typography from "@mui/material/Typography";
 import { useCMSData } from "app/hooks/useCMSData";
 import { LineChart } from "app/components/charts/line";
 import { ChartBlock } from "app/components/chart-block";
+import { CYCLES, CycleProps } from "app/pages/home/data";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import { LineChartProps } from "app/components/charts/line/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { useGetDatasetLatestUpdate } from "app/hooks/useGetDatasetLatestUpdate";
-import {
-  CYCLES,
-  CycleProps,
-  CHART_4_DROPDOWN_ITEMS,
-} from "app/pages/home/data";
 import {
   getRange,
   getFinancialValueWithMetricPrefix,
@@ -25,11 +21,16 @@ export const HomeBlock4: React.FC = () => {
   const latestUpdateDate = useGetDatasetLatestUpdate({
     dataset: "disbursements",
   });
+  const chart4DropdownItems = getCMSDataField(
+    cmsData,
+    "pagesHome.disbursementsDropdownItems",
+    [],
+  );
 
   const [chart4Cycles, setChart4Cycles] = React.useState<CycleProps[]>([]);
 
   const [chart4Dropdown, setChart4Dropdown] = React.useState(
-    CHART_4_DROPDOWN_ITEMS[0].value,
+    get(chart4DropdownItems, "[0].value", ""),
   );
 
   const dataDisbursementsLineChart = useStoreState(
@@ -105,7 +106,7 @@ export const HomeBlock4: React.FC = () => {
       filterString,
       routeParams: {
         componentField:
-          componentField === CHART_4_DROPDOWN_ITEMS[0].value
+          componentField === get(chart4DropdownItems, "[0].value", "")
             ? "activityAreaGroup"
             : "activityArea",
       },
@@ -171,7 +172,7 @@ export const HomeBlock4: React.FC = () => {
       selectedCycles={chart4Cycles}
       latestUpdate={latestUpdateDate}
       dropdownSelected={chart4Dropdown}
-      dropdownItems={CHART_4_DROPDOWN_ITEMS}
+      dropdownItems={chart4DropdownItems}
       loading={loadingDisbursementsLineChart}
       handleDropdownChange={setChart4Dropdown}
       empty={dataDisbursementsLineChart.data.length === 0}
@@ -185,11 +186,11 @@ export const HomeBlock4: React.FC = () => {
       <Box position="relative">
         <Typography
           bottom="20px"
-          fontSize="10px"
+          fontSize="12px"
           padding="7px 12px"
           borderRadius="4px"
           position="absolute"
-          border="1px solid #DFE3E5"
+          border="1px solid #98A1AA"
           sx={{
             transformOrigin: "left",
             transform: "rotate(-90deg)",
@@ -201,11 +202,11 @@ export const HomeBlock4: React.FC = () => {
         <Typography
           left="40px"
           bottom="-20px"
-          fontSize="10px"
+          fontSize="12px"
           padding="7px 12px"
           borderRadius="4px"
           position="absolute"
-          border="1px solid #DFE3E5"
+          border="1px solid #98A1AA"
         >
           X Axis/<b>Years</b>
         </Typography>

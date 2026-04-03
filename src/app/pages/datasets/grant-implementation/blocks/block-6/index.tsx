@@ -4,20 +4,27 @@ import uniq from "lodash/uniq";
 import sumBy from "lodash/sumBy";
 import filter from "lodash/filter";
 import Box from "@mui/material/Box";
+import orderBy from "lodash/orderBy";
+import isEqual from "lodash/isEqual";
 import { appColors } from "app/theme";
 import { useLocation } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
 import { useCMSData } from "app/hooks/useCMSData";
 import { Dropdown } from "app/components/dropdown";
 import { Heatmap } from "app/components/charts/heatmap";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import { TableContainer } from "app/components/table-container";
+import TableIcon from "app/assets/vectors/Select_Table.svg?react";
 import { FilterGroupModel } from "app/components/filters/list/data";
 import { formatFinancialValue } from "app/utils/formatFinancialValue";
+import HeatmapIcon from "app/assets/vectors/Select_Heatmap.svg?react";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import BarChartIcon from "app/assets/vectors/Select_BarChart.svg?react";
 import { DatasetChartBlock } from "app/pages/datasets/common/chart-block";
 import { useGetDatasetLatestUpdate } from "app/hooks/useGetDatasetLatestUpdate";
 import { defaultAppliedFilters } from "app/state/api/action-reducers/sync/filters";
 import { ExpandableHorizontalBar } from "app/components/charts/expandable-horizontal-bar";
+import { defaultComponentsGroupingOptions } from "app/pages/datasets/grant-implementation/data";
 import { ExpandableHorizontalBarChartDataItem } from "app/components/charts/expandable-horizontal-bar/data";
 import {
   HeatmapDataItem,
@@ -27,12 +34,6 @@ import {
   TableDataItem,
   TABLE_VARIATION_15_COLUMNS as EXPENDITURES_TABLE_COLUMNS,
 } from "app/components/table/data";
-import {
-  componentsGroupingOptions,
-  dropdownItemsExpenditures,
-} from "app/pages/datasets/grant-implementation/data";
-import orderBy from "lodash/orderBy";
-import isEqual from "lodash/isEqual";
 
 interface GrantImplementationPageBlock6Props {
   geographyGrouping: string;
@@ -49,8 +50,52 @@ export const GrantImplementationPageBlock6: React.FC<
     dataset: "expenditures",
   });
 
+  const componentsGroupingOptions = React.useMemo(
+    () =>
+      getCMSDataField(
+        cmsData,
+        "pagesDatasetsGrantImplementation.componentsGroupingDropdownOptions",
+        defaultComponentsGroupingOptions,
+      ),
+    [cmsData],
+  );
+
+  const dropdownItemsExpenditures = React.useMemo(
+    () => [
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.heatmapDropdownOptionLabel",
+          "Heatmap",
+        ),
+        value: "Heatmap",
+        icon: <HeatmapIcon />,
+      },
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.barChartDropdownOptionLabel",
+          "Bar Chart",
+        ),
+        value: "Bar Chart",
+        icon: <BarChartIcon />,
+      },
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.tableViewDropdownOptionLabel",
+          "Table View",
+        ),
+        value: "Table View",
+        icon: <TableIcon />,
+      },
+    ],
+    [cmsData],
+  );
+
   const [expendituresDropdownSelected, setExpendituresDropdownSelected] =
     React.useState(dropdownItemsExpenditures[0].value);
+  const [unit, setUnit] = React.useState<"amount" | "percentage">("percentage");
   const [chart4AppliedFiltersData, setChart4AppliedFiltersData] =
     React.useState({
       ...defaultAppliedFilters,
@@ -305,6 +350,71 @@ export const GrantImplementationPageBlock6: React.FC<
     );
   }, [expenditureCycles, expendituresCycleDropdownSelected]);
 
+  const unitButtons = React.useMemo(
+    () => (
+      <Box
+        gap="8px"
+        display="flex"
+        flexDirection="row"
+        sx={{
+          "& > button": {
+            width: "40px",
+            height: "35px",
+            fontSize: "16px",
+            borderRadius: "4px",
+            border: `1px solid ${appColors.CHART_BLOCK_CYCLES.BUTTON_BORDER_COLOR}`,
+            "&:hover": {
+              color: appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_TEXT_COLOR,
+              background:
+                appColors.CHART_BLOCK_CYCLES.BUTTON_HOVER_BACKGROUND_COLOR,
+              borderColor: appColors.CHART_BLOCK_CYCLES.BUTTON_BORDER_COLOR,
+            },
+          },
+        }}
+      >
+        <IconButton
+          onClick={() => setUnit("percentage")}
+          sx={{
+            color:
+              unit === "percentage"
+                ? appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_TEXT_COLOR
+                : appColors.CHART_BLOCK_CYCLES.BUTTON_TEXT_COLOR,
+            background:
+              unit === "percentage"
+                ? appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR
+                : appColors.CHART_BLOCK_CYCLES.BUTTON_BACKGROUND_COLOR,
+            borderColor:
+              unit === "percentage"
+                ? appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR
+                : appColors.CHART_BLOCK_CYCLES.BUTTON_BORDER_COLOR,
+          }}
+        >
+          %
+        </IconButton>
+        <IconButton
+          onClick={() => setUnit("amount")}
+          sx={{
+            color:
+              unit === "amount"
+                ? appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_TEXT_COLOR
+                : appColors.CHART_BLOCK_CYCLES.BUTTON_TEXT_COLOR,
+            background:
+              unit === "amount"
+                ? appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR
+                : appColors.CHART_BLOCK_CYCLES.BUTTON_BACKGROUND_COLOR,
+            borderColor:
+              unit === "amount"
+                ? appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR
+                : appColors.CHART_BLOCK_CYCLES.BUTTON_BORDER_COLOR,
+          }}
+        >
+          $
+        </IconButton>
+      </Box>
+    ),
+    [unit],
+  );
+
   const expendituresChartEmpty = React.useMemo(() => {
     switch (expendituresDropdownSelected) {
       case dropdownItemsExpenditures[0].value:
@@ -461,8 +571,8 @@ export const GrantImplementationPageBlock6: React.FC<
       case dropdownItemsExpenditures[0].value:
         return (
           <Heatmap
-            valueType="amount"
-            contentProp="value"
+            valueType={unit}
+            contentProp={unit === "percentage" ? "percentage" : "value"}
             hoveredLegend={null}
             columnCategory="cycle"
             rowCategory="component"
@@ -517,6 +627,7 @@ export const GrantImplementationPageBlock6: React.FC<
         return null;
     }
   }, [
+    unit,
     tableSearch,
     expendituresDropdownSelected,
     dataExpendituresHeatmap,
@@ -686,6 +797,11 @@ export const GrantImplementationPageBlock6: React.FC<
         handleResetFilters={handleResetChartFilters}
         tempAppliedFiltersData={chart4TempAppliedFiltersData}
         extraDropdown={expendituresCycleDropdown}
+        unitButtons={
+          expendituresDropdownSelected === dropdownItemsExpenditures[0].value
+            ? unitButtons
+            : undefined
+        }
         data={exportChartData}
         infoType="expenditures"
       >

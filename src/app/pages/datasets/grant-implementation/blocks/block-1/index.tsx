@@ -8,7 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { formatFinancialValue } from "app/utils/formatFinancialValue";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { useGetDatasetLatestUpdate } from "app/hooks/useGetDatasetLatestUpdate";
-import { componentsGroupingOptions } from "app/pages/datasets/grant-implementation/data";
+import { defaultComponentsGroupingOptions } from "app/pages/datasets/grant-implementation/data";
 
 interface GrantImplementationPageBlock1Props {
   filterString: string;
@@ -23,6 +23,16 @@ export const GrantImplementationPageBlock1: React.FC<
   const latestUpdateDate = useGetDatasetLatestUpdate({
     dataset: "disbursements",
   });
+
+  const componentsGroupingOptions = React.useMemo(
+    () =>
+      getCMSDataField(
+        cmsData,
+        "pagesDatasetsGrantImplementation.componentsGroupingDropdownOptions",
+        defaultComponentsGroupingOptions,
+      ),
+    [cmsData],
+  );
 
   const dataFinancialInsightsStats = useStoreState((state) =>
     get(state.FinancialInsightsStats, "data.data[0]", {
@@ -64,7 +74,7 @@ export const GrantImplementationPageBlock1: React.FC<
             width: "calc(100% / 3)",
             padding: "0 10px",
             "&:not(:last-child)": {
-              borderRight: "1px solid #DFE3E5",
+              borderRight: "1px solid #98A1AA",
             },
             "&:first-of-type": {
               paddingLeft: 0,
@@ -80,7 +90,7 @@ export const GrantImplementationPageBlock1: React.FC<
               padding: "16px 0",
               "&:not(:last-child)": {
                 borderRightStyle: "none",
-                borderBottom: "1px solid #DFE3E5",
+                borderBottom: "1px solid #98A1AA",
               },
             },
           },

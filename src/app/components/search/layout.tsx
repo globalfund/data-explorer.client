@@ -8,9 +8,9 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { Dropdown } from "app/components/dropdown";
 import SearchIcon from "@mui/icons-material/Search";
-import { categories } from "app/components/search/data";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { getCMSDataField } from "app/utils/getCMSDataField";
+import { getCategoryIcon } from "app/components/search/data";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import { SearchResults } from "app/components/search/components/results";
 import {
@@ -39,6 +39,11 @@ interface SearchLayoutProps {
 export function SearchLayout(props: SearchLayoutProps) {
   const isMobile = useMediaQuery("(max-width: 767px)");
   const cmsData = useCMSData({ returnData: true });
+  const categories: { value: string; label: string }[] = getCMSDataField(
+    cmsData,
+    "componentsSearch.categories",
+    [],
+  );
 
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -90,14 +95,23 @@ export function SearchLayout(props: SearchLayoutProps) {
     }
   }, [props.results, props.category, isMobile]);
 
+  const categoriesWithIcons = React.useMemo(
+    () =>
+      categories.map((category) => ({
+        ...category,
+        icon: getCategoryIcon(category.label),
+      })),
+    [categories],
+  );
+
   return (
     <MobileContainer>
       {props.withCatMenu && props.category && props.setCategory && (
         <Box id="search-category-dropdown" marginRight="10px">
           <Dropdown
             height={40}
-            dropdownItems={categories}
             dropdownSelected={props.category}
+            dropdownItems={categoriesWithIcons}
             handleDropdownChange={props.setCategory}
           />
         </Box>
@@ -112,6 +126,7 @@ export function SearchLayout(props: SearchLayoutProps) {
           ref={inputRef}
           value={props.value}
           id="general-search"
+          aria-label="Search input"
           placeholder={getCMSDataField(
             cmsData,
             "componentsSearch.placeholder",
@@ -157,9 +172,6 @@ export function SearchLayout(props: SearchLayoutProps) {
             alignItems: "center",
             justifyContent: "center",
             background: appColors.COMMON.BLACK,
-            "@media (max-width: 767px)": {
-              height: "35px",
-            },
           }}
         >
           <SearchIcon htmlColor={appColors.COMMON.WHITE} />

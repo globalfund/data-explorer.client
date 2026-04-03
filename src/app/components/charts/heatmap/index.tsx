@@ -345,7 +345,7 @@ export function Heatmap(props: HeatmapProps) {
                         : `calc((100% - 112px) / ${flatVisibleColumns.length})`,
                       minWidth: props.itemWidth
                         ? `${props.itemWidth}px`
-                        : "105px",
+                        : "135px",
                     }}
                   >
                     {column.name}
@@ -380,6 +380,7 @@ export function Heatmap(props: HeatmapProps) {
                 >
                   {row.children ? (
                     <IconButton
+                      aria-label={`${row.expanded ? "Collapse" : "Expand"} ${row.name} row`}
                       sx={{
                         padding: "4px",
                         transform: `rotate(${row.expanded ? -90 : 90}deg)`,
@@ -448,7 +449,7 @@ export function Heatmap(props: HeatmapProps) {
                             : `calc((100% - 112px) / ${flatVisibleColumns.length})`,
                           minWidth: props.itemWidth
                             ? `${props.itemWidth}px`
-                            : "105px",
+                            : "135px",
                         }}
                       >
                         {value}

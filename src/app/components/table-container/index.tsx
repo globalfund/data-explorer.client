@@ -158,7 +158,7 @@ export const TableContainer: React.FC<TableContainerProps> = (
                 padding: "0px 12px",
                 borderRadius: "4px",
                 textTransform: "none",
-                border: "1px solid #DFE3E5",
+                border: "1px solid #98A1AA",
                 "&:hover": {
                   color: "#fff",
                   background: "#000",
@@ -193,13 +193,9 @@ export const TableContainer: React.FC<TableContainerProps> = (
               height: "35px",
               borderRadius: "4px",
               background: "transparent",
-              border: "1px solid #DFE3E5",
+              border: "1px solid #98A1AA",
               "&:hover": {
-                background: "#000000",
-                borderColor: "#000000",
-                svg: {
-                  filter: "invert(1)",
-                },
+                background: "#F8F9FA",
               },
             },
           }}
@@ -210,22 +206,35 @@ export const TableContainer: React.FC<TableContainerProps> = (
               ref={inputRef}
               value={search1}
               placeholder="Search"
+              aria-label="Search input"
               onChange={onSearchInputChange}
               style={{
                 padding: "6px 8px",
                 borderRadius: "4px",
-                border: "1px solid #DFE3E5",
+                border: "1px solid #98A1AA",
               }}
             />
           )}
-          <IconButton disableRipple onClick={onSearchBtnClick}>
+          <IconButton
+            disableRipple
+            onClick={onSearchBtnClick}
+            aria-label="Search button"
+          >
             {!openSearch ? <SearchIcon /> : <Close />}
           </IconButton>
-          <IconButton disableRipple onClick={fullscreen}>
+          <IconButton
+            disableRipple
+            onClick={fullscreen}
+            aria-label="Fullscreen button"
+          >
             <FullscreenIcon />
           </IconButton>
           {!props.noColumnVisibilitySelection && (
-            <IconButton disableRipple onClick={handleColumnsMenuClick}>
+            <IconButton
+              disableRipple
+              onClick={handleColumnsMenuClick}
+              aria-label="Columns visibility button"
+            >
               <ColumnsIcon />
             </IconButton>
           )}

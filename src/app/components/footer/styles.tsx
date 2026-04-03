@@ -6,14 +6,15 @@ import TwitterIcon from "app/assets/vectors/SM_Twitter.svg?react";
 import FacebookIcon from "app/assets/vectors/SM_Facebook.svg?react";
 import LinkedInIcon from "app/assets/vectors/SM_LinkedIn.svg?react";
 import InstagramIcon from "app/assets/vectors/SM_Instagram.svg?react";
+import { Link } from "react-router-dom";
 
 export const FooterContainer = styled.footer`
   width: 100vw;
   height: 256px;
   padding: 33px 0;
   position: relative;
-  background-color: ${appColors.COMMON.WHITE};
-  border-top: 1px solid ${appColors.COMMON.SECONDARY_COLOR_3};
+  background-color: #f1f3f5;
+  border-top: 1px solid ${appColors.COMMON.SECONDARY_COLOR_6};
 
   @media (max-width: 767px) {
     height: auto;
@@ -25,6 +26,14 @@ export const FooterHeader = styled(Typography)`
   font-size: 14px;
   font-weight: 900;
   margin-bottom: 23px;
+  color: ${appColors.COMMON.BLACK};
+`;
+
+export const FooterLink = styled(Link)`
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+  text-decoration: none;
   color: ${appColors.COMMON.BLACK};
 `;
 

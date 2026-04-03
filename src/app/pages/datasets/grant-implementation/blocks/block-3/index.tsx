@@ -3,6 +3,7 @@ import get from "lodash/get";
 import uniq from "lodash/uniq";
 import sumBy from "lodash/sumBy";
 import Box from "@mui/material/Box";
+import isEqual from "lodash/isEqual";
 import Grid from "@mui/material/Grid";
 import { useLocation } from "react-router-dom";
 import { useCMSData } from "app/hooks/useCMSData";
@@ -11,23 +12,21 @@ import { Treemap } from "app/components/charts/treemap";
 import { SankeyChart } from "app/components/charts/sankey";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import { TableContainer } from "app/components/table-container";
+import TableIcon from "app/assets/vectors/Select_Table.svg?react";
 import { FilterGroupModel } from "app/components/filters/list/data";
 import { TreemapDataItem } from "app/components/charts/treemap/data";
+import TreemapIcon from "app/assets/vectors/Select_Treemap.svg?react";
 import { formatFinancialValue } from "app/utils/formatFinancialValue";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { DatasetChartBlock } from "app/pages/datasets/common/chart-block";
+import SankeyChartIcon from "app/assets/vectors/Select_SankeyChart.svg?react";
 import { useGetDatasetLatestUpdate } from "app/hooks/useGetDatasetLatestUpdate";
 import { defaultAppliedFilters } from "app/state/api/action-reducers/sync/filters";
+import { defaultComponentsGroupingOptions } from "app/pages/datasets/grant-implementation/data";
 import {
   TableDataItem,
   TABLE_VARIATION_14_COLUMNS as BUDGET_TABLE_COLUMNS,
 } from "app/components/table/data";
-import {
-  dropdownItemsBudgets,
-  componentsGroupingOptions,
-  dropdownItemsBudgetsTableDataTypes,
-} from "app/pages/datasets/grant-implementation/data";
-import isEqual from "lodash/isEqual";
 
 interface GrantImplementationPageBlock3Props {
   filterString: string;
@@ -44,6 +43,71 @@ export const GrantImplementationPageBlock3: React.FC<
   const latestUpdateDate = useGetDatasetLatestUpdate({
     dataset: "budgets",
   });
+
+  const componentsGroupingOptions = React.useMemo(
+    () =>
+      getCMSDataField(
+        cmsData,
+        "pagesDatasetsGrantImplementation.componentsGroupingDropdownOptions",
+        defaultComponentsGroupingOptions,
+      ),
+    [cmsData],
+  );
+
+  const dropdownItemsBudgets = React.useMemo(
+    () => [
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.sankeyChartDropdownOptionLabel",
+          "Sankey Chart",
+        ),
+        value: "Sankey Chart",
+        icon: <SankeyChartIcon />,
+      },
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.treemapDropdownOptionLabel",
+          "Treemap",
+        ),
+        value: "Treemap",
+        icon: <TreemapIcon />,
+      },
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.tableViewDropdownOptionLabel",
+          "Table View",
+        ),
+        value: "Table View",
+        icon: <TableIcon />,
+      },
+    ],
+    [cmsData],
+  );
+
+  const dropdownItemsBudgetsTableDataTypes = React.useMemo(
+    () => [
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.investementLandscapeDropdownOptionLabel",
+          "Investment Landscape",
+        ),
+        value: "Investment Landscape",
+      },
+      {
+        label: getCMSDataField(
+          cmsData,
+          "generic.modulesInterventionsDropdownOptionLabel",
+          "Modules & Interventions",
+        ),
+        value: "Modules & Interventions",
+      },
+    ],
+    [cmsData],
+  );
 
   const [budgetsDropdownSelected, setBudgetsDropdownSelected] = React.useState(
     dropdownItemsBudgets[0].value,

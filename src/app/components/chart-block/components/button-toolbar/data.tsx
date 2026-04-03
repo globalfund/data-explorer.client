@@ -4,7 +4,9 @@ import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
+import { useCMSData } from "app/hooks/useCMSData";
 import { exportChart } from "app/utils/exportChart";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 export type InfoPanelType =
   | "global"
@@ -95,6 +97,8 @@ export const DownloadPanel: React.FC<ChartBlockButtonToolbarProps> = (
 export const SharePanel: React.FC<ChartBlockButtonToolbarProps> = (
   props: ChartBlockButtonToolbarProps,
 ) => {
+  const cmsData = useCMSData({ returnData: true });
+
   const [feedbackMessage, setFeedbackMessage] = React.useState<string | null>(
     null,
   );
@@ -155,7 +159,13 @@ export const SharePanel: React.FC<ChartBlockButtonToolbarProps> = (
               Embed code
             </Button>
           </Tooltip> */}
-          <Button onClick={handleButtonClick("link")}>Share link</Button>
+          <Button onClick={handleButtonClick("link")}>
+            {getCMSDataField(
+              cmsData,
+              "general.chartSectionShareLinkButtonLabel",
+              "Share link",
+            )}
+          </Button>
         </React.Fragment>
       )}
     </React.Fragment>

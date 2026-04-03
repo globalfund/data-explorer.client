@@ -3,6 +3,7 @@ import get from "lodash/get";
 import sumBy from "lodash/sumBy";
 import filter from "lodash/filter";
 import Box from "@mui/material/Box";
+import orderBy from "lodash/orderBy";
 import { appColors } from "app/theme";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
@@ -22,8 +23,7 @@ import { RaceBarChart } from "app/components/charts/race-bar";
 import { SankeyChartData } from "app/components/charts/sankey/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { useGetDatasetLatestUpdate } from "app/hooks/useGetDatasetLatestUpdate";
-import { CHART_2_DROPDOWN_ITEMS } from "app/pages/grant/views/grant-implementation/data";
-import { componentsGroupingOptions } from "app/pages/datasets/grant-implementation/data";
+import { defaultComponentsGroupingOptions } from "app/pages/datasets/grant-implementation/data";
 import {
   HeatmapDataItem,
   getPercentageColor,
@@ -32,7 +32,6 @@ import {
   getRange,
   getFinancialValueWithMetricPrefix,
 } from "app/utils/getFinancialValueWithMetricPrefix";
-import orderBy from "lodash/orderBy";
 
 export const GrantImplementation: React.FC = () => {
   const cmsData = useCMSData({ returnData: true });
@@ -49,8 +48,34 @@ export const GrantImplementation: React.FC = () => {
 
   useTitle(`The Data Explorer - ${params.id} Financial Insights`);
 
+  const componentsGroupingOptions = React.useMemo(
+    () =>
+      getCMSDataField(
+        cmsData,
+        "pagesDatasetsGrantImplementation.componentsGroupingDropdownOptions",
+        defaultComponentsGroupingOptions,
+      ),
+    [cmsData],
+  );
+
+  const expendituresGroupingOptions = React.useMemo(
+    () =>
+      getCMSDataField(
+        cmsData,
+        "pagesGrantGrantImplementation.expendituresDropdownOptions",
+        [
+          { label: "Investment Landscape", value: "Investment Landscape" },
+          {
+            label: "Modules & Interventions",
+            value: "Modules & Interventions",
+          },
+        ],
+      ),
+    [cmsData],
+  );
+
   const [chart2Dropdown, setChart2Dropdown] = React.useState(
-    CHART_2_DROPDOWN_ITEMS[0].value,
+    expendituresGroupingOptions[0].value,
   );
   const [chart2Dropdown2, setChart2Dropdown2] = React.useState(
     componentsGroupingOptions[0].value,
@@ -114,9 +139,8 @@ export const GrantImplementation: React.FC = () => {
             "&:hover": {
               color: appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_TEXT_COLOR,
               background:
-                appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR,
-              borderColor:
-                appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BACKGROUND_COLOR,
+                appColors.CHART_BLOCK_CYCLES.BUTTON_HOVER_BACKGROUND_COLOR,
+              borderColor: appColors.CHART_BLOCK_CYCLES.BUTTON_BORDER_COLOR,
             },
           },
         }}
@@ -328,7 +352,7 @@ export const GrantImplementation: React.FC = () => {
     fetchExpendituresHeatmap({
       routeParams: {
         row:
-          chart2Dropdown === CHART_2_DROPDOWN_ITEMS[0].value
+          chart2Dropdown === expendituresGroupingOptions[0].value
             ? "module,intervention"
             : "investmentLandscape1,investmentLandscape2,costCategory",
         column: "component",
@@ -591,7 +615,7 @@ export const GrantImplementation: React.FC = () => {
         title={expendituresTotal}
         empty={!showExpendituresHeatmap}
         dropdownSelected={chart2Dropdown}
-        dropdownItems={CHART_2_DROPDOWN_ITEMS}
+        dropdownItems={expendituresGroupingOptions}
         handleDropdownChange={setChart2Dropdown}
         data={exportExpenditureHeatmapChartData}
         unitButtons={chart2UnitButtons}
@@ -609,7 +633,7 @@ export const GrantImplementation: React.FC = () => {
           getItemColor={getPercentageColor}
           contentProp={chart2Unit === "percentage" ? "percentage" : "value"}
           columnHeader={
-            chart2Dropdown === CHART_2_DROPDOWN_ITEMS[0].value
+            chart2Dropdown === expendituresGroupingOptions[0].value
               ? "Modules & Interventions"
               : "Investment Landscapes & Cost Categories"
           }
