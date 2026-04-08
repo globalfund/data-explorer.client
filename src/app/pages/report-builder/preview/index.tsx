@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import { Empty } from "app/pages/report-builder/builder/components/empty";
+
 import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
 import { ReportBuilderPageGrid } from "app/pages/report-builder/builder/components/grid";
 import { ReportBuilderPageText } from "app/pages/report-builder/builder/components/text";
@@ -341,7 +341,6 @@ export const ReportBuilderPreviewPage: React.FC = () => {
             },
           }}
         >
-          {items.length === 0 && <Empty />}
           {items.map((item) => (
             <React.Fragment key={item.id}>{getItemByType(item)}</React.Fragment>
           ))}
