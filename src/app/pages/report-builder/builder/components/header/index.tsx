@@ -32,6 +32,7 @@ import { usePatchReport } from "app/hooks/queries/report-builder";
 import { useDebounce } from "react-use";
 import { useStoreState } from "app/state/store/hooks";
 import { exportReport } from "app/utils/exportReport";
+import axios from "axios";
 
 export const menuSx = {
   zIndex: 1400,
@@ -118,6 +119,31 @@ export const ReportBuilderPageHeader: React.FC = () => {
     }, 200);
   };
 
+  const handleAutoGenerateThumbnail = async () => {
+    const fileData = await exportReport(
+      "png",
+      reportState.settings.backgroundColor,
+      reportState.name,
+      true,
+    );
+    const formData = new FormData();
+    formData.append(`${id}.png`, fileData as Blob, `${id}.png`);
+    await axios
+      .post(`${import.meta.env.VITE_API}/files`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then(async (response) => {
+        if (response.status === 200) {
+          console.log("REPORT THUMBNAIL: SAVED");
+        }
+      })
+      .catch((error) => {
+        console.error("REPORT THUMBNAIL: ", error);
+      });
+  };
+
   useDebounce(
     () => {
       updateReport.mutate({
@@ -126,6 +152,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
         settings: reportState.settings,
         name: reportState.name,
       });
+      handleAutoGenerateThumbnail();
     },
     2000,
     [

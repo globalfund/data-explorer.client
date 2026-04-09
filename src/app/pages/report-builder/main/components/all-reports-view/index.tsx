@@ -113,13 +113,17 @@ export const AllReportsView: React.FC<{
                   borderRadius: "2px",
                   justifyContent: "center",
                   border: "1px solid #cfd4da",
+                  div: {
+                    width: "calc(100% - 10px)",
+                    backgroundImage: `url(${import.meta.env.VITE_API}/report-thumbnail/${item.id}.png)`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
+                    backgroundSize: "contain",
+                  },
                 }}
                 onClick={handleItemClick(item.id)}
               >
-                <img
-                  src="/static/images/layout-placeholder.png"
-                  alt={item.name}
-                />
+                <div />
               </Box>
               <Box
                 sx={{

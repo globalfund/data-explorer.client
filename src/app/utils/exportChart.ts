@@ -1,6 +1,5 @@
 import JSPDF from "jspdf";
-// @ts-expect-error no types for dom-to-image
-import domtoimage from "dom-to-image";
+import * as htmlToImage from "html-to-image";
 
 export async function exportChart(
   id: string,
@@ -11,16 +10,17 @@ export async function exportChart(
   },
   exportName: string,
 ) {
-  const bgcolor = "#ffffff";
+  const backgroundColor = "#ffffff";
   return new Promise((resolve, reject) => {
     const node = document.getElementById(id);
+    if (!node) return;
     const filter = (n: any) =>
       n.id !== "page-ornament" &&
       n.id !== "viz-floating-buttons" &&
       n.id !== "viz-sidepanel-background";
     if (type === "jpg") {
-      domtoimage
-        .toJpeg(node, { filter, bgcolor })
+      htmlToImage
+        .toJpeg(node, { filter, backgroundColor })
         .then((dataUrl: any) => {
           const link = document.createElement("a");
           link.download = `${exportName}.jpg`;
@@ -33,8 +33,8 @@ export async function exportChart(
           reject("oops, something went wrong!");
         });
     } else if (type === "svg") {
-      domtoimage
-        .toSvg(node, { bgcolor })
+      htmlToImage
+        .toSvg(node, { backgroundColor })
         .then((dataUrl: any) => {
           const link = document.createElement("a");
           link.download = `${exportName}.svg`;
@@ -47,8 +47,8 @@ export async function exportChart(
           reject("oops, something went wrong!");
         });
     } else if (type === "pdf") {
-      domtoimage
-        .toPng(node, { filter, bgcolor })
+      htmlToImage
+        .toPng(node, { filter, backgroundColor })
         .then((dataUrl: any) => {
           const pdf = new JSPDF({
             orientation: "portrait",
@@ -93,11 +93,8 @@ export async function exportChart(
       link.click();
       resolve({});
     } else {
-      domtoimage
-        .toPng(node, {
-          filter,
-          bgcolor,
-        })
+      htmlToImage
+        .toPng(node, { filter, backgroundColor })
         .then((dataUrl: any) => {
           const link = document.createElement("a");
           link.download = `${exportName}.png`;
