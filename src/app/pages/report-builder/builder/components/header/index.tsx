@@ -119,6 +119,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
     }, 200);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleAutoGenerateThumbnail = async () => {
     const fileData = await exportReport(
       "png",
@@ -152,7 +153,8 @@ export const ReportBuilderPageHeader: React.FC = () => {
         settings: reportState.settings,
         name: reportState.name,
       });
-      handleAutoGenerateThumbnail();
+
+      // handleAutoGenerateThumbnail(); --- DISABLED FOR NOW, AFFECTING USER EXPERIENCE ---
     },
     2000,
     [

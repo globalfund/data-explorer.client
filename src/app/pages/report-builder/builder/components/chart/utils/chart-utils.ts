@@ -93,25 +93,6 @@ export function parseBarWidth(
   return fallback;
 }
 
-export function resolveLegendPosition(pos?: string) {
-  switch ((pos ?? "").toLowerCase()) {
-    case "top":
-      return { top: 0, left: "center" as const };
-    case "bottom":
-      return { bottom: 0, left: "center" as const };
-    case "left":
-      return { left: 0, top: "middle" as const, orient: "vertical" as const };
-    case "right":
-      return {
-        right: 0,
-        top: "middle" as const,
-        orient: "vertical" as const,
-      };
-    default:
-      return { top: 0, left: "center" as const };
-  }
-}
-
 // -------------------- your formatter (kept as-is) --------------------
 
 export const valueFormatter3 = (params: any, isMonetaryValue: boolean) => {

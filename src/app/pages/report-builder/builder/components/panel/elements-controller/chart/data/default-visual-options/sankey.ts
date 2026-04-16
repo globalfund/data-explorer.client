@@ -1,59 +1,12 @@
 import { IDefaultChartVisualOptions } from "../../utils";
 import { charts } from "../chartsBase";
+import { borderAndFillOptions, paddingOptions, titleOptions } from "./base";
 
 const options: IDefaultChartVisualOptions = {
-  showChartName: {
-    type: "boolean",
-    default: true,
-    label: "Show Chart Title",
-    tab: "layout",
-  },
+  ...titleOptions,
   chartTitle: {
-    type: "text",
+    ...titleOptions.chartTitle,
     default: "Sankey Chart",
-    tab: "layout",
-    disabled: {
-      showChartName: false,
-    },
-  },
-  chartTitleOptions: {
-    tab: "layout",
-    type: "advancedOptions",
-    label: "Expand chart title text options",
-    advancedOptions: {
-      fontFamily: {
-        type: "fontFamily",
-        default: "IBM Plex Sans",
-        label: "Font Family",
-      },
-      fontWeight: {
-        type: "fontWeight",
-        default: "600",
-        label: "Font Weight",
-        column: "span 1",
-      },
-      fontSize: {
-        type: "fontSize",
-        default: "16",
-        label: "Font Size",
-        column: "span 1",
-      },
-      textColor: {
-        type: "color",
-        default: "#161616",
-        label: "Text Color",
-        column: "span 1",
-      },
-      backgroundColor: {
-        type: "color",
-        default: "#FFFFFF",
-        label: "Highlight Color",
-        column: "span 1",
-      },
-    },
-    disabled: {
-      showChartName: false,
-    },
   },
   nodeWidth: {
     type: "slider",
@@ -177,38 +130,7 @@ const options: IDefaultChartVisualOptions = {
       showNodeLabels: false,
     },
   },
-  paddingLeft: {
-    type: "text",
-    default: "30",
-    label: "{arrowLeft} Left",
-    tab: "layout",
-    group: "Padding",
-    column: "span 1",
-  },
-  paddingTop: {
-    type: "text",
-    default: "50",
-    label: "{arrowUp} Top",
-    tab: "layout",
-    group: "Padding",
-    column: "span 1",
-  },
-  paddingRight: {
-    type: "text",
-    default: "10",
-    label: "{arrowRight} Right",
-    tab: "layout",
-    group: "Padding",
-    column: "span 1",
-  },
-  paddingBottom: {
-    type: "text",
-    default: "30",
-    label: "{arrowDown} Bottom",
-    tab: "layout",
-    group: "Padding",
-    column: "span 1",
-  },
+  ...paddingOptions,
   width: {
     type: "text",
     default: "100%",
@@ -231,38 +153,7 @@ const options: IDefaultChartVisualOptions = {
     label: "Color Palette",
     tab: "style",
   },
-  strokeWidth: {
-    type: "text",
-    default: "0",
-    label: "Stroke",
-    tab: "style",
-    group: "Border & Fill",
-    column: "span 1",
-  },
-  strokeColor: {
-    type: "color",
-    default: "#000000",
-    label: "Stroke Color",
-    tab: "style",
-    group: "Border & Fill",
-    column: "span 1",
-  },
-  cornerRadius: {
-    type: "text",
-    default: "0",
-    label: "Corner Radius",
-    tab: "style",
-    group: "Border & Fill",
-    column: "span 1",
-  },
-  background: {
-    type: "color",
-    default: "#FFFFFF",
-    label: "Background",
-    tab: "style",
-    group: "Border & Fill",
-    column: "span 1",
-  },
+  ...borderAndFillOptions,
   showTooltip: {
     tab: "advanced",
     type: "boolean",

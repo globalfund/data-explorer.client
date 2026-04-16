@@ -23,7 +23,6 @@ import {
   TooltipComponent,
   VisualMapComponent,
   DataZoomComponent,
-  TitleComponent,
   RadarComponent,
 } from "echarts/components";
 
@@ -39,9 +38,7 @@ import {
 import {
   parseBarWidth,
   parseCssPx,
-  parseEchartsLayout,
   parseFontSize,
-  resolveLegendPosition,
   valueFormatter3,
 } from "../utils/chart-utils";
 
@@ -64,7 +61,6 @@ echarts.use([
   TooltipComponent,
   DataZoomComponent,
   VisualMapComponent,
-  TitleComponent,
   RadarComponent,
 ]);
 
@@ -72,12 +68,14 @@ interface UseDataThemesEchartProps {
   readOnly?: boolean;
   setVisualOptions?: (value: any) => void;
   visualOptions?: any;
+  setStateChart?: (chart: echarts.EChartsType | null) => void;
 }
 
 export function useEcharts({
   visualOptions: mainVisualOptions,
   setVisualOptions,
   readOnly,
+  setStateChart,
 }: UseDataThemesEchartProps) {
   const debouncedSetVisualOptions = debounce((value: any) => {
     if (setVisualOptions) {
@@ -94,32 +92,14 @@ export function useEcharts({
   }
   echarts.registerTransform(transform.regression);
 
-  function echartsBarchart(data: any[], visualOptions: any, mapping: any) {
+  function echartsBarchart(data: any[], visualOptions: any) {
     const vo = visualOptions ?? {};
 
     const {
-      // title
-      showChartName,
-      chartTitle,
-
-      // legend
-      showLegend,
-      legendPosition,
-
-      // layout
-      paddingLeft,
-      paddingTop,
-      paddingRight,
-      paddingBottom,
-      background,
-
       // colors / bars
       colorPalette,
       customBarWidth,
       barWidth,
-      strokeWidth,
-      strokeColor,
-      cornerRadius,
 
       // axes / behavior
       logarithmicYAxis,
@@ -129,15 +109,7 @@ export function useEcharts({
       showTooltip,
       monetaryValueTooltip,
 
-      // axis names
-      customYAxisName,
-      yAxisName,
-      customXAxisName,
-      xAxisName,
-
       chartOrientation,
-      alignHorizontal,
-      alignVertical,
     } = vo;
 
     const sortedData = sortBy(data ?? [], (d) => d?.bars);
@@ -148,127 +120,37 @@ export function useEcharts({
       colorPaletteCategoricalData.find((item) => item.name === colorPalette)
         ?.colors ?? [];
 
-    const resolvedXAxisName = customXAxisName
-      ? (xAxisName ?? mapping?.bars?.value?.[0] ?? "")
-      : "";
-
-    const resolvedYAxisName = customYAxisName
-      ? (yAxisName ?? mapping?.size?.value?.[0] ?? "")
-      : "";
-
     const isMonetaryValue = !!monetaryValueTooltip;
 
-    const title = showChartName
-      ? (() => {
-          const t: any = {
-            show: true,
-            text: chartTitle ?? "",
-            left: 0,
-            top: 0,
-            padding: 6,
-            backgroundColor: get(
-              visualOptions,
-              "chartTitleOptions.backgroundColor",
-              "transparent",
-            ),
-            textStyle: {
-              fontFamily: get(
-                visualOptions,
-                "chartTitleOptions.fontFamily",
-                "Arial",
-              ),
-              fontWeight: get(
-                visualOptions,
-                "chartTitleOptions.fontWeight",
-                "400",
-              ),
-              fontSize: parseFontSize(
-                get(visualOptions, "chartTitleOptions.fontSize", "14"),
-                14,
-              ),
-              color: get(
-                visualOptions,
-                "chartTitleOptions.textColor",
-                "#000000",
-              ),
-            },
-          };
-
-          return t;
-        })()
-      : undefined;
-
-    const legend = showLegend
-      ? {
-          show: true,
-          ...resolveLegendPosition(legendPosition),
-          textStyle: {
-            fontFamily: get(vo, "legendTextOptions.fontFamily", "Arial"),
-            fontWeight: get(vo, "legendTextOptions.fontWeight", "400"),
-            fontSize: parseFontSize(
-              get(vo, "legendTextOptions.fontSize", "14"),
-              14,
-            ),
-            color: get(vo, "legendTextOptions.textColor", "#000000"),
-            backgroundColor: get(
-              vo,
-              "legendTextOptions.backgroundColor",
-              "transparent",
-            ),
-          },
-        }
-      : { show: false };
-
     const option: any = {
-      backgroundColor: background ?? "transparent",
+      backgroundColor: "transparent",
       ...(paletteColors?.length ? { color: paletteColors } : {}),
-      ...(title ? { title } : {}),
-      legend,
+      legend: { show: false },
       grid: {
-        top: parseEchartsLayout(paddingTop, 20),
-        left: parseEchartsLayout(paddingLeft, 20),
-        right: parseEchartsLayout(paddingRight, 20),
-        bottom: parseEchartsLayout(paddingBottom, 20),
+        top: 30,
+        left: 10,
+        right: 30,
+        bottom: 10,
         containLabel: true,
       },
       xAxis: {
         ...(chartOrientation === "horizontal"
           ? { type: logarithmicYAxis ? "log" : "value" }
           : { type: "category", data: bars }),
-        inverse: alignHorizontal === "right",
-        name: resolvedXAxisName,
-        nameLocation: "middle",
-        nameGap: 32,
         splitLine: { show: true },
         axisTick: { show: false },
         axisLine: { show: true, lineStyle: { color: "#8D8D8D", width: 1 } },
         axisLabel: { show: true, color: "#6F6F6F", fontSize: 12 },
-        nameTextStyle: {
-          fontSize: 12,
-          fontFamily: "Inter, sans-serif",
-          color: "#161616",
-          fontWeight: "600",
-        },
       },
 
       yAxis: {
         ...(chartOrientation === "horizontal"
           ? { type: "category", data: bars }
           : { type: logarithmicYAxis ? "log" : "value" }),
-        inverse: alignVertical === "top",
-        name: resolvedYAxisName,
-        nameLocation: "middle",
-        nameGap: 47,
         splitLine: { show: true },
         axisTick: { show: false },
         axisLine: { show: true, lineStyle: { color: "#8D8D8D", width: 1 } },
         axisLabel: { show: true, color: "#6F6F6F", fontSize: 12 },
-        nameTextStyle: {
-          fontSize: 12,
-          fontFamily: "Inter, sans-serif",
-          color: "#161616",
-          fontWeight: "600",
-        },
       },
 
       tooltip: {
@@ -277,19 +159,13 @@ export function useEcharts({
         confine: true,
         formatter: (params: any) => valueFormatter3(params, isMonetaryValue),
       },
+      colorBy: "data",
       series: [
         {
-          name: resolvedYAxisName || "",
           type: "bar",
           data: sizes,
           realtimeSort: realTimeSort ?? true,
           barWidth: customBarWidth ? parseBarWidth(barWidth) : undefined,
-          colorBy: "data",
-          itemStyle: {
-            borderRadius: parseCssPx(cornerRadius, 0),
-            borderWidth: parseCssPx(strokeWidth, 0),
-            borderColor: strokeColor ?? "#000000",
-          },
         },
       ],
     };
@@ -301,24 +177,9 @@ export function useEcharts({
     const vo = visualOptions ?? {};
 
     const {
-      // title
-      showChartName,
-      chartTitle,
-
       // label
       showLabel,
       labelPosition,
-
-      // legend
-      showLegend,
-      legendPosition,
-
-      // layout
-      paddingLeft,
-      paddingTop,
-      paddingRight,
-      paddingBottom,
-      background,
 
       // donut
       drawAsDonuts,
@@ -326,11 +187,6 @@ export function useEcharts({
 
       // palette
       colorPalette,
-
-      // stroke / rounding
-      strokeWidth,
-      strokeColor,
-      cornerRadius,
 
       // tooltip
       showTooltip,
@@ -345,53 +201,6 @@ export function useEcharts({
 
     const isMonetaryValue = !!monetaryValueTooltip;
 
-    const title = showChartName
-      ? {
-          show: true,
-          text: chartTitle ?? "",
-          left: 0,
-          top: 0,
-          padding: 6,
-          backgroundColor: get(
-            vo,
-            "chartTitleOptions.backgroundColor",
-            "transparent",
-          ),
-          textStyle: {
-            fontFamily: get(vo, "chartTitleOptions.fontFamily", "Arial"),
-            fontWeight: get(vo, "chartTitleOptions.fontWeight", "400"),
-            fontSize: parseFontSize(
-              get(vo, "chartTitleOptions.fontSize", "14"),
-              14,
-            ),
-            color: get(vo, "chartTitleOptions.textColor", "#000000"),
-          },
-        }
-      : undefined;
-
-    const legend = showLegend
-      ? {
-          show: true,
-          ...resolveLegendPosition(legendPosition),
-          type: "scroll",
-          width: "90%",
-          textStyle: {
-            fontFamily: get(vo, "legendTextOptions.fontFamily", "Arial"),
-            fontWeight: get(vo, "legendTextOptions.fontWeight", "400"),
-            fontSize: parseFontSize(
-              get(vo, "legendTextOptions.fontSize", "14"),
-              14,
-            ),
-            color: get(vo, "legendTextOptions.textColor", "#000000"),
-            backgroundColor: get(
-              vo,
-              "legendTextOptions.backgroundColor",
-              "transparent",
-            ),
-          },
-        }
-      : { show: false };
-
     // ECharts pie radius is usually percent strings; donut thickness becomes inner radius.
     // Clamp to keep it sane.
     const outer = 80; // percent
@@ -405,18 +214,9 @@ export function useEcharts({
       : ["0%", `${outer}%`];
 
     return {
-      backgroundColor: background ?? "transparent",
+      backgroundColor: "transparent",
       ...(paletteColors?.length ? { color: paletteColors } : {}),
-      ...(title ? { title } : {}),
-      legend,
-
-      grid: {
-        top: parseEchartsLayout(paddingTop, 20),
-        left: parseEchartsLayout(paddingLeft, 20),
-        right: parseEchartsLayout(paddingRight, 20),
-        bottom: parseEchartsLayout(paddingBottom, 20),
-        containLabel: true,
-      },
+      legend: { show: false },
 
       tooltip: {
         show: !!showTooltip,
@@ -429,7 +229,6 @@ export function useEcharts({
         {
           type: "pie",
           radius,
-          // Centering in pie is done with `center` not alignHorizontal/Vertical in most cases
           center: ["50%", "50%"],
           avoidLabelOverlap: false,
 
@@ -458,11 +257,6 @@ export function useEcharts({
               "transparent",
             ),
           },
-          itemStyle: {
-            borderWidth: parseCssPx(strokeWidth, 0),
-            borderColor: strokeColor ?? "#000000",
-            borderRadius: parseCssPx(cornerRadius, 0),
-          },
 
           emphasis: {
             label: {
@@ -482,21 +276,10 @@ export function useEcharts({
     const vo = visualOptions ?? {};
 
     const {
-      // title
-      showChartName,
-      chartTitle,
-
-      // // layout
-      // paddingLeft,
-      // paddingTop,
-      // paddingRight,
-      // paddingBottom,
-      background,
-
       // map behavior
       mapRoaming,
       roamOption,
-      showAntartica, // note: matches your VO spelling
+      showAntarctica,
       scaleLimitMin,
       scaleLimitMax,
 
@@ -506,16 +289,12 @@ export function useEcharts({
 
       // colors
       colorPalette,
-
-      // stroke
-      strokeWidth,
-      strokeColor,
     } = vo;
 
     if (!data?.geoJSON) return {};
 
     // remove Antarctica if requested
-    const geoJSON = !showAntartica
+    const geoJSON = !showAntarctica
       ? {
           ...data.geoJSON,
           features: data.geoJSON.features.filter((f: any) => f.id !== "ATA"),
@@ -525,29 +304,6 @@ export function useEcharts({
     echarts.registerMap("World", geoJSON);
 
     const sizes = (data?.results ?? []).map((d: any) => d.value);
-    const title = showChartName
-      ? {
-          show: true,
-          text: chartTitle ?? "",
-          left: 0,
-          top: 0,
-          padding: 6,
-          backgroundColor: get(
-            vo,
-            "chartTitleOptions.backgroundColor",
-            "transparent",
-          ),
-          textStyle: {
-            fontFamily: get(vo, "chartTitleOptions.fontFamily", "Arial"),
-            fontWeight: get(vo, "chartTitleOptions.fontWeight", "600"),
-            fontSize: parseFontSize(
-              get(vo, "chartTitleOptions.fontSize", "16"),
-              16,
-            ),
-            color: get(vo, "chartTitleOptions.textColor", "#161616"),
-          },
-        }
-      : undefined;
 
     // palette lookup (sequential for choropleth)
     const paletteColors =
@@ -555,8 +311,7 @@ export function useEcharts({
         ?.colors ?? colorPaletteSequentialData[0]?.colors;
 
     return {
-      backgroundColor: background ?? "#FFFFFF",
-      ...(title ? { title } : {}),
+      backgroundColor: "transparent",
 
       tooltip: {
         trigger: showTooltip ? "item" : "none",
@@ -590,16 +345,15 @@ export function useEcharts({
           map: "World",
           data: data?.results ?? [],
           roam: mapRoaming ? (roamOption ?? true) : false,
-          // layoutCenter: ["50%", "50%"],
-          // layoutSize: "100%",
+          layoutCenter: ["50%", "50%"],
+          layoutSize: "150%",
           scaleLimit: {
             min: parseFloat(scaleLimitMin ?? "0.5"),
             max: parseFloat(scaleLimitMax ?? "2"),
           },
 
           itemStyle: {
-            borderWidth: parseCssPx(strokeWidth, 0),
-            borderColor: strokeColor ?? "#000000",
+            borderWidth: 0,
           },
 
           emphasis: {
@@ -618,25 +372,10 @@ export function useEcharts({
       ? formatFinancialValue(parseInt(value.toString(), 10), true)
       : value;
 
-  function echartsLinechart(data: any, visualOptions: any, mapping: any) {
+  function echartsLinechart(data: any, visualOptions: any) {
     const vo = visualOptions ?? {};
 
     const {
-      // title
-      showChartName,
-      chartTitle,
-
-      // legend
-      showLegend,
-      legendPosition,
-
-      // layout
-      paddingLeft,
-      paddingTop,
-      paddingRight,
-      paddingBottom,
-      background,
-
       // line styling
       lineType,
       lineWidth,
@@ -648,15 +387,6 @@ export function useEcharts({
 
       // colors
       colorPalette,
-
-      // axis names
-      customYAxisName,
-      yAxisName,
-      customXAxisName,
-      xAxisName,
-
-      alignVertical,
-      alignHorizontal,
     } = vo;
 
     const paletteColors: string[] =
@@ -665,113 +395,37 @@ export function useEcharts({
       colorPaletteCategoricalData[0]?.colors ??
       [];
 
-    const resolvedXAxisName = customXAxisName
-      ? (xAxisName ?? "")
-      : (mapping?.x?.value?.[0] ?? "");
-
-    const resolvedYAxisName = customYAxisName
-      ? (yAxisName ?? "")
-      : (mapping?.y?.value?.[0] ?? "");
     const isMonetaryValue = !!monetaryValueTooltip;
 
-    const title = showChartName
-      ? {
-          show: true,
-          text: chartTitle ?? "",
-          left: 0,
-          top: 0,
-          padding: 6,
-          backgroundColor: get(
-            vo,
-            "chartTitleOptions.backgroundColor",
-            "transparent",
-          ),
-          textStyle: {
-            fontFamily: get(vo, "chartTitleOptions.fontFamily", "Arial"),
-            fontWeight: get(vo, "chartTitleOptions.fontWeight", "400"),
-            fontSize: parseFontSize(
-              get(vo, "chartTitleOptions.fontSize", "14"),
-              14,
-            ),
-            color: get(vo, "chartTitleOptions.textColor", "#000000"),
-          },
-        }
-      : undefined;
-
-    const legend = showLegend
-      ? {
-          show: true,
-          ...resolveLegendPosition(legendPosition),
-          textStyle: {
-            fontFamily: get(vo, "legendTextOptions.fontFamily", "Arial"),
-            fontWeight: get(vo, "legendTextOptions.fontWeight", "400"),
-            fontSize: parseFontSize(
-              get(vo, "legendTextOptions.fontSize", "14"),
-              14,
-            ),
-            color: get(vo, "legendTextOptions.textColor", "#000000"),
-            backgroundColor: get(
-              vo,
-              "legendTextOptions.backgroundColor",
-              "transparent",
-            ),
-          },
-          icon: "roundRect",
-          type: "scroll",
-          width: "90%",
-        }
-      : { show: false };
-
     return {
-      backgroundColor: background ?? "transparent",
+      backgroundColor: "transparent",
       ...(paletteColors?.length ? { color: paletteColors } : {}),
-      ...(title ? { title } : {}),
-      legend,
+      legend: { show: false },
 
       grid: {
-        top: parseEchartsLayout(paddingTop, 20),
-        left: parseEchartsLayout(paddingLeft, 20),
-        right: parseEchartsLayout(paddingRight, 20),
-        bottom: parseEchartsLayout(paddingBottom, 20),
+        top: 30,
+        left: 10,
+        right: 30,
+        bottom: 10,
         containLabel: true,
       },
 
       xAxis: {
         type: "category",
         data: data?.xAxisValues || [],
-        name: resolvedXAxisName,
-        nameLocation: "middle",
-        nameGap: 32,
         boundaryGap: false,
-        inverse: alignHorizontal === "right",
         splitLine: { show: true },
         axisTick: { show: false },
         axisLine: { show: true, lineStyle: { color: "#8D8D8D", width: 1 } },
         axisLabel: { show: true, color: "#6F6F6F", fontSize: 12 },
-        nameTextStyle: {
-          fontSize: 12,
-          fontFamily: "Inter, sans-serif",
-          color: "#161616",
-          fontWeight: "600",
-        },
       },
 
       yAxis: {
         type: "value",
-        name: resolvedYAxisName,
-        nameLocation: "middle",
-        nameGap: 47,
-        inverse: alignVertical === "top",
         splitLine: { show: true },
         axisTick: { show: false },
         axisLine: { show: true, lineStyle: { color: "#8D8D8D", width: 1 } },
         axisLabel: { show: true, color: "#6F6F6F", fontSize: 12 },
-        nameTextStyle: {
-          fontSize: 12,
-          fontFamily: "Inter, sans-serif",
-          color: "#161616",
-          fontWeight: "600",
-        },
       },
       series: (data?.series ?? []).map((s: any) => ({
         type: "line",
@@ -798,17 +452,6 @@ export function useEcharts({
     const vo = visualOptions ?? {};
 
     const {
-      // title
-      showChartName,
-      chartTitle,
-
-      // layout
-      paddingLeft,
-      paddingTop,
-      paddingRight,
-      paddingBottom,
-      background,
-
       // colors / styling
       colorPalette,
       symbolSize, // max bubble size
@@ -820,12 +463,6 @@ export function useEcharts({
       // tooltip
       showTooltip,
       monetaryValueTooltip,
-
-      // axis names (optional)
-      customYAxisName,
-      yAxisName,
-      customXAxisName,
-      xAxisName,
     } = vo;
 
     const paletteColors: string[] =
@@ -837,38 +474,6 @@ export function useEcharts({
     const isMonetaryValue = !!monetaryValueTooltip;
 
     const groups = Object.keys(data ?? {});
-
-    const resolvedXAxisName = customXAxisName
-      ? (xAxisName ?? "")
-      : (mapping?.x?.value?.[0] ?? mapping?.x?.value ?? "");
-
-    const resolvedYAxisName = customYAxisName
-      ? (yAxisName ?? "")
-      : (mapping?.y?.value?.[0] ?? mapping?.y?.value ?? "");
-
-    const title = showChartName
-      ? {
-          show: true,
-          text: chartTitle ?? "",
-          left: 0,
-          top: 0,
-          padding: 6,
-          backgroundColor: get(
-            vo,
-            "chartTitleOptions.backgroundColor",
-            "transparent",
-          ),
-          textStyle: {
-            fontFamily: get(vo, "chartTitleOptions.fontFamily", "Arial"),
-            fontWeight: get(vo, "chartTitleOptions.fontWeight", "400"),
-            fontSize: parseFontSize(
-              get(vo, "chartTitleOptions.fontSize", "14"),
-              14,
-            ),
-            color: get(vo, "chartTitleOptions.textColor", "#000000"),
-          },
-        }
-      : undefined;
 
     // ---- bubble size normalization (same as your original)
     const maxSize = Math.max(
@@ -891,51 +496,31 @@ export function useEcharts({
     });
 
     return {
-      backgroundColor: background ?? "transparent",
+      backgroundColor: "transparent",
       ...(paletteColors?.length ? { color: paletteColors } : {}),
-      ...(title ? { title } : {}),
-
       grid: {
-        top: parseEchartsLayout(paddingTop, 20),
-        left: parseEchartsLayout(paddingLeft, 20),
-        right: parseEchartsLayout(paddingRight, 20),
-        bottom: parseEchartsLayout(paddingBottom, 20),
+        top: 30,
+        left: 10,
+        right: 30,
+        bottom: 10,
         containLabel: true,
       },
 
       xAxis: {
         type: mapping?.x?.mappedType?.[0] === "date" ? "category" : "value",
-        name: resolvedXAxisName,
-        nameLocation: "middle",
-        nameGap: 32,
         splitLine: { lineStyle: { type: "dashed" } },
         axisTick: { show: false },
         axisLine: { show: true, lineStyle: { color: "#8D8D8D", width: 1 } },
         axisLabel: { show: true, color: "#6F6F6F", fontSize: 12 },
-        nameTextStyle: {
-          fontSize: 12,
-          fontFamily: "Inter, sans-serif",
-          color: "#161616",
-          fontWeight: "600",
-        },
       },
 
       yAxis: {
         type: mapping?.y?.mappedType?.[0] === "date" ? "category" : "value",
         scale: true,
-        name: resolvedYAxisName,
-        nameLocation: "middle",
-        nameGap: 47,
         splitLine: { lineStyle: { type: "dashed" } },
         axisTick: { show: false },
         axisLine: { show: true, lineStyle: { color: "#8D8D8D", width: 1 } },
         axisLabel: { show: true, color: "#6F6F6F", fontSize: 12 },
-        nameTextStyle: {
-          fontSize: 12,
-          fontFamily: "Inter, sans-serif",
-          color: "#161616",
-          fontWeight: "600",
-        },
       },
 
       dataZoom: showDataZoom
@@ -966,15 +551,21 @@ export function useEcharts({
         },
       },
 
-      series: [
-        // bubble series per group (your original structure)
-        ...groups.map((group, idx) => ({
+      series: groups.map((group, idx) => {
+        const itemColor = mapping?.label
+          ? paletteColors?.[idx % paletteColors.length]
+          : symbolColor;
+        return {
           name: group,
           type: "scatter",
 
           data: (data?.[group] ?? []).map((item: any) => {
             const raw = Number(item?.size ?? 0);
-            const normalized = maxSize > 0 ? (raw / maxSize) * maxSymbol : 0;
+            const normalized = mapping?.size
+              ? maxSize > 0
+                ? (raw / maxSize) * maxSymbol
+                : 0
+              : maxSymbol / 2; // if size not mapped, use default mid-size for all points
 
             return [item?.x, item?.y, normalized, item?.label ?? ""];
           }),
@@ -982,10 +573,10 @@ export function useEcharts({
           symbolSize: (singleData: any) => singleData?.[2] ?? 0,
 
           itemStyle: {
-            color: (params: any) =>
-              params?.data?.[3]
-                ? params.color
-                : (symbolColor ?? paletteColors?.[idx] ?? undefined),
+            color: itemColor + "80",
+            borderWidth: 2,
+            borderColor: itemColor, // add transparency to border
+            opacity: 0.7,
           },
 
           emphasis: {
@@ -996,8 +587,8 @@ export function useEcharts({
               position: "top",
             },
           },
-        })),
-      ],
+        };
+      }),
     };
   }
 
@@ -1103,65 +694,10 @@ export function useEcharts({
       showTooltip,
       monetaryValueTooltip: isMonetaryValue,
       colorPalette: palette,
-      showLegend,
-      legendPosition,
-      showChartName,
-      chartTitle,
-      background,
       startAngle,
       gridCircles,
-      paddingLeft,
-      paddingTop,
-      paddingRight,
-      paddingBottom,
-      strokeWidth,
-      strokeColor,
       showPointMarkers,
     } = visualOptions;
-
-    const titleFontFamily = get(
-      visualOptions,
-      "chartTitleOptions.fontFamily",
-      "sans-serif",
-    );
-
-    const titleFontWeight = get(
-      visualOptions,
-      "chartTitleOptions.fontWeight",
-      600,
-    );
-
-    const titleFontSize = Number(
-      get(visualOptions, "chartTitleOptions.fontSize", 16),
-    );
-
-    const titleTextColor = get(
-      visualOptions,
-      "chartTitleOptions.textColor",
-      "#161616",
-    );
-
-    const legendFontFamily = get(
-      visualOptions,
-      "legendTextOptions.fontFamily",
-      "sans-serif",
-    );
-
-    const legendFontWeight = get(
-      visualOptions,
-      "legendTextOptions.fontWeight",
-      600,
-    );
-
-    const legendFontSize = Number(
-      get(visualOptions, "legendTextOptions.fontSize", 14),
-    );
-
-    const legendTextColor = get(
-      visualOptions,
-      "legendTextOptions.textColor",
-      "#161616",
-    );
 
     const paletteColors =
       colorPaletteCategoricalData.find((item: any) => item.name === palette)
@@ -1187,27 +723,9 @@ export function useEcharts({
     const radarCenter: any = ["50%", "50%"];
     const radarRadius: any = "70%";
 
-    const legendMap: any = {
-      top: { top: paddingTop, left: "center" },
-      bottom: { bottom: paddingBottom, left: "center" },
-      left: { left: paddingLeft, top: "middle", orient: "vertical" },
-      right: { right: paddingRight, top: "middle", orient: "vertical" },
-    };
-
     return {
       color: paletteColors,
-      backgroundColor: background,
-
-      title: {
-        show: showChartName,
-        text: chartTitle,
-        textStyle: {
-          fontFamily: titleFontFamily,
-          fontWeight: titleFontWeight,
-          fontSize: titleFontSize,
-          color: titleTextColor,
-        },
-      },
+      backgroundColor: "transparent",
 
       tooltip: {
         trigger: showTooltip ? "item" : "none",
@@ -1216,16 +734,7 @@ export function useEcharts({
       },
 
       legend: {
-        type: "scroll",
-        show: showLegend,
-        ...legendMap[legendPosition ?? "top"],
-        data: data.categories.map((c: any) => String(c)),
-        textStyle: {
-          fontFamily: legendFontFamily,
-          fontWeight: legendFontWeight,
-          fontSize: legendFontSize,
-          color: legendTextColor,
-        },
+        show: false,
       },
       radar: {
         startAngle,
@@ -1236,31 +745,31 @@ export function useEcharts({
         axisName: {
           show: showPointMarkers,
         },
-        axisLine: {
-          lineStyle: {
-            width: Number(strokeWidth ?? 1),
-            color: strokeColor,
-          },
-        },
-        splitLine: {
-          lineStyle: {
-            width: Number(strokeWidth ?? 1),
-            color: strokeColor,
-          },
-        },
       },
-
-      series: data.data.map((item: any) => ({
-        type: "radar",
-        symbol: "none",
-        areaStyle: {},
-        data: [
-          {
-            value: item.value,
-            name: String(item.name),
+      colorBy: "data",
+      series: [
+        {
+          type: "radar",
+          symbol: "none",
+          lineStyle: {
+            width: 2,
           },
-        ],
-      })),
+          // areaStyle: {
+          //   opacity: 0.2,
+          //   zIndex: -1,
+          // },
+          emphasis: {
+            lineStyle: {
+              width: 4,
+            },
+          },
+
+          data: data.data.map((d: any) => ({
+            value: d.value,
+            name: String(d.name),
+          })),
+        },
+      ],
     };
   }
 
@@ -1303,11 +812,6 @@ export function useEcharts({
     const vo = visualOptions ?? {};
 
     const {
-      // title
-      showChartName,
-      chartTitle,
-      chartTitleOptions,
-
       // sankey layout
       nodeWidth,
       nodePadding,
@@ -1323,20 +827,8 @@ export function useEcharts({
       labelRotation,
       labelTextOptions,
 
-      // layout
-      paddingLeft,
-      paddingTop,
-      paddingRight,
-      paddingBottom,
-      background,
-
       // palette
       colorPalette,
-
-      // stroke / rounding
-      strokeWidth,
-      strokeColor,
-      cornerRadius,
 
       // tooltip
       showTooltip,
@@ -1366,26 +858,6 @@ export function useEcharts({
       nodes = uniqBy(built, "name");
     }
 
-    const title = showChartName
-      ? {
-          show: true,
-          text: chartTitle ?? "",
-          left: 0,
-          top: 0,
-          padding: 6,
-          backgroundColor: chartTitleOptions?.backgroundColor,
-          textStyle: {
-            fontFamily: get(vo, "chartTitleOptions.fontFamily", "Arial"),
-            fontWeight: get(vo, "chartTitleOptions.fontWeight", "400"),
-            fontSize: parseFontSize(
-              get(vo, "chartTitleOptions.fontSize", "14"),
-              14,
-            ),
-            color: get(vo, "chartTitleOptions.textColor", "#000000"),
-          },
-        }
-      : undefined;
-
     // ECharts sankey uses `orient: 'horizontal' | 'vertical'`
     const orient = chartOrientation === "vertical" ? "vertical" : "horizontal";
 
@@ -1399,17 +871,8 @@ export function useEcharts({
         : "justify";
 
     return {
-      backgroundColor: background ?? "transparent",
+      backgroundColor: "transparent",
       ...(paletteColors?.length ? { color: paletteColors } : {}),
-      ...(title ? { title } : {}),
-
-      grid: {
-        top: parseEchartsLayout(paddingTop, 20),
-        left: parseEchartsLayout(paddingLeft, 20),
-        right: parseEchartsLayout(paddingRight, 20),
-        bottom: parseEchartsLayout(paddingBottom, 20),
-        containLabel: true,
-      },
 
       series: [
         {
@@ -1433,16 +896,7 @@ export function useEcharts({
             curveness: 0.5,
             color: "source",
             opacity: Math.max(0, Math.min(1, Number(linkOpacity ?? 50) / 100)),
-            width: parseCssPx(strokeWidth, 0),
           },
-
-          // node styling
-          itemStyle: {
-            borderWidth: parseCssPx(strokeWidth, 0),
-            borderColor: strokeColor ?? "#000000",
-            borderRadius: parseCssPx(cornerRadius, 0),
-          },
-
           // node labels
           label: {
             show: showNodeLabels ?? true,
@@ -1487,21 +941,6 @@ export function useEcharts({
     const vo = visualOptions ?? {};
 
     const {
-      // title
-      showChartName,
-      chartTitle,
-
-      // legend (treemap doesn't really use legend; we’ll keep the flag but not render legend)
-      showLegend,
-      legendPosition,
-
-      // layout (new paddings)
-      paddingLeft,
-      paddingTop,
-      paddingRight,
-      paddingBottom,
-      background,
-
       // labels / breadcrumbs
       showLabels,
       showBreadcrumbs,
@@ -1512,11 +951,6 @@ export function useEcharts({
 
       // colors
       colorPalette,
-
-      // stroke / radius
-      strokeWidth,
-      strokeColor,
-      cornerRadius,
     } = vo;
 
     const paletteColors: string[] =
@@ -1525,62 +959,10 @@ export function useEcharts({
       colorPaletteCategoricalData[0]?.colors ??
       [];
 
-    const title = showChartName
-      ? {
-          show: true,
-          text: chartTitle ?? "",
-          left: 0,
-          top: 0,
-          padding: 6,
-          backgroundColor: get(
-            vo,
-            "chartTitleOptions.backgroundColor",
-            "transparent",
-          ),
-          textStyle: {
-            fontFamily: get(vo, "chartTitleOptions.fontFamily", "Arial"),
-            fontWeight: get(vo, "chartTitleOptions.fontWeight", "400"),
-            fontSize: parseFontSize(
-              get(vo, "chartTitleOptions.fontSize", "14"),
-              14,
-            ),
-            color: get(vo, "chartTitleOptions.textColor", "#000000"),
-          },
-        }
-      : undefined;
-
-    // Treemap doesn't have a normal legend; keep structure consistent
-    const legend = showLegend
-      ? {
-          show: false, // intentionally false for treemap
-          ...resolveLegendPosition(legendPosition),
-          textStyle: {
-            fontFamily: get(vo, "legendTextOptions.fontFamily", "Arial"),
-            fontWeight: get(vo, "legendTextOptions.fontWeight", "400"),
-            fontSize: parseFontSize(
-              get(vo, "legendTextOptions.fontSize", "14"),
-              14,
-            ),
-            color: get(vo, "legendTextOptions.textColor", "#000000"),
-            backgroundColor: get(
-              vo,
-              "legendTextOptions.backgroundColor",
-              "transparent",
-            ),
-          },
-        }
-      : { show: false };
-
-    const top = parseEchartsLayout(paddingTop, 20);
-    const left = parseEchartsLayout(paddingLeft, 20);
-    const bottom = parseEchartsLayout(paddingBottom, 20);
-    const right = parseEchartsLayout(paddingRight, 20);
-
     return {
-      backgroundColor: background ?? "transparent",
+      backgroundColor: "transparent",
       ...(paletteColors?.length ? { color: paletteColors } : {}),
-      ...(title ? { title } : {}),
-      legend,
+      legend: { show: false },
 
       series: [
         {
@@ -1588,10 +970,10 @@ export function useEcharts({
           type: "treemap",
           data,
           roam: false,
-          top,
-          left,
-          right,
-          bottom,
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
           leafDepth: 1,
           nodeClick: "zoomToNode",
           drillDownIcon: "",
@@ -1599,11 +981,6 @@ export function useEcharts({
             show: !!showLabels,
           },
 
-          itemStyle: {
-            borderWidth: parseFloat(strokeWidth ?? "0"),
-            borderColor: strokeColor ?? "#ffffff",
-            borderRadius: parseFloat(cornerRadius ?? "0"),
-          },
           breadcrumb: {
             show: !!showBreadcrumbs,
             top: 0,
@@ -1682,9 +1059,9 @@ export function useEcharts({
     window.removeEventListener("resize", () => onResize(chart, id));
 
     const CHART_TYPE_TO_COMPONENT = {
-      bar: () => echartsBarchart(data, visualOptions, mapping),
+      bar: () => echartsBarchart(data, visualOptions),
       geomap: () => echartsGeomap(data, visualOptions),
-      line: () => echartsLinechart(data, visualOptions, mapping),
+      line: () => echartsLinechart(data, visualOptions),
       sankey: () => echartsSankey(data, visualOptions),
       treemap: () => echartsTreemap(data, visualOptions, mapping),
       pie: () => echartsPiechart(data, visualOptions),
@@ -1697,6 +1074,7 @@ export function useEcharts({
 
     window.addEventListener("resize", () => onResize(chart, id));
     chart.on("datazoom", handleDataZoom);
+    setStateChart?.(chart);
   }
 
   return { render };
