@@ -176,7 +176,7 @@ const ChartComponent = (props: ChartComponentProps) => {
                 id={props.id}
               >
                 <HeatmapChartComponent
-                  data={props.data}
+                  data={props.data ?? []}
                   chartType={props.chartType}
                   visualOptions={props.visualOptions}
                   mapping={props.mapping}
