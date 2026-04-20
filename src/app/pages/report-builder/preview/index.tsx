@@ -314,6 +314,7 @@ export const ReportBuilderPreviewPage: React.FC = () => {
             flexDirection: "column",
             alignItems: "flex-start",
             justifyContent: "flex-start",
+            minHeight: "calc(100% - 200px)",
             width: reportData?.settings.width
               ? `${reportData?.settings.width}px`
               : "100%",
