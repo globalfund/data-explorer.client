@@ -2,7 +2,6 @@ import React, { useRef } from "react";
 import { Cropper, CropperRef } from "react-advanced-cropper";
 import "./style.css";
 import { debounce } from "lodash";
-import { ObjectFitTypes } from "app/state/api/action-reducers/report-builder/sync";
 
 type Coords = { left: number; top: number; width: number; height: number };
 
@@ -16,8 +15,6 @@ export const CropComponent: React.FC<{
   imgStyle:
     | {
         opacity?: number;
-        objectFit?: ObjectFitTypes;
-        width?: string;
       }
     | undefined;
 }> = ({

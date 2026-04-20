@@ -47,10 +47,25 @@ export const ReportBuilderPageImage: React.FC<{
 
   const hasParent = !!parent?.id;
 
-  const settings = selectedItem?.options || {};
+  const {
+    imgOpacity,
+    imgBorderWidth,
+    imgBorderColor,
+    imgBorderRadius,
+    imgBackgroundColor,
+    ...settings
+  } = selectedItem?.options || {};
+
   const imgStyle = {
-    opacity: settings.imgOpacity || 1,
-    objectFit: settings.imgObjectFit || "none",
+    opacity: imgOpacity || 1,
+  };
+
+  const borderStyle = {
+    borderWidth: imgBorderWidth || "0px",
+    borderColor: imgBorderColor || "#000000",
+    borderRadius: imgBorderRadius || "0px",
+    backgroundColor: imgBackgroundColor || "#ffffff",
+    borderStyle: "solid",
   };
 
   const imageExtra = selectedItem?.data;
@@ -130,25 +145,8 @@ export const ReportBuilderPageImage: React.FC<{
     }
   };
 
-  const getUniqueStyle = () => {
-    if (settings?.sizingMode === "fill") {
-      return {
-        display: "block",
-        height: `calc(${settings.height} + ${settings.paddingTop} + ${
-          settings.paddingBottom
-        })`,
-      };
-    }
-    if (settings?.sizingMode === "auto") {
-      return {
-        display: "block",
-      };
-    }
-    return {};
-  };
-
   const renderImage = React.useCallback(
-    (value: "fit-proportional" | "fit" | "crop" | "auto") => {
+    (value: "fit-proportional" | "fill" | "crop" | "auto") => {
       if (!imageSrc) return null;
       switch (value) {
         case "fit-proportional":
@@ -156,10 +154,16 @@ export const ReportBuilderPageImage: React.FC<{
             <img
               src={imageSrc}
               alt="random"
-              style={{ ...imgStyle, height: "100%", width: "100%" }}
+              style={{
+                ...imgStyle,
+                height: "100%",
+                width: "100%",
+                objectFit: "contain",
+                display: "block",
+              }}
             />
           );
-        case "fit":
+        case "fill":
           return (
             <PanComponent
               imageSrc={imageSrc}
@@ -168,6 +172,7 @@ export const ReportBuilderPageImage: React.FC<{
               }
               viewMode={viewMode}
               selectedItem={selectedItem}
+              imgStyle={imgStyle}
             />
           );
         case "crop":
@@ -257,10 +262,9 @@ export const ReportBuilderPageImage: React.FC<{
         {imageSrc && (
           <Box
             sx={{
-              backgroundColor: "#fff",
               ...settings,
-              ...getUniqueStyle(),
-              border: "none",
+              ...borderStyle,
+              overflow: "hidden",
               width: hasParent ? "100%" : settings.width,
             }}
           >

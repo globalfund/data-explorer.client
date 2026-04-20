@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import { Empty } from "app/pages/report-builder/builder/components/empty";
+
 import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
 import { ReportBuilderPageGrid } from "app/pages/report-builder/builder/components/grid";
 import { ReportBuilderPageText } from "app/pages/report-builder/builder/components/text";
@@ -32,18 +32,35 @@ export const ReportBuilderPreviewPage: React.FC = () => {
 
   const reportState = useStoreState((state) => state.RBReportItemsState);
 
+  const checkEmptyItem = (item: RBReportItem): boolean => {
+    if (item.type === "unknown") return false;
+    switch (item.type) {
+      case "text":
+        return !!item.data.rte;
+      case "chart":
+        return (
+          !!item.data.chartType &&
+          !!item.data.dataset &&
+          !!item.data.renderedChartData
+        );
+      case "kpi_box":
+        return item.open;
+      case "table":
+        return false; // tables are not supported in preview currently
+      case "grid":
+        return item.data.items.some((child) => checkEmptyItem(child));
+      case "column":
+        return item.data.items.some((child) => checkEmptyItem(child));
+      case "image":
+        return !!item.data.src;
+      default:
+        return false;
+    }
+  };
+
   const items = React.useMemo(() => {
     return reportState.items.filter((item) => {
-      switch (item.type) {
-        case "text":
-          return item.data.rte;
-        case "chart":
-          return item.data.chartType;
-        case "kpi_box":
-          return item.open;
-        default:
-          return true;
-      }
+      return checkEmptyItem(item);
     });
   }, [reportState.items]);
 
@@ -297,6 +314,7 @@ export const ReportBuilderPreviewPage: React.FC = () => {
             flexDirection: "column",
             alignItems: "flex-start",
             justifyContent: "flex-start",
+            minHeight: "calc(100% - 200px)",
             width: reportData?.settings.width
               ? `${reportData?.settings.width}px`
               : "100%",
@@ -324,7 +342,6 @@ export const ReportBuilderPreviewPage: React.FC = () => {
             },
           }}
         >
-          {items.length === 0 && <Empty />}
           {items.map((item) => (
             <React.Fragment key={item.id}>{getItemByType(item)}</React.Fragment>
           ))}

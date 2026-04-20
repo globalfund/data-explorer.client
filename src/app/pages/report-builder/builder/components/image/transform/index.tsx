@@ -19,11 +19,17 @@ const PanComponent: React.FC<{
   viewMode?: boolean;
   imageSrc: string;
   selectedItem: ReportItemOf<"image">;
+  imgStyle:
+    | {
+        opacity?: number;
+      }
+    | undefined;
 }> = ({
   handleChangeTransformCoordinates,
   viewMode,
   imageSrc,
   selectedItem,
+  imgStyle,
 }) => {
   const [transform, setTransform] =
     React.useState<SavedTransform>(DEFAULT_TRANSFORM);
@@ -77,6 +83,7 @@ const PanComponent: React.FC<{
     >
       <TransformComponent
         wrapperStyle={{
+          ...(imgStyle || {}),
           width: "100%",
           height: "100%",
         }}
