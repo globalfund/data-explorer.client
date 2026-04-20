@@ -11,7 +11,7 @@ interface AxisProps {
   viewMode?: boolean;
 }
 
-const ValidChartTypes = ["bar", "line", "heatmap", "scatter"];
+const ValidChartTypes = ["bar", "line", "scatter"];
 
 const AxisNameArea: React.FC<AxisProps> = ({
   variant,

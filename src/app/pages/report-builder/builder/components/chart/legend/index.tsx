@@ -4,6 +4,8 @@ import { EChartsType } from "echarts/core";
 import { DragIndicator } from "@mui/icons-material";
 import { useDrag } from "react-dnd";
 import GeomapLegend from "../geomap-legend";
+import { colorPaletteSequentialData } from "../../panel/elements-controller/common/data";
+import { generateHeatmapLegends } from "../utils/chart-utils";
 
 interface LegendContentProps {
   items: Array<{
@@ -294,8 +296,23 @@ const Legend: React.FC<LegendProps> = ({
             }));
       }
     },
-    [chartType, treemapPath],
+    [chartType, treemapPath, mappedData, visualOptions],
   );
+
+  React.useEffect(() => {
+    if (chartType === "heatmap" && mappedData) {
+      setLegendItems(
+        generateHeatmapLegends(
+          mappedData || [],
+          colorPaletteSequentialData.find(
+            (item) => item.name === visualOptions?.colorPalette,
+          )?.colors ||
+            colorPaletteSequentialData[0]?.colors ||
+            [],
+        ),
+      );
+    }
+  }, [mappedData, visualOptions]);
 
   React.useEffect(() => {
     if (!chart) return;

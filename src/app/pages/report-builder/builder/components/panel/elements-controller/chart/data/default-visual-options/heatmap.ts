@@ -15,7 +15,7 @@ const options: IDefaultChartVisualOptions = {
   },
   cellPadding: {
     type: "slider",
-    default: 50,
+    default: 4,
     label: "Cell Padding",
     tab: "layout",
   },
@@ -89,12 +89,6 @@ const options: IDefaultChartVisualOptions = {
     group: "Bar Style",
   },
   ...borderAndFillOptions,
-  autoNormalize: {
-    tab: "advanced",
-    type: "boolean",
-    default: false,
-    label: "Auto-Normalize",
-  },
   showValues: {
     tab: "advanced",
     type: "boolean",
@@ -104,7 +98,7 @@ const options: IDefaultChartVisualOptions = {
   showTooltip: {
     tab: "advanced",
     type: "boolean",
-    default: true,
+    default: false,
     label: "Show Tooltip",
   },
   monetaryValueTooltip: {
