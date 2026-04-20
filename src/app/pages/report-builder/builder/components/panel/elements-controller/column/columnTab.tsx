@@ -15,7 +15,7 @@ export function ColumnLayoutTab() {
   const selectedItemController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const { selectedItem, editItem } = useGetReportItemState<"grid">({
+  const { selectedItem, editItem } = useGetReportItemState<"column">({
     id: selectedItemController?.parent?.id || "",
   });
 
@@ -27,7 +27,7 @@ export function ColumnLayoutTab() {
       ...currentItem,
       id: selectedItemController?.parent?.id || "",
       open: currentItem?.open || false,
-      type: "grid",
+      type: "column",
     });
   };
 
@@ -61,7 +61,7 @@ export function ColumnLayoutTab() {
       ...selectedItem,
       id: selectedItemController?.parent?.id || "",
       open: selectedItem?.open || false,
-      type: "grid",
+      type: "column",
       data: {
         ...selectedItem.data,
         columns,
@@ -69,7 +69,7 @@ export function ColumnLayoutTab() {
           ...item,
           options: {
             ...item.options,
-            width: `${Math.floor(100 / columns)}%`,
+            width: `${(100 / columns).toFixed(2)}%`,
           },
         })),
       },

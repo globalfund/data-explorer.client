@@ -1,9 +1,7 @@
 import { Box, Divider, Typography } from "@mui/material";
 import Direction from "app/assets/vectors/RBAlignBottom.svg?react";
 import React from "react";
-import { objectFitMap } from "../data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import { ObjectFitTypes } from "app/state/api/action-reducers/report-builder/sync";
 import { get, set } from "lodash";
 import TextField from "../../components/textfield";
 import SelectField from "../../components/selectfield";
@@ -61,7 +59,6 @@ export function PaddingSize() {
                   ? selectedItem?.options?.height
                   : selectedItem?.options?.imgNormHeight || "400px",
             }),
-        imgObjectFit: objectFitMap[value] as ObjectFitTypes,
         sizingMode: value,
       },
     });
@@ -86,7 +83,7 @@ export function PaddingSize() {
 
   const sizingModes = [
     { label: "Fit Proportional (Contain)", value: "fit-proportional" },
-    { label: "Fit", value: "fit" },
+    { label: "Fill", value: "fill" },
     { label: "Crop", value: "crop" },
     {
       label: "Auto-Size (Grow)",
