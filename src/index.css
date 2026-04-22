@@ -96,12 +96,6 @@ input[type="text"] {
   background: #000;
   border-radius: 24px;
 }
-.tabulator-row:hover {
-  background: #f6f7f7 !important;
-}
-.tabulator-row:hover > div {
-  background: #f6f7f7 !important;
-}
 .tabulator-cell,
 .tabulator-col-title {
   font-size: 14px !important;
