@@ -8,7 +8,6 @@ import ChartPlaceholder from "./placeholders/placeholder";
 import { checkValidDimensionMapping } from "../panel/elements-controller/chart/utils";
 import ChartComponent from "./chart-component";
 import { useRenderChartData } from "app/hooks/queries/report-builder";
-import GeomapLegend from "./geomap-legend";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 export const ReportBuilderPageChart: React.FC<{
@@ -38,10 +37,20 @@ export const ReportBuilderPageChart: React.FC<{
 
   const chartExtra = selectedItem?.data;
   const renderedChartData = chartExtra?.renderedChartData;
+  const [mappedData, setMappedData] = React.useState<any>(null);
+
+  const setVisualOptions = (newVisualOptions: Record<string, any>) => {
+    if (!selectedItem) return;
+    editItem({
+      ...selectedItem,
+      id: id || "",
+      type: "chart",
+      options: newVisualOptions,
+    });
+  };
 
   React.useEffect(() => {
     if (
-      !viewMode &&
       chartExtra?.dataset &&
       checkValidDimensionMapping(chartExtra.chartType || "", chartExtra.mapping)
     ) {
@@ -55,6 +64,8 @@ export const ReportBuilderPageChart: React.FC<{
         },
         {
           onSuccess: (data) => {
+            const { mappedData, ...rendered } = data.data;
+            setMappedData(mappedData);
             editItem({
               ...selectedItem,
               id,
@@ -62,7 +73,7 @@ export const ReportBuilderPageChart: React.FC<{
               open: selectedItem?.open || true,
               data: {
                 ...selectedItem?.data,
-                renderedChartData: data.data,
+                renderedChartData: rendered,
               },
             });
           },
@@ -145,28 +156,14 @@ export const ReportBuilderPageChart: React.FC<{
             }}
           >
             <ChartComponent
-              data={renderedChartData?.mappedData}
+              data={mappedData}
               mapping={chartExtra?.mapping}
               chartType={chartExtra.chartType}
               visualOptions={selectedItem.options || {}}
+              setVisualOptions={setVisualOptions}
               id={id}
+              readOnly={viewMode}
             />
-            {chartExtra.chartType === "geomap" &&
-            selectedItem.options?.showLegend ? (
-              <Box
-                sx={{
-                  position: "absolute",
-                  bottom: 0,
-                  right: 0,
-                }}
-              >
-                <GeomapLegend
-                  data={renderedChartData?.mappedData}
-                  visualOptions={selectedItem.options}
-                  mapping={chartExtra.mapping}
-                />
-              </Box>
-            ) : null}
           </Box>
         ) : viewMode ? null : (
           <Box

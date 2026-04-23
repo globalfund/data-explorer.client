@@ -276,7 +276,7 @@ export function Heatmap(props: HeatmapProps) {
             },
           }}
         >
-          {(props.customLegends ?? LEGENDS)?.map((item) => (
+          {LEGENDS.map((item) => (
             <Box key={item.label}>
               <Box
                 bgcolor={item.color}

@@ -32,6 +32,8 @@ export default function DatasetList() {
 
   const handleApply = () => {
     if (!selectedItem || !selectedDataset) return;
+    const datasetUnchanged =
+      selectedItem?.data?.dataset === selectedDataset?.id;
     editItem({
       ...selectedItem,
       id: selectedController?.id || "",
@@ -39,10 +41,10 @@ export default function DatasetList() {
       data: {
         ...selectedItem?.data,
         dataset: selectedDataset?.id,
-        mapping:
-          selectedItem?.data?.dataset === selectedDataset?.id
-            ? selectedItem?.data?.mapping
-            : {},
+        mapping: datasetUnchanged ? selectedItem?.data?.mapping : {},
+        appliedFilters: datasetUnchanged
+          ? selectedItem?.data?.appliedFilters
+          : {},
       },
     });
     handleBack();

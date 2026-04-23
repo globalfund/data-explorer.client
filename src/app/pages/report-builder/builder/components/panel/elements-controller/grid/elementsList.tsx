@@ -116,7 +116,7 @@ export default function GridElementsList(props: { type: "grid" | "column" }) {
             paddingLeft: "10px",
             paddingRight: "10px",
             paddingBottom: "10px",
-            borderWidth: "0.5px",
+            borderWidth: "0px",
             borderColor: "#98A1AA",
             borderRadius: "4px",
             backgroundColor: "#ffffff",

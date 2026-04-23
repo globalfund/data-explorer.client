@@ -91,7 +91,7 @@ type RBReportItemDataByType = {
     chartType?: ChartType;
     mapping?: MappedDimension;
     appliedFilters?: Record<string, any[]>;
-    renderedChartData?: RBRenderedChartData | null;
+    renderedChartData?: Omit<RBRenderedChartData, "mappedData"> | null;
   };
 
   table: null;

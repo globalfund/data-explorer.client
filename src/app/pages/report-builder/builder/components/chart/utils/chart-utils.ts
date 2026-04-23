@@ -93,25 +93,6 @@ export function parseBarWidth(
   return fallback;
 }
 
-export function resolveLegendPosition(pos?: string) {
-  switch ((pos ?? "").toLowerCase()) {
-    case "top":
-      return { top: 0, left: "center" as const };
-    case "bottom":
-      return { bottom: 0, left: "center" as const };
-    case "left":
-      return { left: 0, top: "middle" as const, orient: "vertical" as const };
-    case "right":
-      return {
-        right: 0,
-        top: "middle" as const,
-        orient: "vertical" as const,
-      };
-    default:
-      return { top: 0, left: "center" as const };
-  }
-}
-
 // -------------------- your formatter (kept as-is) --------------------
 
 export const valueFormatter3 = (params: any, isMonetaryValue: boolean) => {
@@ -121,12 +102,12 @@ export const valueFormatter3 = (params: any, isMonetaryValue: boolean) => {
 };
 
 type LegendItem = {
-  label: string;
+  name: string;
   color: string;
 };
 
 export function generateHeatmapLegends(
-  data: { value: number }[],
+  data: { size: number }[],
   paletteColors: string[],
   options?: {
     suffix?: string; // e.g. "%"
@@ -140,11 +121,11 @@ export function generateHeatmapLegends(
     suffix = "",
     decimals = 0,
     includeNA = true,
-    includeOutlier = false,
+    includeOutlier = true,
     outlierThreshold = 1.2, // 120%
   } = options || {};
 
-  const values = data.map((d) => d.value).filter((v) => typeof v === "number");
+  const values = data.map((d) => d.size).filter((v) => typeof v === "number");
 
   if (!values.length) return [];
 
@@ -154,7 +135,7 @@ export function generateHeatmapLegends(
   if (maxValue === minValue) {
     return [
       {
-        label: `${maxValue.toFixed(decimals)}${suffix}`,
+        name: `${maxValue.toFixed(decimals)}${suffix}`,
         color: paletteColors[Math.floor(paletteColors.length / 2)] || "#FFFFFF",
       },
     ];
@@ -183,7 +164,7 @@ export function generateHeatmapLegends(
     }
 
     legends.push({
-      label,
+      name: label,
       color: paletteColors[i],
     });
   }
@@ -191,7 +172,7 @@ export function generateHeatmapLegends(
   // Optional outlier
   if (includeOutlier) {
     legends.push({
-      label: `> ${(maxValue * outlierThreshold).toFixed(decimals)}${suffix} outlier`,
+      name: `> ${(maxValue * outlierThreshold).toFixed(decimals)}${suffix} outlier`,
       color: "#DADADA",
     });
   }
@@ -199,7 +180,7 @@ export function generateHeatmapLegends(
   // Optional N/A
   if (includeNA) {
     legends.push({
-      label: "N/A",
+      name: "N/A",
       color: "#FFFFFF",
     });
   }

@@ -16,6 +16,7 @@ import HEATMAP_OPTIONS from "../chart/data/default-visual-options/heatmap";
 import { charts } from "./data/chartsBase";
 
 type OptionType =
+  | "number"
   | "boolean"
   | "text"
   | "color"
@@ -96,12 +97,15 @@ export const getDefaultVisualOptions = (
         acc[key] = option.default;
       }
       if (!option.default && option.type === "advancedOptions") {
-        Object.entries(option.advancedOptions || {}).forEach(
-          ([advKey, advOption]) => {
-            if (advOption.default !== undefined) {
-              acc[`${key}.${advKey}`] = advOption.default;
+        acc[key] = Object.keys(option.advancedOptions || {}).reduce(
+          (advancedAcc, advKey) => {
+            const advOption = option.advancedOptions?.[advKey];
+            if (advOption?.default !== undefined) {
+              advancedAcc[advKey] = advOption.default;
             }
+            return advancedAcc;
           },
+          {} as Record<string, any>,
         );
       }
       return acc;

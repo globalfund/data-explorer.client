@@ -88,7 +88,7 @@ export const useGetAssets = (params: {
   });
 };
 
-export const usePatchReport = (reportId?: string) => {
+export const usePatchReport = (reportId: string | undefined) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["ReportBuilderPatchReport", reportId],

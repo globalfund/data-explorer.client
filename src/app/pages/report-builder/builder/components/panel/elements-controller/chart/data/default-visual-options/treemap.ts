@@ -1,112 +1,28 @@
 import { IDefaultChartVisualOptions } from "../../utils";
+import {
+  borderAndFillOptions,
+  legendOptions,
+  paddingOptions,
+  titleOptions,
+} from "./base";
 
 const options: IDefaultChartVisualOptions = {
-  showChartName: {
-    type: "boolean",
-    default: true,
-    label: "Show Chart Title",
-    tab: "layout",
-  },
+  ...titleOptions,
   chartTitle: {
-    type: "text",
+    ...titleOptions.chartTitle,
     default: "Treemap Chart",
-    tab: "layout",
-    disabled: {
-      showChartName: false,
-    },
   },
-  chartTitleOptions: {
-    tab: "layout",
-    type: "advancedOptions",
-    label: "Expand chart title text options",
-    advancedOptions: {
-      fontFamily: {
-        type: "fontFamily",
-        default: "IBM Plex Sans",
-        label: "Font Family",
-      },
-      fontWeight: {
-        type: "fontWeight",
-        default: "600",
-        label: "Font Weight",
-        column: "span 1",
-      },
-      fontSize: {
-        type: "fontSize",
-        default: "16",
-        label: "Font Size",
-        column: "span 1",
-      },
-      textColor: {
-        type: "color",
-        default: "#161616",
-        label: "Text Color",
-        column: "span 1",
-      },
-      backgroundColor: {
-        type: "color",
-        default: "#FFFFFF",
-        label: "Highlight Color",
-        column: "span 1",
-      },
-    },
-    disabled: {
-      showChartName: false,
-    },
-  },
-
+  ...legendOptions,
   showLegend: {
-    type: "boolean",
-    default: true,
-    label: "Show Legend",
+    ...legendOptions.showLegend,
     tab: "layout",
   },
   legendPosition: {
-    type: "text",
-    options: ["top", "bottom", "left", "right"],
-    default: "bottom",
+    ...legendOptions.legendPosition,
     tab: "layout",
-    disabled: {
-      showLegend: false,
-    },
   },
   legendTextOptions: {
-    type: "advancedOptions",
-    label: "Expand legend text options",
-    advancedOptions: {
-      fontFamily: {
-        type: "fontFamily",
-        default: "IBM Plex Sans",
-        label: "Font Family",
-      },
-      fontWeight: {
-        type: "fontWeight",
-        default: "600",
-        label: "Font Weight",
-        column: "span 1",
-      },
-      fontSize: {
-        type: "fontSize",
-        default: "16",
-        label: "Font Size",
-        column: "span 1",
-      },
-      textColor: {
-        type: "color",
-        default: "#161616",
-        label: "Text Color",
-        column: "span 1",
-      },
-      backgroundColor: {
-        type: "color",
-        default: "#FFFFFF",
-        label: "Highlight Color",
-        column: "span 1",
-      },
-    },
-    disabled: {
-      showLegend: false,
-    },
+    ...legendOptions.legendTextOptions,
     tab: "layout",
   },
   showLabels: {
@@ -123,56 +39,7 @@ const options: IDefaultChartVisualOptions = {
     tab: "layout",
     group: "Labels",
   },
-  paddingLeft: {
-    type: "text",
-    default: "0",
-    label: "{arrowLeft} Left",
-    tab: "layout",
-    group: "Padding",
-    column: "span 1",
-  },
-  paddingTop: {
-    type: "text",
-    default: "30",
-    label: "{arrowUp} Top",
-    tab: "layout",
-    group: "Padding",
-    column: "span 1",
-  },
-  paddingRight: {
-    type: "text",
-    default: "0",
-    label: "{arrowRight} Right",
-    tab: "layout",
-    group: "Padding",
-    column: "span 1",
-  },
-  paddingBottom: {
-    type: "text",
-    default: "16",
-    label: "{arrowDown} Bottom",
-    tab: "layout",
-    group: "Padding",
-    column: "span 1",
-  },
-  alignHorizontal: {
-    type: "text",
-    options: ["left", "center", "right"],
-    default: "center",
-    label: "Horizontal",
-    tab: "layout",
-    group: "Align",
-    column: "span 1",
-  },
-  alignVertical: {
-    type: "text",
-    options: ["top", "middle", "bottom"],
-    default: "middle",
-    label: "Vertical",
-    tab: "layout",
-    group: "Align",
-    column: "span 1",
-  },
+  ...paddingOptions,
   width: {
     type: "text",
     default: "100%",
@@ -196,38 +63,7 @@ const options: IDefaultChartVisualOptions = {
     tab: "style",
     group: "Line Style",
   },
-  strokeWidth: {
-    type: "text",
-    default: "0.3",
-    label: "Stroke",
-    tab: "style",
-    group: "Border & Fill",
-    column: "span 1",
-  },
-  strokeColor: {
-    type: "color",
-    default: "#ffffff",
-    label: "Stroke Color",
-    tab: "style",
-    group: "Border & Fill",
-    column: "span 1",
-  },
-  cornerRadius: {
-    type: "text",
-    default: "0",
-    label: "Corner Radius",
-    tab: "style",
-    group: "Border & Fill",
-    column: "span 1",
-  },
-  background: {
-    type: "color",
-    default: "#FFFFFF",
-    label: "Background",
-    tab: "style",
-    group: "Border & Fill",
-    column: "span 1",
-  },
+  ...borderAndFillOptions,
   showTooltip: {
     tab: "advanced",
     type: "boolean",

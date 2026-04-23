@@ -140,7 +140,7 @@ export default function AddComponent() {
             paddingLeft: "10px",
             paddingRight: "10px",
             paddingBottom: "10px",
-            borderWidth: "0.5px",
+            borderWidth: "0",
             borderColor: "#98A1AA",
             borderRadius: "4px",
             backgroundColor: "#ffffff",
