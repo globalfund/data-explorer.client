@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { BarChart } from "app/components/charts/bar";
-import { withRouter } from "storybook-addon-remix-react-router";
 import {
   STORY_DATA_VARIANT_1,
   STORY_DATA_VARIANT_2,
@@ -10,7 +9,6 @@ import {
 const meta = {
   title: "Components/Charts/Bar chart",
   component: BarChart,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },

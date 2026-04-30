@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Footer } from "app/components/footer";
-import { withRouter } from "storybook-addon-remix-react-router";
 
 const meta = {
   title: "Components/Footer",
   component: Footer,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },

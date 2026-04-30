@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { GrantCard } from "app/components/grant-card";
-import { withRouter } from "storybook-addon-remix-react-router";
 
 const meta = {
   title: "Components/Grant card",
   component: GrantCard,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },

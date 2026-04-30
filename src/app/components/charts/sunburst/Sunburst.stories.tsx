@@ -2,7 +2,6 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { SunburstChart } from "app/components/charts/sunburst";
-import { withRouter } from "storybook-addon-remix-react-router";
 import {
   STORY_DATA_VARIANT_1,
   SunburstDataItem,
@@ -27,7 +26,6 @@ const Wrapper = (props: SunburstProps) => {
 const meta = {
   title: "Components/Charts/Sunburst chart",
   component: Wrapper,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },

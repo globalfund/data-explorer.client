@@ -2,7 +2,6 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { TableContainer } from "app/components/table-container";
-import { withRouter } from "storybook-addon-remix-react-router";
 import {
   TABLE_VARIATION_1_DATA,
   TABLE_VARIATION_1_COLUMNS,
@@ -28,7 +27,6 @@ const Variant2Wrapper = (args: any) => {
 const meta = {
   title: "Components/Table Container",
   component: Variant2Wrapper,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },

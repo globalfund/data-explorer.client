@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { ResourceMobilizationPage } from "app/pages/datasets/resource-mobilization";
-import { withRouter } from "storybook-addon-remix-react-router";
 
 const meta = {
   title: "Pages/Datasets/ResourceMobilization",
   component: ResourceMobilizationPage,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },

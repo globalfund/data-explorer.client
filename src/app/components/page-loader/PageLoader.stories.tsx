@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { PageLoader } from "app/components/page-loader";
-import { withRouter } from "storybook-addon-remix-react-router";
 
 const meta = {
   title: "Components/Page loader",
   component: PageLoader,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },

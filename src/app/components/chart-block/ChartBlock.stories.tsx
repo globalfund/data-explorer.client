@@ -4,7 +4,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { CYCLES } from "app/pages/home/data";
 import { BarChart } from "app/components/charts/bar";
 import { ChartBlock } from "app/components/chart-block";
-import { withRouter } from "storybook-addon-remix-react-router";
 import { STORY_DATA_VARIANT_2 } from "app/components/charts/bar/data";
 
 const Wrapper: React.FC = () => {
@@ -46,7 +45,6 @@ const Wrapper: React.FC = () => {
 const meta = {
   title: "Components/Chart block",
   component: Wrapper,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },

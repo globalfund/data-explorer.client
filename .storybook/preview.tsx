@@ -1,21 +1,23 @@
 import type { Preview } from "@storybook/react";
 
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import Providers from "../src/app/Providers";
 
 export const decorators = [
   (Story) => (
-    <Providers>
-      <React.StrictMode>
-        <Story />
-      </React.StrictMode>
-    </Providers>
+    <MemoryRouter>
+      <Providers>
+        <React.StrictMode>
+          <Story />
+        </React.StrictMode>
+      </Providers>
+    </MemoryRouter>
   ),
 ];
 
 const preview: Preview = {
   parameters: {
-    // actions: { argTypesRegex: "^on[A-Z].*" },
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -23,6 +25,7 @@ const preview: Preview = {
       },
     },
   },
+  tags: ["autodocs"],
 };
 
 export default preview;

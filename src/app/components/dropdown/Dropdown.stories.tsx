@@ -2,7 +2,6 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Dropdown } from "app/components/dropdown";
-import { withRouter } from "storybook-addon-remix-react-router";
 
 const items = [
   { label: "Investment Landscape", value: "Investment Landscape" },
@@ -30,7 +29,6 @@ const Wrapper: React.FC = () => {
 const meta = {
   title: "Components/Dropdown",
   component: Wrapper,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },

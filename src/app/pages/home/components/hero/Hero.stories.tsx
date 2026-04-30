@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { HomeHero } from "app/pages/home/components/hero";
-import { withRouter } from "storybook-addon-remix-react-router";
 
 const meta = {
   title: "Pages/Home/Components/Hero",
   component: HomeHero,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },

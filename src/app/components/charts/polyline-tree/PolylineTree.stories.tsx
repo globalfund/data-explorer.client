@@ -1,13 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { PolylineTree } from "app/components/charts/polyline-tree";
-import { withRouter } from "storybook-addon-remix-react-router";
 import { STORY_DATA_VARIANT_1 } from "app/components/charts/polyline-tree/data";
 
 const meta = {
   title: "Components/Charts/PolylineTree",
   component: PolylineTree,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },
