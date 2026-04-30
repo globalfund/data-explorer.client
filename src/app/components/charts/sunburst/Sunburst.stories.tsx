@@ -29,9 +29,9 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof SunburstChart>;
+} as Meta<typeof SunburstChart>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

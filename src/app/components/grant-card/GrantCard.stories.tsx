@@ -8,9 +8,9 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof GrantCard>;
+} as Meta<typeof GrantCard>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

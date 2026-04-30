@@ -9,9 +9,9 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof ExpandableHorizontalBar>;
+} as Meta<typeof ExpandableHorizontalBar>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

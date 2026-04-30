@@ -14,9 +14,9 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof Heatmap>;
+} as Meta<typeof Heatmap>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

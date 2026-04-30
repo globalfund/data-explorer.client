@@ -12,9 +12,9 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof BarChart>;
+} as Meta<typeof BarChart>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

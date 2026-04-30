@@ -3,14 +3,14 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Geography } from "app/pages/geography";
 
 const meta = {
-  title: "Pages/Geography List",
+  title: "Pages/Geographies",
   component: Geography,
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof Geography>;
+} as Meta<typeof Geography>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

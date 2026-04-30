@@ -1,20 +1,23 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Footer } from "app/components/footer";
+import { HeaderMenu } from "app/components/header-menu";
 
 const meta = {
-  title: "Components/Footer",
-  component: Footer,
+  title: "Components/HeaderMenu",
+  component: HeaderMenu,
   parameters: {
     layout: "fullscreen",
   },
   tags: [],
   argTypes: {},
-} as Meta<typeof Footer>;
+} as Meta<typeof HeaderMenu>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;
 
 export const Primary: StoryType = {
-  args: {},
+  args: {
+    mobileMenuOpen: false,
+    setMobileMenuOpen: () => {},
+  },
 };

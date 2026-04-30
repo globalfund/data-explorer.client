@@ -8,9 +8,9 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof Home>;
+} as Meta<typeof Home>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

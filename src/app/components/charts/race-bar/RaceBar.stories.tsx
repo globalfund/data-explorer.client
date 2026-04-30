@@ -9,9 +9,9 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof RaceBarChart>;
+} as Meta<typeof RaceBarChart>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

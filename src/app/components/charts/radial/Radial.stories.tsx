@@ -15,9 +15,9 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof RadialChart>;
+} as Meta<typeof RadialChart>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

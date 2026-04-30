@@ -9,9 +9,9 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof SankeyChart>;
+} as Meta<typeof SankeyChart>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

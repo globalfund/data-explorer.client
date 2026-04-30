@@ -9,9 +9,9 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof PolylineTree>;
+} as Meta<typeof PolylineTree>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

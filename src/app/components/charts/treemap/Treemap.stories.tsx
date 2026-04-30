@@ -12,9 +12,9 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof Treemap>;
+} as Meta<typeof Treemap>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

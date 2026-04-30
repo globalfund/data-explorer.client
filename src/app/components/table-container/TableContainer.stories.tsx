@@ -30,9 +30,9 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof TableContainer>;
+} as Meta<typeof TableContainer>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

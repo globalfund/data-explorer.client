@@ -34,9 +34,9 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof Table>;
+} as Meta<typeof Table>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;
