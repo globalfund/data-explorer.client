@@ -8,6 +8,7 @@ import { useUrlFilters } from "app/hooks/useUrlFilters";
 import { useRouteListener } from "app/hooks/useRouteListener";
 import { useScrollToAnchor } from "app/hooks/useScrollToAnchor";
 import { ReportBuilderPageHeader } from "app/pages/report-builder/builder/components/header";
+import { useStoreState } from "app/state/store/hooks";
 
 export const Page: React.FC = () => {
   useUrlFilters();
@@ -15,10 +16,27 @@ export const Page: React.FC = () => {
   useScrollToAnchor();
 
   const location = useLocation();
+  const isPanelOpen = useStoreState((s) => s.AiExplorerChats.isPanelOpen);
 
   const inReportBuilder = React.useMemo(() => {
     return location.pathname.startsWith("/report-builder/");
   }, [location.pathname]);
+
+  const inAiExplorer = React.useMemo(() => {
+    return location.pathname.startsWith("/ai-explorer");
+  }, [location.pathname]);
+
+  if (inAiExplorer && isPanelOpen) {
+    return (
+      <React.Fragment>
+        <Header />
+        <Box id="main" sx={{ width: "100%", minHeight: "calc(100vh - 58px)" }}>
+          <Outlet />
+        </Box>
+        <Footer />
+      </React.Fragment>
+    );
+  }
 
   if (inReportBuilder) {
     const previewMode =

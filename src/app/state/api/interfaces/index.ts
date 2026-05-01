@@ -8,6 +8,7 @@ import {
   RBReportRTEModel,
   RBReportTooltipModel,
 } from "app/state/api/action-reducers/report-builder/sync";
+import { AiExplorerChatsModel } from "app/state/api/action-reducers/ai-explorer/chats";
 import {
   AppliedFiltersStateModel,
   AppliedFilterStringModel,
@@ -266,6 +267,8 @@ export interface StoreModel {
   AppliedFiltersState: AppliedFiltersStateModel;
   AppliedFilterStringState: AppliedFilterStringModel;
   TempAppliedFiltersState: AppliedFiltersStateModel;
+  // ai explorer
+  AiExplorerChats: AiExplorerChatsModel;
   // report builder
   RBReportItemsState: RBReportItemsModel;
   RBTooltipTriggerState: RBReportTooltipModel;

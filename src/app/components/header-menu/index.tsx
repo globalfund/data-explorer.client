@@ -241,24 +241,26 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
         orientation="vertical"
         sx={{ borderColor: "#98A1AA", height: "30px", mt: "15px" }}
       />
-      <HeaderMenuButton
-        id={PAGES[3].id}
-        key={PAGES[3].id}
-        disableRipple
-        onClick={handleClick(false, PAGES[3])}
-        sx={
-          isNavButtonActive(PAGES[3].id, location.pathname)
-            ? (PAGES[3].activeButtonStateStyle ?? activeButtonStateStyle)
-            : {
-                "&:hover":
-                  PAGES[3].activeButtonStateStyle ?? activeButtonStateStyle,
-              }
-        }
-        data-cy="header-menu-button"
-        style={PAGES[3].style}
-      >
-        {PAGES[3].label}
-      </HeaderMenuButton>
+      {PAGES.slice(3).map((page) => (
+        <HeaderMenuButton
+          id={page.id}
+          key={page.id}
+          disableRipple
+          onClick={handleClick(false, page)}
+          sx={
+            isNavButtonActive(page.id, location.pathname)
+              ? (page.activeButtonStateStyle ?? activeButtonStateStyle)
+              : {
+                  "&:hover":
+                    page.activeButtonStateStyle ?? activeButtonStateStyle,
+                }
+          }
+          data-cy="header-menu-button"
+          style={page.style}
+        >
+          {page.label}
+        </HeaderMenuButton>
+      ))}
       <Popover
         disableScrollLock
         open={Boolean(anchorEl)}

@@ -19,7 +19,8 @@ export type RouteComponentName =
   | "GrantImplementationPage"
   | "AnnualResultsPage"
   | "GlossaryPage"
-  | "ChangelogPage";
+  | "ChangelogPage"
+  | "AiExplorerPage";
 
 export const ROUTE_CONFIGS: RouteConfig[] = [
   { path: "/", componentName: "Home", importFrom: "app/pages/home" },
@@ -96,6 +97,11 @@ export const ROUTE_CONFIGS: RouteConfig[] = [
     path: "/changelog",
     componentName: "ChangelogPage",
     importFrom: "app/pages/changelog",
+  },
+  {
+    path: "/ai-explorer",
+    componentName: "AiExplorerPage",
+    importFrom: "app/pages/ai-explorer",
   },
   {
     path: "/test/:id/:ip",

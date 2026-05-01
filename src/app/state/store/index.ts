@@ -153,6 +153,7 @@ import {
   RBReportRTEState,
   RBTooltipTriggerState,
 } from "../api/action-reducers/report-builder/sync";
+import { AiExplorerChats } from "app/state/api/action-reducers/ai-explorer/chats";
 
 const storeContent: StoreModel = {
   // homepage
@@ -300,6 +301,8 @@ const storeContent: StoreModel = {
   AppliedFiltersState: persist(AppliedFiltersState),
   AppliedFilterStringState: persist(AppliedFilterStringState),
   TempAppliedFiltersState: persist(TempAppliedFiltersState),
+  // ai explorer
+  AiExplorerChats: persist(AiExplorerChats),
   // report builder
   RBReportItemsState: persist(RBReportItemsState),
   RBTooltipTriggerState: persist(RBTooltipTriggerState),

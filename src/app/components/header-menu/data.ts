@@ -1,5 +1,6 @@
 import { colors } from "app/theme";
 import { getCMSDataField } from "app/utils/getCMSDataField";
+import { isStagingEnv } from "app/utils/environment";
 
 export interface HeaderMenuProps {
   mobileMenuOpen: boolean;
@@ -116,6 +117,19 @@ export const getPages = (cmsData: any): HeaderMenuPage[] => {
     },
   ];
 
+  if (isStagingEnv()) {
+    PAGES.push({
+      id: "ai-explorer",
+      label:
+        getCMSDataField(
+          cmsData,
+          "componentsHeader.aiExplorerLabel",
+          "AI Explorer",
+        ) || "AI Explorer",
+      link: "/ai-explorer",
+    });
+  }
+
   return PAGES;
 };
 
@@ -136,6 +150,8 @@ export function isNavButtonActive(id: string, path: string): boolean {
       return path.includes("/grants") || path.includes("/grant");
     case "my-reports":
       return path.includes("/report-builder");
+    case "ai-explorer":
+      return path.includes("/ai-explorer");
     default:
       return id === path.split("/")[1];
   }

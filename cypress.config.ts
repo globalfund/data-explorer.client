@@ -1,6 +1,7 @@
 import { defineConfig } from "cypress";
+import dotenv from "dotenv";
 
-require("dotenv").config();
+dotenv.config();
 
 export default defineConfig({
   projectId: "ioki3q",
@@ -9,6 +10,7 @@ export default defineConfig({
   e2e: {
     env: {
       api_url: process.env.VITE_API,
+      VITE_APP_ENV: "staging",
     },
     baseUrl: process.env.VITE_BASE_URL,
   },

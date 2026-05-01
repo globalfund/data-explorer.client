@@ -41,21 +41,11 @@ The following diagrams are provided with descriptions:
 
 ## Installation
 
-In order to be able to successfully run or build the app you need to create an environment file `.env` in the project root directory and fill it with the following:
+In order to be able to successfully run or build the app you need to create an environment file `.env` in the project root directory. A `.env.example` is provided, which includes an explanation of each field and can be used to easily set up the environment:
 
+```bash
+cp .env.example .env
 ```
-REACT_APP_API=<data middleware api url>
-REACT_APP_CMS_API=<strapi cms api url>
-REACT_APP_CMS_TOKEN=<strapi cms api token>
-```
-
-`REACT_APP_API`: is the url where the data middleware API runs on. If running [Data API Middleware](https://github.com/globalfund/data-explorer-server/) locally then you can use `http://localhost:4200`.
-
-`REACT_APP_MAPBOX_TOKEN`: to get a mapbox token you will need to register on their [website](https://www.mapbox.com).The token will be used to identify you and start serving up map tiles. The service is free until a certain level of traffic is exceeded.
-
-`REACT_APP_CMS_API`: is the url where the [Strapi CMS API](https://github.com/zimmerman-team/CMS/) runs on. The project/de branch.
-
-`REACT_APP_CMS_TOKEN`: is the API token retrieved from the Strapi CMS interface.
 
 ---
 
