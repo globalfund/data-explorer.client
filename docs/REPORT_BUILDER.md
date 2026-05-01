@@ -14,7 +14,7 @@ Three pages constitute the feature:
 |-----|-----------|------|
 | `/report-builder` | `ReportBuilder` | `src/app/pages/report-builder/main/index.tsx` |
 | `/report-builder/reports/:id/edit` | `ReportBuilderPage` | `src/app/pages/report-builder/builder/index.tsx` |
-| `/report-builder/reports/:id` | `ReportBuilderPreviewPage` | `src/app/pages/report-builder/preview/index.tsx` |
+| `/report-builder/reports/:id` | `ReportBuilderPreviewPage` | `src/app/pages/report-builder/preview/index.tsx` + `ReportCanvas.tsx` |
 
 ---
 
@@ -373,7 +373,9 @@ src/app/pages/report-builder/
 │       │   ├── hooks/useEcharts.tsx        ECharts option builders (all 9 types)
 │       │   └── data.tsx                    datasetItems + chartTypes lists
 │       └── order-container/index.tsx       ItemComponent (useDrag + useDrop)
-├── preview/index.tsx                       Read-only preview page
+├── preview/
+│   ├── index.tsx                       Read-only preview page
+│   └── ReportCanvas.tsx                  Canvas renderer for preview (wraps Easy Peasy store)
 └── hooks/
     └── useGetReportItemState.ts            Uniform item read/write (top-level + grid child)
 
