@@ -22,6 +22,23 @@ It makes use of [Data API Middleware](https://github.com/globalfund/data-explore
   - Frontend: <a href="https://github.com/globalfund/data-explorer-client" target="_blank">https://github.com/globalfund/data-explorer-client</a>
   - Backend: <a href="https://github.com/globalfund/data-explorer-server" target="_blank">https://github.com/globalfund/data-explorer-server</a>
 
+## Diagrams
+
+The following diagrams are provided with descriptions:
+
+- [Application Entry & Routing](./docs/DIAGRAMS.md#1-application-entry--routing)
+- [Global State Architecture](./docs/DIAGRAMS.md#2-global-state-architecture-easy-peasy-store)
+- [APIModel Factory — Data Flow](./docs/DIAGRAMS.md#3-apimodel-factory-data-flow)
+- [CMS Integration](./docs/DIAGRAMS.md#4-cms-integration)
+- [Filter → URL → Refetch Cycle](./docs/DIAGRAMS.md#5-filter-url-refetch-cycle)
+- [Chart Rendering Pipeline](./docs/DIAGRAMS.md#6-chart-rendering-pipeline-dataset-pages)
+- [Report Builder — Top-Level Architecture](./docs/DIAGRAMS.md#7-report-builder-top-level-architecture)
+- [Report Builder — Item Lifecycle](./docs/DIAGRAMS.md#8-report-builder-item-lifecycle)
+- [Report Builder — Chart Block Data Flow](./docs/DIAGRAMS.md#9-report-builder-chart-block-data-flow)
+- [Report Builder — Drag-and-Drop Reordering](./docs/DIAGRAMS.md#10-report-builder-drag-and-drop-reordering)
+- [Report Builder — Preview vs Builder Mode](./docs/DIAGRAMS.md#11-report-builder-preview-vs-builder-mode)
+- 
+
 ## Installation
 
 In order to be able to successfully run or build the app you need to create an environment file `.env` in the project root directory and fill it with the following:
@@ -107,6 +124,14 @@ Alternatively, you can run all Cypress tests in headless mode (without the GUI) 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Development
+
+_This project was co-developed with AI to accelerate feature delivery. All code has been manually reviewed and tested for quality. To support agentic development, [AGENTS.md](./AGENTS.md) and [CLAUDE.md](./CLAUDE.md) are included._
+
+## Report Builder development
+
+There is a [document describing the "Report Builder" feature](./docs/REPORT_BUILDER.md), containing the technical description of the feature in clear sections. Useful read to unerstand the Report Builder at the implementation level.
 
 ## How should I contribute?
 
