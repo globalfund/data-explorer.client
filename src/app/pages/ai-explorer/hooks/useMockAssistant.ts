@@ -1,4 +1,8 @@
 import { useRef } from "react";
+import { RBReportModel } from "app/state/api/action-reducers/report-builder/sync";
+import { ReportPlacement } from "app/pages/ai-explorer/types";
+import { detectSimulationTrigger } from "app/pages/ai-explorer/utils/simulationTrigger";
+import { buildSimulatedAssistantMessage } from "app/pages/ai-explorer/fixtures/simulatedReport";
 
 const MOCK_RESPONSES = [
   "I can help you explore the Global Fund datasets. What would you like to know?",
@@ -10,10 +14,16 @@ const MOCK_RESPONSES = [
 
 let responseIndex = 0;
 
+export interface MockAssistantReply {
+  content: string;
+  report?: RBReportModel;
+  reportPlacement?: ReportPlacement;
+}
+
 export function useMockAssistant() {
   const abortRef = useRef<AbortController | null>(null);
 
-  const respond = (prompt: string): Promise<string> => {
+  const respond = (prompt: string): Promise<MockAssistantReply> => {
     if (abortRef.current) {
       abortRef.current.abort();
     }
@@ -21,19 +31,36 @@ export function useMockAssistant() {
     abortRef.current = controller;
 
     return new Promise((resolve, reject) => {
-      const delay = 200 + Math.random() * 100;  // Simulate variable response time between 200-300ms
+      const simulation = detectSimulationTrigger(prompt);
+
+      // Simulated report: longer delay so the typing indicator is visible.
+      const delay = simulation
+        ? 1200 + Math.random() * 600
+        : 200 + Math.random() * 100;
+
       const timeoutId = setTimeout(() => {
         if (controller.signal.aborted) {
           reject(new DOMException("Aborted", "AbortError"));
           return;
         }
-        const response =
+
+        if (simulation) {
+          const msg = buildSimulatedAssistantMessage(simulation.placement);
+          resolve({
+            content: msg.content,
+            report: msg.report,
+            reportPlacement: msg.reportPlacement,
+          });
+          return;
+        }
+
+        const content =
           MOCK_RESPONSES[responseIndex % MOCK_RESPONSES.length] +
           (prompt.length > 0
             ? `\n\nYou asked: "${prompt.slice(0, 80)}${prompt.length > 80 ? "…" : ""}"`
             : "");
         responseIndex += 1;
-        resolve(response);
+        resolve({ content });
       }, delay);
 
       controller.signal.addEventListener("abort", () => {

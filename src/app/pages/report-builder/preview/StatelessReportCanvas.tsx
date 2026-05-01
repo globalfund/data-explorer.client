@@ -134,6 +134,13 @@ function StatelessChartBlock({
   const renderedWithData = data?.renderedChartData as
     | (typeof data.renderedChartData & { mappedData?: any })
     | undefined;
+
+  // Each mounted instance needs a unique DOM id so that when the same report
+  // is rendered in both the inline card and the main view simultaneously,
+  // document.getElementById(id) inside useEcharts finds the correct element.
+  const instanceId = React.useId().replace(/:/g, "");
+  const chartId = `stateless-${item.id}-${instanceId}`;
+
   if (!data?.chartType || !renderedWithData?.mappedData) {
     return (
       <Box
@@ -166,7 +173,7 @@ function StatelessChartBlock({
         chartType={data.chartType}
         mapping={data.mapping}
         visualOptions={item.options ?? {}}
-        id={`stateless-${item.id}`}
+        id={chartId}
         readOnly
       />
     </Box>

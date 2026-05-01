@@ -38,8 +38,10 @@ export const ChatMainPanel: React.FC = () => {
       appendAssistantMessage({
         id: crypto.randomUUID(),
         role: "assistant",
-        content: reply,
+        content: reply.content,
         createdAt: Date.now(),
+        report: reply.report,
+        reportPlacement: reply.reportPlacement,
       });
     } catch {
       setAssistantLoading(false);

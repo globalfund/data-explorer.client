@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Box from "@mui/material/Box";
-import { useStoreActions } from "app/state/store/hooks";
 import { RBReportModel } from "app/state/api/action-reducers/report-builder/sync";
-import { ReportCanvas } from "app/pages/report-builder/preview/ReportCanvas";
+import { StatelessReportCanvas } from "app/pages/report-builder/preview/StatelessReportCanvas";
 import { ReportViewToolbar } from "app/pages/ai-explorer/components/ReportViewToolbar";
 
 interface ReportViewProps {
@@ -10,24 +9,18 @@ interface ReportViewProps {
 }
 
 export const ReportView: React.FC<ReportViewProps> = ({ report }) => {
-  const setReport = useStoreActions(
-    (actions) => actions.RBReportItemsState.setReport,
-  );
-  const resetReport = useStoreActions(
-    (actions) => actions.RBReportItemsState.resetReport,
-  );
-
-  useEffect(() => {
-    setReport(report);
-    return () => {
-      resetReport();
-    };
-  }, [report]);
-
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
+    <Box
+      className="scrollbar"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        overflow: "auto",
+        height: "100%",
+      }}
+    >
       <ReportViewToolbar report={report} />
-      <ReportCanvas settings={report.settings} />
+      <StatelessReportCanvas report={report} />
     </Box>
   );
 };

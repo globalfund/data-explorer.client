@@ -319,6 +319,7 @@ export const HINT_CHIPS = [
   "Explain the eligibility model",
   "Which grants have low absorption?",
   "Summarize disbursement flows",
+  ...(import.meta.env.DEV ? ["/demo", "/demo main"] : []),
 ];
 
 export const AVAILABLE_DATASETS = [

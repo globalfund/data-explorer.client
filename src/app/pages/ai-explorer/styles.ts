@@ -125,7 +125,7 @@ export const InlineReportCardHeader = styled(Box)`
 `;
 
 export const InlineReportCanvasContainer = styled(Box)`
-  overflow-y: auto;
+  overflow: hidden;
   max-height: 55vh;
   border-top: 1px solid #d0dae8;
   border-bottom: 1px solid #d0dae8;
