@@ -31,7 +31,12 @@ export const ChatEmptyState: React.FC = () => {
     appendUserMessage(text);
     try {
       const reply = await respond(text);
-      appendAssistantMessage(reply);
+      appendAssistantMessage({
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: reply,
+        createdAt: Date.now(),
+      });
     } catch {
       setAssistantLoading(false);
     }

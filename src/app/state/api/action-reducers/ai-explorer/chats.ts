@@ -1,5 +1,6 @@
 import { action, Action } from "easy-peasy";
 import { Chat, ChatMessage, ChatRole } from "app/pages/ai-explorer/types";
+import { RBReportModel } from "app/state/api/action-reducers/report-builder/sync";
 
 const MAX_CHATS = 50;
 
@@ -11,6 +12,8 @@ export interface AiExplorerChatsModel {
   sidebarCollapsed: boolean;
   isPanelOpen: boolean;
   searchQuery: string;
+  mainViewMode: "explore" | "report";
+  generatedReports: Record<string, RBReportModel>;
 
   openPanel: Action<AiExplorerChatsModel>;
   closePanel: Action<AiExplorerChatsModel>;
@@ -19,11 +22,16 @@ export interface AiExplorerChatsModel {
   createChat: Action<AiExplorerChatsModel>;
   setActiveChat: Action<AiExplorerChatsModel, string | null>;
   appendUserMessage: Action<AiExplorerChatsModel, string>;
-  appendAssistantMessage: Action<AiExplorerChatsModel, string>;
+  appendAssistantMessage: Action<AiExplorerChatsModel, ChatMessage>;
   setInputValue: Action<AiExplorerChatsModel, string>;
   setSearchQuery: Action<AiExplorerChatsModel, string>;
   setAssistantLoading: Action<AiExplorerChatsModel, boolean>;
   deleteChat: Action<AiExplorerChatsModel, string>;
+  setGeneratedReport: Action<
+    AiExplorerChatsModel,
+    { chatId: string; report: RBReportModel }
+  >;
+  clearGeneratedReport: Action<AiExplorerChatsModel>;
 }
 
 function makeId(): string {
@@ -50,6 +58,8 @@ export const AiExplorerChats: AiExplorerChatsModel = {
   sidebarCollapsed: false,
   isPanelOpen: false,
   searchQuery: "",
+  mainViewMode: "explore",
+  generatedReports: {},
 
   openPanel: action((state) => {
     state.isPanelOpen = true;
@@ -79,6 +89,8 @@ export const AiExplorerChats: AiExplorerChatsModel = {
   setActiveChat: action((state, chatId) => {
     state.activeChatId = chatId;
     state.inputValue = "";
+    state.mainViewMode =
+      chatId && state.generatedReports[chatId] ? "report" : "explore";
   }),
   appendUserMessage: action((state, content) => {
     if (!state.activeChatId) return;
@@ -100,9 +112,8 @@ export const AiExplorerChats: AiExplorerChatsModel = {
     state.inputValue = "";
     state.isAssistantLoading = true;
   }),
-  appendAssistantMessage: action((state, content) => {
+  appendAssistantMessage: action((state, message) => {
     if (!state.activeChatId) return;
-    const message = makeMessage("assistant", content);
     const now = Date.now();
     const updated = updateChatInList(state.chats, state.activeChatId, (c) => ({
       ...c,
@@ -111,6 +122,15 @@ export const AiExplorerChats: AiExplorerChatsModel = {
     }));
     state.chats = [...updated].sort((a, b) => b.updatedAt - a.updatedAt);
     state.isAssistantLoading = false;
+
+    if (message.report) {
+      const placement = message.reportPlacement ?? "inline";
+      if (placement === "main_view") {
+        state.generatedReports[state.activeChatId] = message.report;
+        state.mainViewMode = "report";
+      }
+      // "inline": report lives in the message itself; no main-view switch
+    }
   }),
   setInputValue: action((state, value) => {
     state.inputValue = value;
@@ -125,6 +145,15 @@ export const AiExplorerChats: AiExplorerChatsModel = {
     state.chats = state.chats.filter((c) => c.id !== chatId);
     if (state.activeChatId === chatId) {
       state.activeChatId = state.chats[0]?.id ?? null;
+      state.mainViewMode = "explore";
     }
+    delete state.generatedReports[chatId];
+  }),
+  setGeneratedReport: action((state, { chatId, report }) => {
+    state.generatedReports[chatId] = report;
+    state.mainViewMode = "report";
+  }),
+  clearGeneratedReport: action((state) => {
+    state.mainViewMode = "explore";
   }),
 };

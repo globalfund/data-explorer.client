@@ -6,8 +6,8 @@ import Typography from "@mui/material/Typography";
 import ChatIcon from "@mui/icons-material/Chat";
 import { useTitle } from "react-use";
 import { BasicAuthGuard } from "app/components/basic-auth-guard";
-import { IntroSection } from "app/pages/ai-explorer/components/IntroSection";
-import { FeatureSection } from "app/pages/ai-explorer/components/FeatureSection";
+import { ExploreView } from "app/pages/ai-explorer/components/ExploreView";
+import { ReportView } from "app/pages/ai-explorer/components/ReportView";
 import { ChatPanel } from "app/pages/ai-explorer/components/ChatPanel";
 import { PageRoot, CHAT_PANEL_WIDTH } from "app/pages/ai-explorer/styles";
 import { useStoreState, useStoreActions } from "app/state/store/hooks";
@@ -16,10 +16,19 @@ const AiExplorerContent: React.FC = () => {
   useTitle("The Data Explorer - AI Explorer");
 
   const isPanelOpen = useStoreState((s) => s.AiExplorerChats.isPanelOpen);
+  const mainViewMode = useStoreState((s) => s.AiExplorerChats.mainViewMode);
+  const activeChatId = useStoreState((s) => s.AiExplorerChats.activeChatId);
+  const generatedReports = useStoreState(
+    (s) => s.AiExplorerChats.generatedReports,
+  );
+  const chats = useStoreState((s) => s.AiExplorerChats.chats);
+
   const togglePanel = useStoreActions((a) => a.AiExplorerChats.togglePanel);
   const createChat = useStoreActions((a) => a.AiExplorerChats.createChat);
-  const chats = useStoreState((s) => s.AiExplorerChats.chats);
-  const activeChatId = useStoreState((s) => s.AiExplorerChats.activeChatId);
+
+  const activeReport = activeChatId
+    ? generatedReports[activeChatId]
+    : undefined;
 
   const handleOpenChat = () => {
     if (chats.length === 0 || activeChatId === null) {
@@ -71,10 +80,11 @@ const AiExplorerContent: React.FC = () => {
           </Typography>
         </Box>
 
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-          <IntroSection />
-          <FeatureSection />
-        </Box>
+        {mainViewMode === "report" && activeReport ? (
+          <ReportView report={activeReport} />
+        ) : (
+          <ExploreView />
+        )}
 
         <Tooltip
           title={isPanelOpen ? "Close chat" : "Open chat"}

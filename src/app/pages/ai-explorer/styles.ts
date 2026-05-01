@@ -104,6 +104,40 @@ export const HintChipsRow = styled(Box)`
   justify-content: center;
 `;
 
+export const InlineReportCardRoot = styled(Box)`
+  width: 100%;
+  border: 1px solid #d0dae8;
+  border-radius: 12px;
+  background: #f5f8ff;
+  overflow: hidden;
+`;
+
+export const InlineReportCardHeader = styled(Box)`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  user-select: none;
+  &:hover {
+    background: #ecf1fa;
+  }
+`;
+
+export const InlineReportCanvasContainer = styled(Box)`
+  overflow-y: auto;
+  max-height: 55vh;
+  border-top: 1px solid #d0dae8;
+  border-bottom: 1px solid #d0dae8;
+  background: #ffffff;
+`;
+
+export const InlineReportCardActions = styled(Box)`
+  display: flex;
+  gap: 8px;
+  padding: 8px 14px;
+`;
+
 export const ChatListItem = styled(Box)<{ active: boolean }>`
   padding: 10px 12px;
   cursor: pointer;

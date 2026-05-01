@@ -4,6 +4,8 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Chat } from "app/pages/ai-explorer/types";
 import { MessageList, MessageBubble } from "app/pages/ai-explorer/styles";
+import { InlineReportCard } from "app/pages/ai-explorer/components/InlineReportCard";
+import { useStoreState } from "app/state/store/hooks";
 
 interface Props {
   chat: Chat;
@@ -15,6 +17,7 @@ export const ChatMessageList: React.FC<Props> = ({
   isAssistantLoading,
 }) => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const activeChatId = useStoreState((s) => s.AiExplorerChats.activeChatId);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -22,24 +25,41 @@ export const ChatMessageList: React.FC<Props> = ({
 
   return (
     <MessageList>
-      {chat.messages.map((msg) => (
-        <Box
-          key={msg.id}
-          sx={{
-            display: "flex",
-            justifyContent: msg.role === "user" ? "flex-end" : "flex-start",
-          }}
-        >
-          <MessageBubble
-            role={msg.role}
-            data-testid={
-              msg.role === "assistant" ? "chat-message-assistant" : undefined
-            }
+      {chat.messages.map((msg) => {
+        const hasInlineReport =
+          msg.role === "assistant" &&
+          !!msg.report &&
+          (msg.reportPlacement ?? "inline") === "inline";
+
+        return (
+          <Box
+            key={msg.id}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: msg.role === "user" ? "flex-end" : "flex-start",
+              gap: 1,
+            }}
           >
-            {msg.content}
-          </MessageBubble>
-        </Box>
-      ))}
+            {msg.content && (
+              <MessageBubble
+                role={msg.role}
+                data-testid={
+                  msg.role === "assistant"
+                    ? "chat-message-assistant"
+                    : undefined
+                }
+              >
+                {msg.content}
+              </MessageBubble>
+            )}
+
+            {hasInlineReport && activeChatId && (
+              <InlineReportCard report={msg.report!} chatId={activeChatId} />
+            )}
+          </Box>
+        );
+      })}
 
       {isAssistantLoading && (
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>

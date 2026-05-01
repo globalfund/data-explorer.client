@@ -1,3 +1,7 @@
+import { RBReportModel } from "app/state/api/action-reducers/report-builder/sync";
+
+export type ReportPlacement = "inline" | "main_view";
+
 export type FeatureStatus = "implemented" | "pipeline" | "not-planned";
 
 export interface AiFeature {
@@ -17,6 +21,8 @@ export interface ChatMessage {
   role: ChatRole;
   content: string;
   createdAt: number;
+  report?: RBReportModel;
+  reportPlacement?: ReportPlacement;
 }
 
 export interface Chat {
