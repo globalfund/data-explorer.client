@@ -8,13 +8,23 @@ This document describes the report builder feature at the implementation level. 
 
 The report builder lets users compose data-driven reports from a drag-and-drop canvas of typed blocks (charts, text, images, KPI boxes, grids, etc.). Reports are persisted server-side; the canvas state is managed in Easy Peasy and autosaved via a debounced PATCH call.
 
-Three pages constitute the feature:
+Four pages constitute the feature:
 
 | URL | Component | File |
 |-----|-----------|------|
 | `/report-builder` | `ReportBuilder` | `src/app/pages/report-builder/main/index.tsx` |
 | `/report-builder/reports/:id/edit` | `ReportBuilderPage` | `src/app/pages/report-builder/builder/index.tsx` |
-| `/report-builder/reports/:id` | `ReportBuilderPreviewPage` | `src/app/pages/report-builder/preview/index.tsx` + `ReportCanvas.tsx` |
+| `/report-builder/reports/:id` | `ReportBuilderPreviewPage` | `src/app/pages/report-builder/preview/index.tsx` |
+| | `ReportCanvas` | `src/app/pages/report-builder/preview/ReportCanvas.tsx` (stateful, reads from Easy Peasy) |
+| | `StatelessReportCanvas` | `src/app/pages/report-builder/preview/StatelessReportCanvas.tsx` (stateless, receives full report model) |
+
+### Report Builder Preview
+
+There are two versions of the ReportCanvas.
+
+First, ReportCanvas (stateful): The preview page (ReportBuilderPreviewPage) fetches the report via useGetReport(id), stores it in Easy Peasy via setActiveReport(), and ReportCanvas reads from that live store. This means if the user makes changes in the builder and switches to preview, they see the latest state immediately without needing another API call.
+
+Subsequently, StatelessReportCanvas (stateless) was created: To render a report without the app state, for example, to integrate a report into chat UI. generating a PDF on the server, or creating a thumbnail image. It takes the full report model and renders it directly, with no dependencies on the app's runtime state. They share the same checkEmptyItem utility to ensure consistent filtering logic.
 
 ---
 
@@ -201,6 +211,28 @@ Status states shown in the header: `"Saving…"` → `"Saved ✓"` | `"Couldn't 
 
 - Navigate to `/report-builder/reports/:id` (header preview icon → `<Link>` to preview URL).
 - Same `useGetReport` + `setActiveReport` hydration path.
+
+#### Two Preview Renderers
+
+The preview has two canvas components for rendering reports:
+
+| Component | Purpose | Data Source |
+|-----------|---------|--------------|
+| `ReportCanvas` | Used by `ReportBuilderPreviewPage` for interactive preview | Reads from Easy Peasy store (`RBReportItemsState`) |
+| `StatelessReportCanvas` | Used for static rendering (PDF export, thumbnails) | Receives complete `RBReportModel` as prop |
+
+#### Shared Utilities
+
+The preview shares components with the builder via `src/app/pages/report-builder/components/`:
+
+| File | Contents |
+|------|----------|
+| `GlobalFundLogo.tsx` | "Prepared using" label + Global Fund SVG logo |
+| `ReportDisclaimer.tsx` | Disclaimer text component + constant (`REPORT_DISCLAIMER_TEXT`) |
+| `checkEmptyItem.ts` | Unified empty-item filter logic for both canvas renderers |
+
+The `checkEmptyItem()` utility filters out blocks with no content before rendering. It handles all item types including `section_divider` (always rendered), `grid`/`column` (recursive check), and includes safety checks with optional chaining for all data accesses.
+
 - `checkEmptyItem()` filters out blocks with no content before render.
 - All blocks receive `viewMode={true}` → click handlers disabled, drag handles hidden, `ElementsController` not rendered.
 - On unmount: `resetReport()` clears Easy Peasy store.
@@ -331,7 +363,7 @@ const { item, updateItem } = useGetReportItemState(id, parent);
 3. Add a `getItemByType` case in both `builder/index.tsx` and `preview/index.tsx` to render the new component.
 4. Add the menu entry in `header/add-component.tsx` with default `options` and `data`.
 5. Add an `ElementsController` panel component under `panel/elements-controller/<type>/`.
-6. Add a `checkEmptyItem` case in the preview's empty-item filter so blank blocks are excluded.
+6. Add a `checkEmptyItem` case in `components/checkEmptyItem.ts` so blank blocks are excluded from preview rendering.
 7. Document the expected `options` shape in the block's default initializer in `add-component.tsx`.
 
 ---
@@ -373,9 +405,14 @@ src/app/pages/report-builder/
 │       │   ├── hooks/useEcharts.tsx        ECharts option builders (all 9 types)
 │       │   └── data.tsx                    datasetItems + chartTypes lists
 │       └── order-container/index.tsx       ItemComponent (useDrag + useDrop)
+├── components/                              Shared utilities for RB pages
+│   ├── GlobalFundLogo.tsx                  "Prepared using" label + GF logo
+│   ├── ReportDisclaimer.tsx                Disclaimer text component
+│   └── checkEmptyItem.ts                   Unified empty-item filter logic
 ├── preview/
-│   ├── index.tsx                       Read-only preview page
-│   └── ReportCanvas.tsx                  Canvas renderer for preview (wraps Easy Peasy store)
+│   ├── index.tsx                           ReportBuilderPreviewPage (wrapper)
+│   ├── ReportCanvas.tsx                   Stateful canvas (reads from Easy Peasy)
+│   └── StatelessReportCanvas.tsx          Stateless canvas (receives RBReportModel)
 └── hooks/
     └── useGetReportItemState.ts            Uniform item read/write (top-level + grid child)
 
