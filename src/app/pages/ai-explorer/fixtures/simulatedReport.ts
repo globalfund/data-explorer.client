@@ -839,6 +839,210 @@ function dividerItem(id: string) {
   };
 }
 
+function generatedComponentItem(
+  id: string,
+  suggestedName: string,
+  componentCode: string,
+  propsInterface: Record<string, string>,
+  props: Record<string, unknown>,
+) {
+  return {
+    id,
+    type: "generated_component" as const,
+    open: false,
+    focus: false,
+    data: {
+      component_code: componentCode,
+      suggested_name: suggestedName,
+      props_interface: propsInterface,
+      props,
+    },
+  };
+}
+
+const NOVELTY_REQUEST_CODE = `
+function NoveltyRequest({ title, description, variant }) {
+  var isExplorer = variant !== 'publisher';
+  var primaryColor = isExplorer ? '#3B6CD3' : '#04857F';
+  var backgroundColor = isExplorer ? '#ebf0fb' : '#E6F3F2';
+
+  return React.createElement('div', {
+    style: {
+      backgroundColor: backgroundColor,
+      borderRadius: '8px',
+      padding: '24px',
+      margin: '16px 0',
+      border: '1px solid ' + primaryColor,
+      boxShadow: '0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
+      fontFamily: 'Inter, sans-serif',
+    }
+  },
+    React.createElement('div', {
+      style: { display: 'flex', alignItems: 'flex-start', gap: '16px' }
+    },
+      React.createElement('div', {
+        style: {
+          flex: '0 0 auto',
+          width: '40px',
+          height: '40px',
+          borderRadius: '50%',
+          backgroundColor: primaryColor,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#FFFFFF',
+          fontWeight: 'bold',
+          fontSize: '18px',
+        }
+      }, 'N'),
+      React.createElement('div', { style: { flex: '1' } },
+        React.createElement('h3', {
+          style: { margin: '0 0 8px 0', color: '#0C162A', fontSize: '20px', fontWeight: '600' }
+        }, title),
+        React.createElement('p', {
+          style: { margin: '0', color: '#454545', fontSize: '14px', lineHeight: '1.5' }
+        }, description)
+      )
+    )
+  );
+}
+
+export default NoveltyRequest;
+`.trim();
+
+const TAG_CLOUD_CODE = `
+function TagCloud({ tags, minFontSize, maxFontSize }) {
+  var mn = minFontSize !== undefined ? minFontSize : 12;
+  var mx = maxFontSize !== undefined ? maxFontSize : 32;
+
+  if (!tags || tags.length === 0) {
+    return React.createElement('div', {
+      style: { fontStyle: 'italic', color: '#888888' }
+    }, 'No tags available.');
+  }
+
+  var weights = tags.map(function(t) { return t.weight; });
+  var minWeight = Math.min.apply(null, weights);
+  var maxWeight = Math.max.apply(null, weights);
+  var range = maxWeight - minWeight || 1;
+
+  return React.createElement('div', {
+    style: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: '12px',
+      padding: '16px',
+      fontFamily: 'Inter, sans-serif',
+    }
+  },
+    tags.map(function(tag, idx) {
+      var size = Math.round(((tag.weight - minWeight) / range) * (mx - mn) + mn);
+      var opacity = 0.5 + ((tag.weight - minWeight) / range) * 0.5;
+      return React.createElement('span', {
+        key: idx,
+        style: {
+          fontSize: size + 'px',
+          color: '#002561',
+          opacity: opacity,
+          fontWeight: tag.weight > (minWeight + range * 0.6) ? '600' : '400',
+          cursor: 'default',
+          transition: 'opacity 0.2s',
+        }
+      }, tag.text);
+    })
+  );
+}
+
+export default TagCloud;
+`.trim();
+
+const CREATIVE_EXPLORATION_PANEL_CODE = `
+function CreativeExplorationPanel({ title, description, prompt, ideas, loading, variant }) {
+  var accentColor = variant === 'publisher' ? '#04857F' : '#3B6CD3';
+  var trackColor  = variant === 'publisher' ? '#E6F3F2' : '#ebf0fb';
+  var badgeText   = variant === 'publisher' ? 'Publisher mode' : 'Explorer mode';
+
+  return React.createElement('section', {
+    style: {
+      border: '1px solid ' + accentColor,
+      borderRadius: 8,
+      padding: 24,
+      background: '#FFFFFF',
+      boxShadow: '0px 1px 14px 0px rgba(0,0,0,0.12)',
+      fontFamily: 'Inter, sans-serif',
+      color: '#454545',
+    }
+  },
+    loading && React.createElement('div', {
+      style: {
+        width: '100%', height: 8, borderRadius: 4,
+        backgroundColor: trackColor, overflow: 'hidden', marginBottom: 16,
+      }
+    },
+      React.createElement('div', {
+        style: {
+          width: '65%', height: '100%', borderRadius: 4,
+          backgroundColor: accentColor, transition: 'width 0.6s ease-in-out',
+        }
+      })
+    ),
+    React.createElement('div', {
+      style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }
+    },
+      React.createElement('h2', {
+        style: { margin: 0, fontSize: 22, fontWeight: 700, color: '#0C162A' }
+      }, title),
+      React.createElement('span', {
+        style: {
+          fontSize: 12, fontWeight: 600, padding: '4px 8px',
+          borderRadius: 999, backgroundColor: accentColor, color: '#FFFFFF',
+        }
+      }, badgeText)
+    ),
+    React.createElement('p', {
+      style: { margin: '0 0 18px 0', fontSize: 14, lineHeight: 1.5 }
+    }, description),
+    React.createElement('div', {
+      style: {
+        backgroundColor: '#F7F7F7', borderRadius: 5, padding: 16,
+        marginBottom: 18, border: '1px solid ' + trackColor,
+      }
+    },
+      React.createElement('p', {
+        style: { margin: '0 0 8px 0', fontSize: 14, fontWeight: 600, color: '#0C162A' }
+      }, 'Prompt focus'),
+      React.createElement('p', { style: { margin: 0, fontSize: 14, lineHeight: 1.4 } }, prompt)
+    ),
+    React.createElement('div', {
+      style: { marginBottom: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }
+    },
+      React.createElement('p', {
+        style: { margin: 0, fontSize: 14, fontWeight: 600, color: '#0C162A' }
+      }, 'Suggested explorations'),
+      React.createElement('span', {
+        style: { fontSize: 12, color: '#888888' }
+      }, ideas.length + ' idea' + (ideas.length === 1 ? '' : 's'))
+    ),
+    ideas.length === 0
+      ? React.createElement('p', {
+          style: { margin: 0, fontSize: 14, color: '#888888' }
+        }, 'No ideas yet.')
+      : React.createElement('ul', {
+          style: { margin: 0, paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 8 }
+        },
+          ideas.map(function(idea, i) {
+            return React.createElement('li', {
+              key: i,
+              style: { fontSize: 14, lineHeight: 1.4, color: '#454545' }
+            }, idea);
+          })
+        )
+  );
+}
+
+export default CreativeExplorationPanel;
+`.trim();
+
 // Report template
 const SIMULATED_REPORT_TEMPLATE: RBReportModel = {
   name: "AI Explorer Comprehensive Demo Report",
@@ -1142,6 +1346,99 @@ const SIMULATED_REPORT_TEMPLATE: RBReportModel = {
         ],
       },
     },
+
+    // Generated components
+    headingItem(
+      "sim_heading_generated",
+      "Generated Components",
+      "Custom React components generated by the AI agent and rendered in sandboxed iframes. Use these for bespoke visualisations that no standard chart type covers.",
+    ),
+    generatedComponentItem(
+      "sim_gen_novelty",
+      "NoveltyRequest",
+      NOVELTY_REQUEST_CODE,
+      {
+        title: "string",
+        description: "string",
+        variant: "'explorer' | 'publisher'",
+      },
+      {
+        title: "AI-Powered Report Builder",
+        description:
+          "Generate data reports from natural language using the Global Fund Data Explorer's new AI capabilities. Ask questions about allocations, disbursements, and results across all active grants.",
+        variant: "explorer",
+      },
+    ),
+    dividerItem("sim_divider_gen_1"),
+    headingItem(
+      "sim_heading_gen_tagcloud",
+      "Tag Cloud",
+      "Weighted tag cloud — font size and opacity scale with the weight value.",
+    ),
+    generatedComponentItem(
+      "sim_gen_tagcloud",
+      "TagCloud",
+      TAG_CLOUD_CODE,
+      {
+        tags: "Array<{ text: string; weight: number }>",
+        minFontSize: "number | undefined",
+        maxFontSize: "number | undefined",
+      },
+      {
+        tags: [
+          { text: "HIV/AIDS", weight: 10 },
+          { text: "Malaria", weight: 8 },
+          { text: "Tuberculosis", weight: 6 },
+          { text: "Africa", weight: 9 },
+          { text: "Disbursements", weight: 7 },
+          { text: "Allocations", weight: 8 },
+          { text: "Asia", weight: 5 },
+          { text: "Pledges", weight: 6 },
+          { text: "Grants", weight: 7 },
+          { text: "Americas", weight: 3 },
+          { text: "2023–2025 Cycle", weight: 9 },
+          { text: "Results", weight: 5 },
+          { text: "Europe", weight: 2 },
+          { text: "Oceania", weight: 2 },
+        ],
+        minFontSize: 14,
+        maxFontSize: 36,
+      },
+    ),
+    dividerItem("sim_divider_gen_2"),
+    headingItem(
+      "sim_heading_gen_panel",
+      "Creative Exploration Panel",
+      "A richer widget combining variant theming, a loading bar, a prompt block, and a list of suggested explorations.",
+    ),
+    generatedComponentItem(
+      "sim_gen_panel",
+      "CreativeExplorationPanel",
+      CREATIVE_EXPLORATION_PANEL_CODE,
+      {
+        title: "string",
+        description: "string",
+        prompt: "string",
+        ideas: "string[]",
+        loading: "boolean",
+        variant: '"explorer" | "publisher"',
+      },
+      {
+        title: "Disbursement Analysis",
+        description:
+          "Surface insights from Global Fund disbursement data using natural language queries and AI-assisted chart selection.",
+        prompt:
+          "Which regions received the largest disbursement increases in the 2023–2025 cycle?",
+        ideas: [
+          "Compare Africa vs Asia disbursement growth rates",
+          "Show disbursement efficiency by disease component",
+          "Map countries with highest TB funding per capita",
+          "Overlay pledges vs actual disbursements by year",
+        ],
+        loading: false,
+        variant: "explorer",
+      },
+    ),
 
     // Footer
     dividerItem("sim_divider_footer"),

@@ -11,6 +11,7 @@ import { checkEmptyItem } from "app/pages/report-builder/components/checkEmptyIt
 import KPIBox from "app/pages/report-builder/builder/components/kpi";
 import SectionDivider from "app/pages/report-builder/builder/components/section-divider";
 import ViewModeContainer from "app/pages/report-builder/builder/components/order-container/view";
+import { GeneratedComponentBlock } from "app/pages/report-builder/preview/GeneratedComponentBlock";
 
 export interface ReportCanvasSettings {
   width: string;
@@ -90,6 +91,12 @@ function getItemByType(item: RBReportItem) {
       return (
         <ViewModeContainer>
           <SectionDivider id={item.id} viewMode />
+        </ViewModeContainer>
+      );
+    case "generated_component":
+      return (
+        <ViewModeContainer>
+          <GeneratedComponentBlock data={item.data} />
         </ViewModeContainer>
       );
     default:

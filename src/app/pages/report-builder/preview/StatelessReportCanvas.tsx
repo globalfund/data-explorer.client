@@ -10,6 +10,7 @@ import {
 } from "app/state/api/action-reducers/report-builder/sync";
 import ChartComponent from "app/pages/report-builder/builder/components/chart/chart-component";
 import { checkEmptyItem } from "app/pages/report-builder/components/checkEmptyItem";
+import { GeneratedComponentBlock } from "app/pages/report-builder/preview/GeneratedComponentBlock";
 import { DEFAULT_VISUAL_OPTIONS } from "app/pages/report-builder/builder/components/panel/elements-controller/chart/utils";
 
 /**
@@ -387,6 +388,8 @@ function StatelessItemRenderer({
           compact={compact}
         />
       );
+    case "generated_component":
+      return <GeneratedComponentBlock data={item.data} compact={compact} />;
     default:
       return null;
   }

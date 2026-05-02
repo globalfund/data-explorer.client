@@ -68,6 +68,7 @@ type RBReportItemTypes =
   | "grid"
   | "column"
   | "section_divider"
+  | "generated_component"
   | "unknown";
 
 interface RBReportItem {
@@ -93,6 +94,7 @@ interface RBReportItem {
 | `grid` | `{ rows: number, columns: number, items: RBReportItem[] }` |
 | `column` | `{ columns: number, items: RBReportItem[] }` |
 | `section_divider` | `null` |
+| `generated_component` | `{ component_code: string, suggested_name: string, props_interface: Record<string, string>, props: Record<string, unknown> }` - LLM-generated React component |
 | `unknown` | `null` - empty cell placeholder in a grid |
 
 #### Item options (layout/style overrides)
@@ -342,6 +344,86 @@ interface RBRenderedChartData {
 `src/app/pages/report-builder/builder/components/chart/chart-component.tsx` calls `useEcharts()` which builds an ECharts option object per chart type. The hook uses `echarts.init()` + `chart.setOption()`. A `ResizeObserver` handles responsive sizing. The `datazoom` event is listened to and debounced back to the store.
 
 Heatmap is handled by a separate `HeatmapChartComponent` due to rendering differences.
+
+---
+
+## Generated Component Block
+
+The `generated_component` block type allows embedding arbitrary React components — generated at query time by the LLM agent — directly into a report. This is used when no standard chart type fits the visualization needs, or when a bespoke widget (tag cloud, scorecard, progress ring) communicates the data better.
+
+### Data Shape
+
+```ts
+interface RBGeneratedComponentData {
+  component_code: string;                  // full JSX including `export default Name`
+  suggested_name: string;                  // display label (for toolbar, errors)
+  props_interface: Record<string, string>; // prop name → TypeScript type string (docs/debugging only)
+  props: Record<string, unknown>;         // actual prop values injected into the component
+}
+```
+
+### Wire format example
+
+```json
+{
+  "id": "<uuid>",
+  "type": "generated_component",
+  "open": false,
+  "focus": false,
+  "key": 0,
+  "data": {
+    "component_code": "function TagCloud({ tags, minFontSize = 12, maxFontSize = 24 }) {\n  ...\n}\n\nexport default TagCloud;",
+    "suggested_name": "TagCloud",
+    "props_interface": {
+      "tags": "Array<{ text: string; weight: number }>",
+      "minFontSize": "number | undefined",
+      "maxFontSize": "number | undefined"
+    },
+    "props": {
+      "tags": [
+        { "text": "HIV", "weight": 10 },
+        { "text": "Malaria", "weight": 6 },
+        { "text": "TB", "weight": 4 }
+      ]
+    }
+  },
+  "options": {}
+}
+```
+
+### Rendering
+
+The component is rendered via a sandboxed `<iframe>` with the following approach:
+
+1. Extract the component name from `export default <Name>` via regex
+2. Strip the `export default …;` line so the code is valid inside a `<script>` tag
+3. Serialize `props` to JSON
+4. Build a self-contained HTML document embedding React 18 UMD + Babel Standalone, then inject it into a sandboxed `<iframe srcDoc={…}>`
+
+**File:** `src/app/pages/report-builder/preview/GeneratedComponentBlock.tsx`
+
+### Security
+
+The iframe uses `sandbox="allow-scripts"` without `allow-same-origin`, meaning:
+- The iframe's origin is `null`
+- It cannot access `window.parent`, localStorage, cookies, or any parent DOM
+- Full isolation from the parent React context, store, and credentials
+
+### Constraints for Agent-Generated Code
+
+When the LLM agent generates component code, it must follow these rules:
+- Use only inline styles — no CSS imports, no className, no MUI
+- No `import` or `require` statements — React is available as a global (`React`, `ReactDOM`)
+- Must export exactly one component via `export default`
+- Props must match the `props` object passed in — do not hardcode data inside the component
+
+### Editing
+
+Generated components cannot be edited from the report builder UI. Editing would require a code editor panel in the configuration panel. Users can only view and delete them.
+
+### MCP Tool
+
+The backend provides a `build_generated_component_item` MCP tool for the agent to construct valid items. It validates that `component_code` contains `export default <Name>` before returning a valid item.
 
 ---
 

@@ -12,6 +12,7 @@ export type RBReportItemTypes =
   | "grid"
   | "column"
   | "section_divider"
+  | "generated_component"
   | "unknown";
 
 export type ObjectFitTypes =
@@ -105,6 +106,14 @@ type RBReportItemDataByType = {
   column: { columns: number; items: RBReportItem[] };
 
   section_divider: null;
+
+  generated_component: {
+    component_code: string;
+    suggested_name: string;
+    props_interface: Record<string, string>;
+    props: Record<string, unknown>;
+  };
+
   unknown: null;
 };
 

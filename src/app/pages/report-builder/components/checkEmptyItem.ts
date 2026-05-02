@@ -37,6 +37,8 @@ export function checkEmptyItem(item: RBReportItem): boolean {
       return !!item.data?.src;
     case "section_divider":
       return true;
+    case "generated_component":
+      return !!item.data?.component_code;
     default:
       return false;
   }

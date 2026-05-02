@@ -279,7 +279,7 @@ flowchart LR
     subgraph shared["Shared rendering"]
         hydrate["useGetReport(id)\n→ setActiveReport()\n→ Easy Peasy store"]
         items["RBReportItemsState.items"]
-        render["Item components\n(chart, text, image, kpi_box…)"]
+        render["Item components\n(chart, text, image, kpi_box,\ngenerated_component, grid, column…)"]
     end
 
     builderPage --> hydrate
