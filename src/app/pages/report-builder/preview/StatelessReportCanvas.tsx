@@ -10,6 +10,50 @@ import {
 } from "app/state/api/action-reducers/report-builder/sync";
 import ChartComponent from "app/pages/report-builder/builder/components/chart/chart-component";
 import { checkEmptyItem } from "app/pages/report-builder/components/checkEmptyItem";
+import { DEFAULT_VISUAL_OPTIONS } from "app/pages/report-builder/builder/components/panel/elements-controller/chart/utils";
+
+/**
+ * Resolve visual options for a chart based on its type and any specific options provided in the report item.
+ *
+ * @param chartType - The type of the chart (e.g., "bar", "line", "geomap") to determine the default visual options schema
+ * @param itemOptions - The specific visual options provided in the report item, which may override the defaults
+ * @returns An object containing the resolved visual options for the chart, combining defaults and item-specific overrides
+ */
+function resolveVisualOptions(
+  chartType: string,
+  itemOptions: Record<string, any> | undefined,
+): Record<string, any> {
+  const schema = DEFAULT_VISUAL_OPTIONS[chartType] ?? {};
+  const defaults = Object.fromEntries(
+    Object.entries(schema).map(([k, v]) => {
+      if (v.type === "advancedOptions" && v.advancedOptions) {
+        const nested = Object.fromEntries(
+          Object.entries(v.advancedOptions).map(([nk, nv]: [string, any]) => [
+            nk,
+            nv.default,
+          ]),
+        );
+        return [k, nested];
+      }
+      return [k, v.default];
+    }),
+  );
+  return { ...defaults, ...(itemOptions ?? {}) };
+}
+
+let cachedGeoJSON: any = null;
+
+/**
+ * Load preload geoJSON to be able to render the geomap chart in static preview.
+ *
+ * @returns A promise that resolves to the loaded geoJSON data
+ */
+async function loadGeoJSON(): Promise<any> {
+  if (cachedGeoJSON) return cachedGeoJSON;
+  const res = await fetch("/static/simple.geo.json");
+  cachedGeoJSON = await res.json();
+  return cachedGeoJSON;
+}
 
 interface StatelessReportCanvasProps {
   report: RBReportModel;
@@ -129,19 +173,34 @@ function StatelessChartBlock({
   compact?: boolean;
 }) {
   const data = item.data;
-  // Backend-generated reports include mappedData inside renderedChartData.
-  // The builder strips it out when persisting, so the stored type omits it.
   const renderedWithData = data?.renderedChartData as
     | (typeof data.renderedChartData & { mappedData?: any })
     | undefined;
 
-  // Each mounted instance needs a unique DOM id so that when the same report
-  // is rendered in both the inline card and the main view simultaneously,
-  // document.getElementById(id) inside useEcharts finds the correct element.
   const instanceId = React.useId().replace(/:/g, "");
   const chartId = `stateless-${item.id}-${instanceId}`;
 
-  if (!data?.chartType || !renderedWithData?.mappedData) {
+  const visualOptions = React.useMemo(
+    () => resolveVisualOptions(data?.chartType ?? "", item.options),
+    [data?.chartType, item.options],
+  );
+
+  const [chartData, setChartData] = React.useState<any>(
+    renderedWithData?.mappedData ?? null,
+  );
+
+  React.useEffect(() => {
+    if (data?.chartType !== "geomap" || !renderedWithData?.mappedData) return;
+    if (renderedWithData.mappedData.geoJSON) {
+      setChartData(renderedWithData.mappedData);
+      return;
+    }
+    loadGeoJSON().then((geoJSON) => {
+      setChartData({ ...renderedWithData.mappedData, geoJSON });
+    });
+  }, [data?.chartType, renderedWithData?.mappedData]);
+
+  if (!data?.chartType || !chartData) {
     return (
       <Box
         sx={{
@@ -163,16 +222,16 @@ function StatelessChartBlock({
   return (
     <Box
       sx={{
-        width: item.options?.width ?? "100%",
-        height: item.options?.height ?? (compact ? 220 : 320),
+        width: visualOptions.width ?? "100%",
+        height: visualOptions.height ?? (compact ? 220 : 320),
         position: "relative",
       }}
     >
       <ChartComponent
-        data={renderedWithData.mappedData}
+        data={chartData}
         chartType={data.chartType}
         mapping={data.mapping}
-        visualOptions={item.options ?? {}}
+        visualOptions={visualOptions}
         id={chartId}
         readOnly
       />

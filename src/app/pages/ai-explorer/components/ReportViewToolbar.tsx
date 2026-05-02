@@ -53,7 +53,7 @@ export const ReportViewToolbar: React.FC<ReportViewToolbarProps> = ({
         onClick={() => clearGeneratedReport()}
         sx={{ color: "#002561", textTransform: "none" }}
       >
-        Back to Explorer
+        Back to AI Explorer
       </Button>
 
       <Box sx={{ flex: 1 }}>

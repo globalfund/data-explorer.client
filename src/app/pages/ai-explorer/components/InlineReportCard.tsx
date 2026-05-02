@@ -40,7 +40,8 @@ export const InlineReportCard: React.FC<InlineReportCardProps> = ({
 
   useLayoutEffect(() => {
     if (!expanded || !containerRef.current) return;
-    const reportWidth = Number.parseInt(report.settings.width ?? "1200", 10) || 1200;
+    const reportWidth =
+      Number.parseInt(report.settings.width ?? "1200", 10) || 1200;
     const containerWidth = containerRef.current.offsetWidth;
     setScale(Math.min(1, containerWidth / reportWidth));
   }, [expanded, report.settings.width]);
