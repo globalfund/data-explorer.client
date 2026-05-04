@@ -13,7 +13,7 @@ import { ReportBuilderNewReportModal } from "app/pages/report-builder/main/compo
 import {
   AssetViewType,
   ReportBuilderAssetsToolbar,
-} from "./components/all-assets-view/toolbar";
+} from "app/pages/report-builder/main/components/all-assets-view/toolbar";
 
 export const ReportBuilder: React.FC = () => {
   const [sidebarSelectedItem, setSidebarSelectedItem] =

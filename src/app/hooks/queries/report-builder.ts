@@ -54,13 +54,17 @@ export const useGetAsset = (assetId?: string) => {
 
 export const useGetReports = (params: { sort: string; search: string }) => {
   // TODO: cache and manage invalidation
+  let filter = "";
+  if (params.search) {
+    filter = `{"where":{"name":{"like":".*${params.search}.*","options":"i"}},"order":["${params.sort}"]}`;
+  } else {
+    filter = `{"order":["${params.sort}"]}`;
+  }
   return useQuery({
     queryKey: ["ReportBuilderGetReports", params.search, params.sort],
     queryFn: () =>
       axiosInstance.get<RBReportModelResponse[]>(`/reports`, {
-        params: {
-          filter: `{"where":{"name":{"like":".*${params.search}.*","options":"i"}},"order":["${params.sort}"]}`,
-        },
+        params: { filter },
       }),
     staleTime: 1000 * 60 * 5,
   });
