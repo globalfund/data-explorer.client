@@ -660,6 +660,7 @@ export const AccessToFunding: React.FC = () => {
         </Box>
         <Table
           dataTree
+          disableHover
           dataTreeStartExpanded
           id="eligibility-table"
           data={dataEligibilityTable}

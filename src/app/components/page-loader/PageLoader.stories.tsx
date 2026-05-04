@@ -1,18 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { PageLoader } from "app/components/page-loader";
-import { withRouter } from "storybook-addon-remix-react-router";
 
 const meta = {
   title: "Components/Page loader",
   component: PageLoader,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof PageLoader>;
+} as Meta<typeof PageLoader>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Heatmap } from "app/components/charts/heatmap";
-import { withRouter } from "storybook-addon-remix-react-router";
 import {
   getEligibilityColor,
   getPercentageColor,
@@ -12,13 +11,12 @@ import {
 const meta = {
   title: "Components/Charts/Heatmap",
   component: Heatmap,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof Heatmap>;
+} as Meta<typeof Heatmap>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

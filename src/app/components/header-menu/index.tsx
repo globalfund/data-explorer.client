@@ -1,21 +1,17 @@
 import React from "react";
 import { colors } from "app/theme";
 import Box from "@mui/material/Box";
-import { Divider, styled } from "@mui/material";
 import Button from "@mui/material/Button";
-import Drawer from "@mui/material/Drawer";
 import Popover from "@mui/material/Popover";
-import Accordion from "@mui/material/Accordion";
+import Divider from "@mui/material/Divider";
+import Collapse from "@mui/material/Collapse";
+import { styled } from "@mui/material/styles";
 import Container from "@mui/material/Container";
-import IconClose from "@mui/icons-material/Close";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { useCMSData } from "app/hooks/useCMSData";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import ChevronRight from "@mui/icons-material/ChevronRight";
 import { useLocation, useNavigate } from "react-router-dom";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
 import {
   getPages,
   HeaderMenuPage,
@@ -58,7 +54,7 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
     if (!isSubPage) {
       const container = document.getElementById("header-menu-tabs-container");
       setAnchorEl(container);
-      setSelectedPage(page.id);
+      setSelectedPage(page.id === selectedPage ? null : page.id);
     }
     if (page.link) {
       navigate(page.link);
@@ -75,10 +71,6 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
     setAnchorEl(null);
   };
 
-  const handleCloseMobileMenu = () => {
-    props.setMobileMenuOpen(false);
-  };
-
   React.useEffect(() => {
     window.addEventListener("scroll", onScroll);
     return () => {
@@ -88,92 +80,117 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
 
   if (mobile) {
     return (
-      <Drawer
-        anchor="right"
-        open={props.mobileMenuOpen}
-        onClose={handleCloseMobileMenu}
+      <Collapse
+        sx={{
+          left: 0,
+          top: "77px",
+          width: "100vw",
+          position: "absolute",
+        }}
+        in={props.mobileMenuOpen}
       >
-        <IconButton
+        <Box
           sx={{
-            top: "10px",
-            zIndex: 1000,
-            right: "10px",
-            position: "absolute",
+            width: "100vw",
+            padding: "0 16px",
+            height: "calc(100vh - 77px)",
+            bgcolor: colors.primary.gray,
+            borderBottom: "1px solid #cfd4da",
+            "> button": {
+              width: "100%",
+              padding: "10px",
+              fontSize: "18px",
+              fontWeight: "700",
+              textTransform: "none",
+              color: colors.primary.black,
+              justifyContent: "flex-start",
+              ":not(:last-child)": {
+                borderBottom: "1px solid #cfd4da",
+              },
+            },
           }}
-          onClick={handleCloseMobileMenu}
         >
-          <IconClose htmlColor="#000" />
-        </IconButton>
-        <Box width="100vw" padding="16px">
           {PAGES.map((page) => {
-            if (page.subPages) {
-              return (
-                <Accordion
-                  expanded
-                  key={page.id}
-                  onChange={handleClick(false, page)}
+            return (
+              <React.Fragment key={page.id}>
+                <Button
+                  onClick={handleClick(false, page)}
+                  sx={
+                    page.id === selectedPage
+                      ? {
+                          color: "#3154f4 !important",
+                          borderStyle: "none !important",
+                        }
+                      : {}
+                  }
                 >
-                  <AccordionSummary
-                    sx={{
-                      marginBottom: "8px",
-                    }}
-                  >
-                    <Typography fontSize="20px" fontWeight="700">
-                      {page.label}
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
+                  {page.label}
+                  {page.subPages && page.subPages.length > 0 && (
+                    <ChevronRight
+                      sx={{
+                        ml: "8px",
+                        transform: `rotate(${selectedPage === page.id ? -90 : 90}deg)`,
+                      }}
+                    />
+                  )}
+                </Button>
+                {page.subPages && page.subPages.length > 0 && (
+                  <Collapse in={page.id === selectedPage}>
                     <Box
                       sx={{
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "column",
+                        paddingBottom: "10px",
+                        borderBottom: "1px solid #cfd4da",
                       }}
                     >
-                      {page.subPages.map((subPage) => (
-                        <Button
-                          key={subPage.id}
-                          onClick={handleClick(false, subPage)}
-                          sx={{
-                            width: "100%",
-                            padding: "6px 16px",
-                            textTransform: "none",
-                            color: colors.primary.black,
-                            justifyContent: "flex-start",
-                            fontWeight:
-                              subPage.link === location.pathname
-                                ? "700"
-                                : "400",
-                          }}
-                        >
-                          {subPage.label}
-                        </Button>
-                      ))}
+                      <Box
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
+                        {page.subPages.map((subPage) => (
+                          <Button
+                            key={subPage.id}
+                            onClick={handleClick(false, subPage)}
+                            sx={{
+                              width: "100%",
+                              padding: "10px 6px",
+                              textTransform: "none",
+                              color: colors.primary.black,
+                              justifyContent: "flex-start",
+                              fontWeight:
+                                subPage.link === location.pathname
+                                  ? "700"
+                                  : "400",
+                            }}
+                          >
+                            <Box
+                              gap="4px"
+                              width="100%"
+                              display="flex"
+                              flexDirection="column"
+                              alignItems="flex-start"
+                              sx={{ p: { textAlign: "start" } }}
+                            >
+                              <Typography fontSize="16px" fontWeight="700">
+                                {subPage.label}
+                              </Typography>
+                              <Typography fontSize="14px" lineHeight={1.4}>
+                                {subPage.description}
+                              </Typography>
+                            </Box>
+                          </Button>
+                        ))}
+                      </Box>
                     </Box>
-                  </AccordionDetails>
-                </Accordion>
-              );
-            }
-            return (
-              <Button
-                key={page.id}
-                onClick={handleClick(false, page)}
-                sx={{
-                  width: "100%",
-                  fontSize: "20px",
-                  padding: "6px 0",
-                  fontWeight: "700",
-                  textTransform: "none",
-                  color: colors.primary.black,
-                  justifyContent: "flex-start",
-                }}
-              >
-                {page.label}
-              </Button>
+                  </Collapse>
+                )}
+              </React.Fragment>
             );
           })}
         </Box>
-      </Drawer>
+      </Collapse>
     );
   }
 

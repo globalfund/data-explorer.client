@@ -1,19 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { LineChart } from "app/components/charts/line";
-import { withRouter } from "storybook-addon-remix-react-router";
 import { STORY_DATA_VARIANT_1 } from "app/components/charts/line/data";
 
 const meta = {
   title: "Components/Charts/Line chart",
   component: LineChart,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof LineChart>;
+} as Meta<typeof LineChart>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

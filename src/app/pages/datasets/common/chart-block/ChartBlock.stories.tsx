@@ -2,7 +2,6 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { BarChart } from "app/components/charts/bar";
-import { withRouter } from "storybook-addon-remix-react-router";
 import { STORY_DATA_VARIANT_2 } from "app/components/charts/bar/data";
 import { DatasetChartBlock } from "app/pages/datasets/common/chart-block";
 import { defaultAppliedFilters } from "app/state/api/action-reducers/sync/filters";
@@ -55,13 +54,12 @@ const Wrapper: React.FC = () => {
 const meta = {
   title: "Pages/Datasets/Common/Chart block",
   component: Wrapper,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof DatasetChartBlock>;
+} as Meta<typeof DatasetChartBlock>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

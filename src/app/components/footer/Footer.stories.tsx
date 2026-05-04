@@ -1,18 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Footer } from "app/components/footer";
-import { withRouter } from "storybook-addon-remix-react-router";
 
 const meta = {
   title: "Components/Footer",
   component: Footer,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof Footer>;
+} as Meta<typeof Footer>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

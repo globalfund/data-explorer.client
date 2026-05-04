@@ -138,10 +138,9 @@ import { FinancialInsightsHGISankey } from "app/state/api/action-reducers/financ
 import { FinancialInsightsHGITable } from "app/state/api/action-reducers/financial-insights/hgi-table";
 import { DatasetsLatestUpdate } from "app/state/api/action-reducers/latest-update";
 import {
-  changelog,
+  glossary,
   changelog,
   countrySummary,
-  glossary,
 } from "../api/action-reducers/cms/collections";
 import { formattedCollections } from "../api/action-reducers/cms/formatted";
 import componentHeader from "../api/action-reducers/cms/componentsHeader";

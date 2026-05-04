@@ -1,18 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Geography } from "app/pages/geography";
-import { withRouter } from "storybook-addon-remix-react-router";
 
 const meta = {
-  title: "Pages/Geography List",
+  title: "Pages/Geographies",
   component: Geography,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof Geography>;
+} as Meta<typeof Geography>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

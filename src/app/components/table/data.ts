@@ -29,6 +29,7 @@ export interface TableProps {
   extraColumns?: ColumnDefinition[];
   dataTreeStartExpandedFn?: (row: RowComponent, level: number) => boolean;
   onScrollToBottom?: () => void;
+  disableHover?: boolean;
 }
 
 export const cellBGColorFormatter = (cell: CellComponent) => {

@@ -1,15 +1,15 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import CircularProgress from "@mui/material/CircularProgress";
 import TBIcon from "app/assets/vectors/TB.svg?react";
 import HIVIcon from "app/assets/vectors/HIV.svg?react";
-import { applyResultValueFormula } from "app/utils/applyResultValueFormula";
+import CircularProgress from "@mui/material/CircularProgress";
 import MalariaIcon from "app/assets/vectors/Malaria.svg?react";
+import { applyResultValueFormula } from "app/utils/applyResultValueFormula";
 import {
+  statsOrder,
   StatCompProps,
   HomeResultsStatsProps,
-  statsOrder,
 } from "app/pages/home/components/results-stats/data";
 
 const StatComp: React.FC<StatCompProps> = (props: StatCompProps) => {
@@ -33,6 +33,9 @@ const StatComp: React.FC<StatCompProps> = (props: StatCompProps) => {
       sx={{
         b: {
           fontWeight: 900,
+        },
+        "@media (max-width: 767px)": {
+          justifyContent: "flex-start",
         },
       }}
     >

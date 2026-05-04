@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { RadialChart } from "app/components/charts/radial";
-import { withRouter } from "storybook-addon-remix-react-router";
 import {
   STORY_DATA_VARIANT_1,
   STORY_DATA_VARIANT_2,
@@ -13,13 +12,12 @@ import {
 const meta = {
   title: "Components/Charts/Radial chart",
   component: RadialChart,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof RadialChart>;
+} as Meta<typeof RadialChart>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

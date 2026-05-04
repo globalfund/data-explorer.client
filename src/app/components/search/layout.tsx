@@ -172,9 +172,6 @@ export function SearchLayout(props: SearchLayoutProps) {
             alignItems: "center",
             justifyContent: "center",
             background: appColors.COMMON.BLACK,
-            "@media (max-width: 767px)": {
-              height: "35px",
-            },
           }}
         >
           <SearchIcon htmlColor={appColors.COMMON.WHITE} />

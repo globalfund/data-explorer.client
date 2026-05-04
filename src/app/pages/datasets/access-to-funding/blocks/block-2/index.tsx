@@ -1,6 +1,7 @@
 import React from "react";
 import get from "lodash/get";
 import uniq from "lodash/uniq";
+import isEqual from "lodash/isEqual";
 import Box from "@mui/material/Box";
 import { appColors } from "app/theme";
 import Tooltip from "@mui/material/Tooltip";
@@ -19,7 +20,6 @@ import {
   cellBGColorFormatter,
   TABLE_VARIATION_10_COLUMNS as ELIGIBILITY_TABLE_COLUMNS,
 } from "app/components/table/data";
-import isEqual from "lodash/isEqual";
 
 interface AccessToFundingBlock2Props {
   filterGroups: FilterGroupModel[];
@@ -483,6 +483,7 @@ export const AccessToFundingBlock2: React.FC<AccessToFundingBlock2Props> = (
         </Box>
         <TableContainer
           dataTree
+          disableHover
           search={tableSearch}
           id="eligibility-table"
           data={dataEligibilityTable}
