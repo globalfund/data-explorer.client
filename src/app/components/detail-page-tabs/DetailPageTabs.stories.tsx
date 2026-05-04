@@ -2,7 +2,6 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { DetailPageTabs } from "app/components/detail-page-tabs";
-import { withRouter } from "storybook-addon-remix-react-router";
 import {
   getGrantTabs,
   getLocationTabs,
@@ -40,13 +39,12 @@ const Wrapper: React.FC<DetailPageTabsProps> = (props: DetailPageTabsProps) => {
 const meta = {
   title: "Components/Detail page tabs",
   component: Wrapper,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof Wrapper>;
+} as Meta<typeof Wrapper>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

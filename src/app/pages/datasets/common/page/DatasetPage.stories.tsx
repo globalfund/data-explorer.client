@@ -2,18 +2,16 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { DatasetPage } from "app/pages/datasets/common/page";
-import { withRouter } from "storybook-addon-remix-react-router";
 
 const meta = {
   title: "Pages/Datasets/Common/Page",
   component: DatasetPage,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof DatasetPage>;
+} as Meta<typeof DatasetPage>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

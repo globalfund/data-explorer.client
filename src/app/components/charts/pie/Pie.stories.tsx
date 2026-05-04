@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { PieChart } from "app/components/charts/pie";
-import { withRouter } from "storybook-addon-remix-react-router";
 import {
   STORY_DATA_VARIANT_1,
   STORY_DATA_VARIANT_2,
@@ -13,13 +12,12 @@ import {
 const meta = {
   title: "Components/Charts/Pie chart",
   component: PieChart,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof PieChart>;
+} as Meta<typeof PieChart>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

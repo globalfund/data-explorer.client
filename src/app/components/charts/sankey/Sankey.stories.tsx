@@ -1,19 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { SankeyChart } from "app/components/charts/sankey";
-import { withRouter } from "storybook-addon-remix-react-router";
 import { STORY_DATA_VARIANT_1 } from "app/components/charts/sankey/data";
 
 const meta = {
   title: "Components/Charts/Sankey chart",
   component: SankeyChart,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof SankeyChart>;
+} as Meta<typeof SankeyChart>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;
