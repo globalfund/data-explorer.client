@@ -1,6 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import { Table } from "app/components/table";
 import { useNavigate } from "react-router-dom";
 import { CellComponent } from "tabulator-tables";
@@ -16,7 +17,6 @@ import {
 import {
   Copy,
   Share,
-  Pencil,
   Folder,
   Settings,
   Backspace,
@@ -49,12 +49,6 @@ export const AllReportsView: React.FC<{
 
   const getAnchorElId = () => anchorEl?.getAttribute("id");
 
-  const handleEdit = () => {
-    const id = getAnchorElId();
-    if (!id) return;
-    navigate(`/report-builder/reports/${id}/edit`);
-  };
-
   const handleDuplicate = () => {
     const id = getAnchorElId();
     if (!id) return;
@@ -75,6 +69,10 @@ export const AllReportsView: React.FC<{
 
   const handleItemClick = (id: string) => () => {
     navigate(`/report-builder/reports/${id}`);
+  };
+
+  const handleEditClick = (id: string) => () => {
+    navigate(`/report-builder/reports/${id}/edit`);
   };
 
   const handleTableCellClick = (_e: UIEvent, cell: CellComponent) => {
@@ -100,76 +98,100 @@ export const AllReportsView: React.FC<{
     }
     if (selectedView === "cards") {
       return (
-        <Grid container spacing={2}>
+        <Grid container columnSpacing={2} rowSpacing={6}>
           {reports.data.map((item) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
-              <Box
-                sx={{
-                  width: "100%",
-                  height: "180px",
-                  display: "flex",
-                  paddingTop: "8px",
-                  cursor: "pointer",
-                  borderRadius: "2px",
-                  justifyContent: "center",
-                  border: "1px solid #cfd4da",
-                  div: {
-                    width: "calc(100% - 10px)",
-                    backgroundImage: `url(${import.meta.env.VITE_API}/report-thumbnail/${item.id}.png)`,
-                    backgroundRepeat: "no-repeat",
-                    backgroundPosition: "center",
-                    backgroundSize: "contain",
-                  },
-                }}
-                onClick={handleItemClick(item.id)}
-              >
-                <div />
-              </Box>
-              <Box
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  margin: "10px 0 5px 0",
-                  alignItems: "flex-start",
-                  justifyContent: "space-between",
-                }}
-              >
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              key={item.id}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
+              <Box>
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: "180px",
+                    display: "flex",
+                    paddingTop: "8px",
+                    cursor: "pointer",
+                    borderRadius: "2px",
+                    justifyContent: "center",
+                    border: "1px solid #cfd4da",
+                    div: {
+                      width: "calc(100% - 10px)",
+                      backgroundImage: `url(${import.meta.env.VITE_API}/report-thumbnail/${item.id}.png)`,
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center",
+                      backgroundSize: "contain",
+                    },
+                  }}
+                  onClick={handleItemClick(item.id)}
+                >
+                  <div />
+                </Box>
+                <Box
+                  sx={{
+                    margin: "10px 0 5px 0",
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    fontSize="16px"
+                    lineHeight="normal"
+                    sx={{ cursor: "pointer" }}
+                    onClick={handleItemClick(item.id)}
+                  >
+                    {item.name}
+                  </Typography>
+                </Box>
                 <Typography
-                  variant="h6"
-                  fontSize="16px"
-                  lineHeight="normal"
+                  variant="body2"
+                  width="calc(100% - 40px)"
                   sx={{ cursor: "pointer" }}
                   onClick={handleItemClick(item.id)}
                 >
-                  {item.name}
+                  {item.description}
                 </Typography>
-                <IconButton
-                  id={item.id}
-                  onClick={handleItemMenuClick}
-                  sx={{ padding: 0, marginLeft: "10px" }}
-                >
+              </Box>
+              <Box
+                sx={{
+                  gap: "10px",
+                  width: "100%",
+                  display: "flex",
+                  marginTop: "12px",
+                  alignItems: "center",
+                  "> button:not(:last-child)": {
+                    flex: "1",
+                    fontSize: "14px",
+                    bgcolor: "#fff",
+                    fontWeight: "400",
+                    height: "36px",
+                    borderRadius: "4px",
+                    lineHeight: "normal",
+                    textTransform: "none",
+                    border: "1px solid #98a1aa",
+                  },
+                }}
+              >
+                <Button onClick={handleEditClick(item.id)}>Edit</Button>
+                <Button onClick={handleItemClick(item.id)}>Preview</Button>
+                <IconButton id={item.id} onClick={handleItemMenuClick}>
                   <MoreVert />
                 </IconButton>
               </Box>
-              <Typography
-                variant="body2"
-                width="calc(100% - 40px)"
-                sx={{ cursor: "pointer" }}
-                onClick={handleItemClick(item.id)}
-              >
-                {item.description}
-              </Typography>
             </Grid>
           ))}
           <ReportBuilderItemMenu
             anchorEl={anchorEl}
             handleClose={handleClose}
             menuItems={[
-              {
-                label: "Edit",
-                icon: <Pencil />,
-                onClick: handleEdit,
-              },
               {
                 label: "Settings",
                 icon: <Settings />,
