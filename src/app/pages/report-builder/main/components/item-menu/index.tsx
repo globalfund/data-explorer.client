@@ -40,6 +40,11 @@ export const ReportBuilderItemMenu: React.FC<{
       anchorEl={props.anchorEl}
       onClose={props.handleClose}
       open={Boolean(props.anchorEl)}
+      slotProps={{
+        paper: {
+          id: "rb-item-menu-paper",
+        },
+      }}
       aria-labelledby="rb-item-button"
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       transformOrigin={{ vertical: "top", horizontal: "right" }}

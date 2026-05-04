@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { Table } from "app/components/table";
 import { useNavigate } from "react-router-dom";
+import TextField from "@mui/material/TextField";
 import { CellComponent } from "tabulator-tables";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -13,12 +14,14 @@ import { ReportBuilderItemMenu } from "app/pages/report-builder/main/components/
 import {
   useDeleteReport,
   useDuplicateReport,
+  usePatchReport2,
 } from "app/hooks/queries/report-builder";
 import {
   Copy,
   Share,
+  Pencil,
   Folder,
-  Settings,
+  Details,
   Backspace,
 } from "app/pages/report-builder/builder/components/report-settings/icons";
 
@@ -38,9 +41,13 @@ export const AllReportsView: React.FC<{
 }> = ({ selectedView, reports, refetch }) => {
   const navigate = useNavigate();
   const deleteReport = useDeleteReport();
+  const updateReport = usePatchReport2();
   const duplicateReport = useDuplicateReport();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [selectedItemForRenaming, setSelectedItemForRenaming] = React.useState<
+    string | null
+  >(null);
 
   const handleItemMenuClick = (event: React.MouseEvent<HTMLElement>) =>
     setAnchorEl(event.currentTarget);
@@ -48,6 +55,37 @@ export const AllReportsView: React.FC<{
   const handleClose = () => setAnchorEl(null);
 
   const getAnchorElId = () => anchorEl?.getAttribute("id");
+
+  const handleRename = () => {
+    const id = getAnchorElId();
+    if (!id) return;
+    setAnchorEl(null);
+    setSelectedItemForRenaming(id);
+    setTimeout(() => {
+      const element = document.getElementById(`rename-field-${id}`);
+      if (element) {
+        element.focus();
+      }
+    }, 100);
+  };
+
+  const handleRenameEnter = (id: string) => {
+    const name = (
+      document.getElementById(`rename-field-${id}`) as HTMLInputElement
+    )?.value;
+    if (!name) {
+      setSelectedItemForRenaming(null);
+      return;
+    }
+    updateReport.mutate(
+      { id, name },
+      {
+        onSuccess: () => {
+          setSelectedItemForRenaming(null);
+        },
+      },
+    );
+  };
 
   const handleDuplicate = () => {
     const id = getAnchorElId();
@@ -141,15 +179,50 @@ export const AllReportsView: React.FC<{
                     margin: "10px 0 5px 0",
                   }}
                 >
-                  <Typography
-                    variant="h6"
-                    fontSize="16px"
-                    lineHeight="normal"
-                    sx={{ cursor: "pointer" }}
-                    onClick={handleItemClick(item.id)}
-                  >
-                    {item.name}
-                  </Typography>
+                  {selectedItemForRenaming === item.id ? (
+                    <TextField
+                      fullWidth
+                      autoFocus
+                      size="small"
+                      variant="standard"
+                      defaultValue={item.name}
+                      id={`rename-field-${item.id}`}
+                      slotProps={{ htmlInput: { maxLength: 100 } }}
+                      onBlur={(e) => {
+                        if (e.relatedTarget?.id === "rb-item-menu-paper") {
+                          return;
+                        }
+                        handleRenameEnter(item.id);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Escape") {
+                          setSelectedItemForRenaming(null);
+                        }
+                        if (e.key === "Enter") {
+                          handleRenameEnter(item.id);
+                        }
+                      }}
+                      sx={{
+                        input: {
+                          fontWeight: "700",
+                          pl: "0 !important",
+                        },
+                        ".MuiInputBase-root:before, .MuiInputBase-root:after": {
+                          borderBottom: "2px solid #3154F4 !important",
+                        },
+                      }}
+                    />
+                  ) : (
+                    <Typography
+                      variant="h6"
+                      fontSize="16px"
+                      lineHeight="normal"
+                      sx={{ cursor: "pointer" }}
+                      onClick={handleItemClick(item.id)}
+                    >
+                      {item.name}
+                    </Typography>
+                  )}
                 </Box>
                 <Typography
                   variant="body2"
@@ -193,10 +266,9 @@ export const AllReportsView: React.FC<{
             handleClose={handleClose}
             menuItems={[
               {
-                label: "Settings",
-                icon: <Settings />,
-                onClick: handleClose,
-                disabled: true,
+                label: "Rename",
+                icon: <Pencil />,
+                onClick: handleRename,
               },
               {
                 label: "Share",
@@ -214,6 +286,12 @@ export const AllReportsView: React.FC<{
                 label: "Duplicate",
                 icon: <Copy />,
                 onClick: handleDuplicate,
+              },
+              {
+                label: "Details",
+                icon: <Details />,
+                onClick: handleClose,
+                disabled: true,
               },
               {
                 label: "Delete",
@@ -255,7 +333,7 @@ export const AllReportsView: React.FC<{
         ]}
       />
     );
-  }, [selectedView, reports, anchorEl]);
+  }, [selectedView, reports, anchorEl, selectedItemForRenaming]);
 
   return view;
 };

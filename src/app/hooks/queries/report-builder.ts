@@ -109,6 +109,20 @@ export const usePatchReport = (reportId: string | undefined) => {
   });
 };
 
+export const usePatchReport2 = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["ReportBuilderPatchReport"],
+    mutationFn: (data: RBReportPatchModel) =>
+      axiosInstance.patch<RBReportPatchModel>(`/report/${data.id}`, data),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["ReportBuilderGetReports"],
+      });
+    },
+  });
+};
+
 export const usePatchAsset = (assetId?: string) => {
   const queryClient = useQueryClient();
   return useMutation({
