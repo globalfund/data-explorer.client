@@ -1074,7 +1074,7 @@ const SIMULATED_REPORT_TEMPLATE: RBReportModel = {
               content: [
                 {
                   type: "text",
-                  text: "Global Fund Data Explorer — Component Showcase",
+                  text: "Global Fund Data Explorer Component Showcase",
                 },
               ],
             },
@@ -1373,7 +1373,7 @@ const SIMULATED_REPORT_TEMPLATE: RBReportModel = {
     headingItem(
       "sim_heading_gen_tagcloud",
       "Tag Cloud",
-      "Weighted tag cloud — font size and opacity scale with the weight value.",
+      "Weighted tag cloud where font size and opacity scale with the weight value.",
     ),
     generatedComponentItem(
       "sim_gen_tagcloud",
@@ -1481,7 +1481,7 @@ export function buildSimulatedAssistantMessage(
 
   const content =
     placement === "main_view"
-      ? "Here is a comprehensive demo report showcasing all component and chart types — rendered in the main view."
+      ? "Here is a comprehensive demo report showcasing all component and chart types, rendered in the main view."
       : "Here is a comprehensive demo report showcasing all component and chart types.";
 
   return {

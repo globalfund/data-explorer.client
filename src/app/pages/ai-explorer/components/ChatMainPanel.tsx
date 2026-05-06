@@ -5,6 +5,7 @@ import { ChatMessageList } from "app/pages/ai-explorer/components/ChatMessageLis
 import { ChatComposer } from "app/pages/ai-explorer/components/ChatComposer";
 import { useStoreState, useStoreActions } from "app/state/store/hooks";
 import { useMockAssistant } from "app/pages/ai-explorer/hooks/useMockAssistant";
+import { FeedbackWidget } from "./FeedbackWidget";
 
 export const ChatMainPanel: React.FC = () => {
   const chats = useStoreState((s) => s.AiExplorerChats.chats);
@@ -51,6 +52,10 @@ export const ChatMainPanel: React.FC = () => {
   if (!activeChat || activeChat.messages.length === 0) {
     return (
       <ChatAreaRoot>
+        <FeedbackWidget
+          candidateId="chat-empty-state"
+          label="Chat Empty State"
+        />
         <ChatEmptyState />
       </ChatAreaRoot>
     );
@@ -58,6 +63,7 @@ export const ChatMainPanel: React.FC = () => {
 
   return (
     <ChatAreaRoot>
+      <FeedbackWidget candidateId="chat-main-panel" label="Chat Main Panel" />
       <ChatMessageList
         chat={activeChat}
         isAssistantLoading={isAssistantLoading}

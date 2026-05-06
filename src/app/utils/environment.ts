@@ -13,7 +13,7 @@ export interface BasicAuthCredentials {
 
 /**
  * Returns basic-auth credentials from env vars, or null if not configured.
- * This is a frontend-only soft gate — not a security boundary.
+ * This is a frontend-only soft gate, not a security boundary.
  *
  * TODO: As this moves from development to deployment to staging, this guard
  * is intended to be completely removed. When deployed, the /ai-explorer route

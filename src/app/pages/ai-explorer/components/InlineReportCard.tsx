@@ -7,6 +7,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 import EditIcon from "@mui/icons-material/Edit";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { useNavigate } from "react-router-dom";
 import { RBReportModel } from "app/state/api/action-reducers/report-builder/sync";
 import { useStoreActions } from "app/state/store/hooks";
@@ -64,6 +65,10 @@ export const InlineReportCard: React.FC<InlineReportCardProps> = ({
     }
   };
 
+  const handleExportPdf = async () => {
+    console.log("EXPORT TO PDF - TO BE IMPLEMENTED");
+  };
+
   return (
     <InlineReportCardRoot>
       <InlineReportCardHeader onClick={() => setExpanded((v) => !v)}>
@@ -104,7 +109,11 @@ export const InlineReportCard: React.FC<InlineReportCardProps> = ({
                 width: scale < 1 ? `${100 / scale}%` : "100%",
               }}
             >
-              <StatelessReportCanvas report={report} compact />
+              <StatelessReportCanvas
+                report={report}
+                compact
+                id={`inline-report-canvas-${report.id || report.name.replace(/\s+/g, "-").toLowerCase()}`}
+              />
             </Box>
           </InlineReportCanvasContainer>
 
@@ -125,6 +134,14 @@ export const InlineReportCard: React.FC<InlineReportCardProps> = ({
               sx={{ textTransform: "none", color: "#667085", fontSize: 12 }}
             >
               Open in Report Builder
+            </Button>
+            <Button
+              size="small"
+              startIcon={<PictureAsPdfIcon fontSize="small" />}
+              onClick={handleExportPdf}
+              sx={{ textTransform: "none", color: "#667085", fontSize: 12 }}
+            >
+              Export to PDF
             </Button>
           </InlineReportCardActions>
         </>

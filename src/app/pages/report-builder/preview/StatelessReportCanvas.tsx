@@ -59,6 +59,7 @@ async function loadGeoJSON(): Promise<any> {
 interface StatelessReportCanvasProps {
   report: RBReportModel;
   compact?: boolean;
+  id?: string;
 }
 
 /**
@@ -407,6 +408,7 @@ function StatelessItemRenderer({
 export const StatelessReportCanvas: React.FC<StatelessReportCanvasProps> = ({
   report,
   compact,
+  id,
 }) => {
   const visibleItems = React.useMemo(
     () => report.items.filter(checkEmptyItem),
@@ -427,6 +429,7 @@ export const StatelessReportCanvas: React.FC<StatelessReportCanvasProps> = ({
           : (report.settings.padding?.map((p) => `${p}px`).join(" ") ?? "50px"),
         border: `${report.settings.stroke ?? 0}px solid ${report.settings.strokeColor ?? "#000"}`,
       }}
+      id={id}
     >
       {visibleItems.map((item) => (
         <StatelessItemRenderer key={item.id} item={item} compact={compact} />

@@ -4,10 +4,12 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { useNavigate } from "react-router-dom";
 import { useStoreActions } from "app/state/store/hooks";
 import { useCreateReport } from "app/hooks/queries/report-builder";
 import { RBReportModel } from "app/state/api/action-reducers/report-builder/sync";
+import { FeedbackWidget } from "./FeedbackWidget";
 
 interface ReportViewToolbarProps {
   report: RBReportModel;
@@ -21,6 +23,10 @@ export const ReportViewToolbar: React.FC<ReportViewToolbarProps> = ({
     (a) => a.AiExplorerChats.clearGeneratedReport,
   );
   const createReport = useCreateReport();
+
+  const handleExportPdf = async () => {
+    console.log("EXPORT TO PDF - TO BE IMPLEMENTED");
+  };
 
   const handleOpenInBuilder = async () => {
     try {
@@ -47,6 +53,10 @@ export const ReportViewToolbar: React.FC<ReportViewToolbarProps> = ({
         borderBottom: "1px solid #e3e3e3",
       }}
     >
+      <FeedbackWidget
+        candidateId="report-view-toolbar"
+        label="Report View Toolbar"
+      />
       <Button
         size="small"
         startIcon={<ArrowBackIcon />}
@@ -76,6 +86,16 @@ export const ReportViewToolbar: React.FC<ReportViewToolbarProps> = ({
         sx={{ textTransform: "none", borderColor: "#002561", color: "#002561" }}
       >
         Open in Report Builder
+      </Button>
+
+      <Button
+        size="small"
+        variant="outlined"
+        startIcon={<PictureAsPdfIcon />}
+        onClick={handleExportPdf}
+        sx={{ textTransform: "none", borderColor: "#002561", color: "#002561" }}
+      >
+        Export to PDF
       </Button>
     </Box>
   );

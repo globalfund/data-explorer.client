@@ -6,8 +6,9 @@ export const exportReport = async (
   bgcolor: string,
   filename: string,
   onlyReturnFileData?: boolean,
+  elementId: string = "items-container",
 ) => {
-  const originalNode = document.getElementById("items-container");
+  const originalNode = document.getElementById(elementId);
   if (!originalNode) return;
 
   const node = originalNode.cloneNode(true) as HTMLElement;

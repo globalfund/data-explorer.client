@@ -4,6 +4,17 @@ export type ReportPlacement = "inline" | "main_view";
 
 export type FeatureStatus = "implemented" | "pipeline" | "not-planned";
 
+export type FeatureCategory =
+  | "chat"
+  | "forecasting"
+  | "classification"
+  | "clustering"
+  | "nlp"
+  | "anomaly"
+  | "optimization"
+  | "geospatial"
+  | "causal";
+
 export interface AiFeature {
   id: string;
   code: string;
@@ -12,6 +23,19 @@ export interface AiFeature {
   datasets: string[];
   methodology: string;
   status: FeatureStatus;
+  category: FeatureCategory;
+}
+
+export interface Dataset {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export interface DatasetGroup {
+  id: string;
+  label: string;
+  datasets: Dataset[];
 }
 
 export type ChatRole = "user" | "assistant";

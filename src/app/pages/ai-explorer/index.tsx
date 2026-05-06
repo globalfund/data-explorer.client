@@ -11,6 +11,7 @@ import { ReportView } from "app/pages/ai-explorer/components/ReportView";
 import { ChatPanel } from "app/pages/ai-explorer/components/ChatPanel";
 import { PageRoot, CHAT_PANEL_WIDTH } from "app/pages/ai-explorer/styles";
 import { useStoreState, useStoreActions } from "app/state/store/hooks";
+import { FeedbackWidget } from "app/pages/ai-explorer/components/FeedbackWidget";
 
 const AiExplorerContent: React.FC = () => {
   useTitle("The Data Explorer - AI Explorer");
@@ -66,7 +67,8 @@ const AiExplorerContent: React.FC = () => {
           maxWidth: isPanelOpen ? "none" : "100%",
         }}
       >
-        <Box sx={{ mb: 4 }}>
+        <Box sx={{ mb: 4, position: "relative" }}>
+          <FeedbackWidget candidateId="page-header" label="AI Explorer" />
           <Typography
             variant="h4"
             fontWeight={700}

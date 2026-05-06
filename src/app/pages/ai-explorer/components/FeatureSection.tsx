@@ -6,21 +6,31 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { AiFeature } from "app/pages/ai-explorer/types";
-import { FEATURE_CHECKLIST } from "app/pages/ai-explorer/data";
+import { AiFeature, FeatureCategory } from "app/pages/ai-explorer/types";
+import {
+  FEATURE_CHECKLIST,
+  FEATURE_CATEGORY_LABELS,
+  FEATURE_CATEGORY_ORDER,
+} from "app/pages/ai-explorer/data";
+import { SectionAccordion } from "app/pages/ai-explorer/components/SectionAccordion";
+import { FeedbackWidget } from "./FeedbackWidget";
 
 const FeatureCard: React.FC<{ feature: AiFeature }> = ({ feature }) => (
   <Accordion data-testid="feature-accordion">
     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-        <Typography variant="body1" fontWeight={600}>
-          {feature.code} — {feature.title}
-        </Typography>
-      </Box>
+      <Typography variant="body2" fontWeight={600}>
+        {feature.code} - {feature.title}
+      </Typography>
     </AccordionSummary>
     <AccordionDetails>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <Typography variant="body2">{feature.summary}</Typography>
+        <FeedbackWidget
+          candidateId={feature.id}
+          label={`${FEATURE_CATEGORY_LABELS[feature.category]} - ${feature.title}`}
+        />
+        <Typography variant="body2" color="text.secondary">
+          {feature.summary}
+        </Typography>
         <Box>
           <Typography variant="caption" fontWeight={600} color="text.secondary">
             DATASETS USED
@@ -44,19 +54,129 @@ const FeatureCard: React.FC<{ feature: AiFeature }> = ({ feature }) => (
   </Accordion>
 );
 
-export const FeatureSection: React.FC = () => {
+const PipelineRow: React.FC<{ feature: AiFeature }> = ({ feature }) => (
+  <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1.5, py: 0.75 }}>
+    <Typography variant="body2" color="text.secondary" sx={{ minWidth: 36 }}>
+      {feature.code}
+    </Typography>
+    <Box>
+      <Typography variant="body2">{feature.title}</Typography>
+      <Typography variant="caption" color="text.secondary">
+        {feature.summary}
+        <br />
+        {feature.methodology}
+      </Typography>
+    </Box>
+  </Box>
+);
+
+function groupByCategory(
+  features: AiFeature[],
+): [FeatureCategory, AiFeature[]][] {
+  const map = new Map<FeatureCategory, AiFeature[]>();
+  for (const f of features) {
+    if (!map.has(f.category)) map.set(f.category, []);
+    map.get(f.category)!.push(f);
+  }
+  return FEATURE_CATEGORY_ORDER.filter((c) => map.has(c)).map((c) => [
+    c,
+    map.get(c)!,
+  ]);
+}
+
+const ImplementedSubSection: React.FC = () => {
   const implemented = FEATURE_CHECKLIST.filter(
     (f) => f.status === "implemented",
   );
+  const groups = groupByCategory(implemented);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-      <Typography variant="h6" fontWeight={600} sx={{ mb: 1 }}>
-        Implemented Features
-      </Typography>
-      {implemented.map((feature) => (
-        <FeatureCard key={feature.id} feature={feature} />
-      ))}
-    </Box>
+    <SectionAccordion
+      feedbackId="features-implemented"
+      feedbackLabel="Implemented Features"
+      title={`Implemented Features (${implemented.length})`}
+      titleVariant="body1"
+      defaultExpanded
+      detailsSx={{ p: 0 }}
+    >
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
+        {groups.map(([category, features]) => (
+          <Box key={category} sx={{ px: 2, pb: 1 }}>
+            <Typography
+              variant="caption"
+              fontWeight={700}
+              color="text.secondary"
+              sx={{
+                display: "block",
+                textTransform: "uppercase",
+                letterSpacing: 0.5,
+                pt: 2,
+                pb: 0.5,
+              }}
+            >
+              {FEATURE_CATEGORY_LABELS[category]}
+            </Typography>
+            {features.map((f) => (
+              <FeatureCard key={f.id} feature={f} />
+            ))}
+          </Box>
+        ))}
+      </Box>
+    </SectionAccordion>
   );
 };
+
+const PipelineSubSection: React.FC = () => {
+  const pipeline = FEATURE_CHECKLIST.filter((f) => f.status === "pipeline");
+  const groups = groupByCategory(pipeline);
+
+  return (
+    <SectionAccordion
+      feedbackId="features-pipeline"
+      feedbackLabel="Feature Pipeline"
+      title={`Feature Pipeline (${pipeline.length})`}
+      titleVariant="body1"
+      defaultExpanded
+    >
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        {groups.map(([category, features]) => (
+          <Box key={category}>
+            <Typography
+              variant="caption"
+              fontWeight={700}
+              color="text.secondary"
+              sx={{
+                display: "block",
+                textTransform: "uppercase",
+                letterSpacing: 0.5,
+                mb: 0.5,
+              }}
+            >
+              {FEATURE_CATEGORY_LABELS[category]}
+            </Typography>
+            {features.map((f) => (
+              <PipelineRow key={f.id} feature={f} />
+            ))}
+          </Box>
+        ))}
+      </Box>
+    </SectionAccordion>
+  );
+};
+
+export const FeatureSection: React.FC = () => (
+  <SectionAccordion
+    id="ai-explorer-features"
+    feedbackId="features-section"
+    feedbackLabel="Features"
+    title="Features"
+    subTitle="The list of features currently implemented and in the pipeline for the AI Explorer."
+    defaultExpanded
+    detailsSx={{ p: 0 }}
+  >
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <ImplementedSubSection />
+      <PipelineSubSection />
+    </Box>
+  </SectionAccordion>
+);
