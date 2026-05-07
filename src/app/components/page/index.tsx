@@ -24,9 +24,14 @@ export const Page: React.FC = () => {
     const previewMode =
       location.pathname.includes("/reports/") &&
       !location.pathname.includes("edit");
+    const exportMode = location.pathname.includes("/export");
     return (
       <React.Fragment>
-        {previewMode ? <Header /> : <ReportBuilderPageHeader />}
+        {exportMode ? null : previewMode ? (
+          <Header />
+        ) : (
+          <ReportBuilderPageHeader />
+        )}
         <Box
           sx={{
             width: "100%",

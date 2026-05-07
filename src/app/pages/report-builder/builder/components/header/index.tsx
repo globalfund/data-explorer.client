@@ -31,8 +31,7 @@ import { keyframes } from "@mui/system";
 import { usePatchReport } from "app/hooks/queries/report-builder";
 import { useDebounce } from "react-use";
 import { useStoreState } from "app/state/store/hooks";
-import { exportReport } from "app/utils/exportReport";
-import axios from "axios";
+import { exportReportFromServer } from "app/utils/exportReport";
 
 export const menuSx = {
   zIndex: 1400,
@@ -66,11 +65,6 @@ export const ReportBuilderPageHeader: React.FC = () => {
   const reportState = useStoreState((state) => state.RBReportItemsState);
 
   const updateReport = usePatchReport(id);
-  const thumbnailGenerationInFlight = React.useRef(false);
-  const scheduledThumbnailTask = React.useRef<{
-    id: number;
-    type: "idle" | "timeout";
-  } | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -102,11 +96,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
 
   const handleDownloadShareableFile =
     (type: "png" | "svg" | "pdf") => async () => {
-      await exportReport(
-        type,
-        reportState.settings.backgroundColor,
-        reportState.name,
-      );
+      await exportReportFromServer(id!, type);
       setSnackbarMessage(`${type.toUpperCase()} downloaded!`);
       setSnackbarOpen(true);
     };
@@ -124,86 +114,6 @@ export const ReportBuilderPageHeader: React.FC = () => {
     }, 200);
   };
 
-  const handleAutoGenerateThumbnail = React.useCallback(async () => {
-    if (thumbnailGenerationInFlight.current || !id) {
-      return;
-    }
-
-    thumbnailGenerationInFlight.current = true;
-
-    try {
-      const fileData = await exportReport(
-        "png",
-        reportState.settings.backgroundColor,
-        reportState.name,
-        true,
-      );
-
-      if (!fileData) {
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append(`${id}.png`, fileData as Blob, `${id}.png`);
-
-      const response = await axios.post(
-        `${import.meta.env.VITE_API}/files`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        },
-      );
-
-      if (response.status === 200) {
-        console.log("REPORT THUMBNAIL: SAVED");
-      }
-    } catch (error) {
-      console.error("REPORT THUMBNAIL: ", error);
-    } finally {
-      thumbnailGenerationInFlight.current = false;
-    }
-  }, [id, reportState.name, reportState.settings.backgroundColor]);
-
-  const clearScheduledThumbnailGeneration = React.useCallback(() => {
-    if (!scheduledThumbnailTask.current) {
-      return;
-    }
-
-    if (scheduledThumbnailTask.current.type === "idle") {
-      window.cancelIdleCallback(scheduledThumbnailTask.current.id);
-    } else {
-      window.clearTimeout(scheduledThumbnailTask.current.id);
-    }
-
-    scheduledThumbnailTask.current = null;
-  }, []);
-
-  const scheduleThumbnailGeneration = React.useCallback(() => {
-    clearScheduledThumbnailGeneration();
-
-    if (typeof window.requestIdleCallback === "function") {
-      const idleId = window.requestIdleCallback(
-        () => {
-          scheduledThumbnailTask.current = null;
-          void handleAutoGenerateThumbnail();
-        },
-        { timeout: 1500 },
-      );
-
-      scheduledThumbnailTask.current = { id: idleId, type: "idle" };
-      return;
-    }
-
-    const timeoutId = window.setTimeout(() => {
-      scheduledThumbnailTask.current = null;
-      void handleAutoGenerateThumbnail();
-    }, 300);
-
-    scheduledThumbnailTask.current = { id: timeoutId, type: "timeout" };
-  }, [clearScheduledThumbnailGeneration, handleAutoGenerateThumbnail]);
-
   useDebounce(
     () => {
       updateReport.mutate({
@@ -212,7 +122,6 @@ export const ReportBuilderPageHeader: React.FC = () => {
         settings: reportState.settings,
         name: reportState.name,
       });
-      scheduleThumbnailGeneration();
     },
     2000,
     [
@@ -220,7 +129,6 @@ export const ReportBuilderPageHeader: React.FC = () => {
       reportState.description,
       reportState.settings,
       reportState.name,
-      scheduleThumbnailGeneration,
     ],
   );
 
@@ -231,12 +139,6 @@ export const ReportBuilderPageHeader: React.FC = () => {
       }, 5000);
     }
   }, [updateReport.isSuccess]);
-
-  React.useEffect(() => {
-    return () => {
-      clearScheduledThumbnailGeneration();
-    };
-  }, [clearScheduledThumbnailGeneration]);
 
   const open = Boolean(anchorEl);
   const open2 = Boolean(anchorEl2);

@@ -1,5 +1,33 @@
 import JSPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
+import axios from "axios";
+
+export const exportReportFromServer = async (
+  reportId: string,
+  type: "png" | "svg" | "pdf",
+) => {
+  const response = await axios.get(
+    `${import.meta.env.VITE_API}/report/${reportId}/export/${type}`,
+    {
+      responseType: "blob",
+    },
+  );
+
+  const blob = new Blob([response.data], {
+    type: String(response.headers["Content-Type"]),
+  });
+
+  const downloadUrl = window.URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = downloadUrl;
+  link.download = `report-${reportId}.${type}`;
+  document.body.appendChild(link);
+  link.click();
+
+  link.remove();
+  window.URL.revokeObjectURL(downloadUrl);
+};
 
 export const exportReport = async (
   type: string,
