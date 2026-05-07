@@ -16,13 +16,12 @@ export default function AlignButtons() {
     parent: selectedController?.parent ?? undefined,
   });
 
-  const handleAlignChange = (align: "start" | "center" | "end") => {
+  const handleAlignChange = (align: "flex-start" | "center" | "flex-end") => {
     if (!item) return;
 
-    const currentAlign = item?.options?.alignItems;
+    const currentAlign = item?.options?.justifyContent;
     const isRemoving = currentAlign === align;
     const newAlign = isRemoving ? undefined : align;
-    const newDisplay = isRemoving ? "block" : "flex";
 
     editItem({
       ...item,
@@ -31,8 +30,7 @@ export default function AlignButtons() {
       type: "text",
       options: {
         ...item?.options,
-        alignItems: newAlign,
-        display: newDisplay,
+        justifyContent: newAlign,
       },
     });
   };
@@ -40,9 +38,9 @@ export default function AlignButtons() {
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: "13px" }}>
       <IconButton
-        onClick={() => handleAlignChange("start")}
+        onClick={() => handleAlignChange("flex-start")}
         className={
-          item?.options?.alignItems === "start"
+          item?.options?.justifyContent === "flex-start"
             ? "active-icon-button"
             : "icon-button"
         }
@@ -52,7 +50,7 @@ export default function AlignButtons() {
       <IconButton
         onClick={() => handleAlignChange("center")}
         className={
-          item?.options?.alignItems === "center"
+          item?.options?.justifyContent === "center"
             ? "active-icon-button"
             : "icon-button"
         }
@@ -61,9 +59,9 @@ export default function AlignButtons() {
       </IconButton>
 
       <IconButton
-        onClick={() => handleAlignChange("end")}
+        onClick={() => handleAlignChange("flex-end")}
         className={
-          item?.options?.alignItems === "end"
+          item?.options?.justifyContent === "flex-end"
             ? "active-icon-button"
             : "icon-button"
         }
