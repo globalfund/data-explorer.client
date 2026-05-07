@@ -29,7 +29,7 @@ export const InlineReportCard: React.FC<InlineReportCardProps> = ({
   report,
   chatId,
 }) => {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const [scale, setScale] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
