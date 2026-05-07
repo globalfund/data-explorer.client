@@ -13,7 +13,7 @@ import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 type Score = "good" | "neutral" | "bad";
 
 interface FeedbackRequest {
-  candidate_id: string;
+  topic: string;
   score: Score;
   text: string | null;
 }
@@ -47,11 +47,15 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
     if (!score) return;
     const userText = text.trim();
     const payload: FeedbackRequest = {
-      candidate_id: candidateId,
+      topic: candidateId,
       score,
       text: userText ? `${label}: ${userText}` : null,
     };
-    console.log("[FeedbackRequest]", payload);
+    fetch(`${import.meta.env.VITE_API}/flexible-ui-generation/feedback`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }).catch((e) => { console.log("error sending feedback", e); });
     handleClose();
   };
 
@@ -108,7 +112,7 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
           <TextField
             multiline
             rows={3}
-            placeholder="Additional comments (optional)"
+            placeholder="Comments (optional, but preferred)"
             value={text}
             onChange={(e) => setText(e.target.value)}
             size="small"
