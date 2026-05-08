@@ -212,7 +212,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
         settings: reportState.settings,
         name: reportState.name,
       });
-      scheduleThumbnailGeneration();
+      // scheduleThumbnailGeneration();
     },
     2000,
     [
