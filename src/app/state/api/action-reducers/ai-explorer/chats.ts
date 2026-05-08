@@ -14,6 +14,7 @@ export interface AiExplorerChatsModel {
   searchQuery: string;
   mainViewMode: "explore" | "report";
   generatedReports: Record<string, RBReportModel>;
+  demoMode: boolean;
 
   openPanel: Action<AiExplorerChatsModel>;
   closePanel: Action<AiExplorerChatsModel>;
@@ -32,6 +33,7 @@ export interface AiExplorerChatsModel {
     { chatId: string; report: RBReportModel }
   >;
   clearGeneratedReport: Action<AiExplorerChatsModel>;
+  setDemoMode: Action<AiExplorerChatsModel, boolean>;
 }
 
 function makeId(): string {
@@ -60,7 +62,7 @@ export const AiExplorerChats: AiExplorerChatsModel = {
   searchQuery: "",
   mainViewMode: "explore",
   generatedReports: {},
-
+  demoMode: false,
   openPanel: action((state) => {
     state.isPanelOpen = true;
   }),
@@ -155,5 +157,8 @@ export const AiExplorerChats: AiExplorerChatsModel = {
   }),
   clearGeneratedReport: action((state) => {
     state.mainViewMode = "explore";
+  }),
+  setDemoMode: action((state, value) => {
+    state.demoMode = value;
   }),
 };

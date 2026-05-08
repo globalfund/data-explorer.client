@@ -55,7 +55,9 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
-    }).catch((e) => { console.log("error sending feedback", e); });
+    }).catch((e) => {
+      console.log("error sending feedback", e);
+    });
     handleClose();
   };
 

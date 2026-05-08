@@ -1,5 +1,10 @@
 import { RBReportModel } from "app/state/api/action-reducers/report-builder/sync";
 
+export interface ProgressEvent {
+  event: string;
+  data: Record<string, unknown>;
+}
+
 export type ReportPlacement = "inline" | "main_view";
 
 export type FeatureStatus = "implemented" | "pipeline" | "not-planned";
@@ -47,6 +52,7 @@ export interface ChatMessage {
   createdAt: number;
   report?: RBReportModel;
   reportPlacement?: ReportPlacement;
+  progressLog?: ProgressEvent[];
 }
 
 export interface Chat {
