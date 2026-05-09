@@ -57,6 +57,15 @@ export const ChatMainPanel: React.FC = () => {
               typeof p.data.content === "string"
             ) {
               setStreamingContent(p.data.content as string);
+              // if RAG is done, store all the result key/value pairs into the progress log.
+              Object.entries(p.data).forEach(([key, value]) => {
+                const entry: ProgressEvent = {
+                  event: "rag_done",
+                  data: { key, value, reasoning: `${key}: ${JSON.stringify(value)}` },
+                };
+                localProgressLog.push(entry);
+                setProgressLog((prev) => [...prev, entry]);
+              });
             } else {
               localProgressLog.push(p);
               setProgressLog((prev) => [...prev, p]);
