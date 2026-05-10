@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { RBReportItemController } from "app/state/api/action-reducers/report-builder/sync";
+import { ComponentOptions } from "../toolbar/data";
 
 export const FileTabView: React.FC = () => {
   const items = useStoreState((state) => state.RBReportItemsState.items);
@@ -34,16 +35,24 @@ export const FileTabView: React.FC = () => {
 
   return (
     <Box sx={{ padding: "8px" }}>
-      <Typography fontSize="14px" mb="8px">
-        Layers
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "8px",
+        }}
+      >
+        <Typography fontSize="14px">Layers</Typography>
+      </Box>
+
       <Box
         sx={{
           width: "100%",
           display: "flex",
           flexDirection: "column",
           button: {
-            padding: "8px",
+            padding: "8px 18px",
             fontSize: "14px",
             fontWeight: "normal",
             textTransform: "capitalize",
@@ -55,10 +64,13 @@ export const FileTabView: React.FC = () => {
           const typeIndex = items
             .filter((i) => i.type === item.type)
             .findIndex((i) => i.id === item.id);
+          const option = ComponentOptions.find(
+            (option) => option.value === item.type,
+          );
           return (
             <Button
               key={item.id}
-              startIcon="*"
+              startIcon={option?.icon}
               onClick={handleItemClick({
                 open: true,
                 id: item.id,
