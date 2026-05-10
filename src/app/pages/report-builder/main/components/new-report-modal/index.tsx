@@ -8,15 +8,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import { useCreateReport } from "app/hooks/queries/report-builder";
 import { PageLoader } from "app/components/page-loader";
+import { ReportBuilderNewReportModalProps } from "app/pages/report-builder/main/components/new-report-modal/data";
 
-export const ReportBuilderNewReportModal: React.FC<{
-  open: boolean;
-  nameValue: string;
-  onClose: () => void;
-  descriptionValue: string;
-  setNameValue: (value: string) => void;
-  setDescriptionValue: (value: string) => void;
-}> = ({
+export const ReportBuilderNewReportModal: React.FC<
+  ReportBuilderNewReportModalProps
+> = ({
   open,
   onClose,
   nameValue,
@@ -84,7 +80,7 @@ export const ReportBuilderNewReportModal: React.FC<{
           sx={{
             width: "100%",
             display: "flex",
-            padding: "10px",
+            padding: "4px 10px",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
@@ -94,8 +90,8 @@ export const ReportBuilderNewReportModal: React.FC<{
           <Typography variant="h6" fontSize="16px">
             Create a New Report
           </Typography>
-          <IconButton onClick={onClose}>
-            <CloseIcon fontSize="small" />
+          <IconButton onClick={onClose} sx={{ mr: "-12px" }}>
+            <CloseIcon fontSize="small" htmlColor="#000" />
           </IconButton>
         </Box>
         <Box
@@ -111,10 +107,10 @@ export const ReportBuilderNewReportModal: React.FC<{
               justifyContent: "space-between",
             }}
           >
-            <Typography variant="body2" marginBottom="5px" color="#525252">
+            <Typography variant="body2" marginBottom="5px">
               Report Name
             </Typography>
-            <Typography variant="body2" marginBottom="5px" color="#525252">
+            <Typography fontSize="12px" marginBottom="5px">
               {nameValue.length}/100
             </Typography>
           </Box>
@@ -124,10 +120,10 @@ export const ReportBuilderNewReportModal: React.FC<{
               marginBottom: "20px",
               input: {
                 width: "100%",
+                borderRadius: "4px",
                 padding: "11px 16px",
-                background: "#f1f3f5",
-                border: "2px solid #f1f3f5",
-                borderBottomColor: "#868e96",
+                background: "#fff",
+                border: "1px solid #98a1aa",
                 "&:focus, &:active": {
                   borderColor: "#3154f4",
                 },
@@ -150,10 +146,10 @@ export const ReportBuilderNewReportModal: React.FC<{
               justifyContent: "space-between",
             }}
           >
-            <Typography variant="body2" marginBottom="5px" color="#525252">
+            <Typography variant="body2" marginBottom="5px">
               Report Description
             </Typography>
-            <Typography variant="body2" marginBottom="5px" color="#525252">
+            <Typography fontSize="12px" marginBottom="5px">
               {descriptionValue.length}/250
             </Typography>
           </Box>
@@ -164,9 +160,9 @@ export const ReportBuilderNewReportModal: React.FC<{
                 width: "100%",
                 height: "129px",
                 padding: "16px",
-                background: "#f1f3f5",
-                border: "2px solid #f1f3f5",
-                borderBottomColor: "#868e96",
+                borderRadius: "4px",
+                background: "#fff",
+                border: "1px solid #98a1aa",
                 "&:focus, &:active": {
                   borderColor: "#3154f4",
                 },

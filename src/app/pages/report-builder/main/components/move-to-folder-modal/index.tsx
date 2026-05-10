@@ -5,28 +5,11 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import { useCreateFolder } from "app/hooks/queries/report-builder";
-import { ReportBuilderNewFolderModalProps } from "app/pages/report-builder/main/components/new-folder-modal/data";
+import { ReportBuilderMoveToFolderModalProps } from "app/pages/report-builder/main/components/move-to-folder-modal/data";
 
-export const ReportBuilderNewFolderModal: React.FC<
-  ReportBuilderNewFolderModalProps
-> = ({ open, onClose, nameValue, setNameValue, reload }) => {
-  const createFolder = useCreateFolder();
-
-  const onSubmit = () => {
-    if (nameValue) {
-      const newFolder = { name: nameValue };
-
-      createFolder.mutate(newFolder, {
-        onSuccess: () => {
-          reload();
-          onClose();
-          setNameValue("");
-        },
-      });
-    }
-  };
-
+export const ReportBuilderMoveToFolderModal: React.FC<
+  ReportBuilderMoveToFolderModalProps
+> = ({ open, onClose }) => {
   return (
     <Modal disableScrollLock open={open} onClose={onClose}>
       <Box
@@ -51,7 +34,7 @@ export const ReportBuilderNewFolderModal: React.FC<
           }}
         >
           <Typography variant="h6" fontSize="16px">
-            Create Folder
+            Move to Folder
           </Typography>
           <IconButton onClick={onClose} sx={{ mr: "-12px" }}>
             <CloseIcon fontSize="small" htmlColor="#000" />
@@ -62,32 +45,6 @@ export const ReportBuilderNewFolderModal: React.FC<
             padding: "10px",
           }}
         >
-          <Typography variant="body2" marginBottom="5px">
-            Folder Name
-          </Typography>
-          <Box
-            sx={{
-              width: "100%",
-              input: {
-                width: "100%",
-                borderRadius: "4px",
-                padding: "11px 16px",
-                background: "#fff",
-                border: "1px solid #98a1aa",
-                "&:focus, &:active": {
-                  borderColor: "#3154f4",
-                },
-              },
-            }}
-          >
-            <input
-              autoFocus
-              type="text"
-              value={nameValue}
-              placeholder="Folder name"
-              onChange={(e) => setNameValue(e.target.value)}
-            />
-          </Box>
           <Box
             sx={{
               gap: "10px",
@@ -102,16 +59,16 @@ export const ReportBuilderNewFolderModal: React.FC<
             </Button>
             <Button
               variant="contained"
-              disabled={!nameValue}
+              //   disabled={!nameValue}
               sx={{
                 fontWeight: "400",
                 color: "#ffffff",
                 textTransform: "none",
                 background: "#3154f4",
               }}
-              onClick={onSubmit}
+              //   onClick={onSubmit}
             >
-              Create Folder
+              Move
             </Button>
           </Box>
         </Box>

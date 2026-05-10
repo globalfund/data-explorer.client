@@ -2,7 +2,10 @@ import React from "react";
 import get from "lodash/get";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { useGetAssets, useGetReports } from "app/hooks/queries/report-builder";
+import { useSessionStorage } from "react-use";
+import Typography from "@mui/material/Typography";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import NavigateNext from "@mui/icons-material/NavigateNext";
 import { ReportBuilderSidebar } from "app/pages/report-builder/main/components/sidebar";
 import { ReportBuilderToolbar } from "app/pages/report-builder/main/components/toolbar";
 import { AllAssetsView } from "app/pages/report-builder/main/components/all-assets-view";
@@ -14,12 +17,19 @@ import {
   AssetViewType,
   ReportBuilderAssetsToolbar,
 } from "app/pages/report-builder/main/components/all-assets-view/toolbar";
+import {
+  useGetAssets,
+  useGetFolder,
+  useGetFolders,
+  useGetReports,
+} from "app/hooks/queries/report-builder";
+import { ReportBuilderMoveToFolderModal } from "./components/move-to-folder-modal";
 
 export const ReportBuilder: React.FC = () => {
   const [sidebarSelectedItem, setSidebarSelectedItem] =
     React.useState("All Reports");
   const [search, setSearch] = React.useState("");
-  const [selectedView, setSelectedView] = React.useState<"cards" | "list">(
+  const [selectedView, setSelectedView] = useSessionStorage<"cards" | "list">(
     "cards",
   );
 
@@ -34,8 +44,39 @@ export const ReportBuilder: React.FC = () => {
     React.useState("");
   const [newReportModalDescriptionValue, setNewReportModalDescriptionValue] =
     React.useState("");
+  const [moveToFolderModalOpen, setMoveToFolderModalOpen] =
+    React.useState(false);
 
-  const getReports = useGetReports({ search: search, sort: selectedSort });
+  const getReports = useGetReports({
+    search: search,
+    sort: selectedSort,
+    includeFolders: true,
+  });
+
+  const getFoldersStructure = useGetFolders({
+    search: "",
+    sort: selectedSort,
+    includeSubFolders: true,
+  });
+
+  const [openedFolders, setOpenedFolders] = React.useState<
+    { id: string; name: string }[]
+  >([]);
+
+  const [allReportsViewItems, setAllReportsViewItems] = React.useState<
+    {
+      id: string;
+      name: string;
+      description: string;
+      createdDate: string;
+      updatedDate: string;
+      isFolder?: boolean;
+      assetCount?: number;
+      reportCount?: number;
+    }[]
+  >(get(getReports, "data.data", []));
+
+  const getFolder = useGetFolder(openedFolders[0]?.id);
 
   const getAssets = useGetAssets({
     search: search,
@@ -59,17 +100,49 @@ export const ReportBuilder: React.FC = () => {
     setNewReportModalOpen(false);
   };
 
+  // const handleMoveToFolderModalOpen = () => {
+  //   setMoveToFolderModalOpen(true);
+  // };
+
+  const handleMoveToFolderModalClose = () => {
+    setMoveToFolderModalOpen(false);
+  };
+
+  const handleFolderOpen = (id: string) => {
+    const folder = allReportsViewItems.find((item) => item.id === id);
+    if (!folder) return;
+    setOpenedFolders((prev) => [{ id, name: folder.name }, ...prev]);
+  };
+
+  const handleRootBreadcrumbClick = () => {
+    setOpenedFolders([]);
+    getReports.refetch().then((res) => {
+      const reportsData = get(res, "data.data", []);
+      setAllReportsViewItems(reportsData);
+    });
+  };
+
+  const handleFolderBreadcrumbClick = (index: number) => () => {
+    if (index === openedFolders.length - 1) return;
+    setOpenedFolders((prev) => prev.slice(0, index + 1));
+  };
+
   const view = React.useMemo(() => {
     switch (sidebarSelectedItem) {
       case "All Reports":
         return (
           <AllReportsView
             reports={{
-              isLoading: getReports.isFetching,
-              data: get(getReports, "data.data", []),
+              data: allReportsViewItems,
+              isLoading:
+                getReports.isFetching ||
+                getReports.isLoading ||
+                getFolder.isFetching ||
+                getFolder.isLoading,
             }}
-            selectedView={selectedView}
             refetch={getReports.refetch}
+            handleFolderOpen={handleFolderOpen}
+            selectedView={selectedView ?? "cards"}
           />
         );
       case "Templates and Layouts":
@@ -104,23 +177,36 @@ export const ReportBuilder: React.FC = () => {
   }, [
     selectedView,
     selectedAssetView,
+    allReportsViewItems,
     sidebarSelectedItem,
     getReports.isLoading,
-    getReports.data?.data,
+    getReports.isFetching,
+    getFolder.isLoading,
+    getFolder.isFetching,
     getAssets.isLoading,
     getAssets.data?.data,
   ]);
 
   React.useEffect(() => {
     if (sidebarSelectedItem === "All Reports") {
-      getReports.refetch();
+      getReports.refetch().then((res) => {
+        const reportsData = get(res, "data.data", []);
+        setAllReportsViewItems(reportsData);
+      });
     }
   }, [sidebarSelectedItem, search]);
+
+  React.useEffect(() => {
+    if (openedFolders.length > 0 && getFolder.data) {
+      const folderData = get(getFolder, "data.data.reports", []);
+      setAllReportsViewItems(folderData);
+    }
+  }, [getFolder.data, openedFolders]);
 
   return (
     <React.Fragment>
       <Box padding="50px 0">
-        <Grid container spacing={"14px"}>
+        <Grid container spacing="14px">
           <Grid item xs={12} md={3.5} lg={2.3}>
             <ReportBuilderSidebar
               selectedItem={sidebarSelectedItem}
@@ -139,12 +225,45 @@ export const ReportBuilder: React.FC = () => {
               onNewReportClick={handleNewReportModalOpen}
             />
             <Box width="100%" height="20px" />
+            {openedFolders.length > 0 && (
+              <Breadcrumbs
+                separator={
+                  <NavigateNext fontSize="small" htmlColor="#adb5bd" />
+                }
+                sx={{ fontSize: "14px", position: "absolute" }}
+              >
+                <Typography
+                  key="workspace"
+                  fontSize="14px"
+                  onClick={handleRootBreadcrumbClick}
+                  sx={{ textDecoration: "underline", cursor: "pointer" }}
+                >
+                  Workspace
+                </Typography>
+                {openedFolders.map((folder, i) => (
+                  <Typography
+                    key={folder.id}
+                    fontSize="14px"
+                    sx={
+                      i !== openedFolders.length - 1
+                        ? { textDecoration: "underline", cursor: "pointer" }
+                        : {}
+                    }
+                    onClick={handleFolderBreadcrumbClick(i)}
+                  >
+                    {folder.name}
+                  </Typography>
+                ))}
+              </Breadcrumbs>
+            )}
+            {openedFolders.length > 0 && <Box width="100%" height="40px" />}
             {view}
           </Grid>
         </Grid>
       </Box>
       <ReportBuilderNewFolderModal
         open={newFolderModalOpen}
+        reload={getReports.refetch}
         onClose={handleNewFolderModalClose}
         nameValue={newFolderModalNameValue}
         setNameValue={setNewFolderModalNameValue}
@@ -156,6 +275,11 @@ export const ReportBuilder: React.FC = () => {
         setNameValue={setNewReportModalNameValue}
         descriptionValue={newReportModalDescriptionValue}
         setDescriptionValue={setNewReportModalDescriptionValue}
+      />
+      <ReportBuilderMoveToFolderModal
+        open={moveToFolderModalOpen}
+        onClose={handleMoveToFolderModalClose}
+        folderStructure={getFoldersStructure.data?.data || []}
       />
     </React.Fragment>
   );

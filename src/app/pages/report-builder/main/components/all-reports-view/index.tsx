@@ -1,19 +1,21 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
 import { Table } from "app/components/table";
 import { useNavigate } from "react-router-dom";
-import TextField from "@mui/material/TextField";
 import { CellComponent } from "tabulator-tables";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import MoreVert from "@mui/icons-material/MoreVert";
 import CircularProgress from "@mui/material/CircularProgress";
 import { ReportBuilderItemMenu } from "app/pages/report-builder/main/components/item-menu";
 import {
+  ReportCard,
+  FolderCard,
+} from "app/pages/report-builder/main/components/all-reports-view/cards";
+import {
+  useDeleteFolder,
   useDeleteReport,
+  useDuplicateFolder,
   useDuplicateReport,
+  usePatchFolder2,
   usePatchReport2,
 } from "app/hooks/queries/report-builder";
 import {
@@ -28,6 +30,7 @@ import {
 export const AllReportsView: React.FC<{
   refetch: () => void;
   selectedView: "cards" | "list";
+  handleFolderOpen: (id: string) => void;
   reports: {
     isLoading: boolean;
     data: {
@@ -36,13 +39,19 @@ export const AllReportsView: React.FC<{
       description: string;
       createdDate: string;
       updatedDate: string;
+      isFolder?: boolean;
+      assetCount?: number;
+      reportCount?: number;
     }[];
   };
-}> = ({ selectedView, reports, refetch }) => {
+}> = ({ selectedView, reports, refetch, handleFolderOpen }) => {
   const navigate = useNavigate();
   const deleteReport = useDeleteReport();
+  const deleteFolder = useDeleteFolder();
   const updateReport = usePatchReport2();
+  const updateFolder = usePatchFolder2();
   const duplicateReport = useDuplicateReport();
+  const duplicateFolder = useDuplicateFolder();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const [selectedItemForRenaming, setSelectedItemForRenaming] = React.useState<
@@ -55,6 +64,8 @@ export const AllReportsView: React.FC<{
   const handleClose = () => setAnchorEl(null);
 
   const getAnchorElId = () => anchorEl?.getAttribute("id");
+
+  const getAnchorElName = () => anchorEl?.getAttribute("name");
 
   const handleRename = () => {
     const id = getAnchorElId();
@@ -69,7 +80,7 @@ export const AllReportsView: React.FC<{
     }, 100);
   };
 
-  const handleRenameEnter = (id: string) => {
+  const handleRenameEnter = (id: string, type: "report" | "folder") => {
     const name = (
       document.getElementById(`rename-field-${id}`) as HTMLInputElement
     )?.value;
@@ -77,36 +88,65 @@ export const AllReportsView: React.FC<{
       setSelectedItemForRenaming(null);
       return;
     }
-    updateReport.mutate(
-      { id, name },
-      {
-        onSuccess: () => {
-          setSelectedItemForRenaming(null);
+    if (type === "folder") {
+      updateFolder.mutate(
+        { id, name },
+        {
+          onSuccess: () => {
+            setSelectedItemForRenaming(null);
+          },
         },
-      },
-    );
+      );
+    } else {
+      updateReport.mutate(
+        { id, name },
+        {
+          onSuccess: () => {
+            setSelectedItemForRenaming(null);
+          },
+        },
+      );
+    }
   };
 
   const handleDuplicate = () => {
     const id = getAnchorElId();
+    const isFolder = getAnchorElName() === "folder";
     if (!id) return;
     setAnchorEl(null);
-    duplicateReport.mutate(id, {
-      onSuccess: () => refetch(),
-    });
+    if (isFolder) {
+      duplicateFolder.mutate(id, {
+        onSuccess: () => refetch(),
+      });
+    } else {
+      duplicateReport.mutate(id, {
+        onSuccess: () => refetch(),
+      });
+    }
   };
 
   const handleDelete = () => {
     const id = getAnchorElId();
+    const isFolder = getAnchorElName() === "folder";
     if (!id) return;
     setAnchorEl(null);
-    deleteReport.mutate(id, {
-      onSuccess: () => refetch(),
-    });
+    if (isFolder) {
+      deleteFolder.mutate(id, {
+        onSuccess: () => refetch(),
+      });
+    } else {
+      deleteReport.mutate(id, {
+        onSuccess: () => refetch(),
+      });
+    }
   };
 
-  const handleItemClick = (id: string) => () => {
-    navigate(`/report-builder/reports/${id}`);
+  const handleItemClick = (id: string, type: "report" | "folder") => () => {
+    if (type === "folder") {
+      handleFolderOpen(id);
+    } else {
+      navigate(`/report-builder/reports/${id}`);
+    }
   };
 
   const handleEditClick = (id: string) => () => {
@@ -115,7 +155,8 @@ export const AllReportsView: React.FC<{
 
   const handleTableCellClick = (_e: UIEvent, cell: CellComponent) => {
     const id = cell.getRow().getData()?.id;
-    if (id) handleItemClick(id)();
+    const type = cell.getRow().getData()?.type;
+    if (id) handleItemClick(id, type === "Folder" ? "folder" : "report")();
   };
 
   const view = React.useMemo(() => {
@@ -138,126 +179,52 @@ export const AllReportsView: React.FC<{
       return (
         <Grid container columnSpacing={2} rowSpacing={6}>
           {reports.data.map((item) => (
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              lg={3}
-              key={item.id}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}
-            >
-              <Box>
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "180px",
-                    display: "flex",
-                    paddingTop: "8px",
-                    cursor: "pointer",
-                    borderRadius: "2px",
-                    justifyContent: "center",
-                    border: "1px solid #cfd4da",
-                    div: {
-                      width: "calc(100% - 10px)",
-                      backgroundImage: `url(${import.meta.env.VITE_API}/report-thumbnail/${item.id}.png)`,
-                      backgroundRepeat: "no-repeat",
-                      backgroundPosition: "center",
-                      backgroundSize: "contain",
-                    },
-                  }}
-                  onClick={handleItemClick(item.id)}
-                >
-                  <div />
-                </Box>
-                <Box
-                  sx={{
-                    margin: "10px 0 5px 0",
-                  }}
-                >
-                  {selectedItemForRenaming === item.id ? (
-                    <TextField
-                      fullWidth
-                      autoFocus
-                      size="small"
-                      variant="standard"
-                      defaultValue={item.name}
-                      id={`rename-field-${item.id}`}
-                      slotProps={{ htmlInput: { maxLength: 100 } }}
-                      onBlur={(e) => {
-                        if (e.relatedTarget?.id === "rb-item-menu-paper") {
-                          return;
-                        }
-                        handleRenameEnter(item.id);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Escape") {
-                          setSelectedItemForRenaming(null);
-                        }
-                        if (e.key === "Enter") {
-                          handleRenameEnter(item.id);
-                        }
-                      }}
-                      sx={{
-                        input: {
-                          fontWeight: "700",
-                          pl: "0 !important",
-                        },
-                        ".MuiInputBase-root:before, .MuiInputBase-root:after": {
-                          borderBottom: "2px solid #3154F4 !important",
-                        },
-                      }}
-                    />
-                  ) : (
-                    <Typography
-                      variant="h6"
-                      fontSize="16px"
-                      lineHeight="normal"
-                      sx={{ cursor: "pointer" }}
-                      onClick={handleItemClick(item.id)}
-                    >
-                      {item.name}
-                    </Typography>
-                  )}
-                </Box>
-                <Typography
-                  variant="body2"
-                  width="calc(100% - 40px)"
-                  sx={{ cursor: "pointer" }}
-                  onClick={handleItemClick(item.id)}
-                >
-                  {item.description}
-                </Typography>
-              </Box>
+            <Grid item xs={12} sm={6} md={4} lg={4} key={item.id}>
               <Box
                 sx={{
-                  gap: "10px",
                   width: "100%",
+                  height: "100%",
                   display: "flex",
-                  marginTop: "12px",
-                  alignItems: "center",
-                  "> button:not(:last-child)": {
-                    flex: "1",
-                    fontSize: "14px",
-                    bgcolor: "#fff",
-                    fontWeight: "400",
-                    height: "36px",
-                    borderRadius: "4px",
-                    lineHeight: "normal",
-                    textTransform: "none",
-                    border: "1px solid #98a1aa",
+                  padding: "16px",
+                  borderRadius: "4px",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  border: `1px solid ${getAnchorElId() === item.id ? "#3154f4" : "#cfd4da"}`,
+                  ":hover": {
+                    borderColor: "#3154f4",
                   },
                 }}
               >
-                <Button onClick={handleEditClick(item.id)}>Edit</Button>
-                <Button onClick={handleItemClick(item.id)}>Preview</Button>
-                <IconButton id={item.id} onClick={handleItemMenuClick}>
-                  <MoreVert />
-                </IconButton>
+                {!item.isFolder && (
+                  <ReportCard
+                    id={item.id}
+                    name={item.name}
+                    description={item.description}
+                    createdDate={item.createdDate}
+                    updatedDate={item.updatedDate}
+                    selectedItemForRenaming={selectedItemForRenaming}
+                    setSelectedItemForRenaming={setSelectedItemForRenaming}
+                    handleRenameEnter={handleRenameEnter}
+                    handleItemMenuClick={handleItemMenuClick}
+                    handleItemClick={handleItemClick}
+                    handleEditClick={handleEditClick}
+                  />
+                )}
+                {item.isFolder && (
+                  <FolderCard
+                    id={item.id}
+                    name={item.name}
+                    assetCount={item.assetCount ?? 0}
+                    reportCount={item.reportCount ?? 0}
+                    createdDate={item.createdDate}
+                    updatedDate={item.updatedDate}
+                    selectedItemForRenaming={selectedItemForRenaming}
+                    setSelectedItemForRenaming={setSelectedItemForRenaming}
+                    handleRenameEnter={handleRenameEnter}
+                    handleItemMenuClick={handleItemMenuClick}
+                    handleItemClick={handleItemClick}
+                  />
+                )}
               </Box>
             </Grid>
           ))}
@@ -313,6 +280,7 @@ export const AllReportsView: React.FC<{
             id: item.id,
             name: item.name,
             description: item.description,
+            type: item.isFolder ? "Folder" : "Report",
             dateCreated: `${cdate.getDate()}-${cdate.getMonth() + 1}-${cdate.getFullYear()}`,
             dateEdited: `${edate.getDate()}-${edate.getMonth() + 1}-${edate.getFullYear()}`,
           };
@@ -320,7 +288,7 @@ export const AllReportsView: React.FC<{
         columns={[
           { title: "", field: "id", visible: false },
           {
-            title: "Report name",
+            title: "Name",
             field: "name",
             width: "30%",
             cellClick: handleTableCellClick,
@@ -328,8 +296,9 @@ export const AllReportsView: React.FC<{
               `<u style="color: #3154F4;">${cell.getValue()}</u>`,
           },
           { title: "Description", field: "description", width: "40%" },
-          { title: "Date Created", field: "dateCreated", width: "15%" },
-          { title: "Last Edited", field: "dateEdited", width: "15%" },
+          { title: "Type", field: "type", width: "10%" },
+          { title: "Date Created", field: "dateCreated", width: "10%" },
+          { title: "Last Edited", field: "dateEdited", width: "10%" },
         ]}
       />
     );

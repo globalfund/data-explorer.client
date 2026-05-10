@@ -293,6 +293,17 @@ export interface RBAssetModel {
   data: any;
 }
 
+export interface RBFolderModel {
+  id?: string;
+  name: string;
+  public?: boolean;
+  owner?: string;
+  createdDate?: string;
+  updatedDate?: string;
+  assets?: RBAssetModel[];
+  reports?: RBReportModel[];
+}
+
 export interface RBAssetModelResponse {
   id: string;
   name: string;
@@ -328,6 +339,16 @@ export interface RBReportModelResponse {
   description: string;
   updatedDate: string;
   createdDate: string;
+}
+export interface RBFolderModelResponse {
+  id: string;
+  name: string;
+  public: boolean;
+  owner: string;
+  createdDate: string;
+  updatedDate: string;
+  assets: RBAssetModelResponse[];
+  reports: RBReportModelResponse[];
 }
 export interface RBRenderedChartData {
   renderedContent: string;

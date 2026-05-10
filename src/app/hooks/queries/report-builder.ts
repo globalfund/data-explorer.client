@@ -15,6 +15,8 @@ import {
   RBReportPatchModel,
   RBAssetModel,
   RBAssetModelResponse,
+  RBFolderModel,
+  RBFolderModelResponse,
 } from "app/state/api/action-reducers/report-builder/sync";
 import { AssetViewType } from "app/pages/report-builder/main/components/all-assets-view/toolbar";
 
@@ -31,6 +33,14 @@ export const useCreateAsset = () => {
     mutationKey: ["ReportBuilderCreateAsset"],
     mutationFn: (data: RBAssetModel) =>
       axiosInstance.post<RBAssetModel>(`/asset`, data),
+  });
+};
+
+export const useCreateFolder = () => {
+  return useMutation({
+    mutationKey: ["ReportBuilderCreateFolder"],
+    mutationFn: (data: RBFolderModel) =>
+      axiosInstance.post<RBFolderModel>(`/folder`, data),
   });
 };
 
@@ -52,7 +62,21 @@ export const useGetAsset = (assetId?: string) => {
   });
 };
 
-export const useGetReports = (params: { sort: string; search: string }) => {
+export const useGetFolder = (folderId?: string) => {
+  return useQuery({
+    queryKey: ["ReportBuilderGetFolder", folderId],
+    queryFn: () =>
+      axiosInstance.get<RBFolderModelResponse>(`/folder/${folderId}`),
+    enabled: !!folderId,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+};
+
+export const useGetReports = (params: {
+  sort: string;
+  search: string;
+  includeFolders?: boolean;
+}) => {
   // TODO: cache and manage invalidation
   let filter = "";
   if (params.search) {
@@ -61,10 +85,19 @@ export const useGetReports = (params: { sort: string; search: string }) => {
     filter = `{"order":["${params.sort}"]}`;
   }
   return useQuery({
-    queryKey: ["ReportBuilderGetReports", params.search, params.sort],
+    queryKey: [
+      "ReportBuilderGetReports",
+      params.search,
+      params.sort,
+      params.includeFolders,
+    ],
     queryFn: () =>
       axiosInstance.get<RBReportModelResponse[]>(`/reports`, {
-        params: { filter },
+        params: {
+          filter,
+          folderFilter: filter,
+          includeFolders: params.includeFolders,
+        },
       }),
     staleTime: 1000 * 60 * 5,
   });
@@ -75,6 +108,16 @@ export const useGetAssets = (params: {
   search: string;
   type: AssetViewType;
 }) => {
+  let filter = "";
+  if (params.search && params.type !== "all") {
+    filter = `{"where":{"name":{"like":".*${params.search}.*","options":"i"},"type":"${params.type}"}},"order":["${params.sort}"]}`;
+  } else if (params.search && params.type === "all") {
+    filter = `{"where":{"name":{"like":".*${params.search}.*","options":"i"}},"order":["${params.sort}"]}`;
+  } else if (!params.search && params.type !== "all") {
+    filter = `{"where":{"type":"${params.type}"},"order":["${params.sort}"]}`;
+  } else {
+    filter = `{"order":["${params.sort}"]}`;
+  }
   return useQuery({
     queryKey: [
       "ReportBuilderGetAssets",
@@ -84,8 +127,35 @@ export const useGetAssets = (params: {
     ],
     queryFn: () =>
       axiosInstance.get<RBAssetModelResponse[]>(`/assets`, {
+        params: { filter },
+      }),
+    staleTime: 1000 * 60 * 5,
+  });
+};
+
+export const useGetFolders = (params: {
+  sort: string;
+  search: string;
+  includeSubFolders?: boolean;
+}) => {
+  let filter = "";
+  if (params.search) {
+    filter = `{"where":{"name":{"like":".*${params.search}.*","options":"i"}},"order":["${params.sort}"]}`;
+  } else {
+    filter = `{"order":["${params.sort}"]}`;
+  }
+  return useQuery({
+    queryKey: [
+      "ReportBuilderGetFolders",
+      params.search,
+      params.sort,
+      params.includeSubFolders,
+    ],
+    queryFn: () =>
+      axiosInstance.get<RBFolderModelResponse[]>(`/folders`, {
         params: {
-          filter: `{"where":{"name":{"like":".*${params.search}.*","options":"i"}${params.type !== "all" ? `,"type":"${params.type}"` : ""}},"order":["${params.sort}"]}`,
+          filter,
+          includeSubFolders: Boolean(params.includeSubFolders),
         },
       }),
     staleTime: 1000 * 60 * 5,
@@ -138,6 +208,33 @@ export const usePatchAsset = (assetId?: string) => {
   });
 };
 
+export const usePatchFolder = (folderId?: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["ReportBuilderPatchFolder", folderId],
+    mutationFn: (data: Partial<RBFolderModel>) =>
+      axiosInstance.patch<RBFolderModel>(`/folder/${folderId}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ReportBuilderGetFolders"] });
+      queryClient.invalidateQueries({
+        queryKey: ["ReportBuilderGetFolder", folderId],
+      });
+    },
+  });
+};
+
+export const usePatchFolder2 = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["ReportBuilderPatchFolder"],
+    mutationFn: (data: Partial<RBFolderModel>) =>
+      axiosInstance.patch<RBFolderModel>(`/folder/${data.id}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ReportBuilderGetFolders"] });
+    },
+  });
+};
+
 export const useDeleteReport = () => {
   return useMutation({
     mutationKey: ["ReportBuilderDeleteReport"],
@@ -156,6 +253,17 @@ export const useDeleteAsset = () => {
   });
 };
 
+export const useDeleteFolder = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["ReportBuilderDeleteFolder"],
+    mutationFn: (id: string) => axiosInstance.delete(`/folder/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ReportBuilderGetFolders"] });
+    },
+  });
+};
+
 export const useDuplicateReport = () => {
   return useMutation({
     mutationKey: ["ReportBuilderDuplicateReport"],
@@ -170,6 +278,17 @@ export const useDuplicateAsset = () => {
     mutationFn: (id: string) => axiosInstance.get(`/asset/duplicate/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ReportBuilderGetAssets"] });
+    },
+  });
+};
+
+export const useDuplicateFolder = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["ReportBuilderDuplicateFolder"],
+    mutationFn: (id: string) => axiosInstance.get(`/folder/duplicate/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ReportBuilderGetFolders"] });
     },
   });
 };
