@@ -76,7 +76,7 @@ export const RichEditor: React.FC<{
       onFocus={() => setEditorStateAndController()}
       onClick={() => setEditorStateAndController()}
     >
-      <EditorContent editor={editor} width="100%" />
+      <EditorContent editor={editor} width="100%" style={{ width: "100%" }} />
     </Box>
   );
 };
