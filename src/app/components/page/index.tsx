@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import { Header } from "app/components/header";
 import { Footer } from "app/components/footer";
 import Container from "@mui/material/Container";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useSearchParams } from "react-router-dom";
 import { useUrlFilters } from "app/hooks/useUrlFilters";
 import { useRouteListener } from "app/hooks/useRouteListener";
 import { useScrollToAnchor } from "app/hooks/useScrollToAnchor";
@@ -15,12 +15,14 @@ export const Page: React.FC = () => {
   useScrollToAnchor();
 
   const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   const inReportBuilder = React.useMemo(() => {
     return location.pathname.startsWith("/report-builder/");
   }, [location.pathname]);
 
   if (inReportBuilder) {
+    const thumbnail = searchParams.get("screenshot") === "true";
     const previewMode =
       location.pathname.includes("/reports/") &&
       !location.pathname.includes("edit");
@@ -36,10 +38,10 @@ export const Page: React.FC = () => {
           sx={{
             width: "100%",
             display: "flex",
-            paddingTop: "50px",
-            paddingBottom: "50px",
+            paddingTop: thumbnail ? "0px" : "50px",
+            paddingBottom: thumbnail ? "0px" : "50px",
             bgcolor: "#495057",
-            minHeight: "calc(100vh - 60px)",
+            minHeight: thumbnail ? undefined : "calc(100vh - 60px)",
           }}
         >
           <Box id="main" sx={{ width: "100%", minHeight: "100%" }}>
