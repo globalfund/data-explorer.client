@@ -63,6 +63,7 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
       "Time-series regression with cyclical replenishment pattern overlays.",
     status: "implemented",
     category: "forecasting",
+    slug: "allocation_forecasting",
   },
   {
     id: "1.7",
@@ -74,6 +75,7 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
     methodology: "ARIMA-based forecasting with budget cycle adjustments.",
     status: "implemented",
     category: "forecasting",
+    slug: "grant_budgets_forecasting",
   },
   {
     id: "1.8",
@@ -85,6 +87,7 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
     methodology: "Rolling-window regression on disbursement trajectories.",
     status: "implemented",
     category: "forecasting",
+    slug: "grant_commitments_forecasting",
   },
   {
     id: "1.1",
@@ -97,9 +100,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
       "Grant Agreements",
     ],
     methodology:
-      "Train an ARIMA, Prophet, or gradient-boosted model on the Disbursements dataset joined with Implementation Periods to predict future quarterly disbursement amounts per grant. This directly supports treasury management and cash-flow planning. Features include historical disbursement cadence, grant signed amount, principal recipient type, country, and component.",
-    status: "pipeline",
+      "Gradient-boosted regression on disbursement trajectories joined with implementation periods, predicting quarterly disbursement amounts per grant.",
+    status: "implemented",
     category: "forecasting",
+    slug: "grant_disbursements_forecasting",
   },
   {
     id: "1.2",
@@ -114,9 +118,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
       "Grant Agreements",
     ],
     methodology:
-      "Using Financial Metrics and Grant Expenditures, build a regression model that predicts the in-country absorption rate for an implementation period at its midpoint. Early warning of low absorption enables proactive portfolio management. a top operational priority. Features include historical absorption by the same principal recipient, expenditure run-rate, country macro indicators, and components.",
-    status: "pipeline",
+      "Regression model predicting in-country absorption rate using expenditure run-rate, PR type, country, component, and historical absorption for the same recipient.",
+    status: "implemented",
     category: "forecasting",
+    slug: "absorption_rate_prediction",
   },
   {
     id: "1.3",
@@ -125,9 +130,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
     summary: "Projects key disease burden indicators into future periods.",
     datasets: ["Reported Results", "Eligibility", "WHO/UNAIDS data"],
     methodology:
-      "Using Reported Results time series (people on ART, TB case detection rate, LLIN distribution counts), combined with external epidemiological data (UNAIDS, WHO), build ensemble forecasting models to project country-level disease indicators 3-5 years forward. This supports investment-case modeling for replenishment conferences.",
-    status: "pipeline",
+      "Ensemble regression on Reported Results time-series features (rolling mean, YoY change, trend slope) to project country-level disease indicators 3–5 years forward.",
+    status: "implemented",
     category: "forecasting",
+    slug: "disease_indicator_trajectory_forecasting",
   },
   {
     id: "1.4",
@@ -148,9 +154,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
     summary: "Estimates donor pledge fulfillment and contribution timing.",
     datasets: ["Pledges and Contributions"],
     methodology:
-      "Model the relationship between pledges and actual contributions using the Pledges and Contributions dataset. Predict contribution timing and amounts per donor for each replenishment cycle. Features: donor type, historical pledge-to-contribution ratio, replenishment period, macroeconomic indicators.",
-    status: "pipeline",
+      "Regression model predicting contribution amounts per donor using donor type, pledge-to-contribution ratio, replenishment cycle, and pledge timing features.",
+    status: "implemented",
     category: "forecasting",
+    slug: "donor_contribution_forecasting",
   },
   // Classification and supervised learning
   {
@@ -161,9 +168,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
       "Classifies which countries are likely to gain or lose eligibility in the next allocation cycle, based on income and disease burden thresholds.",
     datasets: ["Eligibility", "Income classifications", "Disease data"],
     methodology:
-      "Using the Eligibility dataset combined with World Bank income data and disease burden trends from Results, classify which countries are likely to transition out of eligibility in the next allocation cycle. Supports sustainability and transition planning.",
+      "Classification model using eligibility history, income level, disease burden, and country features to predict eligibility status with probability scores.",
     status: "implemented",
     category: "classification",
+    slug: "eligibility_prediction",
   },
   {
     id: "2.1",
@@ -173,9 +181,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
       "Scores grants by implementation risk based on historical performance patterns.",
     datasets: ["Reported Results"],
     methodology:
-      "Train a classifier (XGBoost, random forest) to predict whether a grant will receive a low performance rating (B2 or C) at its next progress update. This creates a risk identification tool for fund portfolio managers. Features drawn from early expenditure patterns, historical ratings for the same principal recipient, financial metrics, and indicator achievement rates.",
-    status: "pipeline",
+      "XGBoost/random forest classifier predicting whether a grant will receive a low performance rating (B2/C) based on expenditure patterns, historical ratings, financial metrics, and indicator achievement.",
+    status: "implemented",
     category: "classification",
+    slug: "grant_performance_risk_classification",
   },
   {
     id: "2.2",
@@ -184,9 +193,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
     summary: "Evaluates the organizational capacity of principal recipients.",
     datasets: ["Grant financials", "Implementation data"],
     methodology:
-      "Build a composite scoring model that classifies principal recipients by implementation capacity using historical financial and programmatic performance across all their grants. Supports grant-making decisions during allocation periods. Features: average absorption rate, on-time reporting, indicator achievement rates, grant portfolio size, PR type.",
-    status: "pipeline",
+      "Composite classifier scoring PRs as High/Medium/Low capacity using absorption rate, on-time reporting, indicator achievement, portfolio size, and PR type.",
+    status: "implemented",
     category: "classification",
+    slug: "principal_recipient_capacity_scoring",
   },
   {
     id: "2.4",
@@ -195,9 +205,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
     summary: "Auto-classifies budget line items into standardized categories.",
     datasets: ["Budget breakdowns"],
     methodology:
-      "Train a text classifier on the Grant Budgets dataset's module/intervention/cost category taxonomy to automatically categorize new budget submissions. Useful for standardizing budget reviews across active grants.",
-    status: "pipeline",
+      "Text classifier on Grant Budgets module/intervention taxonomy to automatically categorize new budget submissions into standardized cost categories.",
+    status: "implemented",
     category: "classification",
+    slug: "budget_line-item_classification",
   },
   // Clustering and unsupervised learning
   {
@@ -207,9 +218,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
     summary: "Groups countries by portfolio characteristics and risk profile.",
     datasets: ["Allocations", "Results", "Country data"],
     methodology:
-      "Apply k-means or hierarchical clustering to countries using features derived from Allocations, Financial Metrics, Reported Results, and Eligibility (allocation size, absorption rate, indicator achievement, income level, disease burden). Identify natural groupings of countries with similar profiles to tailor technical assistance and portfolio management strategies. ",
-    status: "pipeline",
+      "DBSCAN/k-means clustering on allocation size, absorption rate, indicator achievement, income level, and disease burden to identify natural country groupings.",
+    status: "implemented",
     category: "clustering",
+    slug: "country_portfolio_segmentation",
   },
   {
     id: "3.2",
@@ -218,9 +230,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
     summary: "Discovers natural grant archetypes from implementation patterns.",
     datasets: ["Grant financials", "Results"],
     methodology:
-      'Cluster grants based on their financial and programmatic signatures, like budget composition by module (from Grant Budgets), absorption trajectory, disbursement cadence, and indicator performance. Discover archetypes such as "high-absorption HIV treatment grants" versus "slow-starting health systems grants."',
-    status: "pipeline",
+      'Clustering on budget composition, absorption trajectory, and indicator performance to discover grant archetypes such as "high-absorption HIV treatment" vs "slow-starting health systems."',
+    status: "implemented",
     category: "clustering",
+    slug: "grant_archetype_discovery",
   },
   {
     id: "3.3",
@@ -241,9 +254,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
       "Unsupervised detection of unusual grant spending patterns over time.",
     datasets: ["Expenditures", "Budgets"],
     methodology:
-      "Apply isolation forests or DBSCAN to Grant Expenditures and Disbursements to detect grants with unusual spending patterns, sudden spikes, prolonged inactivity, or cost-category distributions that deviate from peer grants. Flags potential implementation problems or financial irregularities.",
-    status: "pipeline",
+      "Isolation forest on Grant Expenditures and Disbursements to detect grants with unusual spending patterns, sudden spikes, prolonged inactivity, or deviant cost-category distributions.",
+    status: "implemented",
     category: "clustering",
+    slug: "anomalous_spending_pattern_detection",
   },
   // Natural language processing and LLMs
   {
@@ -307,7 +321,7 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
       "Identifies procurement transactions with prices that deviate significantly from market benchmarks, flagging potential inefficiencies or data errors.",
     datasets: ["Procurement data", "Global health price benchmarks"],
     methodology:
-      "Using PQR Transaction Summary data, build a statistical or ML model that flags individual transactions with unit prices that significantly deviate from the reference price for the same product/dosage/pack size. This catches potential overpricing, data entry errors, or fraudulent transactions. A straightforward z-score or isolation forest approach works well here.",
+      "Z-score and isolation forest on PQR Transaction Summary to flag unit prices that significantly deviate from reference prices for the same product/dosage/pack size.",
     status: "implemented",
     category: "anomaly",
   },
@@ -319,9 +333,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
       "Automatically reconciles financial figures across budget, disbursement, and expenditure reports, surfacing discrepancies.",
     datasets: ["Budgets", "Disbursements", "Expenditures"],
     methodology:
-      "Cross-validate Disbursements against Financial Metrics and Grant Budgets to detect inconsistencies (e.g., disbursements exceeding budgets, expenditures exceeding disbursements). Flag data quality issues automatically.",
+      "Cross-validates Disbursements against Financial Metrics and Grant Budgets to detect inconsistencies such as disbursements exceeding budgets or expenditures exceeding disbursements.",
     status: "implemented",
     category: "anomaly",
+    slug: "financial_data_reconciliation_engine",
   },
   {
     id: "5.3",
@@ -331,9 +346,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
       "Detects result values that are statistically inconsistent with peer countries, prior periods, or stated targets.",
     datasets: ["Annual results", "Targets vs actuals", "Disease indicators"],
     methodology:
-      'Apply outlier detection to Reported Results to flag implausible indicator values like sudden 10x jumps in "people tested for HIV" or achievement rates exceeding 500%. These often indicate reporting errors rather than genuine performance.',
+      "Outlier detection on Reported Results to flag implausible indicator values, sudden 10× jumps, or achievement rates exceeding 500%.",
     status: "implemented",
     category: "anomaly",
+    slug: "results_data_outlier_detection",
   },
   // Optimization and recommendation systems
   {
@@ -343,9 +359,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
     summary: "Recommends optimal budget allocations to maximize health impact.",
     datasets: ["Budgets", "Results data"],
     methodology:
-      "Build a constrained optimization model that recommends how to allocate a given funding envelope across countries and components to maximize projected health outcomes. Uses historical relationships between budget amounts (Grant Budgets), absorption rates (Financial Metrics), and programmatic results (Reported Results) to estimate the marginal return on investment per dollar per intervention per country. ",
-    status: "pipeline",
+      "Constrained optimization over historical budget–absorption–results relationships to recommend how to allocate a funding envelope across countries and components for maximum projected health outcomes.",
+    status: "implemented",
     category: "optimization",
+    slug: "budget_allocation_optimizer",
   },
   {
     id: "6.2",
@@ -365,9 +382,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
     summary: "Suggests portfolio-level adjustments based on performance data.",
     datasets: ["Grant financials", "Results"],
     methodology:
-      "Develop a portfolio optimization tool that analyzes the current mix of grants across disease components, geographies, and implementation stages, and recommends rebalancing actions (accelerated disbursements, budget reprogramming) based on performance signals.",
-    status: "pipeline",
+      "Portfolio optimization analyzing the current grant mix across components, geographies, and implementation stages to recommend rebalancing actions such as accelerated disbursements or budget reprogramming.",
+    status: "implemented",
     category: "optimization",
+    slug: "grant_portfolio_rebalancing_recommendations",
   },
   // Geospatial and network analysis
   {
@@ -383,9 +401,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
       "Grant Agreements",
     ],
     methodology:
-      "Map the flow of funds from donors (Pledges and Contributions) through the Global Fund to countries (Allocations, Disbursements) and visualize as a network graph. Apply network analysis metrics (centrality, clustering coefficient) to understand funding concentration, donor dependency, and systemic risks.",
+      "Network graph of fund flows from donors through the Global Fund to countries, with centrality and HHI concentration metrics to identify dependency and systemic risk.",
     status: "implemented",
     category: "geospatial",
+    slug: "disbursement_flow_network_analysis",
   },
   {
     id: "7.2",
@@ -408,9 +427,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
       "Evaluates the causal impact of different grant design choices on outcomes.",
     datasets: ["Grant design data", "Results"],
     methodology:
-      "Apply causal inference methods (difference-in-differences, synthetic controls) to estimate the incremental impact of specific grant design features, such as community health worker modules, RSSH investments, or specific intervention types, on health outcomes. The combination of Grant Budgets (intervention-level spending) and Reported Results (health indicators) provides the treatment and outcome variables; Eligibility provides natural experiments (countries that just met or missed eligibility thresholds).",
-    status: "pipeline",
+      "Difference-in-differences causal inference estimating the incremental impact of grant design features (CHW modules, RSSH investments, intervention types) on health outcomes.",
+    status: "implemented",
     category: "causal",
+    slug: "grant_design_impact_analysis",
   },
   {
     id: "8.2",
@@ -419,9 +439,10 @@ export const FEATURE_CHECKLIST: AiFeature[] = [
     summary: "Identifies causal drivers of low grant fund absorption rates.",
     datasets: ["Expenditures", "Budgets", "Implementation data"],
     methodology:
-      "Use SHAP values from a gradient-boosted model trained to predict absorption rates to identify the most important drivers of high vs. low absorption. Features span principal recipient type, country characteristics, component, grant size, and budget composition. Produces actionable insights for the Access to Funding department.",
-    status: "pipeline",
+      "SHAP values from a gradient-boosted absorption-rate model identify the most important drivers of high vs. low absorption across PR type, country, component, grant size, and budget composition.",
+    status: "implemented",
     category: "causal",
+    slug: "absorption_driver_analysis",
   },
 ];
 
@@ -435,6 +456,7 @@ export const HINT_CHIPS = [
 ];
 
 export const FUTURE_OUTLOOK_ITEMS: string[] = [
+  "Upgrades to the chat interface, including follow-up questions, multi-turn conversations, and updates from chat. As well as expanding the RAG capabilities, and especially integrating a general knowledge base for answering questions that require understanding of Global Fund policies, processes, and data definitions.",
   "Integration of dataset profiler options onto the Data Service Platform.",
   "Ability to input future budget scales (e.g. an 11% reduction) and see the impact across the board.",
   "Ability to scale numeric input data and see the projected impact of that scaling.",

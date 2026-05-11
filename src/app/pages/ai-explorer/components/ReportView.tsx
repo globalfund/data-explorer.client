@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import { RBReportModel } from "app/state/api/action-reducers/report-builder/sync";
 import { StatelessReportCanvas } from "app/pages/report-builder/preview/StatelessReportCanvas";
 import { ReportViewToolbar } from "app/pages/ai-explorer/components/ReportViewToolbar";
-import { FeedbackWidget } from "./FeedbackWidget";
+import { FeedbackWidget } from "app/pages/ai-explorer/components/FeedbackWidget";
 
 interface ReportViewProps {
   report: RBReportModel;

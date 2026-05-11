@@ -13,7 +13,8 @@ import {
   FEATURE_CATEGORY_ORDER,
 } from "app/pages/ai-explorer/data";
 import { SectionAccordion } from "app/pages/ai-explorer/components/SectionAccordion";
-import { FeedbackWidget } from "./FeedbackWidget";
+import { FeedbackWidget } from "app/pages/ai-explorer/components/FeedbackWidget";
+import { ModelInsightsSection } from "app/pages/ai-explorer/components/model-insights/ModelInsightsSection";
 
 const FeatureCard: React.FC<{ feature: AiFeature }> = ({ feature }) => (
   <Accordion data-testid="feature-accordion">
@@ -96,6 +97,7 @@ const ImplementedSubSection: React.FC = () => {
       feedbackLabel="Implemented Features"
       title={`Implemented Features (${implemented.length})`}
       titleVariant="body1"
+      subTitle="Features that have been implemented and are currently available in the AI Explorer."
       defaultExpanded
       detailsSx={{ p: 0 }}
     >
@@ -175,6 +177,7 @@ export const FeatureSection: React.FC = () => (
     detailsSx={{ p: 0 }}
   >
     <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <ModelInsightsSection />
       <ImplementedSubSection />
       <PipelineSubSection />
     </Box>

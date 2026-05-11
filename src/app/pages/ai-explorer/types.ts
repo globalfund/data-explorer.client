@@ -29,6 +29,51 @@ export interface AiFeature {
   methodology: string;
   status: FeatureStatus;
   category: FeatureCategory;
+  slug?: string;
+}
+
+export type UseCaseTaskType =
+  | "regression"
+  | "classification"
+  | "clustering"
+  | "anomaly_detection"
+  | "optimization"
+  | "network_analysis"
+  | "causal_inference";
+
+export interface UseCaseSummary {
+  slug: string;
+  name: string;
+  task_type: UseCaseTaskType;
+  description: string;
+  has_metrics: boolean;
+  has_interpretation: boolean;
+  has_hyperparameter_tuning: boolean;
+  supports_predict: boolean;
+  has_result: boolean;
+}
+
+export interface UseCaseDetail extends UseCaseSummary {
+  metrics: Record<string, unknown> | null;
+  interpretation: string | null;
+  hyperparameter_tuning: unknown[] | null;
+  example_inputs: Record<string, unknown> | null;
+  shap_summary?: Record<string, number> | null;
+}
+
+export interface PredictResponse {
+  use_case: string;
+  prediction: number;
+  unit?: string;
+  label?: string;
+  probability?: number;
+  optimal_allocations?: Record<string, number>;
+  predicted_impact?: number;
+  converged?: boolean;
+}
+
+export interface UseCaseResult {
+  [key: string]: unknown;
 }
 
 export interface Dataset {

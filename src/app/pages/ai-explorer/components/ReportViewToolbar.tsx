@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useStoreActions } from "app/state/store/hooks";
 import { useCreateReport } from "app/hooks/queries/report-builder";
 import { RBReportModel } from "app/state/api/action-reducers/report-builder/sync";
-import { FeedbackWidget } from "./FeedbackWidget";
+import { FeedbackWidget } from "app/pages/ai-explorer/components/FeedbackWidget";
 
 interface ReportViewToolbarProps {
   report: RBReportModel;

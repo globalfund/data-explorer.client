@@ -7,8 +7,8 @@ import { useStoreState, useStoreActions } from "app/state/store/hooks";
 import { useMockAssistant } from "app/pages/ai-explorer/hooks/useMockAssistant";
 import { useRealAssistant } from "app/pages/ai-explorer/hooks/useRealAssistant";
 import { ProgressEvent } from "app/pages/ai-explorer/types";
-import { FeedbackWidget } from "./FeedbackWidget";
-import { DemoToggle } from "./DemoToggle";
+import { FeedbackWidget } from "app/pages/ai-explorer/components/FeedbackWidget";
+import { DemoToggle } from "app/pages/ai-explorer/components/DemoToggle";
 
 export const ChatMainPanel: React.FC = () => {
   const chats = useStoreState((s) => s.AiExplorerChats.chats);

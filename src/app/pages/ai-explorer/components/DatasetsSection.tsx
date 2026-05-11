@@ -47,7 +47,7 @@ const GlobalFundSection: React.FC = () => (
     feedbackLabel="Global Fund"
     title="Global Fund"
     titleVariant="body2"
-    subTitle="The Global Fund datasets currently available in these features."
+    subTitle="The Global Fund datasets partially available in these features."
     detailsSx={{ p: 0 }}
     defaultExpanded
   >
