@@ -6,9 +6,8 @@ import ChartIcon from "app/assets/vectors/RBChart.svg?react";
 import { Options } from "../common/elementOptions";
 import { SelectChartAssetList } from "./asset-select";
 import DatasetList from "./asset-select/list/datasetList";
-import ChartList from "./asset-select/list/chartList";
 import { tabList } from "./data";
-import { useStoreState } from "app/state/store/hooks";
+import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import DataDetail from "./dataDetail";
 import Mapping from "./mapping";
 import Filtering from "./filtering";
@@ -20,6 +19,7 @@ import { AssetSwitch } from "../grid/switchAsset";
 import { GridLayoutTab } from "../grid/gridTab";
 import { ColumnLayoutTab } from "../column/columnTab";
 import { ColumnOptionIcon, GridOptionIcon } from "../../../toolbar/data";
+import ChartSelectModal from "app/pages/report-builder/main/components/chart-select-modal";
 
 type ChartControllerTab =
   | "mapping"
@@ -42,6 +42,10 @@ export default function ChartController() {
     id: selectedController?.id || "",
     parent: selectedController?.parent ?? undefined,
   });
+
+  const setSelectedController = useStoreActions(
+    (actions) => actions.RBReportItemsControllerState.setItem,
+  );
 
   const chartExtra = selectedController?.extra?.chart || {};
 
@@ -83,11 +87,22 @@ export default function ChartController() {
     switch (selectedController?.extra?.chart?.listToDisplay) {
       case "dataset":
         return <DatasetList />;
-      case "chartType":
-        return <ChartList />;
       default:
         return <></>;
     }
+  };
+
+  const handleBack = () => {
+    if (!selectedController) return;
+    setSelectedController({
+      ...selectedController,
+      extra: {
+        ...selectedController?.extra,
+        chart: {
+          listToDisplay: null,
+        },
+      },
+    });
   };
 
   const extraTabs = [
@@ -205,7 +220,7 @@ export default function ChartController() {
             {selectedController?.parent?.id ? <AssetSwitch /> : null}
           </Box>
           <Box sx={{ display: isExpanded ? "block" : "none" }}>
-            {selectedController?.extra?.chart?.listToDisplay ? (
+            {selectedController?.extra?.chart?.listToDisplay === "dataset" ? (
               renderList()
             ) : (
               <Box>
@@ -267,6 +282,10 @@ export default function ChartController() {
           </Box>
         </Box>
       )}
+      <ChartSelectModal
+        open={selectedController?.extra?.chart?.listToDisplay == "chartType"}
+        onClose={handleBack}
+      />
     </Box>
   );
 }

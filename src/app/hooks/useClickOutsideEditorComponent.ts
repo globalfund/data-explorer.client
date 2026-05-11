@@ -18,17 +18,19 @@ export function useClickOutsideEditor({
   useEffect(() => {
     function handleMouseDown(e: MouseEvent) {
       const editorEls = document.querySelectorAll("#" + editorId);
-      const toolbarEl = document.getElementById(toolbarId);
+      const toolbarEls = document.querySelectorAll("#" + toolbarId);
       const modalEl = modalId ? document.getElementById(modalId) : null;
 
-      if (!editorEls.length || !toolbarEl) return;
+      if (!editorEls.length || !toolbarEls.length) return;
 
       const target = e.target as HTMLElement;
 
-      const clickedInsideEditor = editorEls
-        .entries()
-        .some(([, el]) => el.contains(target));
-      const clickedInsideToolbar = toolbarEl.contains(target);
+      const clickedInsideEditor = Array.from(editorEls).some((el) =>
+        el.contains(target),
+      );
+      const clickedInsideToolbar = Array.from(toolbarEls).some((el) =>
+        el.contains(target),
+      );
       const clickedInsideModal = modalEl ? modalEl.contains(target) : false;
 
       const insidePortal = !!target.closest(ignorePortalSelector);
@@ -51,5 +53,5 @@ export function useClickOutsideEditor({
 
     document.addEventListener("mousedown", handleMouseDown);
     return () => document.removeEventListener("mousedown", handleMouseDown);
-  }, [editorId, toolbarId, onOutsideClick, ignorePortalSelector]);
+  }, [editorId, toolbarId, modalId, onOutsideClick, ignorePortalSelector]);
 }
