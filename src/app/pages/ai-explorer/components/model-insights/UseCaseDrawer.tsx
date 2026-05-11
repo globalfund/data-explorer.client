@@ -140,20 +140,85 @@ export const UseCaseDrawer: React.FC<UseCaseDrawerProps> = ({
 
             {detail.data && (
               <>
-                
+                {/* Business context */}
+                {(detail.data.business_question ||
+                  detail.data.audience ||
+                  detail.data.output_interpretation) && (
+                  <>
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+                      {detail.data.business_question && (
+                        <Box>
+                          <Typography
+                            variant="caption"
+                            fontWeight={700}
+                            color="text.secondary"
+                            sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
+                          >
+                            Business Question
+                          </Typography>
+                          <Typography variant="body2" sx={{ mt: 0.5 }}>
+                            {detail.data.business_question}
+                          </Typography>
+                        </Box>
+                      )}
+                      {detail.data.audience && (
+                        <Box>
+                          <Typography
+                            variant="caption"
+                            fontWeight={700}
+                            color="text.secondary"
+                            sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
+                          >
+                            Intended Audience
+                          </Typography>
+                          <Typography variant="body2" sx={{ mt: 0.5 }}>
+                            {detail.data.audience}
+                          </Typography>
+                        </Box>
+                      )}
+                      {detail.data.output_interpretation && (
+                        <Box>
+                          <Typography
+                            variant="caption"
+                            fontWeight={700}
+                            color="text.secondary"
+                            sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
+                          >
+                            How to Read the Output
+                          </Typography>
+                          <Typography variant="body2" sx={{ mt: 0.5 }}>
+                            {detail.data.output_interpretation}
+                          </Typography>
+                        </Box>
+                      )}
+                    </Box>
+                    <Divider />
+                  </>
+                )}
 
                 {/* Result visualization */}
                 {useCase.has_result && (
                   <>
                     <Box>
-                      <Typography
-                        variant="caption"
-                        fontWeight={700}
-                        color="text.secondary"
-                        sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
-                      >
-                        Model Results
-                      </Typography>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        <Typography
+                          variant="caption"
+                          fontWeight={700}
+                          color="text.secondary"
+                          sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
+                        >
+                          Model Results
+                        </Typography>
+                        {detail.data?.output_unit &&
+                          detail.data.output_unit !== "raw" && (
+                            <Chip
+                              label={detail.data.output_unit}
+                              size="small"
+                              variant="outlined"
+                              sx={{ fontSize: 10, height: 18 }}
+                            />
+                          )}
+                      </Box>
                       {resultApi.loading && (
                         <Box
                           sx={{

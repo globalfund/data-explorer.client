@@ -46,9 +46,9 @@ export interface UseCaseSummary {
   name: string;
   task_type: UseCaseTaskType;
   description: string;
-  has_metrics: boolean;
-  has_interpretation: boolean;
-  has_hyperparameter_tuning: boolean;
+  has_metrics?: boolean;
+  has_interpretation?: boolean;
+  has_hyperparameter_tuning?: boolean;
   supports_predict: boolean;
   has_result: boolean;
 }
@@ -59,6 +59,11 @@ export interface UseCaseDetail extends UseCaseSummary {
   hyperparameter_tuning: unknown[] | null;
   example_inputs: Record<string, unknown> | null;
   shap_summary?: Record<string, number> | null;
+  business_question?: string | null;
+  audience?: string | null;
+  output_interpretation?: string | null;
+  output_unit?: string | null;
+  prediction_input?: Record<string, unknown> | null;
 }
 
 export interface PredictResponse {
