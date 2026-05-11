@@ -1,0 +1,1793 @@
+{
+  "components": [
+    {
+      "name": "ChartBlock",
+      "description": "Chart block component (ChartBlock).",
+      "file_path": "src/app/components/chart-block/index.tsx",
+      "props": [
+        {
+          "name": "data",
+          "type": "any",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "empty",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "exportName",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "latestUpdate",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "noSplitText",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "showCycleAll",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "infoType",
+          "type": "InfoPanelType",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "noBottomToolbar",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "dropdownSelected",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "unitButtons",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "extraDropdown",
+          "type": "React.ReactElement",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "handleDropdownChange",
+          "type": "(value: string) => void",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "selectedCycles",
+          "type": "{ name: string; value: string }[]",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "dropdownItems",
+          "type": "{ value: string; label: string }[]",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "cycles",
+          "type": "{ name: string; value: string; disabled?: boolean }[]",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "handleCycleChange",
+          "type": "(cycle: { name: string; value: string }) => void",
+          "required": false,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "meta.component is a local wrapper - component inferred from title/imports; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "ChartBlockButtonToolbar",
+      "description": "ButtonToolbar component (ChartBlockButtonToolbar).",
+      "file_path": "src/app/components/chart-block/components/button-toolbar/index.tsx",
+      "props": [
+        {
+          "name": "hashId",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "blockId",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "infoType",
+          "type": "InfoPanelType",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "chartType",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "exportName",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "chartData",
+          "type": "{ headers: string[]; data: (string | number)[][]; }",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": "<ChartBlockButtonToolbar\n  infoType=\"global\"\n/>",
+      "notes": ""
+    },
+    {
+      "name": "ChartBlockCycles",
+      "description": "Cycles component (ChartBlockCycles).",
+      "file_path": "src/app/components/chart-block/components/cycles/index.tsx",
+      "props": [
+        {
+          "name": "showCycleAll",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "selectedCycles",
+          "type": "{ name: string; value: string }[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "cycles",
+          "type": "{ name: string; value: string; disabled?: boolean }[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "handleCycleChange",
+          "type": "(cycle: { name: string; value: string }) => void",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": "<ChartBlockCycles\n  cycles={[\n      { name: \"2020\", value: \"2020\" },\n      { name: \"2021\", value: \"2021\" },\n      { name: \"2022\", value: \"2022\" },\n    ]}\n  selectedCycles={[{ name: \"2021\", value: \"2021\" }]}\n  showCycleAll\n  handleCycleChange={() => {}}\n/>",
+      "notes": ""
+    },
+    {
+      "name": "BarSeriesChart",
+      "description": "Bar series chart component (BarSeriesChart).",
+      "file_path": "src/app/components/charts/bar-series/index.tsx",
+      "props": [
+        {
+          "name": "keys",
+          "type": "string[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "data",
+          "type": "BarSeriesChartDataItem[]",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "required": true
+            },
+            "values": {
+              "type": "number[]",
+              "required": true
+            },
+            "itemStyle": {
+              "type": "{ color: string; }",
+              "required": false
+            }
+          }
+        }
+      },
+      "usage_example": "<BarSeriesChart\n  keys={KEYS}\n  data={STORY_DATA_VARIANT_1}\n/>",
+      "notes": ""
+    },
+    {
+      "name": "BarChart",
+      "description": "Bar chart component (BarChart).",
+      "file_path": "src/app/components/charts/bar/index.tsx",
+      "props": [
+        {
+          "name": "data",
+          "type": "BarChartDataItem[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "valueLabels",
+          "type": "{ value: string; value1?: string; }",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "itemStyle",
+          "type": "{ color: (params: any) => string; }",
+          "required": false,
+          "description": null
+        }
+      ],
+      "data_shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "required": true
+            },
+            "value": {
+              "type": "number",
+              "required": true
+            },
+            "value1": {
+              "type": "number",
+              "required": false
+            },
+            "itemStyle": {
+              "type": "{ color: string; }",
+              "required": false
+            }
+          }
+        }
+      },
+      "usage_example": "<BarChart\n  data={STORY_DATA_VARIANT_1}\n  valueLabels={{\n      value: \"\",\n    }}\n/>",
+      "notes": ""
+    },
+    {
+      "name": "DonutChart",
+      "description": "Donut component (DonutChart).",
+      "file_path": "src/app/components/charts/donut/index.tsx",
+      "props": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "valueColor",
+          "type": "string",
+          "required": false,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": "<DonutChart\n  value={75.5}\n  valueColor=\"#013E77\"\n  label=\"Complete\"\n/>",
+      "notes": ""
+    },
+    {
+      "name": "ExpandableHorizontalBar",
+      "description": "Expandable Horizontal Bar chart component (ExpandableHorizontalBar).",
+      "file_path": "src/app/components/charts/expandable-horizontal-bar/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": "<ExpandableHorizontalBar\n  data={STORY_DATA_VARIANT_1}\n  yAxisLabel=\"Donor Types & Donors\"\n  xAxisLabel=\"Amount\"\n  valueLabels={{\n      value: \"Pledge\",\n      value1: \"Contribution\",\n    }}\n/>",
+      "notes": "[NEEDS REVIEW] Props interface not found"
+    },
+    {
+      "name": "FinancialMetric",
+      "description": "FinancialMetric component.",
+      "file_path": "src/app/components/charts/financial-metric/index.tsx",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "legends",
+          "type": "{ name: string; color: string; }[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "donutChart",
+          "type": "{ id: string; value: number; label: string; valueColor: string; }",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "items",
+          "type": "FinancialMetricExpandableItemProps[]",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": "<FinancialMetric\n  title=\"Financial Overview\"\n  legends={[\n      { name: \"Allocated\", color: \"#013E77\" },\n      { name: \"Spent\", color: \"#FFA500\" },\n    ]}\n  donutChart={{\n      id: \"donut-1\",\n      value: 65.5,\n      valueColor: \"#013E77\",\n      label: \"Complete\",\n    }}\n  items={[\n      {\n        name: \"Category A\",\n        value: 80,\n        color: \"#013E77\",\n        level: 0,\n        items: [\n          {\n            name: \"Subcategory A1\",\n            value: 90,\n            color: \"#015C9F\",\n            level: 1,\n            items: [],\n          },\n          {\n            name: \"Subcategory A2\",\n            value: 70,\n            color: \"#015C9F\",\n            level: 1,\n            items: [],\n          },\n        ],\n      },\n      {\n        name: \"Category B\",\n        value: 50,\n        color: \"#FFA500\",\n        level: 0,\n        items: [],\n      },\n    ]}\n/>",
+      "notes": ""
+    },
+    {
+      "name": "Heatmap",
+      "description": "Heatmap component.",
+      "file_path": "src/app/components/charts/heatmap/index.tsx",
+      "props": [
+        {
+          "name": "rowCategory",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "columnCategory",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "data",
+          "type": "HeatmapDataItem[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "hoveredLegend",
+          "type": "string | null",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "valueType",
+          "type": "\"percentage\" | \"amount\" | \"other\"",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "itemWidth",
+          "type": "number",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "contentProp",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "getItemColor",
+          "type": "(item?: HeatmapDataItem) => string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "bgColor",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "noItemOrdering",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "columnHeader",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "rowHeader",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "noLegend",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "expandAll",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        }
+      ],
+      "data_shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "row": {
+              "type": "string",
+              "required": true
+            },
+            "column": {
+              "type": "string",
+              "required": true
+            },
+            "parentRow": {
+              "type": "string",
+              "required": false
+            },
+            "percentage": {
+              "type": "number",
+              "required": false
+            },
+            "parentColumn": {
+              "type": "string",
+              "required": false
+            },
+            "value": {
+              "type": "number | string",
+              "required": true
+            }
+          }
+        }
+      },
+      "usage_example": "<Heatmap\n  rowCategory=\"component\"\n  columnCategory=\"cycle\"\n  valueType=\"amount\"\n  hoveredLegend={null}\n  data={STORY_DATA_VARIANT_1}\n  getItemColor={getPercentageColor}\n  contentProp=\"value\"\n/>",
+      "notes": ""
+    },
+    {
+      "name": "LineChart",
+      "description": "Line chart component (LineChart).",
+      "file_path": "src/app/components/charts/line/index.tsx",
+      "props": [
+        {
+          "name": "xAxisKeys",
+          "type": "string[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "data",
+          "type": "LineChartDataItem[]",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "required": true
+            },
+            "data": {
+              "type": "number[]",
+              "required": true
+            },
+            "itemStyle": {
+              "type": "{ color: string; }",
+              "required": false
+            }
+          }
+        }
+      },
+      "usage_example": "<LineChart\n  data={STORY_DATA_VARIANT_1}\n  xAxisKeys={[\n      \"2002\",\n      \"2003\",\n      \"2004\",\n      \"2005\",\n      \"2006\",\n      \"2007\",\n      \"2008\",\n      \"2009\",\n      \"2010\",\n      \"2011\",\n      \"2012\",\n      \"2013\",\n      \"2014\",\n      \"2015\",\n      \"2016\",\n      \"2017\",\n      \"2018\",\n      \"2019\",\n      \"2020\",\n      \"2021\",\n      \"2022\",\n    ]}\n/>",
+      "notes": ""
+    },
+    {
+      "name": "PieChart",
+      "description": "Pie chart component (PieChart).",
+      "file_path": "src/app/components/charts/pie/index.tsx",
+      "props": [
+        {
+          "name": "data",
+          "type": "PieChartDataItem[]",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "required": true
+            },
+            "value": {
+              "type": "number",
+              "required": true
+            },
+            "itemStyle": {
+              "type": "{ color: string; }",
+              "required": false
+            }
+          }
+        }
+      },
+      "usage_example": "<PieChart\n  data={STORY_DATA_VARIANT_1}\n/>",
+      "notes": ""
+    },
+    {
+      "name": "PolylineTree",
+      "description": "PolylineTree component.",
+      "file_path": "src/app/components/charts/polyline-tree/index.tsx",
+      "props": [
+        {
+          "name": "data",
+          "type": "PolylineTreeDataItem",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "value": {
+            "type": "number",
+            "required": false
+          },
+          "itemStyle": {
+            "type": "{ color: string; }",
+            "required": false
+          },
+          "children": {
+            "type": "PolylineTreeDataItem[]",
+            "required": false
+          }
+        }
+      },
+      "usage_example": "<PolylineTree\n  data={STORY_DATA_VARIANT_1}\n/>",
+      "notes": ""
+    },
+    {
+      "name": "RaceBarChart",
+      "description": "Race bar chart component (RaceBarChart).",
+      "file_path": "src/app/components/charts/race-bar/index.tsx",
+      "props": [
+        {
+          "name": "noValuesFormat",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "data",
+          "type": "RaceBarChartDataItem[]",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "required": true
+            },
+            "value": {
+              "type": "number",
+              "required": true
+            },
+            "color": {
+              "type": "string",
+              "required": true
+            },
+            "percentage": {
+              "type": "number",
+              "required": true
+            },
+            "sizePercentage": {
+              "type": "number",
+              "required": false
+            }
+          }
+        }
+      },
+      "usage_example": "<RaceBarChart\n  data={STORY_DATA_VARIANT_1}\n/>",
+      "notes": ""
+    },
+    {
+      "name": "RadarChart",
+      "description": "Radar chart component (RadarChart).",
+      "file_path": "src/app/components/charts/radar/index.tsx",
+      "props": [
+        {
+          "name": "height",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "data",
+          "type": "RadarChartDataProps",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": {
+        "type": "object",
+        "properties": {
+          "components": {
+            "type": "string[]",
+            "required": true
+          },
+          "budgetValues": {
+            "type": "number[]",
+            "required": true
+          },
+          "disbursementValues": {
+            "type": "number[]",
+            "required": true
+          }
+        }
+      },
+      "usage_example": "<RadarChart\n  data={STORY_DATA_VARIANT_1}\n/>",
+      "notes": ""
+    },
+    {
+      "name": "RadialChart",
+      "description": "Radial chart component (RadialChart).",
+      "file_path": "src/app/components/charts/radial/index.tsx",
+      "props": [
+        {
+          "name": "height",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "tooltipLabel",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "data",
+          "type": "RadialChartDataItem[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "itemLabelFormatterType",
+          "type": "\"name\" | \"name-percent\" | \"name-value-percent\"",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "required": true
+            },
+            "value": {
+              "type": "number",
+              "required": true
+            },
+            "tooltip": {
+              "type": "{ items: { name: string; value: number; percentage: number; }[]; }",
+              "required": false
+            },
+            "itemStyle": {
+              "type": "{ color: string; }",
+              "required": false
+            }
+          }
+        }
+      },
+      "usage_example": "<RadialChart\n  tooltipLabel=\"Amount\"\n  data={STORY_DATA_VARIANT_1}\n  itemLabelFormatterType=\"name-percent\"\n/>",
+      "notes": ""
+    },
+    {
+      "name": "SankeyChart",
+      "description": "Sankey chart component (SankeyChart).",
+      "file_path": "src/app/components/charts/sankey/index.tsx",
+      "props": [
+        {
+          "name": "data",
+          "type": "SankeyChartData",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "formatLabel",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        }
+      ],
+      "data_shape": {
+        "type": "object",
+        "properties": {
+          "nodes": {
+            "type": "SankeyChartNode[]",
+            "required": true
+          },
+          "links": {
+            "type": "SankeyChartLink[]",
+            "required": true
+          }
+        }
+      },
+      "usage_example": "<SankeyChart\n  data={STORY_DATA_VARIANT_1}\n/>",
+      "notes": ""
+    },
+    {
+      "name": "SunburstChart",
+      "description": "Sunburst chart component (SunburstChart).",
+      "file_path": "src/app/components/charts/sunburst/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": "<SunburstChart\n  tooltipLabel=\"Pledge\"\n  data={STORY_DATA_VARIANT_1}\n  centerLabel=\"Total Pledge\"\n  selectedItem={null}\n  setSelectedItem={() => {}}\n/>",
+      "notes": "meta.component is a local wrapper - component inferred from title/imports; [NEEDS REVIEW] Props interface not found"
+    },
+    {
+      "name": "Treemap",
+      "description": "Treemap component.",
+      "file_path": "src/app/components/charts/treemap/index.tsx",
+      "props": [
+        {
+          "name": "data",
+          "type": "TreemapDataItem[]",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "required": true
+            },
+            "value": {
+              "type": "number",
+              "required": true
+            },
+            "itemStyle": {
+              "type": "{ color: string; }",
+              "required": true
+            },
+            "label": {
+              "type": "{ normal: { color: string; }; }",
+              "required": true
+            },
+            "children": {
+              "type": "TreemapDataItem[]",
+              "required": false
+            }
+          }
+        }
+      },
+      "usage_example": "<Treemap\n  data={STORY_DATA_VARIANT_1}\n/>",
+      "notes": ""
+    },
+    {
+      "name": "DetailPageTabs",
+      "description": "Detail page tabs component (DetailPageTabs).",
+      "file_path": "src/app/components/detail-page-tabs/index.tsx",
+      "props": [
+        {
+          "name": "baseRoute",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "activeTab",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "tabs",
+          "type": "DetailPageTabItem[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "dropdown",
+          "type": "{ width?: number; dropdownSelected: string; handleDropdownChange: (value: string) => void; dropdownItems: { value: string; label: string }[]; }",
+          "required": false,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": "<DetailPageTabs\n  tabs={getGrantTabs({})}\n  baseRoute=\"/grant\"\n  dropdown={{\n      dropdownSelected: GRANT_DROPDOWN_ITEMS[0].value,\n      dropdownItems: GRANT_DROPDOWN_ITEMS,\n      handleDropdownChange: (value: string) => console.log(value),\n    }}\n/>",
+      "notes": "meta.component is a local wrapper - component inferred from title/imports"
+    },
+    {
+      "name": "Dropdown",
+      "description": "Dropdown component.",
+      "file_path": "src/app/components/dropdown/index.tsx",
+      "props": [
+        {
+          "name": "height",
+          "type": "number",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "fontSize",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "dropdownSelected",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "fixedIcon",
+          "type": "React.ReactElement",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "handleDropdownChange",
+          "type": "(value: string) => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "dropdownItems",
+          "type": "{ value: string; label: string; icon?: React.ReactElement }[]",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "meta.component is a local wrapper - component inferred from title/imports; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "FiltersApplied",
+      "description": "Applied component (FiltersApplied).",
+      "file_path": "src/app/components/filters/applied/index.tsx",
+      "props": [
+        {
+          "name": "items",
+          "type": "string[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "filterGroups",
+          "type": "FilterGroupModel[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "appliedFilterBgColors",
+          "type": "{ normal: string; hover: string; }",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "removeFilter",
+          "type": "(value: string, types: string[]) => void",
+          "required": false,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "FilterList",
+      "description": "List component (FilterList).",
+      "file_path": "src/app/components/filters/list/index.tsx",
+      "props": [
+        {
+          "name": "collapseAll",
+          "type": "boolean",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "groups",
+          "type": "FilterGroupModel[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "group",
+          "type": "FilterGroupModel",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "tempAppliedFiltersData",
+          "type": "AppliedFiltersModel",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "setCollapseAll",
+          "type": "(collapseAll: boolean) => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "toggleFilter",
+          "type": "(checked: boolean, value: string, type: string) => void",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "setPage",
+          "type": "(value: React.SetStateAction<number>) => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "setPageSearchValue",
+          "type": "(value: React.SetStateAction<number>) => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "shownOptions",
+          "type": "FilterModel[]",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "FilterListItemContent",
+      "description": "ListItem component (FilterListItemContent).",
+      "file_path": "src/app/components/filters/list/listitem.tsx",
+      "props": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "level",
+          "type": "number",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "collapseAll",
+          "type": "boolean",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "withSearch",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "forceExpand",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "FilterModel[]",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "tempAppliedFiltersData",
+          "type": "AppliedFiltersModel",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "setCollapseAll",
+          "type": "(collapseAll: boolean) => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "toggleFilter",
+          "type": "(checked: boolean, value: string, type: string) => void",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "setPage",
+          "type": "(value: React.SetStateAction<number>) => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "setPageSearchValue",
+          "type": "(value: React.SetStateAction<number>) => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "shownOptions",
+          "type": "FilterModel[]",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "FilterPanel",
+      "description": "Panel component (FilterPanel).",
+      "file_path": "src/app/components/filters/panel/index.tsx",
+      "props": [
+        {
+          "name": "appliedFilters",
+          "type": "string[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "appliedFilterBgColors",
+          "type": "{ normal: string; hover: string; }",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "handleResetFilters",
+          "type": "() => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "filterGroups",
+          "type": "FilterGroupModel[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "tempAppliedFiltersData",
+          "type": "AppliedFiltersModel",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "removeFilter",
+          "type": "(value: string, types: string[]) => void",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "toggleFilter",
+          "type": "(checked: boolean, value: string, type: string) => void",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "setPage",
+          "type": "(value: React.SetStateAction<number>) => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "search",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "setPageSearchValue",
+          "type": "(value: React.SetStateAction<number>) => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "handleCancelFilters",
+          "type": "() => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "handleApplyFilters",
+          "type": "() => void",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "Footer",
+      "description": "Footer component.",
+      "file_path": "src/app/components/footer/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "GrantCard",
+      "description": "Grant card component (GrantCard).",
+      "file_path": "src/app/components/grant-card/index.tsx",
+      "props": [
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "location",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "rating",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "component",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "number",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "principalRecipient",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "startDate",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "endDate",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "signed",
+          "type": "number",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "disbursed",
+          "type": "number",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "percentage",
+          "type": "number",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": "<GrantCard\n  status=\"Active\"\n  location=\"Afghanistan\"\n  rating=\"B1\"\n  component=\"HIV\"\n  number=\"AZE-M-MOH\"\n  principalRecipient=\"Ministry of Health Ghana\"\n  startDate=\"12.02.2021\"\n  endDate=\"12.02.2023\"\n  title=\"Scaling up the response to the HIV epidemic through strengthening national capacities, prevention and treatment services for most at risk population and maintaining access to and quality of essential MDR/XDR TB services in the Republic of Azerbaijan\"\n  signed={1000000}\n  disbursed={1000000}\n  percentage={80.5}\n/>",
+      "notes": ""
+    },
+    {
+      "name": "HeaderMenu",
+      "description": "HeaderMenu component.",
+      "file_path": "src/app/components/header-menu/index.tsx",
+      "props": [
+        {
+          "name": "mobileMenuOpen",
+          "type": "boolean",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "setMobileMenuOpen",
+          "type": "React.Dispatch<React.SetStateAction<boolean>>",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": "<HeaderMenu\n  mobileMenuOpen={false}\n  setMobileMenuOpen={() => {}}\n/>",
+      "notes": ""
+    },
+    {
+      "name": "Header",
+      "description": "Header component.",
+      "file_path": "src/app/components/header/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "NoMobile",
+      "description": "NoMobile component.",
+      "file_path": "src/app/components/no-mobile/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "PageLoader",
+      "description": "Page loader component (PageLoader).",
+      "file_path": "src/app/components/page-loader/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "Page",
+      "description": "Page component.",
+      "file_path": "src/app/components/page/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "Pagination",
+      "description": "Pagination component.",
+      "file_path": "src/app/components/pagination/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": "<Pagination\n  count={100}\n  page={1}\n  pageSearchValue={1}\n  handlePageChange={() => {}}\n  handlePageSearchChange={() => {}}\n  handlePageSearch={() => {}}\n/>",
+      "notes": "[NEEDS REVIEW] Props interface not found"
+    },
+    {
+      "name": "Redirect",
+      "description": "Redirect component.",
+      "file_path": "src/app/components/redirect/index.tsx",
+      "props": [
+        {
+          "name": "to",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "state",
+          "type": "any",
+          "required": false,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": "<Redirect\n  to=\"/home\"\n/>",
+      "notes": ""
+    },
+    {
+      "name": "Search",
+      "description": "Search component.",
+      "file_path": "src/app/components/search/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "TableContainer",
+      "description": "Table Container component (TableContainer).",
+      "file_path": "src/app/components/table-container/index.tsx",
+      "props": [
+        {
+          "name": "withCycles",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "noColumnVisibilitySelection",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "tabsView",
+          "type": "{ tabs: string[]; selectedTab: string; onTabChange: (tab: string) => void; }",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "onSearchChange",
+          "type": "(search: string) => void",
+          "required": false,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": "<TableContainer\n  dataTree\n  id=\"table-container\"\n  data={TABLE_VARIATION_1_DATA}\n  columns={TABLE_VARIATION_1_COLUMNS}\n/>",
+      "notes": "meta.component is a local wrapper - component inferred from title/imports"
+    },
+    {
+      "name": "Table",
+      "description": "Table component.",
+      "file_path": "src/app/components/table/index.tsx",
+      "props": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "data",
+          "type": "{ [key: string]: TableDataItem; }[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "columns",
+          "type": "ColumnDefinition[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "dataTree",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "search",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "setTable",
+          "type": "(table: Tabulator) => void",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "dataTreeBranchElement",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "dataTreeStartExpanded",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "extraColumns",
+          "type": "ColumnDefinition[]",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "dataTreeStartExpandedFn",
+          "type": "(row: RowComponent, level: number) => boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "onScrollToBottom",
+          "type": "() => void",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "disableHover",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        }
+      ],
+      "data_shape": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "usage_example": "<Table\n  id=\"table\"\n  dataTree\n  data={TABLE_VARIATION_1_DATA}\n  columns={TABLE_VARIATION_1_COLUMNS}\n/>",
+      "notes": ""
+    },
+    {
+      "name": "ChangelogPage",
+      "description": "Changelog component (ChangelogPage).",
+      "file_path": "src/app/pages/changelog/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "AccessToFundingPage",
+      "description": "AccessToFunding component (AccessToFundingPage).",
+      "file_path": "src/app/pages/datasets/access-to-funding/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "AnnualResultsPage",
+      "description": "AnnualResults component (AnnualResultsPage).",
+      "file_path": "src/app/pages/datasets/annual-results/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "DatasetPage",
+      "description": "Page component (DatasetPage).",
+      "file_path": "src/app/pages/datasets/common/page/index.tsx",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "appliedFilters",
+          "type": "string[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "handleResetFilters",
+          "type": "() => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "filterGroups",
+          "type": "FilterGroupModel[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "toolbarRightContent",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "handleApplyFilters",
+          "type": "() => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "handleCancelFilters",
+          "type": "() => void",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": "<DatasetPage\n  title=\"Resource Mobilization\"\n  filterGroups={[]}\n  appliedFilters={[]}\n  handleResetFilters={() => {}}\n  handleApplyFilters={() => {}}\n  handleCancelFilters={() => {}}\n  children={<div>Content</div>}\n  subtitle=\"Government, private sector, non-government and other donor pledges and contributions.\"\n/>",
+      "notes": ""
+    },
+    {
+      "name": "GrantImplementationPage",
+      "description": "GrantImplementation component (GrantImplementationPage).",
+      "file_path": "src/app/pages/datasets/grant-implementation/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "ResourceMobilizationPage",
+      "description": "ResourceMobilization component (ResourceMobilizationPage).",
+      "file_path": "src/app/pages/datasets/resource-mobilization/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "Geography",
+      "description": "Geographies component (Geography).",
+      "file_path": "src/app/pages/geography/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "GlossaryPage",
+      "description": "Glossary component (GlossaryPage).",
+      "file_path": "src/app/pages/glossary/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "Grants",
+      "description": "Grants component.",
+      "file_path": "src/app/pages/grants/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "Searchbox",
+      "description": "Searchbox component.",
+      "file_path": "src/app/pages/grants/component/Searchbox.tsx",
+      "props": [
+        {
+          "name": "search",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "searchInputRef",
+          "type": "any",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "handleSearch",
+          "type": "(event: React.ChangeEvent<HTMLInputElement>) => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "handleSearchIconClick",
+          "type": "(showSearch: boolean) => () => void",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": "<Searchbox\n  search=\"\"\n  searchInputRef={null}\n  handleSearch={() => {}}\n  handleSearchIconClick={() => () => {}}\n/>",
+      "notes": ""
+    },
+    {
+      "name": "Home",
+      "description": "Home component.",
+      "file_path": "src/app/pages/home/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "HomeBlock1",
+      "description": "Block1 component (HomeBlock1).",
+      "file_path": "src/app/pages/home/blocks/block-1/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "HomeBlock2",
+      "description": "Block2 component (HomeBlock2).",
+      "file_path": "src/app/pages/home/blocks/block-2/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "HomeBlock3",
+      "description": "Block3 component (HomeBlock3).",
+      "file_path": "src/app/pages/home/blocks/block-3/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "HomeBlock4",
+      "description": "Block4 component (HomeBlock4).",
+      "file_path": "src/app/pages/home/blocks/block-4/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "HomeBlock5",
+      "description": "Block5 component (HomeBlock5).",
+      "file_path": "src/app/pages/home/blocks/block-5/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "HomeHero",
+      "description": "Hero component (HomeHero).",
+      "file_path": "src/app/pages/home/components/hero/index.tsx",
+      "props": null,
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+    },
+    {
+      "name": "HomeResultsStats",
+      "description": "Results stats component (HomeResultsStats).",
+      "file_path": "src/app/pages/home/components/results-stats/index.tsx",
+      "props": [
+        {
+          "name": "stats",
+          "type": "StatCompProps[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        }
+      ],
+      "data_shape": null,
+      "usage_example": null,
+      "notes": "[NEEDS REVIEW] No story args found - no usage example generated"
+    }
+  ]
+}
