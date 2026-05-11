@@ -285,12 +285,14 @@ export const ReportBuilderPageHeader: React.FC = () => {
                   },
                 }}
               >
-                <IconButton
-                  component={Link}
-                  to={`/report-builder/reports/${id}`}
-                >
-                  <PreviewIcon />
-                </IconButton>
+                <Tooltip title="Preview" enterDelay={500} leaveDelay={200}>
+                  <IconButton
+                    component={Link}
+                    to={`/report-builder/reports/${id}`}
+                  >
+                    <PreviewIcon />
+                  </IconButton>
+                </Tooltip>
                 <Tooltip title="Export" enterDelay={500} leaveDelay={200}>
                   <IconButton
                     onClick={handleClick}

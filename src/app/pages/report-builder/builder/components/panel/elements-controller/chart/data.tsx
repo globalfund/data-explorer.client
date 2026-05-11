@@ -16,14 +16,14 @@ export interface ChartInfoItem {
 export const chartInfo: ChartInfoItem[] = [
   {
     buttonLabel: "Select Dataset",
-    helperText: "Dataset not selected*",
+    helperText: "Select a dataset to get started",
     icon: <DatabaseIcon />,
     type: "dataset",
     selectedItem: "",
   },
   {
     buttonLabel: "Select Chart Type",
-    helperText: "Chart type not selected*",
+    helperText: "Select a chart to map data",
     icon: <ChartIconLarge />,
     type: "chartType",
     selectedItem: "",

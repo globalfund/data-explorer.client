@@ -8,6 +8,8 @@ import MinimizeIcon from "app/assets/vectors/Minimize.svg?react";
 import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
 import { FileTabView } from "app/pages/report-builder/builder/components/report-settings/file-tab";
 import { SettingsTabView } from "app/pages/report-builder/builder/components/report-settings/settings-tab";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 export const ReportBuilderPageReportSettings: React.FC = () => {
   const [isExpanded, setIsExpanded] = React.useState(true);
@@ -27,7 +29,11 @@ export const ReportBuilderPageReportSettings: React.FC = () => {
   const renderTabPanel = () => {
     switch (value) {
       case "file":
-        return <FileTabView />;
+        return (
+          <DndProvider backend={HTML5Backend}>
+            <FileTabView />
+          </DndProvider>
+        );
       case "settings":
         return <SettingsTabView />;
       default:

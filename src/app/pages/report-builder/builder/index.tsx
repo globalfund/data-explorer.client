@@ -2,7 +2,6 @@ import React from "react";
 import { colors } from "app/theme";
 import Box from "@mui/material/Box";
 import { DndProvider } from "react-dnd";
-import update from "immutability-helper";
 import { useParams } from "react-router-dom";
 import { uniqueId } from "app/utils/uniqueId";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -35,10 +34,6 @@ export const ReportBuilderPage: React.FC = () => {
   const items = reportState.items;
   const addedItemRef = React.useRef(items.length > 0);
 
-  const setItems = useStoreActions(
-    (actions) => actions.RBReportItemsState.setItems,
-  );
-
   const setNotes = useStoreActions(
     (actions) => actions.RBReportNotesState.setValue,
   );
@@ -52,30 +47,11 @@ export const ReportBuilderPage: React.FC = () => {
     }
   }, [reportData]);
 
-  const moveItem = React.useCallback(
-    (dragIndex: number, hoverIndex: number) => {
-      setItems(
-        update(items, {
-          $splice: [
-            [dragIndex, 1],
-            [hoverIndex, 0, items[dragIndex] as RBReportItem],
-          ],
-        }),
-      );
-    },
-    [items],
-  );
-
   const getItemByType = (item: RBReportItem, index: number) => {
     switch (item.type) {
       case "text":
         return (
-          <ItemComponent
-            id={item.id}
-            index={index}
-            childrenData={[]}
-            moveItem={moveItem}
-          >
+          <ItemComponent id={item.id} index={index} childrenData={[]}>
             <ReportBuilderPageText
               id={item.id}
               focus={item.focus}
@@ -85,45 +61,25 @@ export const ReportBuilderPage: React.FC = () => {
         );
       case "chart":
         return (
-          <ItemComponent
-            id={item.id}
-            index={index}
-            childrenData={[]}
-            moveItem={moveItem}
-          >
+          <ItemComponent id={item.id} index={index} childrenData={[]}>
             <ReportBuilderPageChart id={item.id} />
           </ItemComponent>
         );
       case "table":
         return (
-          <ItemComponent
-            id={item.id}
-            index={index}
-            childrenData={[]}
-            moveItem={moveItem}
-          >
+          <ItemComponent id={item.id} index={index} childrenData={[]}>
             <ReportBuilderPageTable id={item.id} />
           </ItemComponent>
         );
       case "image":
         return (
-          <ItemComponent
-            id={item.id}
-            index={index}
-            childrenData={[]}
-            moveItem={moveItem}
-          >
+          <ItemComponent id={item.id} index={index} childrenData={[]}>
             <ReportBuilderPageImage id={item.id} />
           </ItemComponent>
         );
       case "grid":
         return (
-          <ItemComponent
-            id={item.id}
-            index={index}
-            childrenData={[]}
-            moveItem={moveItem}
-          >
+          <ItemComponent id={item.id} index={index} childrenData={[]}>
             <ReportBuilderPageGrid
               columns={item.data.columns}
               rows={item.data.rows}
@@ -133,23 +89,13 @@ export const ReportBuilderPage: React.FC = () => {
         );
       case "kpi_box":
         return (
-          <ItemComponent
-            id={item.id}
-            index={index}
-            childrenData={[]}
-            moveItem={moveItem}
-          >
+          <ItemComponent id={item.id} index={index} childrenData={[]}>
             <KPIBox id={item.id} />
           </ItemComponent>
         );
       case "column":
         return (
-          <ItemComponent
-            id={item.id}
-            index={index}
-            childrenData={[]}
-            moveItem={moveItem}
-          >
+          <ItemComponent id={item.id} index={index} childrenData={[]}>
             <ReportBuilderPageGrid
               rows={1}
               columns={item.data.columns}
@@ -159,12 +105,7 @@ export const ReportBuilderPage: React.FC = () => {
         );
       case "section_divider":
         return (
-          <ItemComponent
-            id={item.id}
-            index={index}
-            childrenData={[]}
-            moveItem={moveItem}
-          >
+          <ItemComponent id={item.id} index={index} childrenData={[]}>
             <SectionDivider id={item.id} />
           </ItemComponent>
         );
