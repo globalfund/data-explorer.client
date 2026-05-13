@@ -11,6 +11,7 @@ import { TemplatesLayoutsView } from "app/pages/report-builder/main/components/t
 import { ReportBuilderNewFolderModal } from "app/pages/report-builder/main/components/new-folder-modal";
 import { ReportBuilderNewReportModal } from "app/pages/report-builder/main/components/new-report-modal";
 import { ReportBuilderDeleteReportModal } from "app/pages/report-builder/main/components/delete-report-modal";
+import { ReportBuilderReportDetailsPanel } from "app/pages/report-builder/main/components/report-details-panel";
 import {
   AssetViewType,
   ReportBuilderAssetsToolbar,
@@ -41,6 +42,21 @@ export const ReportBuilder: React.FC = () => {
     id: string;
     name: string;
   } | null>(null);
+  const [reportDetailsPanelOpen, setReportDetailsPanelOpen] =
+    React.useState(false);
+  const [reportDetails, setReportDetails] = React.useState<{
+    id: string;
+    name: string;
+    description: string;
+    createdDate: string;
+    updatedDate: string;
+  }>({
+    id: "",
+    name: "",
+    description: "",
+    createdDate: "",
+    updatedDate: "",
+  });
 
   const getReports = useGetReports({ search: search, sort: selectedSort });
 
@@ -74,6 +90,21 @@ export const ReportBuilder: React.FC = () => {
     setDeleteReportModalOpen(false);
   };
 
+  const handleReportDetailsPanelOpen = (details: {
+    id: string;
+    name: string;
+    description: string;
+    createdDate: string;
+    updatedDate: string;
+  }) => {
+    setReportDetails(details);
+    setReportDetailsPanelOpen(true);
+  };
+
+  const handleReportDetailsPanelClose = () => {
+    setReportDetailsPanelOpen(false);
+  };
+
   const handleDeleteReport = (id: string, name: string) => {
     setReportToDelete({ id, name });
     handleDeleteReportModalOpen();
@@ -91,6 +122,7 @@ export const ReportBuilder: React.FC = () => {
             selectedView={selectedView}
             refetch={getReports.refetch}
             onDeleteReport={handleDeleteReport}
+            onDetailsClick={handleReportDetailsPanelOpen}
           />
         );
       case "Templates and Layouts":
@@ -160,7 +192,14 @@ export const ReportBuilder: React.FC = () => {
               onNewReportClick={handleNewReportModalOpen}
             />
             <Box width="100%" height="20px" />
-            {view}
+            <Box position="relative">
+              {view}
+              <ReportBuilderReportDetailsPanel
+                details={reportDetails}
+                open={reportDetailsPanelOpen}
+                onClose={handleReportDetailsPanelClose}
+              />
+            </Box>
           </Grid>
         </Grid>
       </Box>

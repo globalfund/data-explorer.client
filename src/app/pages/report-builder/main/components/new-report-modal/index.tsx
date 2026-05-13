@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import { useCreateReport } from "app/hooks/queries/report-builder";
 import { PageLoader } from "app/components/page-loader";
+import { useCreateReport } from "app/hooks/queries/report-builder";
 
 export const ReportBuilderNewReportModal: React.FC<{
   open: boolean;

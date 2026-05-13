@@ -29,6 +29,13 @@ export const AllReportsView: React.FC<{
   refetch: () => void;
   selectedView: "cards" | "list";
   onDeleteReport: (id: string, name: string) => void;
+  onDetailsClick: (details: {
+    id: string;
+    name: string;
+    description: string;
+    createdDate: string;
+    updatedDate: string;
+  }) => void;
   reports: {
     isLoading: boolean;
     data: {
@@ -39,7 +46,7 @@ export const AllReportsView: React.FC<{
       updatedDate: string;
     }[];
   };
-}> = ({ selectedView, reports, refetch, onDeleteReport }) => {
+}> = ({ selectedView, reports, refetch, onDeleteReport, onDetailsClick }) => {
   const navigate = useNavigate();
   const updateReport = usePatchReport2();
   const duplicateReport = useDuplicateReport();
@@ -126,6 +133,17 @@ export const AllReportsView: React.FC<{
     setAnchorEl(null);
     setAnchorElTableId(null);
     onDeleteReport(id, reports.data.find((r) => r.id === id)?.name || "");
+  };
+
+  const handleDetailsClick = () => {
+    const id = getAnchorElId();
+    if (!id) return;
+    setAnchorEl(null);
+    setAnchorElTableId(null);
+    const report = reports.data.find((r) => r.id === id);
+    if (report) {
+      onDetailsClick(report);
+    }
   };
 
   const handleItemClick = (id: string) => () => {
@@ -346,8 +364,7 @@ export const AllReportsView: React.FC<{
               {
                 label: "Details",
                 icon: <Details />,
-                onClick: handleClose,
-                disabled: true,
+                onClick: handleDetailsClick,
               },
               {
                 label: "Delete",
