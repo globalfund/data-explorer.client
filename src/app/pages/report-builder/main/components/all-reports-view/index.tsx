@@ -12,9 +12,8 @@ import MoreVert from "@mui/icons-material/MoreVert";
 import CircularProgress from "@mui/material/CircularProgress";
 import { ReportBuilderItemMenu } from "app/pages/report-builder/main/components/item-menu";
 import {
-  useDeleteReport,
-  useDuplicateReport,
   usePatchReport2,
+  useDuplicateReport,
 } from "app/hooks/queries/report-builder";
 import {
   Copy,
@@ -28,6 +27,7 @@ import {
 export const AllReportsView: React.FC<{
   refetch: () => void;
   selectedView: "cards" | "list";
+  onDeleteReport: (id: string, name: string) => void;
   reports: {
     isLoading: boolean;
     data: {
@@ -38,9 +38,8 @@ export const AllReportsView: React.FC<{
       updatedDate: string;
     }[];
   };
-}> = ({ selectedView, reports, refetch }) => {
+}> = ({ selectedView, reports, refetch, onDeleteReport }) => {
   const navigate = useNavigate();
-  const deleteReport = useDeleteReport();
   const updateReport = usePatchReport2();
   const duplicateReport = useDuplicateReport();
 
@@ -100,9 +99,7 @@ export const AllReportsView: React.FC<{
     const id = getAnchorElId();
     if (!id) return;
     setAnchorEl(null);
-    deleteReport.mutate(id, {
-      onSuccess: () => refetch(),
-    });
+    onDeleteReport(id, reports.data.find((r) => r.id === id)?.name || "");
   };
 
   const handleItemClick = (id: string) => () => {

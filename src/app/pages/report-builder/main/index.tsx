@@ -10,6 +10,7 @@ import { AllReportsView } from "app/pages/report-builder/main/components/all-rep
 import { TemplatesLayoutsView } from "app/pages/report-builder/main/components/templates-layouts-view";
 import { ReportBuilderNewFolderModal } from "app/pages/report-builder/main/components/new-folder-modal";
 import { ReportBuilderNewReportModal } from "app/pages/report-builder/main/components/new-report-modal";
+import { ReportBuilderDeleteReportModal } from "app/pages/report-builder/main/components/delete-report-modal";
 import {
   AssetViewType,
   ReportBuilderAssetsToolbar,
@@ -34,6 +35,12 @@ export const ReportBuilder: React.FC = () => {
     React.useState("");
   const [newReportModalDescriptionValue, setNewReportModalDescriptionValue] =
     React.useState("");
+  const [deleteReportModalOpen, setDeleteReportModalOpen] =
+    React.useState(false);
+  const [reportToDelete, setReportToDelete] = React.useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const getReports = useGetReports({ search: search, sort: selectedSort });
 
@@ -59,6 +66,19 @@ export const ReportBuilder: React.FC = () => {
     setNewReportModalOpen(false);
   };
 
+  const handleDeleteReportModalOpen = () => {
+    setDeleteReportModalOpen(true);
+  };
+
+  const handleDeleteReportModalClose = () => {
+    setDeleteReportModalOpen(false);
+  };
+
+  const handleDeleteReport = (id: string, name: string) => {
+    setReportToDelete({ id, name });
+    handleDeleteReportModalOpen();
+  };
+
   const view = React.useMemo(() => {
     switch (sidebarSelectedItem) {
       case "All Reports":
@@ -70,6 +90,7 @@ export const ReportBuilder: React.FC = () => {
             }}
             selectedView={selectedView}
             refetch={getReports.refetch}
+            onDeleteReport={handleDeleteReport}
           />
         );
       case "Templates and Layouts":
@@ -156,6 +177,13 @@ export const ReportBuilder: React.FC = () => {
         setNameValue={setNewReportModalNameValue}
         descriptionValue={newReportModalDescriptionValue}
         setDescriptionValue={setNewReportModalDescriptionValue}
+      />
+      <ReportBuilderDeleteReportModal
+        refetch={getReports.refetch}
+        open={deleteReportModalOpen}
+        reportId={reportToDelete?.id || ""}
+        onClose={handleDeleteReportModalClose}
+        reportName={reportToDelete?.name || ""}
       />
     </React.Fragment>
   );
