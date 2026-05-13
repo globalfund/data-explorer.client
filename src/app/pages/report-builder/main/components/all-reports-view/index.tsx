@@ -10,6 +10,8 @@ import { renderToString } from "react-dom/server";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MoreVert from "@mui/icons-material/MoreVert";
+import SharedIcon from "app/assets/vectors/Shared.svg?react";
+import PublicIcon from "app/assets/vectors/Public.svg?react";
 import CircularProgress from "@mui/material/CircularProgress";
 import { ReportBuilderItemMenu } from "app/pages/report-builder/main/components/item-menu";
 import {
@@ -44,6 +46,8 @@ export const AllReportsView: React.FC<{
       description: string;
       createdDate: string;
       updatedDate: string;
+      public?: boolean;
+      shared?: boolean;
     }[];
   };
 }> = ({ selectedView, reports, refetch, onDeleteReport, onDetailsClick }) => {
@@ -287,15 +291,21 @@ export const AllReportsView: React.FC<{
                       }}
                     />
                   ) : (
-                    <Typography
-                      variant="h6"
-                      fontSize="16px"
-                      lineHeight="normal"
-                      sx={{ cursor: "pointer" }}
-                      onClick={handleItemClick(item.id)}
+                    <Box
+                      sx={{ display: "flex", alignItems: "center", gap: "8px" }}
                     >
-                      {item.name}
-                    </Typography>
+                      <Typography
+                        variant="h6"
+                        fontSize="16px"
+                        lineHeight="normal"
+                        sx={{ cursor: "pointer" }}
+                        onClick={handleItemClick(item.id)}
+                      >
+                        {item.name}
+                      </Typography>
+                      {item.public && <PublicIcon />}
+                      {item.shared && <SharedIcon />}
+                    </Box>
                   )}
                 </Box>
                 <Typography
