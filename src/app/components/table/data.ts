@@ -30,6 +30,7 @@ export interface TableProps {
   dataTreeStartExpandedFn?: (row: RowComponent, level: number) => boolean;
   onScrollToBottom?: () => void;
   disableHover?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export const cellBGColorFormatter = (cell: CellComponent) => {

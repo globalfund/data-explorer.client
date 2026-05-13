@@ -294,3 +294,11 @@ input[type="text"] {
   padding: 6px 4px !important;
   vertical-align: middle !important;
 }
+
+.table-action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+}
