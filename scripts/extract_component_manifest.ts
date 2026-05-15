@@ -16,7 +16,10 @@ import * as path from "path";
 import { globSync } from "glob";
 
 // Paths
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname));
+const ROOT = path.resolve(
+  path.dirname(new URL(import.meta.url).pathname),
+  "..",
+);
 const SRC_DIR = path.join(ROOT, "src");
 const OUTPUT_PATH = path.join(
   ROOT,
@@ -24,6 +27,39 @@ const OUTPUT_PATH = path.join(
   "project-config",
   "component-manifest.json",
 );
+
+// Manual exclusion list - components listed here are always omitted from the
+// generated manifest regardless of any other heuristic. Add a component's
+// exported name (as referenced by `meta.component` in its story file) to
+// exclude it.
+const EXCLUDED_COMPONENTS: ReadonlySet<string> = new Set<string>([
+  // Non-root components that live outside src/app/pages/ and therefore
+  // wouldn't be caught by the automatic non-root skip.
+  "NoMobile",
+  "Redirect",
+  // Non-root components that DO declare a Props interface (so they aren't
+  // auto-skipped) but are still page-level / page-internal and shouldn't
+  // appear in the manifest.
+  "DatasetPage",
+  "Searchbox",
+  "HomeResultsStats",
+  "Header",
+  "Footer",
+  "PageLoader",
+  "Page",
+]);
+
+// Directories whose components are considered "non-root" and are skipped
+// automatically. Paths are relative to the project root and use forward
+// slashes. A component is non-root when its source file lives under any of
+// these prefixes (e.g. page-level routes and their internal sub-components).
+const NON_ROOT_PATH_PREFIXES: readonly string[] = ["src/app/pages/"];
+
+function isNonRootPath(filePath: string | null): boolean {
+  if (!filePath) return false;
+  const rel = path.relative(ROOT, filePath).replace(/\\/g, "/");
+  return NON_ROOT_PATH_PREFIXES.some((prefix) => rel.startsWith(prefix));
+}
 
 // ts-morph project - parse syntactically only (no full type-check needed)
 const project = new Project({
@@ -402,6 +438,20 @@ async function main() {
     if (seen.has(key)) continue;
     seen.add(key);
 
+    // Manual exclusion - drop components explicitly listed.
+    if (EXCLUDED_COMPONENTS.has(target.componentName)) {
+      console.log(
+        `  [EXCLUDE] ${target.componentName}  (in EXCLUDED_COMPONENTS)`,
+      );
+      continue;
+    }
+
+    // Auto-skip non-root components (e.g. page-level routes and their
+    // internal sub-components) when they don't expose a Props interface.
+    // Such components are not intended to be reused and typically don't
+    // belong in the manifest.
+    const nonRoot = isNonRootPath(target.componentFile);
+
     const notes: string[] = [];
     if (target.isWrapper)
       notes.push(
@@ -426,6 +476,13 @@ async function main() {
           target.componentFile,
         );
       }
+    }
+
+    if (nonRoot && !propsIface) {
+      console.log(
+        `  [SKIP-NON-ROOT] ${target.componentName}  (${relPath(target.componentFile)})`,
+      );
+      continue;
     }
 
     if (!propsIface) notes.push("[NEEDS REVIEW] Props interface not found");
