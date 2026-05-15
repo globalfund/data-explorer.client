@@ -1,21 +1,15 @@
-/* third-party */
 import React from "react";
 import get from "lodash/get";
 import Box from "@mui/material/Box";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import { useDebounce, useUpdateEffect, useSessionStorage } from "react-use";
-/* project */
 import { useCMSData } from "app/hooks/useCMSData";
+import { SearchProps } from "app/components/search/data";
 import { SearchLayout } from "app/components/search/layout";
 import { getCMSDataField } from "app/utils/getCMSDataField";
+import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import { useDebounce, useUpdateEffect, useSessionStorage } from "react-use";
 import { SearchResultsTabModel } from "app/components/search/components/results/data";
 
-export function Search(props: {
-  hocClose?: () => void;
-  withCatMenu?: boolean;
-  forceCategory?: string;
-  handleSearch?: (value: string) => void;
-}) {
+export function Search(props: SearchProps) {
   const cmsData = useCMSData({ returnData: true });
   const categories = getCMSDataField(
     cmsData,

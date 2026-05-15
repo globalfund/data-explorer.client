@@ -16,7 +16,7 @@ import { useChartResizeObserver } from "app/hooks/useChartResizeObserver";
 import { chartTooltipCommonConfig } from "app/components/charts/common/tooltip/config";
 import {
   findDeep,
-  ExpandableHorizontalBarChartProps,
+  ExpandableHorizontalBarProps,
   ExpandableHorizontalBarChartDataItem,
 } from "app/components/charts/expandable-horizontal-bar/data";
 import {
@@ -91,9 +91,9 @@ const Tooltip = (props: any) => {
   );
 };
 
-export const ExpandableHorizontalBar: React.FC<
-  ExpandableHorizontalBarChartProps
-> = (props: ExpandableHorizontalBarChartProps) => {
+export const ExpandableHorizontalBar: React.FC<ExpandableHorizontalBarProps> = (
+  props: ExpandableHorizontalBarProps,
+) => {
   const isMounted = React.useRef(false);
   const isTouch = useMediaQuery("(hover: none)");
   const containerRef = React.useRef<HTMLDivElement>(null);

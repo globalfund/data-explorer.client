@@ -16,5 +16,32 @@ export default meta;
 type StoryType = StoryObj<typeof meta>;
 
 export const Primary: StoryType = {
-  args: {},
+  args: {
+    collapseAll: false,
+    groups: [],
+    group: {
+      id: "geography",
+      name: "Geography",
+      options: [
+        {
+          name: "Africa",
+          value: "QPA",
+          options: [
+            {
+              name: "Eastern Africa",
+              value: "QPB",
+            },
+          ],
+        },
+        {
+          name: "Asia",
+          value: "QPC",
+        },
+      ],
+    },
+    setCollapseAll: () => {},
+    setPage: () => {},
+    setPageSearchValue: () => {},
+    shownOptions: [],
+  },
 };

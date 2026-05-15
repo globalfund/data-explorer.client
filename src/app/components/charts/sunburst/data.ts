@@ -5,7 +5,7 @@ export interface SunburstDataItem {
   itemStyle?: Record<string, string | number>;
 }
 
-export interface SunburstProps {
+export interface SunburstChartProps {
   centerLabel: string;
   tooltipLabel: string;
   data: SunburstDataItem[];

@@ -3,12 +3,15 @@ import Chip from "@mui/material/Chip";
 import Tooltip from "@mui/material/Tooltip";
 
 interface DemoToggleProps {
-    demoMode: boolean;
-    setDemoMode: (value: boolean) => void;
+  demoMode: boolean;
+  setDemoMode: (value: boolean) => void;
 }
 
-export const DemoToggle: React.FC<DemoToggleProps> = ({ demoMode, setDemoMode }) => {
-    return (
+export const DemoToggle: React.FC<DemoToggleProps> = ({
+  demoMode,
+  setDemoMode,
+}) => {
+  return (
     <Tooltip
       title={
         demoMode

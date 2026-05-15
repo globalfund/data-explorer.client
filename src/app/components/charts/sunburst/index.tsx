@@ -15,8 +15,8 @@ import { useChartResizeObserver } from "app/hooks/useChartResizeObserver";
 import { TooltipComponent, TooltipComponentOption } from "echarts/components";
 import { chartTooltipCommonConfig } from "app/components/charts/common/tooltip/config";
 import {
-  SunburstProps,
   SunburstDataItem,
+  SunburstChartProps,
 } from "app/components/charts/sunburst/data";
 import {
   SunburstSeriesOption,
@@ -75,8 +75,8 @@ const Tooltip = (props: any) => {
 
 const Breadcrumbs = (props: {
   onTotalClick: () => void;
-  items: SunburstProps["selectedItem"][];
-  onItemClick: (item: SunburstProps["selectedItem"]) => void;
+  items: SunburstChartProps["selectedItem"][];
+  onItemClick: (item: SunburstChartProps["selectedItem"]) => void;
 }) => {
   if (props.items.length === 0) {
     return null;
@@ -136,7 +136,7 @@ const Breadcrumbs = (props: {
   );
 };
 
-export function SunburstChart(props: SunburstProps) {
+export function SunburstChart(props: SunburstChartProps) {
   const isTouch = useMediaQuery("(hover: none)");
   const containerRef = React.useRef<HTMLDivElement>(null);
   const selectionsRef = React.useRef<
@@ -168,7 +168,7 @@ export function SunburstChart(props: SunburstProps) {
     setCenterLabel("");
   };
 
-  const onBreadcrumbClick = (item: SunburstProps["selectedItem"]) => {
+  const onBreadcrumbClick = (item: SunburstChartProps["selectedItem"]) => {
     const index = selections.findIndex(
       (selection) => selection.dataIndex === item?.dataIndex,
     );

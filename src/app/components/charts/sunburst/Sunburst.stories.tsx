@@ -5,10 +5,10 @@ import { SunburstChart } from "app/components/charts/sunburst";
 import {
   STORY_DATA_VARIANT_1,
   SunburstDataItem,
-  SunburstProps,
+  SunburstChartProps,
 } from "app/components/charts/sunburst/data";
 
-const Wrapper = (props: SunburstProps) => {
+const Wrapper = (props: SunburstChartProps) => {
   const [selectedItem, setSelectedItem] = React.useState<{
     dataIndex: number;
     item: SunburstDataItem;
@@ -31,7 +31,7 @@ const meta = {
   },
   tags: [],
   argTypes: {},
-} as Meta<typeof SunburstChart>;
+} as Meta<typeof Wrapper>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

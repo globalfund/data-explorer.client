@@ -67,14 +67,14 @@ export const MessageList = styled(Box)`
   gap: 16px;
 `;
 
-export const MessageBubble = styled(Box)<{ role: "user" | "assistant" }>`
+export const MessageBubble = styled(Box)<{ $role: "user" | "assistant" }>`
   max-width: 80%;
   padding: 10px 14px;
-  border-radius: ${({ role }) =>
-    role === "user" ? "16px 16px 4px 16px" : "16px 16px 16px 4px"};
-  background: ${({ role }) => (role === "user" ? "#002561" : "#ECF1FA")};
-  color: ${({ role }) => (role === "user" ? "#ffffff" : "#000000")};
-  align-self: ${({ role }) => (role === "user" ? "flex-end" : "flex-start")};
+  border-radius: ${({ $role }) =>
+    $role === "user" ? "16px 16px 4px 16px" : "16px 16px 16px 4px"};
+  background: ${({ $role }) => ($role === "user" ? "#002561" : "#ECF1FA")};
+  color: ${({ $role }) => ($role === "user" ? "#ffffff" : "#000000")};
+  align-self: ${({ $role }) => ($role === "user" ? "flex-end" : "flex-start")};
   white-space: pre-wrap;
   word-break: break-word;
   font-size: 14px;

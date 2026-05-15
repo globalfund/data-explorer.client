@@ -145,14 +145,23 @@ export const UseCaseDrawer: React.FC<UseCaseDrawerProps> = ({
                   detail.data.audience ||
                   detail.data.output_interpretation) && (
                   <>
-                    <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 1.5,
+                      }}
+                    >
                       {detail.data.business_question && (
                         <Box>
                           <Typography
                             variant="caption"
                             fontWeight={700}
                             color="text.secondary"
-                            sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
+                            sx={{
+                              textTransform: "uppercase",
+                              letterSpacing: 0.5,
+                            }}
                           >
                             Business Question
                           </Typography>
@@ -167,7 +176,10 @@ export const UseCaseDrawer: React.FC<UseCaseDrawerProps> = ({
                             variant="caption"
                             fontWeight={700}
                             color="text.secondary"
-                            sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
+                            sx={{
+                              textTransform: "uppercase",
+                              letterSpacing: 0.5,
+                            }}
                           >
                             Intended Audience
                           </Typography>
@@ -182,7 +194,10 @@ export const UseCaseDrawer: React.FC<UseCaseDrawerProps> = ({
                             variant="caption"
                             fontWeight={700}
                             color="text.secondary"
-                            sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
+                            sx={{
+                              textTransform: "uppercase",
+                              letterSpacing: 0.5,
+                            }}
                           >
                             How to Read the Output
                           </Typography>
@@ -200,12 +215,17 @@ export const UseCaseDrawer: React.FC<UseCaseDrawerProps> = ({
                 {useCase.has_result && (
                   <>
                     <Box>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
                         <Typography
                           variant="caption"
                           fontWeight={700}
                           color="text.secondary"
-                          sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
+                          sx={{
+                            textTransform: "uppercase",
+                            letterSpacing: 0.5,
+                          }}
                         >
                           Model Results
                         </Typography>

@@ -61,7 +61,11 @@ export const ChatMainPanel: React.FC = () => {
               Object.entries(p.data).forEach(([key, value]) => {
                 const entry: ProgressEvent = {
                   event: "rag_done",
-                  data: { key, value, reasoning: `${key}: ${JSON.stringify(value)}` },
+                  data: {
+                    key,
+                    value,
+                    reasoning: `${key}: ${JSON.stringify(value)}`,
+                  },
                 };
                 localProgressLog.push(entry);
                 setProgressLog((prev) => [...prev, entry]);

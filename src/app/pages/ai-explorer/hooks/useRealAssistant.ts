@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { MockAssistantReply } from "app/pages/ai-explorer/hooks/useMockAssistant";
-export type { ProgressEvent } from "app/pages/ai-explorer/types";  // re-exporting type for convenience
+export type { ProgressEvent } from "app/pages/ai-explorer/types"; // re-exporting type for convenience
 import type { ProgressEvent } from "app/pages/ai-explorer/types";
 
 export function useRealAssistant() {
@@ -25,7 +25,10 @@ export function useRealAssistant() {
     );
 
     if (!response.ok) {
-      return { content: "Something has gone wrong for the assistant! We have been notified and will look into it as soon as possible. Feel free to check out the demo mode by typing '/demo' into the chat after toggling demo mode on in the top left of this window!" };
+      return {
+        content:
+          "Something has gone wrong for the assistant! We have been notified and will look into it as soon as possible. Feel free to check out the demo mode by typing '/demo' into the chat after toggling demo mode on in the top left of this window!",
+      };
     }
 
     const reader = response.body?.getReader();

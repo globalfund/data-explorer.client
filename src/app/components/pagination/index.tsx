@@ -7,18 +7,12 @@ import { Input } from "app/components/search/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import ChevronLeft from "@mui/icons-material/ChevronLeft";
 import ChevronRight from "@mui/icons-material/ChevronRight";
+import { PaginationProps } from "app/components/pagination/data";
 import LastPageSharpIcon from "@mui/icons-material/LastPageSharp";
 import FirstPageSharpIcon from "@mui/icons-material/FirstPageSharp";
 import usePagination from "@mui/material/usePagination/usePagination";
 
-export default function Pagination(props: {
-  count: number;
-  page: number;
-  pageSearchValue: number;
-  handlePageChange: (event: React.ChangeEvent<unknown>, value: number) => void;
-  handlePageSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handlePageSearch: () => void;
-}) {
+export default function Pagination(props: PaginationProps) {
   const [showLastButton, setShowLastButton] = React.useState(true);
   const [showFirstButton, setShowFirstButton] = React.useState(true);
   const [siblingCount, setSiblingCount] = React.useState(2);

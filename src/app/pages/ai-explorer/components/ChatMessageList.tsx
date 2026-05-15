@@ -27,8 +27,7 @@ function ProgressLogBubble({ log }: { log: ProgressEvent[] }) {
   if (!last) return null;
 
   const label = stepLabel(last);
-  const truncated =
-    label.length > 40 ? `${label.slice(0, 40)}...` : label;
+  const truncated = label.length > 40 ? `${label.slice(0, 40)}...` : label;
 
   if (!expanded) {
     return (
@@ -104,7 +103,7 @@ export const ChatMessageList: React.FC<Props> = ({
 
             {msg.content && (
               <MessageBubble
-                role={msg.role}
+                $role={msg.role}
                 data-testid={
                   msg.role === "assistant"
                     ? "chat-message-assistant"
@@ -156,7 +155,7 @@ export const ChatMessageList: React.FC<Props> = ({
             )}
           </Box>
           {streamingContent && (
-            <MessageBubble role="assistant" sx={{ whiteSpace: "pre-wrap" }}>
+            <MessageBubble $role="assistant" sx={{ whiteSpace: "pre-wrap" }}>
               {streamingContent}
             </MessageBubble>
           )}

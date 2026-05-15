@@ -7,6 +7,13 @@ import {
   ResultsIcon,
 } from "app/components/search/icons";
 
+export interface SearchProps {
+  hocClose?: () => void;
+  withCatMenu?: boolean;
+  forceCategory?: string;
+  handleSearch?: (value: string) => void;
+}
+
 export const getCategoryIcon = (label: string): JSX.Element | undefined => {
   switch (label) {
     case "Locations":

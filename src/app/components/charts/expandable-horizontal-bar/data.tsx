@@ -8,7 +8,7 @@ export interface ExpandableHorizontalBarChartDataItem {
   };
 }
 
-export interface ExpandableHorizontalBarChartProps {
+export interface ExpandableHorizontalBarProps {
   data: ExpandableHorizontalBarChartDataItem[];
   yAxisLabel: string;
   xAxisLabel: string;
