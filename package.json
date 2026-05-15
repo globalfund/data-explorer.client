@@ -120,7 +120,8 @@
     "build-storybook": "storybook build",
     "e2e-ui": "npx cypress open",
     "e2e": "npx cypress run",
-    "generate-sitemap": "npx tsx scripts/generate-sitemap.ts"
+    "generate-sitemap": "npx tsx scripts/generate-sitemap.ts",
+    "extract-component-manifest": "npx tsx scripts/extract_component_manifest.ts"
   },
   "browserslist": {
     "production": [
