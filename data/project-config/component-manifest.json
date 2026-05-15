@@ -352,10 +352,68 @@
       "name": "ExpandableHorizontalBar",
       "description": "Expandable Horizontal Bar chart component (ExpandableHorizontalBar).",
       "file_path": "src/app/components/charts/expandable-horizontal-bar/index.tsx",
-      "props": null,
-      "data_shape": null,
+      "props": [
+        {
+          "name": "data",
+          "type": "ExpandableHorizontalBarChartDataItem[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "yAxisLabel",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "xAxisLabel",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "valueLabels",
+          "type": "{ value: string; value1?: string; }",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "itemStyle",
+          "type": "{ color: (params: any) => string; }",
+          "required": false,
+          "description": null
+        }
+      ],
+      "data_shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "required": true
+            },
+            "value": {
+              "type": "number",
+              "required": true
+            },
+            "value1": {
+              "type": "number",
+              "required": false
+            },
+            "items": {
+              "type": "ExpandableHorizontalBarChartDataItem[]",
+              "required": false
+            },
+            "itemStyle": {
+              "type": "{ color: string; }",
+              "required": false
+            }
+          }
+        }
+      },
       "usage_example": "<ExpandableHorizontalBar\n  data={STORY_DATA_VARIANT_1}\n  yAxisLabel=\"Donor Types & Donors\"\n  xAxisLabel=\"Amount\"\n  valueLabels={{\n      value: \"Pledge\",\n      value1: \"Contribution\",\n    }}\n/>",
-      "notes": "[NEEDS REVIEW] Props interface not found"
+      "notes": ""
     },
     {
       "name": "FinancialMetric",
@@ -810,10 +868,64 @@
       "name": "SunburstChart",
       "description": "Sunburst chart component (SunburstChart).",
       "file_path": "src/app/components/charts/sunburst/index.tsx",
-      "props": null,
-      "data_shape": null,
+      "props": [
+        {
+          "name": "centerLabel",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "tooltipLabel",
+          "type": "string",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "data",
+          "type": "SunburstDataItem[]",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "selectedItem",
+          "type": "{ dataIndex: number; item: SunburstDataItem; } | null",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "setSelectedItem",
+          "type": "( item: { dataIndex: number; item: SunburstDataItem; } | null, ) => void",
+          "required": true,
+          "description": null
+        }
+      ],
+      "data_shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "required": true
+            },
+            "value": {
+              "type": "number",
+              "required": true
+            },
+            "children": {
+              "type": "SunburstDataItem[]",
+              "required": false
+            },
+            "itemStyle": {
+              "type": "Record<string, string | number>",
+              "required": false
+            }
+          }
+        }
+      },
       "usage_example": "<SunburstChart\n  tooltipLabel=\"Pledge\"\n  data={STORY_DATA_VARIANT_1}\n  centerLabel=\"Total Pledge\"\n  selectedItem={null}\n  setSelectedItem={() => {}}\n/>",
-      "notes": "meta.component is a local wrapper - component inferred from title/imports; [NEEDS REVIEW] Props interface not found"
+      "notes": "meta.component is a local wrapper - component inferred from title/imports"
     },
     {
       "name": "Treemap",
@@ -975,8 +1087,8 @@
         }
       ],
       "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] No story args found - no usage example generated"
+      "usage_example": "<FiltersApplied\n  items={[]}\n  filterGroups={[]}\n  appliedFilterBgColors={{\n      normal: \"#F5F6F7\",\n      hover: \"#373D43\",\n    }}\n/>",
+      "notes": ""
     },
     {
       "name": "FilterList",
@@ -1039,8 +1151,8 @@
         }
       ],
       "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] No story args found - no usage example generated"
+      "usage_example": "<FilterList\n  collapseAll={false}\n  groups={[]}\n  group={{\n      id: \"geography\",\n      name: \"Geography\",\n      options: [\n        {\n          name: \"Africa\",\n          value: \"QPA\",\n          options: [\n            {\n              name: \"Eastern Africa\",\n              value: \"QPB\",\n            },\n          ],\n        },\n        {\n          name: \"Asia\",\n          value: \"QPC\",\n        },\n      ],\n    }}\n  setCollapseAll={() => {}}\n  setPage={() => {}}\n  setPageSearchValue={() => {}}\n  shownOptions={[]}\n/>",
+      "notes": ""
     },
     {
       "name": "FilterListItemContent",
@@ -1127,8 +1239,8 @@
         }
       ],
       "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] No story args found - no usage example generated"
+      "usage_example": "<FilterListItemContent\n  id=\"geography\"\n  name=\"Geography\"\n  level={0}\n  collapseAll={false}\n  withSearch\n  options={[\n      {\n        name: \"Africa\",\n        value: \"QPA\",\n        options: [\n          {\n            name: \"Eastern Africa\",\n            value: \"QPB\",\n          },\n        ],\n      },\n      {\n        name: \"Asia\",\n        value: \"QPC\",\n      },\n    ]}\n  setCollapseAll={() => {}}\n  toggleFilter={() => {}}\n  setPage={() => {}}\n  setPageSearchValue={() => {}}\n  shownOptions={[\n      {\n        name: \"Africa\",\n        value: \"QPA\",\n        options: [\n          {\n            name: \"Eastern Africa\",\n            value: \"QPB\",\n          },\n        ],\n      },\n      {\n        name: \"Asia\",\n        value: \"QPC\",\n      },\n    ]}\n/>",
+      "notes": ""
     },
     {
       "name": "FilterPanel",
@@ -1221,17 +1333,8 @@
         }
       ],
       "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "Footer",
-      "description": "Footer component.",
-      "file_path": "src/app/components/footer/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+      "usage_example": "<FilterPanel\n  appliedFilters={[\"filter1\", \"filter2\"]}\n  appliedFilterBgColors={{\n      normal: \"#e0e0e0\",\n      hover: \"#c0c0c0\",\n    }}\n  onClose={() => alert(\"Close panel\")}\n  handleResetFilters={() => alert(\"Reset filters\")}\n  filterGroups={[\n      {\n        id: \"group1\",\n        name: \"Group 1\",\n        options: [\n          { value: \"filter1\", name: \"Filter 1\" },\n          { value: \"filter2\", name: \"Filter 2\" },\n          { value: \"filter3\", name: \"Filter 3\" },\n        ],\n      },\n      {\n        id: \"group2\",\n        name: \"Group 2\",\n        options: [\n          { value: \"filter4\", name: \"Filter 4\" },\n          { value: \"filter5\", name: \"Filter 5\" },\n        ],\n      },\n    ]}\n  setPage={(value) => alert(`Set page to ${value}`)}\n  page={1}\n  search=\"\"\n  setPageSearchValue={(value) => alert(`Set search value to ${value}`)}\n  handleCancelFilters={() => alert(\"Cancel filters\")}\n  handleApplyFilters={() => alert(\"Apply filters\")}\n/>",
+      "notes": ""
     },
     {
       "name": "GrantCard",
@@ -1338,80 +1441,84 @@
       "notes": ""
     },
     {
-      "name": "Header",
-      "description": "Header component.",
-      "file_path": "src/app/components/header/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "NoMobile",
-      "description": "NoMobile component.",
-      "file_path": "src/app/components/no-mobile/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "PageLoader",
-      "description": "Page loader component (PageLoader).",
-      "file_path": "src/app/components/page-loader/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "Page",
-      "description": "Page component.",
-      "file_path": "src/app/components/page/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
       "name": "Pagination",
       "description": "Pagination component.",
       "file_path": "src/app/components/pagination/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": "<Pagination\n  count={100}\n  page={1}\n  pageSearchValue={1}\n  handlePageChange={() => {}}\n  handlePageSearchChange={() => {}}\n  handlePageSearch={() => {}}\n/>",
-      "notes": "[NEEDS REVIEW] Props interface not found"
-    },
-    {
-      "name": "Redirect",
-      "description": "Redirect component.",
-      "file_path": "src/app/components/redirect/index.tsx",
       "props": [
         {
-          "name": "to",
-          "type": "string",
+          "name": "count",
+          "type": "number",
           "required": true,
           "description": null
         },
         {
-          "name": "state",
-          "type": "any",
-          "required": false,
+          "name": "page",
+          "type": "number",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "pageSearchValue",
+          "type": "number",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "handlePageChange",
+          "type": "(event: React.ChangeEvent<unknown>, value: number) => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "handlePageSearchChange",
+          "type": "(e: React.ChangeEvent<HTMLInputElement>) => void",
+          "required": true,
+          "description": null
+        },
+        {
+          "name": "handlePageSearch",
+          "type": "() => void",
+          "required": true,
           "description": null
         }
       ],
       "data_shape": null,
-      "usage_example": "<Redirect\n  to=\"/home\"\n/>",
+      "usage_example": "<Pagination\n  count={100}\n  page={1}\n  pageSearchValue={1}\n  handlePageChange={() => {}}\n  handlePageSearchChange={() => {}}\n  handlePageSearch={() => {}}\n/>",
       "notes": ""
     },
     {
       "name": "Search",
       "description": "Search component.",
       "file_path": "src/app/components/search/index.tsx",
-      "props": null,
+      "props": [
+        {
+          "name": "hocClose",
+          "type": "() => void",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "withCatMenu",
+          "type": "boolean",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "forceCategory",
+          "type": "string",
+          "required": false,
+          "description": null
+        },
+        {
+          "name": "handleSearch",
+          "type": "(value: string) => void",
+          "required": false,
+          "description": null
+        }
+      ],
       "data_shape": null,
       "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
+      "notes": "[NEEDS REVIEW] No story args found - no usage example generated"
     },
     {
       "name": "TableContainer",
@@ -1533,261 +1640,6 @@
       },
       "usage_example": "<Table\n  id=\"table\"\n  dataTree\n  data={TABLE_VARIATION_1_DATA}\n  columns={TABLE_VARIATION_1_COLUMNS}\n/>",
       "notes": ""
-    },
-    {
-      "name": "ChangelogPage",
-      "description": "Changelog component (ChangelogPage).",
-      "file_path": "src/app/pages/changelog/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "AccessToFundingPage",
-      "description": "AccessToFunding component (AccessToFundingPage).",
-      "file_path": "src/app/pages/datasets/access-to-funding/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "AnnualResultsPage",
-      "description": "AnnualResults component (AnnualResultsPage).",
-      "file_path": "src/app/pages/datasets/annual-results/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "DatasetPage",
-      "description": "Page component (DatasetPage).",
-      "file_path": "src/app/pages/datasets/common/page/index.tsx",
-      "props": [
-        {
-          "name": "title",
-          "type": "string",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "subtitle",
-          "type": "string",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "appliedFilters",
-          "type": "string[]",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "children",
-          "type": "React.ReactNode",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "handleResetFilters",
-          "type": "() => void",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "filterGroups",
-          "type": "FilterGroupModel[]",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "toolbarRightContent",
-          "type": "React.ReactNode",
-          "required": false,
-          "description": null
-        },
-        {
-          "name": "handleApplyFilters",
-          "type": "() => void",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "handleCancelFilters",
-          "type": "() => void",
-          "required": true,
-          "description": null
-        }
-      ],
-      "data_shape": null,
-      "usage_example": "<DatasetPage\n  title=\"Resource Mobilization\"\n  filterGroups={[]}\n  appliedFilters={[]}\n  handleResetFilters={() => {}}\n  handleApplyFilters={() => {}}\n  handleCancelFilters={() => {}}\n  children={<div>Content</div>}\n  subtitle=\"Government, private sector, non-government and other donor pledges and contributions.\"\n/>",
-      "notes": ""
-    },
-    {
-      "name": "GrantImplementationPage",
-      "description": "GrantImplementation component (GrantImplementationPage).",
-      "file_path": "src/app/pages/datasets/grant-implementation/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "ResourceMobilizationPage",
-      "description": "ResourceMobilization component (ResourceMobilizationPage).",
-      "file_path": "src/app/pages/datasets/resource-mobilization/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "Geography",
-      "description": "Geographies component (Geography).",
-      "file_path": "src/app/pages/geography/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "GlossaryPage",
-      "description": "Glossary component (GlossaryPage).",
-      "file_path": "src/app/pages/glossary/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "Grants",
-      "description": "Grants component.",
-      "file_path": "src/app/pages/grants/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "Searchbox",
-      "description": "Searchbox component.",
-      "file_path": "src/app/pages/grants/component/Searchbox.tsx",
-      "props": [
-        {
-          "name": "search",
-          "type": "string",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "searchInputRef",
-          "type": "any",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "handleSearch",
-          "type": "(event: React.ChangeEvent<HTMLInputElement>) => void",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "handleSearchIconClick",
-          "type": "(showSearch: boolean) => () => void",
-          "required": true,
-          "description": null
-        }
-      ],
-      "data_shape": null,
-      "usage_example": "<Searchbox\n  search=\"\"\n  searchInputRef={null}\n  handleSearch={() => {}}\n  handleSearchIconClick={() => () => {}}\n/>",
-      "notes": ""
-    },
-    {
-      "name": "Home",
-      "description": "Home component.",
-      "file_path": "src/app/pages/home/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "HomeBlock1",
-      "description": "Block1 component (HomeBlock1).",
-      "file_path": "src/app/pages/home/blocks/block-1/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "HomeBlock2",
-      "description": "Block2 component (HomeBlock2).",
-      "file_path": "src/app/pages/home/blocks/block-2/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "HomeBlock3",
-      "description": "Block3 component (HomeBlock3).",
-      "file_path": "src/app/pages/home/blocks/block-3/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "HomeBlock4",
-      "description": "Block4 component (HomeBlock4).",
-      "file_path": "src/app/pages/home/blocks/block-4/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "HomeBlock5",
-      "description": "Block5 component (HomeBlock5).",
-      "file_path": "src/app/pages/home/blocks/block-5/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "HomeHero",
-      "description": "Hero component (HomeHero).",
-      "file_path": "src/app/pages/home/components/hero/index.tsx",
-      "props": null,
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] Props interface not found; [NEEDS REVIEW] No story args found - no usage example generated"
-    },
-    {
-      "name": "HomeResultsStats",
-      "description": "Results stats component (HomeResultsStats).",
-      "file_path": "src/app/pages/home/components/results-stats/index.tsx",
-      "props": [
-        {
-          "name": "stats",
-          "type": "StatCompProps[]",
-          "required": true,
-          "description": null
-        },
-        {
-          "name": "loading",
-          "type": "boolean",
-          "required": false,
-          "description": null
-        }
-      ],
-      "data_shape": null,
-      "usage_example": null,
-      "notes": "[NEEDS REVIEW] No story args found - no usage example generated"
     }
   ]
 }
