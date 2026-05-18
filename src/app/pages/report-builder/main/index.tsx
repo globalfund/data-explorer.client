@@ -13,6 +13,10 @@ import { AllReportsView } from "app/pages/report-builder/main/components/all-rep
 import { TemplatesLayoutsView } from "app/pages/report-builder/main/components/templates-layouts-view";
 import { ReportBuilderNewFolderModal } from "app/pages/report-builder/main/components/new-folder-modal";
 import { ReportBuilderNewReportModal } from "app/pages/report-builder/main/components/new-report-modal";
+import { ReportBuilderDeleteFolderModal } from "app/pages/report-builder/main/components/delete-folder-modal";
+import { ReportBuilderDeleteReportModal } from "app/pages/report-builder/main/components/delete-report-modal";
+import { ReportBuilderMoveToFolderModal } from "app/pages/report-builder/main/components/move-to-folder-modal";
+import { ReportBuilderReportDetailsPanel } from "app/pages/report-builder/main/components/report-details-panel";
 import {
   AssetViewType,
   ReportBuilderAssetsToolbar,
@@ -23,7 +27,6 @@ import {
   useGetFolders,
   useGetReports,
 } from "app/hooks/queries/report-builder";
-import { ReportBuilderMoveToFolderModal } from "./components/move-to-folder-modal";
 
 export const ReportBuilder: React.FC = () => {
   const [sidebarSelectedItem, setSidebarSelectedItem] =
@@ -46,6 +49,33 @@ export const ReportBuilder: React.FC = () => {
     React.useState("");
   const [moveToFolderModalOpen, setMoveToFolderModalOpen] =
     React.useState(false);
+  const [deleteReportModalOpen, setDeleteReportModalOpen] =
+    React.useState(false);
+  const [reportToDelete, setReportToDelete] = React.useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [deleteFolderModalOpen, setDeleteFolderModalOpen] =
+    React.useState(false);
+  const [folderToDelete, setFolderToDelete] = React.useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [reportDetailsPanelOpen, setReportDetailsPanelOpen] =
+    React.useState(false);
+  const [reportDetails, setReportDetails] = React.useState<{
+    id: string;
+    name: string;
+    description: string;
+    createdDate: string;
+    updatedDate: string;
+  }>({
+    id: "",
+    name: "",
+    description: "",
+    createdDate: "",
+    updatedDate: "",
+  });
 
   const getReports = useGetReports({
     search: search,
@@ -127,6 +157,47 @@ export const ReportBuilder: React.FC = () => {
     setOpenedFolders((prev) => prev.slice(0, index + 1));
   };
 
+  const handleDeleteReportModalOpen = () => {
+    setDeleteReportModalOpen(true);
+  };
+
+  const handleDeleteReportModalClose = () => {
+    setDeleteReportModalOpen(false);
+  };
+
+  const handleDeleteFolderModalOpen = () => {
+    setDeleteFolderModalOpen(true);
+  };
+
+  const handleDeleteFolderModalClose = () => {
+    setDeleteFolderModalOpen(false);
+  };
+
+  const handleReportDetailsPanelOpen = (details: {
+    id: string;
+    name: string;
+    description: string;
+    createdDate: string;
+    updatedDate: string;
+  }) => {
+    setReportDetails(details);
+    setReportDetailsPanelOpen(true);
+  };
+
+  const handleReportDetailsPanelClose = () => {
+    setReportDetailsPanelOpen(false);
+  };
+
+  const handleDeleteReport = (id: string, name: string) => {
+    setReportToDelete({ id, name });
+    handleDeleteReportModalOpen();
+  };
+
+  const handleDeleteFolder = (id: string, name: string) => {
+    setFolderToDelete({ id, name });
+    handleDeleteFolderModalOpen();
+  };
+
   const view = React.useMemo(() => {
     switch (sidebarSelectedItem) {
       case "All Reports":
@@ -141,8 +212,11 @@ export const ReportBuilder: React.FC = () => {
                 getFolder.isLoading,
             }}
             refetch={getReports.refetch}
+            onDeleteReport={handleDeleteReport}
+            onDeleteFolder={handleDeleteFolder}
             handleFolderOpen={handleFolderOpen}
             selectedView={selectedView ?? "cards"}
+            onDetailsClick={handleReportDetailsPanelOpen}
           />
         );
       case "Templates and Layouts":
@@ -258,6 +332,14 @@ export const ReportBuilder: React.FC = () => {
             )}
             {openedFolders.length > 0 && <Box width="100%" height="40px" />}
             {view}
+            <Box position="relative">
+              {view}
+              <ReportBuilderReportDetailsPanel
+                details={reportDetails}
+                open={reportDetailsPanelOpen}
+                onClose={handleReportDetailsPanelClose}
+              />
+            </Box>
           </Grid>
         </Grid>
       </Box>
@@ -280,6 +362,20 @@ export const ReportBuilder: React.FC = () => {
         open={moveToFolderModalOpen}
         onClose={handleMoveToFolderModalClose}
         folderStructure={getFoldersStructure.data?.data || []}
+      />
+      <ReportBuilderDeleteReportModal
+        refetch={getReports.refetch}
+        open={deleteReportModalOpen}
+        reportId={reportToDelete?.id || ""}
+        onClose={handleDeleteReportModalClose}
+        reportName={reportToDelete?.name || ""}
+      />
+      <ReportBuilderDeleteFolderModal
+        refetch={getReports.refetch}
+        open={deleteFolderModalOpen}
+        folderId={folderToDelete?.id || ""}
+        onClose={handleDeleteFolderModalClose}
+        folderName={folderToDelete?.name || ""}
       />
     </React.Fragment>
   );

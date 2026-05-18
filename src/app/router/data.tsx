@@ -20,6 +20,7 @@ import { ReportBuilderPreviewPage } from "app/pages/report-builder/preview";
 import { Debug } from "app/pages/debug";
 import { GlossaryPage } from "app/pages/glossary";
 import { ChangelogPage } from "app/pages/changelog";
+import { ReportBuilderExportViewPage } from "app/pages/report-builder/export-view";
 
 const DetailPageRedirect: React.FC<{
   type: "location" | "partner" | "grant";
@@ -90,6 +91,7 @@ const COMPONENT_MAP: Record<string, React.ComponentType> = {
   ReportBuilder,
   ReportBuilderPage,
   ReportBuilderPreviewPage,
+  ReportBuilderExportViewPage,
   GlossaryPage,
   ChangelogPage,
   Debug,

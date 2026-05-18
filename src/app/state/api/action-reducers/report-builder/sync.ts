@@ -116,6 +116,7 @@ type RBReportItemBase<T extends RBReportItemTypes> = {
   focus?: boolean;
   key?: string;
   options?: Record<string, any>;
+  name?: string;
 };
 
 // 3) Discriminated union: RBReportItem is now “type-aware”

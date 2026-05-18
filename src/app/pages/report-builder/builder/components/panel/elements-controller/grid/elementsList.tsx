@@ -104,6 +104,8 @@ export default function GridElementsList(props: { type: "grid" | "column" }) {
             backgroundColor: "#ffffff",
             width: "100%",
             height: "100%",
+            display: "flex",
+            flexDirection: "column",
           },
         };
         break;

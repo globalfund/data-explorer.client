@@ -5,6 +5,12 @@ import {
 } from "app/state/api/action-reducers/report-builder/sync";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 
+/** * Custom hook to get the state of a report item, whether it's a main item or a grid child item.
+ * @param id - The ID of the report item.
+ * @param parent - Optional parent information if the item is a child of a grid or column.
+ * @returns An object containing the selected item, edit function, delete function, and duplicate function.
+ */
+
 const useGetReportItemState = <T extends RBReportItemTypes>({
   id,
   parent,

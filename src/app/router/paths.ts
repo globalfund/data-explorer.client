@@ -88,6 +88,11 @@ export const ROUTE_CONFIGS: RouteConfig[] = [
     importFrom: "app/pages/report-builder/preview",
   },
   {
+    path: "/report-builder/reports/:id/export",
+    componentName: "ReportBuilderExportViewPage",
+    importFrom: "app/pages/report-builder/export-view",
+  },
+  {
     path: "/glossary",
     componentName: "GlossaryPage",
     importFrom: "app/pages/glossary",

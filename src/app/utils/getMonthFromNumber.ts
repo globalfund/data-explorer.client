@@ -13,7 +13,8 @@ const months = [
   "December",
 ];
 
-export function getMonthFromNumber(value: number): string {
+export function getMonthFromNumber(value: number, fullName?: boolean): string {
   if (value < 0 || value > 12) return "";
+  if (fullName) return months[value - 1];
   return months[value - 1].slice(0, 3);
 }

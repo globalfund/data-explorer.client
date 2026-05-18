@@ -3,9 +3,14 @@ import Menu from "@mui/material/Menu";
 import Divider from "@mui/material/Divider";
 import MenuItem from "@mui/material/MenuItem";
 
+type VirtualElement = {
+  nodeType: 1;
+  getBoundingClientRect: () => DOMRect;
+};
+
 export const ReportBuilderItemMenu: React.FC<{
   handleClose: () => void;
-  anchorEl: HTMLElement | null;
+  anchorEl: HTMLElement | VirtualElement | null;
   menuItems: {
     label: string;
     disabled?: boolean;
