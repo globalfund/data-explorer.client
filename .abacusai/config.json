@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat *)",
+      "Bash(ls *)",
+      "Bash(ls /Users/stefanos/Documents/GitHub/rb-core-middleware/src/services/ 2>&1 || true)",
+      "Bash(cat /Users/stefanos/Documents/GitHub/rb-core-middleware/package.json 2>&1 | head -30 || true)",
+      "Bash(Bash(yarn build 2>& *))",
+      "Bash(grep *)",
+      "Bash(Bash(yarn build 2>& *))",
+      "Bash(ls /Users/stefanos/Documents/GitHub/rb-core-middleware/src/models/ /Users/stefanos/Documents/GitHub/rb-core-middleware/s…)",
+      "Bash(Bash(yarn build 2>& *))",
+      "Bash(cd /Users/stefanos/Documents/GitHub/data-explorer-server)",
+      "Bash(find *)",
+      "Bash(curl *)",
+      "Bash(redis-cli *)",
+      "Bash(mongosh *)",
+      "KillShell",
+      "Bash(pkill *)",
+      "Bash(Bash(yarn build 2>& *))",
+      "Bash(Bash(yarn build 2>& *))",
+      "Bash(grep -A 30 \"async find\" /Users/stefanos/Documents/GitHub/rb-core-middleware/dist/services/folder.service.js | head -40)",
+      "Bash(sleep 5; curl -s \"http://localhost:5555/folders\" > /dev/null; sleep 1; grep \"DEBUG\" /tmp/srv.log)",
+      "Bash(Bash(yarn build 2>&1 *))",
+      "Bash(pkill -9 -f \"node -r source-map\" 2>&1 || true; sleep 1; echo done)",
+      "Bash(cat /tmp/srv.log 2>&1 | grep -A 2 DEBUG | head -50 || true)",
+      "Bash(Bash(yarn build 2>& *))",
+      "Bash(pkill -9 -f \"node -r source-map\" 2>&1 || true; redis-cli FLUSHALL 2>&1; sleep 1; cd /Users/stefanos/Documents/GitHub/dat…)",
+      "Bash(mongosh --quiet data-explorer-rb-db --eval 'db.AssetModel.find({}, {name:1, folderId:1}).limit(10).toArray()' 2>&1 | hea…)"
+    ]
+  },
+  "additionalDirectories": [
+    "/Users/stefanos/Documents/GitHub/rb-core-middleware/src/services",
+    "/Users/stefanos/Documents/GitHub/rb-core-middleware/src/models",
+    "/Users/stefanos/Documents/GitHub/rb-core-middleware/src/repositories",
+    "/Users/stefanos/Documents/GitHub/rb-core-middleware/src",
+    "/Users/stefanos/Documents/GitHub/data-explorer-server/src/controllers/report-builder"
+  ]
+}

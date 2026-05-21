@@ -7,29 +7,21 @@ import IconButton from "@mui/material/IconButton";
 import MoreVert from "@mui/icons-material/MoreVert";
 import FolderIcon from "app/assets/vectors/FolderBig.svg?react";
 import EmptyFolderIcon from "app/assets/vectors/EmptyFolder.svg?react";
+import {
+  ReportCardProps,
+  FolderCardProps,
+} from "app/pages/report-builder/main/components/all-reports-view/data";
 
-export const ReportCard: React.FC<{
-  id: string;
-  name: string;
-  description: string;
-  createdDate: string;
-  updatedDate: string;
-  selectedItemForRenaming: string | null;
-  setSelectedItemForRenaming: (id: string | null) => void;
-  handleRenameEnter: (id: string, type: "report" | "folder") => void;
-  handleItemMenuClick: (event: React.MouseEvent<HTMLElement>) => void;
-  handleItemClick: (id: string, type: "report" | "folder") => () => void;
-  handleEditClick: (id: string) => () => void;
-}> = ({
+export const ReportCard: React.FC<ReportCardProps> = ({
   id,
   name,
   description,
-  selectedItemForRenaming,
-  setSelectedItemForRenaming,
-  handleRenameEnter,
-  handleItemMenuClick,
   handleItemClick,
   handleEditClick,
+  handleRenameEnter,
+  handleItemMenuClick,
+  selectedItemForRenaming,
+  setSelectedItemForRenaming,
 }) => {
   return (
     <React.Fragment>
@@ -138,49 +130,47 @@ export const ReportCard: React.FC<{
       >
         <Button onClick={handleEditClick(id)}>Edit</Button>
         <Button onClick={handleItemClick(id, "report")}>Preview</Button>
-        <IconButton id={id} onClick={handleItemMenuClick}>
-          <MoreVert />
+        <IconButton id={id} onClick={handleItemMenuClick} sx={{ p: "0px" }}>
+          <MoreVert htmlColor="#454545" />
         </IconButton>
       </Box>
     </React.Fragment>
   );
 };
 
-export const FolderCard: React.FC<{
-  id: string;
-  name: string;
-  assetCount: number;
-  reportCount: number;
-  createdDate: string;
-  updatedDate: string;
-  selectedItemForRenaming: string | null;
-  setSelectedItemForRenaming: (id: string | null) => void;
-  handleRenameEnter: (id: string, type: "report" | "folder") => void;
-  handleItemMenuClick: (event: React.MouseEvent<HTMLElement>) => void;
-  handleItemClick: (id: string, type: "report" | "folder") => () => void;
-}> = ({
+export const FolderCard: React.FC<FolderCardProps> = ({
   id,
   name,
   assetCount,
   reportCount,
-  selectedItemForRenaming,
-  setSelectedItemForRenaming,
+  folderCount,
+  handleItemClick,
   handleRenameEnter,
   handleItemMenuClick,
-  handleItemClick,
+  selectedItemForRenaming,
+  setSelectedItemForRenaming,
 }) => {
   const text = React.useMemo(() => {
-    if (assetCount === 0 && reportCount === 0) {
+    if (assetCount === 0 && reportCount === 0 && folderCount === 0) {
       return "Empty Folder";
     }
-    if (assetCount > 0 && reportCount === 0) {
+    if (assetCount > 0 && reportCount === 0 && folderCount === 0) {
       return `${assetCount} ${assetCount === 1 ? "Asset" : "Assets"} inside`;
     }
-    if (assetCount === 0 && reportCount > 0) {
+    if (assetCount > 0 && reportCount > 0 && folderCount === 0) {
+      return `${reportCount} ${reportCount === 1 ? "Report" : "Reports"} and ${assetCount} ${assetCount === 1 ? "Asset" : "Assets"} inside`;
+    }
+    if (assetCount > 0 && reportCount === 0 && folderCount > 0) {
+      return `${folderCount} ${folderCount === 1 ? "Folder" : "Folders"} and ${assetCount} ${assetCount === 1 ? "Asset" : "Assets"} inside`;
+    }
+    if (assetCount === 0 && reportCount > 0 && folderCount === 0) {
       return `${reportCount} ${reportCount === 1 ? "Report" : "Reports"} inside`;
     }
-    return `${reportCount} ${reportCount === 1 ? "Report" : "Reports"} and ${assetCount} ${assetCount === 1 ? "Asset" : "Assets"} inside`;
-  }, [assetCount, reportCount]);
+    if (assetCount === 0 && reportCount > 0 && folderCount > 0) {
+      return `${reportCount} ${reportCount === 1 ? "Report" : "Reports"} and ${folderCount} ${folderCount === 1 ? "Folder" : "Folders"} inside`;
+    }
+    return `${reportCount} ${reportCount === 1 ? "Report" : "Reports"}, ${assetCount} ${assetCount === 1 ? "Asset" : "Assets"} and ${folderCount} ${folderCount === 1 ? "Folder" : "Folders"} inside`;
+  }, [assetCount, reportCount, folderCount]);
 
   return (
     <React.Fragment>
@@ -200,7 +190,7 @@ export const FolderCard: React.FC<{
           }}
           onClick={handleItemClick(id, "folder")}
         >
-          {assetCount === 0 && reportCount === 0 ? (
+          {assetCount === 0 && reportCount === 0 && folderCount === 0 ? (
             <React.Fragment>
               <EmptyFolderIcon />
               <Typography fontSize="14px">{text}</Typography>
@@ -292,8 +282,13 @@ export const FolderCard: React.FC<{
         >
           Open Folder
         </Button>
-        <IconButton id={id} name="folder" onClick={handleItemMenuClick}>
-          <MoreVert />
+        <IconButton
+          id={id}
+          name="folder"
+          sx={{ p: "0px" }}
+          onClick={handleItemMenuClick}
+        >
+          <MoreVert htmlColor="#454545" />
         </IconButton>
       </Box>
     </React.Fragment>

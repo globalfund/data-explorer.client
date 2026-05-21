@@ -41,9 +41,11 @@ export const ReportBuilderToolbar: React.FC<{
   return (
     <Box
       sx={{
+        zIndex: 1,
         gap: "20px",
         width: "100%",
         display: "flex",
+        position: "relative",
         justifyContent: "space-between",
         button: {
           fontSize: "16px",
@@ -115,8 +117,8 @@ export const ReportBuilderToolbar: React.FC<{
           padding: "12px 14px",
           border: "1px solid #dfe3e5",
           "&:hover": {
-            background: "#f1f3f5",
-            borderColor: "#000000",
+            borderColor: "#3154f4",
+            background: "transparent",
           },
         }}
         onClick={onNewFolderClick}

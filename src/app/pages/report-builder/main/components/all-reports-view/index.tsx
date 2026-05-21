@@ -35,6 +35,7 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
   onDeleteReport,
   onDeleteFolder,
   handleFolderOpen,
+  onMoveItemToFolder,
 }) => {
   const navigate = useNavigate();
   const updateReport = usePatchReport2();
@@ -216,6 +217,16 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
     }
   };
 
+  const handleMoveToFolder = () => {
+    const id = getAnchorElId();
+    const isFolder = getAnchorElName() === "folder";
+    const name = reports.data.find((r) => r.id === id)?.name;
+    if (!id || !name) return;
+    setAnchorEl(null);
+    setAnchorElTableId(null);
+    onMoveItemToFolder(id, name, isFolder ? "folder" : "report");
+  };
+
   const view = React.useMemo(() => {
     if (reports.isLoading) {
       return (
@@ -234,7 +245,7 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
     }
     if (selectedView === "cards") {
       return (
-        <Grid container columnSpacing={2} rowSpacing={6}>
+        <Grid container spacing={2.5}>
           {reports.data.map((item) => (
             <Grid item xs={12} sm={6} md={4} lg={4} key={item.id}>
               <Box
@@ -271,15 +282,16 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
                   <FolderCard
                     id={item.id}
                     name={item.name}
-                    assetCount={item.assetCount ?? 0}
-                    reportCount={item.reportCount ?? 0}
                     createdDate={item.createdDate}
                     updatedDate={item.updatedDate}
-                    selectedItemForRenaming={selectedItemForRenaming}
-                    setSelectedItemForRenaming={setSelectedItemForRenaming}
+                    handleItemClick={handleItemClick}
+                    assetCount={item.assetCount ?? 0}
+                    reportCount={item.reportCount ?? 0}
+                    folderCount={item.folderCount ?? 0}
                     handleRenameEnter={handleRenameEnter}
                     handleItemMenuClick={handleItemMenuClick}
-                    handleItemClick={handleItemClick}
+                    selectedItemForRenaming={selectedItemForRenaming}
+                    setSelectedItemForRenaming={setSelectedItemForRenaming}
                   />
                 )}
               </Box>
@@ -303,8 +315,7 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
               {
                 label: "Move to Folder",
                 icon: <Folder />,
-                onClick: handleClose,
-                disabled: true,
+                onClick: handleMoveToFolder,
               },
               {
                 label: "Duplicate",
@@ -438,8 +449,7 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
           {
             label: "Move to Folder",
             icon: <Folder />,
-            onClick: handleCloseTable,
-            disabled: true,
+            onClick: handleMoveToFolder,
           },
           {
             label: "Duplicate",

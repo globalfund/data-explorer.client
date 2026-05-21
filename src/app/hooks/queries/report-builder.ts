@@ -75,6 +75,7 @@ export const useGetFolder = (folderId?: string) => {
 export const useGetReports = (params: {
   sort: string;
   search: string;
+  onlyRootLevel?: boolean;
   includeFolders?: boolean;
 }) => {
   // TODO: cache and manage invalidation
@@ -89,6 +90,7 @@ export const useGetReports = (params: {
       "ReportBuilderGetReports",
       params.search,
       params.sort,
+      params.onlyRootLevel,
       params.includeFolders,
     ],
     queryFn: () =>
@@ -96,6 +98,7 @@ export const useGetReports = (params: {
         params: {
           filter,
           folderFilter: filter,
+          onlyRootLevel: params.onlyRootLevel,
           includeFolders: params.includeFolders,
         },
       }),
@@ -159,6 +162,44 @@ export const useGetFolders = (params: {
         },
       }),
     staleTime: 1000 * 60 * 5,
+  });
+};
+
+export const useAddReportToFolder = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["ReportBuilderAddReportToFolder"],
+    mutationFn: (data: { folderId: string; reportId: string }) =>
+      axiosInstance.get(`/folder/add-report/${data.folderId}`, {
+        params: { reportId: data.reportId },
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["ReportBuilderGetFolders"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["ReportBuilderGetReports"],
+      });
+    },
+  });
+};
+
+export const useAddFolderToFolder = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["ReportBuilderAddFolderToFolder"],
+    mutationFn: (data: { folderId: string; folderIdToAdd: string }) =>
+      axiosInstance.get(`/folder/add-folder/${data.folderId}`, {
+        params: { folderId: data.folderIdToAdd },
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["ReportBuilderGetFolders"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["ReportBuilderGetReports"],
+      });
+    },
   });
 };
 

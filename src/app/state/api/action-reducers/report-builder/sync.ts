@@ -297,8 +297,10 @@ export interface RBAssetModel {
 export interface RBFolderModel {
   id?: string;
   name: string;
-  public?: boolean;
   owner?: string;
+  public?: boolean;
+  parentId?: string;
+  locationPath?: string;
   createdDate?: string;
   updatedDate?: string;
   assets?: RBAssetModel[];
@@ -344,12 +346,15 @@ export interface RBReportModelResponse {
 export interface RBFolderModelResponse {
   id: string;
   name: string;
-  public: boolean;
   owner: string;
+  public: boolean;
+  parentId?: string;
   createdDate: string;
   updatedDate: string;
+  locationPath?: string;
   assets: RBAssetModelResponse[];
   reports: RBReportModelResponse[];
+  children?: RBFolderModelResponse[];
 }
 export interface RBRenderedChartData {
   renderedContent: string;

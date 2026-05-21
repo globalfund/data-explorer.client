@@ -5,17 +5,17 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import { useDeleteReport } from "app/hooks/queries/report-builder";
+import { useDeleteFolder } from "app/hooks/queries/report-builder";
 import WarningIcon from "app/assets/vectors/WarningIconBig.svg?react";
-import { ReportBuilderDeleteReportModalProps } from "app/pages/report-builder/main/components/delete-report-modal/data";
+import { ReportBuilderDeleteFolderModalProps } from "app/pages/report-builder/main/components/delete-folder-modal/data";
 
-export const ReportBuilderDeleteReportModal: React.FC<
-  ReportBuilderDeleteReportModalProps
-> = ({ open, onClose, reportName, refetch, reportId }) => {
-  const deleteReport = useDeleteReport();
+export const ReportBuilderDeleteFolderModal: React.FC<
+  ReportBuilderDeleteFolderModalProps
+> = ({ open, onClose, folderName, refetch, folderId }) => {
+  const deleteFolder = useDeleteFolder();
 
   const handleDelete = () => {
-    deleteReport.mutate(reportId, {
+    deleteFolder.mutate(folderId, {
       onSuccess: () => {
         refetch();
         onClose();
@@ -57,7 +57,7 @@ export const ReportBuilderDeleteReportModal: React.FC<
             <WarningIcon />
             <Box>
               <Typography variant="h6" fontSize="16px">
-                Delete report?
+                Delete folder?
               </Typography>
               <Typography fontSize="14px">
                 This action cannot be undone.
@@ -74,7 +74,7 @@ export const ReportBuilderDeleteReportModal: React.FC<
           }}
         >
           <Typography variant="body2" marginBottom="5px" color="#525252">
-            Are you sure you want to delete <b>{reportName}</b>?
+            Are you sure you want to delete <b>{folderName}</b>?
           </Typography>
           <Box
             sx={{
