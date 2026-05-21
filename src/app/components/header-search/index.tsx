@@ -3,7 +3,7 @@ import { colors } from "app/theme";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 import Collapse from "@mui/material/Collapse";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Search } from "app/components/search";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -13,10 +13,15 @@ import HeaderMenuIcon from "app/assets/vectors/HeaderMenu.svg?react";
 import { HeaderSearchProps } from "app/components/header-search/data";
 import HeaderCloseIcon from "app/assets/vectors/HeaderClose.svg?react";
 import HeaderSearchIcon from "app/assets/vectors/HeaderSearch.svg?react";
+import UserIcon from "app/assets/vectors/UserIcon.svg?react";
 
 export const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
   const { pathname, hash } = useLocation();
   const mobile = useMediaQuery("(max-width: 767px)");
+
+  const isAuthPage = React.useMemo(() => {
+    return pathname === "/sign-in" || pathname === "/sign-up";
+  }, [pathname]);
 
   const onSearchBtnClick = () => {
     props.setSearchOpen(!props.searchOpen);
@@ -126,9 +131,11 @@ export const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
           )}
           {!props.searchOpen && (
             <React.Fragment>
-              <IconButton onClick={onSearchBtnClick} sx={{ padding: 0 }}>
-                <HeaderSearchIcon />
-              </IconButton>
+              {isAuthPage ? null : (
+                <IconButton onClick={onSearchBtnClick} sx={{ padding: 0 }}>
+                  <HeaderSearchIcon />
+                </IconButton>
+              )}
               <IconButton
                 onClick={onMobileMenuToggle}
                 sx={{
@@ -224,15 +231,32 @@ export const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
           <Search hocClose={() => props.setSearchOpen(false)} />
         </Box>
       )}
-      <Tooltip title={!props.searchOpen ? "Search" : "Close"}>
-        <IconButton
-          data-cy="header-search-btn"
-          onClick={onSearchBtnClick}
-          sx={{ padding: "6px" }}
-        >
-          {!props.searchOpen ? <HeaderSearchIcon /> : <HeaderCloseIcon />}
-        </IconButton>
-      </Tooltip>
+
+      {isAuthPage ? null : (
+        <Tooltip title={!props.searchOpen ? "Search" : "Close"}>
+          <IconButton
+            data-cy="header-search-btn"
+            onClick={onSearchBtnClick}
+            sx={{ padding: "6px" }}
+          >
+            {!props.searchOpen ? <HeaderSearchIcon /> : <HeaderCloseIcon />}
+          </IconButton>
+        </Tooltip>
+      )}
+      <IconButton
+        sx={{
+          marginLeft: "12px",
+          path: {
+            stroke: pathname.startsWith("/sign-")
+              ? "#3154f4"
+              : colors.primary.black,
+          },
+        }}
+        component={Link}
+        to="/sign-in"
+      >
+        <UserIcon />
+      </IconButton>
     </Box>
   );
 };
