@@ -3,17 +3,17 @@ import { colors } from "app/theme";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 import Collapse from "@mui/material/Collapse";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Search } from "app/components/search";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import useMediaQuery from "@mui/material/useMediaQuery";
+// import UserIcon from "app/assets/vectors/UserIcon.svg?react";
 import HeaderMenuIcon from "app/assets/vectors/HeaderMenu.svg?react";
 import { HeaderSearchProps } from "app/components/header-search/data";
 import HeaderCloseIcon from "app/assets/vectors/HeaderClose.svg?react";
 import HeaderSearchIcon from "app/assets/vectors/HeaderSearch.svg?react";
-import UserIcon from "app/assets/vectors/UserIcon.svg?react";
 
 export const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
   const { pathname, hash } = useLocation();
@@ -243,7 +243,7 @@ export const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
           </IconButton>
         </Tooltip>
       )}
-      <IconButton
+      {/* <IconButton
         sx={{
           marginLeft: "12px",
           path: {
@@ -256,7 +256,7 @@ export const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
         to="/sign-in"
       >
         <UserIcon />
-      </IconButton>
+      </IconButton> */}
     </Box>
   );
 };
