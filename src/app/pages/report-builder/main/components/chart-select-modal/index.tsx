@@ -19,6 +19,8 @@ import { ChartType } from "app/state/api/action-reducers/report-builder/sync";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 import WarningIcon from "app/assets/vectors/WarningIcon.svg?react";
 import { ArrowForward } from "@mui/icons-material";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 import { TableOptionIcon } from "app/pages/report-builder/builder/components/toolbar/data";
 
 type IntentId = "all" | "trend" | "compare" | "part" | "geographic" | "table";
@@ -161,6 +163,7 @@ const ChartSelectModal: React.FC<{
   open: boolean;
   onClose: () => void;
 }> = ({ open, onClose }) => {
+  const cmsData = useCMSData({ returnData: true });
   const [search, setSearch] = React.useState("");
   const [selectedIntent, setSelectedIntent] = React.useState<IntentId>("all");
   const [selectedChartType, setSelectedChartType] = React.useState<string>("");
@@ -178,13 +181,57 @@ const ChartSelectModal: React.FC<{
   });
 
   const selectedType = selectedChartType || item?.data?.chartType || "";
+  const localizedIntentOptions = React.useMemo(
+    () =>
+      intentOptions.map((intent) => ({
+        ...intent,
+        label: getCMSDataField(
+          cmsData,
+          `componentsRBChartSelectModal.chartIntent${intent.id}`,
+          intent.label,
+        ),
+      })),
+    [cmsData],
+  );
+  const localizedChartSelectItems = React.useMemo(
+    () =>
+      chartSelectItems.map((chart) => ({
+        ...chart,
+        chartType: getCMSDataField(
+          cmsData,
+          `componentsRBChartSelectModal.chart${chart.id}Type`,
+          chart.chartType,
+        ),
+        tag: getCMSDataField(
+          cmsData,
+          `componentsRBChartSelectModal.chart${chart.id}Tag`,
+          chart.tag,
+        ),
+        modalDescription: getCMSDataField(
+          cmsData,
+          `componentsRBChartSelectModal.chart${chart.id}ModalDescription`,
+          chart.modalDescription,
+        ),
+        bestFor: getCMSDataField(
+          cmsData,
+          `componentsRBChartSelectModal.chart${chart.id}BestFor`,
+          chart.bestFor,
+        ),
+        technical: getCMSDataField(
+          cmsData,
+          `componentsRBChartSelectModal.chart${chart.id}Technical`,
+          chart.technical,
+        ),
+      })),
+    [cmsData],
+  );
   const selectedChart =
-    chartSelectItems.find((chart) => chart.id === selectedType) ??
-    chartSelectItems[0];
+    localizedChartSelectItems.find((chart) => chart.id === selectedType) ??
+    localizedChartSelectItems[0];
 
   const filteredCharts = React.useMemo(() => {
     const searchTerm = search.trim().toLowerCase();
-    return chartSelectItems.filter((chart) => {
+    return localizedChartSelectItems.filter((chart) => {
       const matchesIntent =
         selectedIntent === "all" || chart.intent.includes(selectedIntent);
       const matchesSearch =
@@ -195,7 +242,7 @@ const ChartSelectModal: React.FC<{
           .includes(searchTerm);
       return matchesIntent && matchesSearch;
     });
-  }, [search, selectedIntent]);
+  }, [localizedChartSelectItems, search, selectedIntent]);
 
   React.useEffect(() => {
     if (open) {
@@ -323,7 +370,11 @@ const ChartSelectModal: React.FC<{
                   },
                 }}
               >
-                Choose a Chart Type
+                {getCMSDataField(
+                  cmsData,
+                  "componentsRBChartSelectModal.chooseChartTypeTitle",
+                  "Choose a Chart Type",
+                )}
               </Typography>
               <Typography
                 variant="body2"
@@ -334,7 +385,11 @@ const ChartSelectModal: React.FC<{
                   },
                 }}
               >
-                Select how you want to visualise your data
+                {getCMSDataField(
+                  cmsData,
+                  "componentsRBChartSelectModal.chooseChartTypeDescription",
+                  "Select how you want to visualise your data",
+                )}
               </Typography>
             </Box>
           </Box>
@@ -393,8 +448,11 @@ const ChartSelectModal: React.FC<{
                   },
                 }}
               >
-                No dataset connected yet. Chart recommendations will appear once
-                you connect a dataset.
+                {getCMSDataField(
+                  cmsData,
+                  "componentsRBChartSelectModal.chartNoDatasetConnected",
+                  "No dataset connected yet. Chart recommendations will appear once you connect a dataset.",
+                )}
               </Typography>
             </Box>
             <Button
@@ -419,7 +477,11 @@ const ChartSelectModal: React.FC<{
                 },
               }}
             >
-              Connect Dataset
+              {getCMSDataField(
+                cmsData,
+                "componentsRBChartSelectModal.connectDatasetButton",
+                "Connect Dataset",
+              )}
             </Button>
           </Box>
         ) : null}
@@ -487,9 +549,13 @@ const ChartSelectModal: React.FC<{
                 },
               }}
             >
-              Intent
+              {getCMSDataField(
+                cmsData,
+                "componentsRBChartSelectModal.intentLabel",
+                "Intent",
+              )}
             </Typography>
-            {intentOptions.map((intent) => {
+            {localizedIntentOptions.map((intent) => {
               const active = intent.id === selectedIntent;
               return (
                 <Button
@@ -566,9 +632,14 @@ const ChartSelectModal: React.FC<{
             >
               <Typography fontSize="16px" fontWeight={700} color="#252C34">
                 {selectedIntent === "all"
-                  ? "All Chart Types"
-                  : intentOptions.find((intent) => intent.id === selectedIntent)
-                      ?.label}
+                  ? getCMSDataField(
+                      cmsData,
+                      "componentsRBChartSelectModal.allChartTypesTitle",
+                      "All Chart Types",
+                    )
+                  : localizedIntentOptions.find(
+                      (intent) => intent.id === selectedIntent,
+                    )?.label}
               </Typography>
             </Box>
             <Box
@@ -593,8 +664,16 @@ const ChartSelectModal: React.FC<{
                 <input
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Search chart types..."
-                  aria-label="Search chart types"
+                  placeholder={getCMSDataField(
+                    cmsData,
+                    "componentsRBChartSelectModal.searchChartTypesPlaceholder",
+                    "Search chart types...",
+                  )}
+                  aria-label={getCMSDataField(
+                    cmsData,
+                    "componentsRBChartSelectModal.searchChartTypesAriaLabel",
+                    "Search chart types",
+                  )}
                   style={{
                     border: 0,
                     outline: 0,
@@ -743,7 +822,11 @@ const ChartSelectModal: React.FC<{
                   }}
                 >
                   <Typography fontSize="14px">
-                    No chart types match your search.
+                    {getCMSDataField(
+                      cmsData,
+                      "componentsRBChartSelectModal.noChartTypesMatchSearch",
+                      "No chart types match your search.",
+                    )}
                   </Typography>
                 </Box>
               )}
@@ -769,7 +852,11 @@ const ChartSelectModal: React.FC<{
               }}
             >
               <Typography fontSize="16px" fontWeight={700} color="#252C34">
-                Preview
+                {getCMSDataField(
+                  cmsData,
+                  "componentsRBChartSelectModal.previewTitle",
+                  "Preview",
+                )}
               </Typography>
             </Box>
             <Box
@@ -802,9 +889,30 @@ const ChartSelectModal: React.FC<{
                 {selectedChart.icon}
               </Box>
               {[
-                ["Chart Type", selectedChart.chartType],
-                ["Best for", selectedChart.bestFor],
-                ["Technical", selectedChart.technical],
+                [
+                  getCMSDataField(
+                    cmsData,
+                    "componentsRBChartSelectModal.chartTypeLabel",
+                    "Chart Type",
+                  ),
+                  selectedChart.chartType,
+                ],
+                [
+                  getCMSDataField(
+                    cmsData,
+                    "componentsRBChartSelectModal.bestForLabel",
+                    "Best for",
+                  ),
+                  selectedChart.bestFor,
+                ],
+                [
+                  getCMSDataField(
+                    cmsData,
+                    "componentsRBChartSelectModal.technicalLabel",
+                    "Technical",
+                  ),
+                  selectedChart.technical,
+                ],
               ].map(([label, value]) => (
                 <Box
                   key={label}
@@ -860,7 +968,11 @@ const ChartSelectModal: React.FC<{
               },
             }}
           >
-            Cancel
+            {getCMSDataField(
+              cmsData,
+              "componentsRBChartSelectModal.cancelButton",
+              "Cancel",
+            )}
           </Button>
           <Button
             disabled={!selectedType}
@@ -887,7 +999,11 @@ const ChartSelectModal: React.FC<{
               },
             }}
           >
-            Use this Chart
+            {getCMSDataField(
+              cmsData,
+              "componentsRBChartSelectModal.useThisChartButton",
+              "Use this Chart",
+            )}
           </Button>
         </Box>
       </Box>

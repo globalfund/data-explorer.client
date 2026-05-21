@@ -25,11 +25,14 @@ import {
   SizePadding,
   PaintBucket,
 } from "app/pages/report-builder/builder/components/report-settings/icons";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 export const SettingsTabView: React.FC = () => {
   const navigate = useNavigate();
   const deleteReport = useDeleteReport();
   const { id } = useParams<{ id: string }>();
+  const cmsData = useCMSData({ returnData: true });
   const duplicateReport = useDuplicateReport();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -69,15 +72,27 @@ export const SettingsTabView: React.FC = () => {
   const title = React.useMemo(() => {
     switch (selectedOption) {
       case "rename":
-        return "Rename";
+        return getCMSDataField(
+          cmsData,
+          "pagesReportBuilderBuilder.renamePanelTitle",
+          "Rename",
+        );
       case "size":
-        return "Size and Padding";
+        return getCMSDataField(
+          cmsData,
+          "pagesReportBuilderBuilder.sizePaddingPanelTitle",
+          "Size and Padding",
+        );
       case "paint":
-        return "Border and Fill";
+        return getCMSDataField(
+          cmsData,
+          "pagesReportBuilderBuilder.borderFillPanelTitle",
+          "Border and Fill",
+        );
       default:
         return "";
     }
-  }, [selectedOption]);
+  }, [cmsData, selectedOption]);
 
   const view = React.useMemo(() => {
     switch (selectedOption) {
@@ -124,7 +139,11 @@ export const SettingsTabView: React.FC = () => {
               {title}
             </Typography>
             <IconButton
-              aria-label="close"
+              aria-label={getCMSDataField(
+                cmsData,
+                "pagesReportBuilderBuilder.closeAriaLabel",
+                "close",
+              )}
               sx={{ padding: 0 }}
               onClick={handleOptionSelect(null)}
             >
@@ -161,7 +180,13 @@ export const SettingsTabView: React.FC = () => {
             bgcolor: selectedOption === "rename" ? "#F1F3F5" : "transparent",
           }}
         >
-          <div>Rename</div>
+          <div>
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.renameMenuItem",
+              "Rename",
+            )}
+          </div>
         </Button>
         <Divider />
         <Button
@@ -173,7 +198,13 @@ export const SettingsTabView: React.FC = () => {
             bgcolor: selectedOption === "size" ? "#F1F3F5" : "transparent",
           }}
         >
-          <div>Size and Padding</div>
+          <div>
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.sizePaddingMenuItem",
+              "Size and Padding",
+            )}
+          </div>
         </Button>
         <Divider />
         <Button
@@ -185,7 +216,13 @@ export const SettingsTabView: React.FC = () => {
             bgcolor: selectedOption === "paint" ? "#F1F3F5" : "transparent",
           }}
         >
-          <div>Border and Fill</div>
+          <div>
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.borderFillMenuItem",
+              "Border and Fill",
+            )}
+          </div>
         </Button>
         <Divider />
         <Button
@@ -193,7 +230,13 @@ export const SettingsTabView: React.FC = () => {
           startIcon={<Copy />}
           onClick={handleDuplicateReportClick}
         >
-          <div>Duplicate Report</div>
+          <div>
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.duplicateReportMenuItem",
+              "Duplicate Report",
+            )}
+          </div>
         </Button>
         <Divider />
         <Button
@@ -201,7 +244,13 @@ export const SettingsTabView: React.FC = () => {
           startIcon={<Backspace />}
           onClick={handleDeleteReportClick}
         >
-          <div>Delete Report</div>
+          <div>
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.deleteReportMenuItem",
+              "Delete Report",
+            )}
+          </div>
         </Button>
       </Box>
     </React.Fragment>

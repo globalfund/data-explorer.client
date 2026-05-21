@@ -14,6 +14,8 @@ import {
   RightPadding,
   BottomPadding,
 } from "app/pages/report-builder/builder/components/report-settings/icons";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 const panelSx = {
   gap: "8px",
@@ -69,6 +71,7 @@ const panelSx = {
 
 export const RenamePanel: React.FC<{ closePanel: () => void }> = (props) => {
   const { id } = useParams<{ id: string }>();
+  const cmsData = useCMSData({ returnData: true });
 
   const reportData = useGetReport(id);
   const updateReport = usePatchReport(id);
@@ -108,7 +111,13 @@ export const RenamePanel: React.FC<{ closePanel: () => void }> = (props) => {
       <Box sx={panelSx}>
         <Box width="100%">
           <InputLabel id="report-name-label" htmlFor="report-name-input">
-            <span>Report Name</span>
+            <span>
+              {getCMSDataField(
+                cmsData,
+                "pagesReportBuilderBuilder.reportNameLabel",
+                "Report Name",
+              )}
+            </span>
             <span>{name.length}/100</span>
           </InputLabel>
           <input
@@ -125,7 +134,13 @@ export const RenamePanel: React.FC<{ closePanel: () => void }> = (props) => {
             id="report-description-label"
             htmlFor="report-description-input"
           >
-            <span>Report Description</span>
+            <span>
+              {getCMSDataField(
+                cmsData,
+                "pagesReportBuilderBuilder.reportDescriptionLabel",
+                "Report Description",
+              )}
+            </span>
             <span>{description.length}/250</span>
           </InputLabel>
           <textarea
@@ -149,7 +164,11 @@ export const RenamePanel: React.FC<{ closePanel: () => void }> = (props) => {
         }}
       >
         <Button variant="outlined" onClick={props.closePanel}>
-          Back
+          {getCMSDataField(
+            cmsData,
+            "pagesReportBuilderBuilder.backButton",
+            "Back",
+          )}
         </Button>
         <Button
           sx={{
@@ -159,7 +178,11 @@ export const RenamePanel: React.FC<{ closePanel: () => void }> = (props) => {
           }}
           onClick={handleApply}
         >
-          Apply
+          {getCMSDataField(
+            cmsData,
+            "pagesReportBuilderBuilder.applyButton",
+            "Apply",
+          )}
         </Button>
       </Box>
     </React.Fragment>
@@ -170,6 +193,7 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
   props,
 ) => {
   const { id } = useParams<{ id: string }>();
+  const cmsData = useCMSData({ returnData: true });
 
   const reportData = useGetReport(id);
   const updateReport = usePatchReport(id);
@@ -201,7 +225,13 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
   const handleWidthBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (e.target.value === "") {
       setWidth("300");
-      setWidthError("Minimum report width is 300px");
+      setWidthError(
+        getCMSDataField(
+          cmsData,
+          "pagesReportBuilderBuilder.minimumReportWidthError",
+          "Minimum report width is 300px",
+        ),
+      );
       setTimeout(() => {
         setWidthError("");
       }, 3000);
@@ -312,7 +342,11 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
       >
         <Box width="100%">
           <InputLabel id="width-label" htmlFor="width-input">
-            Width
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.widthLabel",
+              "Width",
+            )}
           </InputLabel>
           <input
             type="text"
@@ -329,19 +363,31 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
                 lineHeight: "normal",
               }}
             >
-              The canvas height is fluid and expands automatically as content is
-              added.
+              {getCMSDataField(
+                cmsData,
+                "pagesReportBuilderBuilder.canvasHeightHint",
+                "The canvas height is fluid and expands automatically as content is added.",
+              )}
             </FormHelperText>
           )}
         </Box>
         <Box width="100%">
           <Typography fontSize="14px" fontWeight="700">
-            Padding
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.paddingLabel",
+              "Padding",
+            )}
           </Typography>
         </Box>
         <Box width="calc(50% - 4px)">
           <InputLabel id="l-padding-label" htmlFor="l-padding-input">
-            <LeftPadding /> Left
+            <LeftPadding />{" "}
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.leftPaddingLabel",
+              "Left",
+            )}
           </InputLabel>
           <input
             type="text"
@@ -353,7 +399,12 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
         </Box>
         <Box width="calc(50% - 4px)">
           <InputLabel id="t-padding-label" htmlFor="t-padding-input">
-            <TopPadding /> Top
+            <TopPadding />{" "}
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.topPaddingLabel",
+              "Top",
+            )}
           </InputLabel>
           <input
             type="text"
@@ -365,7 +416,12 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
         </Box>
         <Box width="calc(50% - 4px)">
           <InputLabel id="r-padding-label" htmlFor="r-padding-input">
-            <RightPadding /> Right
+            <RightPadding />{" "}
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.rightPaddingLabel",
+              "Right",
+            )}
           </InputLabel>
           <input
             type="text"
@@ -377,7 +433,12 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
         </Box>
         <Box width="calc(50% - 4px)">
           <InputLabel id="b-padding-label" htmlFor="b-padding-input">
-            <BottomPadding /> Bottom
+            <BottomPadding />{" "}
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.bottomPaddingLabel",
+              "Bottom",
+            )}
           </InputLabel>
           <input
             type="text"
@@ -401,7 +462,11 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
         }}
       >
         <Button variant="outlined" onClick={props.closePanel}>
-          Back
+          {getCMSDataField(
+            cmsData,
+            "pagesReportBuilderBuilder.backButton",
+            "Back",
+          )}
         </Button>
         <Button
           sx={{
@@ -411,7 +476,11 @@ export const SizePaddingPanel: React.FC<{ closePanel: () => void }> = (
           }}
           onClick={handleApply}
         >
-          Apply
+          {getCMSDataField(
+            cmsData,
+            "pagesReportBuilderBuilder.applyButton",
+            "Apply",
+          )}
         </Button>
       </Box>
     </React.Fragment>
@@ -422,6 +491,7 @@ export const BorderFillPanel: React.FC<{ closePanel: () => void }> = (
   props,
 ) => {
   const { id } = useParams<{ id: string }>();
+  const cmsData = useCMSData({ returnData: true });
 
   const reportData = useGetReport(id);
   const updateReport = usePatchReport(id);
@@ -528,7 +598,11 @@ export const BorderFillPanel: React.FC<{ closePanel: () => void }> = (
       <Box sx={panelSx}>
         <Box width="calc(50% - 4px)">
           <InputLabel id="stroke-label" htmlFor="stroke-input">
-            Stroke
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.strokeLabel",
+              "Stroke",
+            )}
           </InputLabel>
           <input
             type="text"
@@ -540,7 +614,11 @@ export const BorderFillPanel: React.FC<{ closePanel: () => void }> = (
         </Box>
         <Box width="calc(50% - 4px)">
           <InputLabel id="stroke-color-label" htmlFor="stroke-color-input">
-            Stroke Color
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.strokeColorLabel",
+              "Stroke Color",
+            )}
           </InputLabel>
           <input
             type="color"
@@ -551,7 +629,11 @@ export const BorderFillPanel: React.FC<{ closePanel: () => void }> = (
         </Box>
         <Box width="calc(50% - 4px)">
           <InputLabel id="border-radius-label" htmlFor="border-radius-input">
-            Corner Radius
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.cornerRadiusLabel",
+              "Corner Radius",
+            )}
           </InputLabel>
           <input
             type="text"
@@ -566,7 +648,11 @@ export const BorderFillPanel: React.FC<{ closePanel: () => void }> = (
             id="background-color-label"
             htmlFor="background-color-input"
           >
-            Background
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.backgroundLabel",
+              "Background",
+            )}
           </InputLabel>
           <input
             type="color"
@@ -589,7 +675,11 @@ export const BorderFillPanel: React.FC<{ closePanel: () => void }> = (
         }}
       >
         <Button variant="outlined" onClick={props.closePanel}>
-          Back
+          {getCMSDataField(
+            cmsData,
+            "pagesReportBuilderBuilder.backButton",
+            "Back",
+          )}
         </Button>
         <Button
           sx={{
@@ -599,7 +689,11 @@ export const BorderFillPanel: React.FC<{ closePanel: () => void }> = (
           }}
           onClick={handleApply}
         >
-          Apply
+          {getCMSDataField(
+            cmsData,
+            "pagesReportBuilderBuilder.applyButton",
+            "Apply",
+          )}
         </Button>
       </Box>
     </React.Fragment>

@@ -189,6 +189,84 @@ export function useCMSData(props: UseCMSDataProps) {
   const pagesChangelogCMSData = useStoreState(
     (state) => state.cms.pagesChangelog.data,
   );
+  const componentsRBChartSelectModalCMSAction = useStoreActions(
+    (actions) => actions.cms.componentsRBChartSelectModal.fetch,
+  );
+  const componentsRBChartSelectModalCMSData = useStoreState(
+    (state) => state.cms.componentsRBChartSelectModal.data,
+  );
+  const componentsRBTemplatesLayoutsViewCMSAction = useStoreActions(
+    (actions) => actions.cms.componentsRBTemplatesLayoutsView.fetch,
+  );
+  const componentsRBTemplatesLayoutsViewCMSData = useStoreState(
+    (state) => state.cms.componentsRBTemplatesLayoutsView.data,
+  );
+  const componentsRBAllAssetsEmptyCMSAction = useStoreActions(
+    (actions) => actions.cms.componentsRBAllAssetsEmpty.fetch,
+  );
+  const componentsRBAllAssetsEmptyCMSData = useStoreState(
+    (state) => state.cms.componentsRBAllAssetsEmpty.data,
+  );
+  const componentsRBAllAssetsToolbarCMSAction = useStoreActions(
+    (actions) => actions.cms.componentsRBAllAssetsToolbar.fetch,
+  );
+  const componentsRBAllAssetsToolbarCMSData = useStoreState(
+    (state) => state.cms.componentsRBAllAssetsToolbar.data,
+  );
+  const componentsRBSaveAsAssetModalCMSAction = useStoreActions(
+    (actions) => actions.cms.componentsRBSaveAsAssetModal.fetch,
+  );
+  const componentsRBSaveAsAssetModalCMSData = useStoreState(
+    (state) => state.cms.componentsRBSaveAsAssetModal.data,
+  );
+  const componentsRBSelectGridModalCMSAction = useStoreActions(
+    (actions) => actions.cms.componentsRBSelectGridModal.fetch,
+  );
+  const componentsRBSelectGridModalCMSData = useStoreState(
+    (state) => state.cms.componentsRBSelectGridModal.data,
+  );
+  const componentsRBSelectColumnModalCMSAction = useStoreActions(
+    (actions) => actions.cms.componentsRBSelectColumnModal.fetch,
+  );
+  const componentsRBSelectColumnModalCMSData = useStoreState(
+    (state) => state.cms.componentsRBSelectColumnModal.data,
+  );
+  const componentsRBComponentOptionsCMSAction = useStoreActions(
+    (actions) => actions.cms.componentsRBComponentOptions.fetch,
+  );
+  const componentsRBComponentOptionsCMSData = useStoreState(
+    (state) => state.cms.componentsRBComponentOptions.data,
+  );
+  const componentsRBGridElementsListCMSAction = useStoreActions(
+    (actions) => actions.cms.componentsRBGridElementsList.fetch,
+  );
+  const componentsRBGridElementsListCMSData = useStoreState(
+    (state) => state.cms.componentsRBGridElementsList.data,
+  );
+  const pagesReportBuilderMainCMSAction = useStoreActions(
+    (actions) => actions.cms.pagesReportBuilderMain.fetch,
+  );
+  const pagesReportBuilderMainCMSData = useStoreState(
+    (state) => state.cms.pagesReportBuilderMain.data,
+  );
+  const pagesReportBuilderBuilderCMSAction = useStoreActions(
+    (actions) => actions.cms.pagesReportBuilderBuilder.fetch,
+  );
+  const pagesReportBuilderBuilderCMSData = useStoreState(
+    (state) => state.cms.pagesReportBuilderBuilder.data,
+  );
+  const pagesReportBuilderPreviewCMSAction = useStoreActions(
+    (actions) => actions.cms.pagesReportBuilderPreview.fetch,
+  );
+  const pagesReportBuilderPreviewCMSData = useStoreState(
+    (state) => state.cms.pagesReportBuilderPreview.data,
+  );
+  const pagesReportBuilderExportViewCMSAction = useStoreActions(
+    (actions) => actions.cms.pagesReportBuilderExportView.fetch,
+  );
+  const pagesReportBuilderExportViewCMSData = useStoreState(
+    (state) => state.cms.pagesReportBuilderExportView.data,
+  );
 
   // GENERAL
 
@@ -298,6 +376,58 @@ export function useCMSData(props: UseCMSDataProps) {
         filterString: `locale=${currentLanguage}`,
       });
       pagesChangelogCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      componentsRBChartSelectModalCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      componentsRBTemplatesLayoutsViewCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      componentsRBAllAssetsEmptyCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      componentsRBAllAssetsToolbarCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      componentsRBSaveAsAssetModalCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      componentsRBSelectGridModalCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      componentsRBSelectColumnModalCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      componentsRBComponentOptionsCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      componentsRBGridElementsListCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesReportBuilderMainCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesReportBuilderBuilderCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesReportBuilderPreviewCMSAction({
+        isCMSfetch: true,
+        filterString: `locale=${currentLanguage}`,
+      });
+      pagesReportBuilderExportViewCMSAction({
         isCMSfetch: true,
         filterString: `locale=${currentLanguage}`,
       });
@@ -415,6 +545,58 @@ export function useCMSData(props: UseCMSDataProps) {
         key: "pagesChangelog",
         data: pagesChangelogCMSData || {},
       },
+      {
+        key: "componentsRBChartSelectModal",
+        data: componentsRBChartSelectModalCMSData || {},
+      },
+      {
+        key: "componentsRBTemplatesLayoutsView",
+        data: componentsRBTemplatesLayoutsViewCMSData || {},
+      },
+      {
+        key: "componentsRBAllAssetsEmpty",
+        data: componentsRBAllAssetsEmptyCMSData || {},
+      },
+      {
+        key: "componentsRBAllAssetsToolbar",
+        data: componentsRBAllAssetsToolbarCMSData || {},
+      },
+      {
+        key: "componentsRBSaveAsAssetModal",
+        data: componentsRBSaveAsAssetModalCMSData || {},
+      },
+      {
+        key: "componentsRBSelectGridModal",
+        data: componentsRBSelectGridModalCMSData || {},
+      },
+      {
+        key: "componentsRBSelectColumnModal",
+        data: componentsRBSelectColumnModalCMSData || {},
+      },
+      {
+        key: "componentsRBComponentOptions",
+        data: componentsRBComponentOptionsCMSData || {},
+      },
+      {
+        key: "componentsRBGridElementsList",
+        data: componentsRBGridElementsListCMSData || {},
+      },
+      {
+        key: "pagesReportBuilderMain",
+        data: pagesReportBuilderMainCMSData || {},
+      },
+      {
+        key: "pagesReportBuilderBuilder",
+        data: pagesReportBuilderBuilderCMSData || {},
+      },
+      {
+        key: "pagesReportBuilderPreview",
+        data: pagesReportBuilderPreviewCMSData || {},
+      },
+      {
+        key: "pagesReportBuilderExportView",
+        data: pagesReportBuilderExportViewCMSData || {},
+      },
       // GENERAL
       {
         key: "general",
@@ -461,6 +643,19 @@ export function useCMSData(props: UseCMSDataProps) {
     pagesGrantOverviewCMSData,
     pagesGrantTargetResultsCMSData,
     pagesGlossaryCMSData,
+    componentsRBChartSelectModalCMSData,
+    componentsRBTemplatesLayoutsViewCMSData,
+    componentsRBAllAssetsEmptyCMSData,
+    componentsRBAllAssetsToolbarCMSData,
+    componentsRBSaveAsAssetModalCMSData,
+    componentsRBSelectGridModalCMSData,
+    componentsRBSelectColumnModalCMSData,
+    componentsRBComponentOptionsCMSData,
+    componentsRBGridElementsListCMSData,
+    pagesReportBuilderMainCMSData,
+    pagesReportBuilderBuilderCMSData,
+    pagesReportBuilderPreviewCMSData,
+    pagesReportBuilderExportViewCMSData,
     // GENERAL
     generalCMSData,
   ]);

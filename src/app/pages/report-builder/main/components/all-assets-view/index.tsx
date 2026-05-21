@@ -5,6 +5,7 @@ import {
   useDeleteAsset,
   useDuplicateAsset,
 } from "app/hooks/queries/report-builder";
+import { useCMSData } from "app/hooks/useCMSData";
 import { CellComponent } from "tabulator-tables";
 import {
   Box,
@@ -21,6 +22,7 @@ import ColumnIcon from "app/assets/vectors/RBColumn.svg?react";
 import LetterTextIcon from "app/assets/vectors/Letter_Text.svg?react";
 import GridIcon from "app/assets/vectors/RBGrid.svg?react";
 import ImageIcon from "app/assets/vectors/RBImage.svg?react";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 import {
   Copy,
@@ -41,6 +43,7 @@ export const AllAssetsView: React.FC<{
 }> = ({ selectedView, assets, refetch }) => {
   const deleteAsset = useDeleteAsset();
   const duplicateAsset = useDuplicateAsset();
+  const cmsData = useCMSData({ returnData: true });
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
@@ -188,30 +191,50 @@ export const AllAssetsView: React.FC<{
             handleClose={handleClose}
             menuItems={[
               {
-                label: "Settings",
+                label: getCMSDataField(
+                  cmsData,
+                  "pagesReportBuilderMain.settingsMenuItem",
+                  "Settings",
+                ),
                 icon: <Settings />,
                 onClick: handleClose,
                 disabled: true,
               },
               {
-                label: "Share",
+                label: getCMSDataField(
+                  cmsData,
+                  "pagesReportBuilderMain.shareMenuItem",
+                  "Share",
+                ),
                 icon: <Share />,
                 onClick: handleClose,
                 disabled: true,
               },
               {
-                label: "Move to Folder",
+                label: getCMSDataField(
+                  cmsData,
+                  "pagesReportBuilderMain.moveToFolderMenuItem",
+                  "Move to Folder",
+                ),
                 icon: <Folder />,
                 onClick: handleClose,
                 disabled: true,
               },
               {
-                label: "Duplicate",
+                label: getCMSDataField(
+                  cmsData,
+                  "pagesReportBuilderMain.duplicateMenuItem",
+                  "Duplicate",
+                ),
                 icon: <Copy />,
                 onClick: handleDuplicate,
               },
               {
-                label: "Delete",
+                label: getCMSDataField(
+                  cmsData,
+                  "pagesReportBuilderMain.deleteMenuItem",
+                  "Delete",
+                ),
                 icon: <Backspace />,
                 onClick: handleDelete,
               },
@@ -238,7 +261,11 @@ export const AllAssetsView: React.FC<{
         columns={[
           { title: "", field: "id", visible: false },
           {
-            title: "Report name",
+            title: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.reportNameColumn",
+              "Report name",
+            ),
             field: "name",
             width: "30%",
             cellClick: handleTableCellClick,
@@ -246,21 +273,49 @@ export const AllAssetsView: React.FC<{
               `<u style="color: #3154F4;">${cell.getValue()}</u>`,
           },
 
-          { title: "Description", field: "description", width: "40%" },
           {
-            title: "Type",
+            title: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.descriptionColumn",
+              "Description",
+            ),
+            field: "description",
+            width: "40%",
+          },
+          {
+            title: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.typeColumn",
+              "Type",
+            ),
             field: "type",
             width: "10%",
             formatter: (cell) => {
               return capitalize(cell.getValue() as string);
             },
           },
-          { title: "Date Created", field: "dateCreated", width: "15%" },
-          { title: "Last Edited", field: "dateEdited", width: "15%" },
+          {
+            title: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.dateCreatedColumn",
+              "Date Created",
+            ),
+            field: "dateCreated",
+            width: "15%",
+          },
+          {
+            title: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.lastEditedColumn",
+              "Last Edited",
+            ),
+            field: "dateEdited",
+            width: "15%",
+          },
         ]}
       />
     );
-  }, [selectedView, assets, anchorEl]);
+  }, [selectedView, assets, anchorEl, cmsData]);
 
   return view;
 };

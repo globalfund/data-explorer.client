@@ -128,6 +128,58 @@ export interface CMSApiPagesGrantTargetResults {
   data: { [key: string]: { [key: string]: string } };
 }
 
+export interface CMSApiComponentsRBChartSelectModal {
+  data: { [key: string]: { [key: string]: string } };
+}
+
+export interface CMSApiComponentsRBTemplatesLayoutsView {
+  data: { [key: string]: { [key: string]: string } };
+}
+
+export interface CMSApiComponentsRBAllAssetsEmpty {
+  data: { [key: string]: { [key: string]: string } };
+}
+
+export interface CMSApiComponentsRBAllAssetsToolbar {
+  data: { [key: string]: { [key: string]: string } };
+}
+
+export interface CMSApiComponentsRBSaveAsAssetModal {
+  data: { [key: string]: { [key: string]: string } };
+}
+
+export interface CMSApiComponentsRBSelectGridModal {
+  data: { [key: string]: { [key: string]: string } };
+}
+
+export interface CMSApiComponentsRBSelectColumnModal {
+  data: { [key: string]: { [key: string]: string } };
+}
+
+export interface CMSApiComponentsRBComponentOptions {
+  data: { [key: string]: { [key: string]: string } };
+}
+
+export interface CMSApiComponentsRBGridElementsList {
+  data: { [key: string]: { [key: string]: string } };
+}
+
+export interface CMSApiPagesReportBuilderMain {
+  data: { [key: string]: { [key: string]: string } };
+}
+
+export interface CMSApiPagesReportBuilderBuilder {
+  data: { [key: string]: { [key: string]: string } };
+}
+
+export interface CMSApiPagesReportBuilderPreview {
+  data: { [key: string]: { [key: string]: string } };
+}
+
+export interface CMSApiPagesReportBuilderExportView {
+  data: { [key: string]: { [key: string]: string } };
+}
+
 export interface CMSApiCountrySummary {
   data: {
     meta: {

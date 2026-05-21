@@ -96,6 +96,19 @@ export interface CMSDataValueModel {
   pagesGrantGrantImplementation: { [key: string]: any };
   pagesGrantOverview: { [key: string]: any };
   pagesGrantTargetResults: { [key: string]: any };
+  componentsRBChartSelectModal: { [key: string]: any };
+  componentsRBTemplatesLayoutsView: { [key: string]: any };
+  componentsRBAllAssetsEmpty: { [key: string]: any };
+  componentsRBAllAssetsToolbar: { [key: string]: any };
+  componentsRBSaveAsAssetModal: { [key: string]: any };
+  componentsRBSelectGridModal: { [key: string]: any };
+  componentsRBSelectColumnModal: { [key: string]: any };
+  componentsRBComponentOptions: { [key: string]: any };
+  componentsRBGridElementsList: { [key: string]: any };
+  pagesReportBuilderMain: { [key: string]: any };
+  pagesReportBuilderBuilder: { [key: string]: any };
+  pagesReportBuilderPreview: { [key: string]: any };
+  pagesReportBuilderExportView: { [key: string]: any };
 }
 
 export interface CMSDataModel {
@@ -150,6 +163,19 @@ export const CMSData: CMSDataModel = {
     pagesGrantGrantImplementation: {},
     pagesGrantOverview: {},
     pagesGrantTargetResults: {},
+    componentsRBChartSelectModal: {},
+    componentsRBTemplatesLayoutsView: {},
+    componentsRBAllAssetsEmpty: {},
+    componentsRBAllAssetsToolbar: {},
+    componentsRBSaveAsAssetModal: {},
+    componentsRBSelectGridModal: {},
+    componentsRBSelectColumnModal: {},
+    componentsRBComponentOptions: {},
+    componentsRBGridElementsList: {},
+    pagesReportBuilderMain: {},
+    pagesReportBuilderBuilder: {},
+    pagesReportBuilderPreview: {},
+    pagesReportBuilderExportView: {},
   },
   setValue: action((state, payload: CMSDataValueModel) => {
     state.value = payload;

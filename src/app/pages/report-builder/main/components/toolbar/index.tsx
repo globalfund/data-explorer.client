@@ -9,15 +9,10 @@ import CardIcon from "app/assets/vectors/Card.svg?react";
 import ListIcon from "app/assets/vectors/List.svg?react";
 import InputAdornment from "@mui/material/InputAdornment";
 import NewFolderIcon from "app/assets/vectors/NewFolder.svg?react";
+import { useCMSData } from "app/hooks/useCMSData";
 import { RBDropdown } from "app/pages/report-builder/components/dropdown";
 import SettingsIcon from "app/assets/vectors/Settings_ButtonIcon.svg?react";
-
-const dropdownItems = [
-  { label: "Date Created DESC", value: "createdDate DESC" },
-  { label: "Date Created ASC", value: "createdDate ASC" },
-  { label: "Title ASC", value: "name ASC" },
-  { label: "Title DESC", value: "name DESC" },
-];
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 export const ReportBuilderToolbar: React.FC<{
   search: string;
@@ -38,6 +33,45 @@ export const ReportBuilderToolbar: React.FC<{
   onNewFolderClick,
   onNewReportClick,
 }) => {
+  const cmsData = useCMSData({ returnData: true });
+  const dropdownItems = React.useMemo(
+    () => [
+      {
+        label: getCMSDataField(
+          cmsData,
+          "pagesReportBuilderMain.sortDateCreatedDesc",
+          "Date Created DESC",
+        ),
+        value: "createdDate DESC",
+      },
+      {
+        label: getCMSDataField(
+          cmsData,
+          "pagesReportBuilderMain.sortDateCreatedAsc",
+          "Date Created ASC",
+        ),
+        value: "createdDate ASC",
+      },
+      {
+        label: getCMSDataField(
+          cmsData,
+          "pagesReportBuilderMain.sortTitleAsc",
+          "Title ASC",
+        ),
+        value: "name ASC",
+      },
+      {
+        label: getCMSDataField(
+          cmsData,
+          "pagesReportBuilderMain.sortTitleDesc",
+          "Title DESC",
+        ),
+        value: "name DESC",
+      },
+    ],
+    [cmsData],
+  );
+
   return (
     <Box
       sx={{
@@ -54,7 +88,11 @@ export const ReportBuilderToolbar: React.FC<{
       <Input
         value={search}
         disableUnderline
-        placeholder="Search"
+        placeholder={getCMSDataField(
+          cmsData,
+          "pagesReportBuilderMain.searchPlaceholder",
+          "Search",
+        )}
         onChange={(e) => setSearch(e.target.value)}
         startAdornment={
           <InputAdornment position="start">
@@ -88,7 +126,11 @@ export const ReportBuilderToolbar: React.FC<{
             borderBottom: `2px solid ${selectedView === "cards" ? "#0f62fe" : "#cfd4da"}`,
           }}
         >
-          Card
+          {getCMSDataField(
+            cmsData,
+            "pagesReportBuilderMain.cardViewButton",
+            "Card",
+          )}
         </Button>
         <Button
           endIcon={<ListIcon />}
@@ -97,7 +139,11 @@ export const ReportBuilderToolbar: React.FC<{
             borderBottom: `2px solid ${selectedView === "list" ? "#0f62fe" : "#cfd4da"}`,
           }}
         >
-          List
+          {getCMSDataField(
+            cmsData,
+            "pagesReportBuilderMain.listViewButton",
+            "List",
+          )}
         </Button>
       </Box>
       <RBDropdown
@@ -133,7 +179,11 @@ export const ReportBuilderToolbar: React.FC<{
         }}
         onClick={onNewReportClick}
       >
-        New Report
+        {getCMSDataField(
+          cmsData,
+          "pagesReportBuilderMain.newReportButton",
+          "New Report",
+        )}
       </Button>
     </Box>
   );

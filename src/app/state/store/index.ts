@@ -123,6 +123,21 @@ import pagesGrantDetail, {
 } from "app/state/api/action-reducers/cms/pagesGrantDetail";
 import pagesGrants from "app/state/api/action-reducers/cms/pagesGrants";
 import pagesHome from "app/state/api/action-reducers/cms/pagesHome";
+import {
+  componentsRBAllAssetsEmpty,
+  componentsRBAllAssetsToolbar,
+  componentsRBChartSelectModal,
+  componentsRBComponentOptions,
+  componentsRBGridElementsList,
+  componentsRBSaveAsAssetModal,
+  componentsRBSelectColumnModal,
+  componentsRBSelectGridModal,
+  componentsRBTemplatesLayoutsView,
+  pagesReportBuilderBuilder,
+  pagesReportBuilderExportView,
+  pagesReportBuilderMain,
+  pagesReportBuilderPreview,
+} from "app/state/api/action-reducers/cms/pagesReportBuilder";
 import pagesLocation, {
   pagesLocationAccessToFunding,
   pagesLocationGrantImplementation,
@@ -338,6 +353,19 @@ const storeContent: StoreModel = {
     pagesGrantGrantImplementation: persist(pagesGrantGrantImplementation),
     pagesGrantOverview: persist(pagesGrantOverview),
     pagesGrantTargetResults: persist(pagesGrantTargetResults),
+    componentsRBChartSelectModal: persist(componentsRBChartSelectModal),
+    componentsRBTemplatesLayoutsView: persist(componentsRBTemplatesLayoutsView),
+    componentsRBAllAssetsEmpty: persist(componentsRBAllAssetsEmpty),
+    componentsRBAllAssetsToolbar: persist(componentsRBAllAssetsToolbar),
+    componentsRBSaveAsAssetModal: persist(componentsRBSaveAsAssetModal),
+    componentsRBSelectGridModal: persist(componentsRBSelectGridModal),
+    componentsRBSelectColumnModal: persist(componentsRBSelectColumnModal),
+    componentsRBComponentOptions: persist(componentsRBComponentOptions),
+    componentsRBGridElementsList: persist(componentsRBGridElementsList),
+    pagesReportBuilderMain: persist(pagesReportBuilderMain),
+    pagesReportBuilderBuilder: persist(pagesReportBuilderBuilder),
+    pagesReportBuilderPreview: persist(pagesReportBuilderPreview),
+    pagesReportBuilderExportView: persist(pagesReportBuilderExportView),
     pagesGlossary: persist(pagesGlossary),
     pagesChangelog: persist(pagesChangelog),
     collections: {

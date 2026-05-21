@@ -15,9 +15,12 @@ import KPIBox from "../builder/components/kpi";
 import { CircularProgress, Typography } from "@mui/material";
 import SectionDivider from "../builder/components/section-divider";
 import ViewModeContainer from "../builder/components/order-container/view";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 export const ReportBuilderPreviewPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const cmsData = useCMSData({ returnData: true });
 
   const reportQuery = useGetReport(id);
   const reportData = reportQuery?.data?.data;
@@ -174,7 +177,11 @@ export const ReportBuilderPreviewPage: React.FC = () => {
         }}
       >
         <Typography variant="body2" color="white" marginBottom={"6.8px"}>
-          Prepared using
+          {getCMSDataField(
+            cmsData,
+            "pagesReportBuilderPreview.preparedUsing",
+            "Prepared using",
+          )}
         </Typography>
         <svg
           width="229"
@@ -352,13 +359,14 @@ export const ReportBuilderPreviewPage: React.FC = () => {
         color="white"
         marginTop={"30px"}
         textAlign={"center"}
-      >
-        The content produced using the The Global Fund Report Builder is
-        prepared by the user and does not constitute an official output or
-        <br />
-        approved information from The Global Fund. TGF is not responsible for
-        the accuracy or validity of the content generated through this tool.
-      </Typography>
+        dangerouslySetInnerHTML={{
+          __html: getCMSDataField(
+            cmsData,
+            "pagesReportBuilderPreview.disclaimer",
+            "<span>The content produced using the The Global Fund Report Builder is prepared by the user and does not constitute an official output or <br /> approved information from The Global Fund. TGF is not responsible for the accuracy or validity of the content generated through this tool.</span>",
+          ),
+        }}
+      ></Typography>
     </Box>
   );
 };

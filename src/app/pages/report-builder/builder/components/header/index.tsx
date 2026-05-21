@@ -32,6 +32,8 @@ import { usePatchReport } from "app/hooks/queries/report-builder";
 import { useDebounce } from "react-use";
 import { useStoreState } from "app/state/store/hooks";
 import { exportReportFromServer } from "app/utils/exportReport";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 export const menuSx = {
   zIndex: 1400,
@@ -61,6 +63,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [anchorEl2, setAnchorEl2] = React.useState<null | HTMLElement>(null);
+  const cmsData = useCMSData({ returnData: true });
 
   const reportState = useStoreState((state) => state.RBReportItemsState);
 
@@ -84,20 +87,38 @@ export const ReportBuilderPageHeader: React.FC = () => {
 
   const handleCopyUrlLink = () => {
     navigator.clipboard.writeText(window.location.href);
-    setSnackbarMessage("Link Copied!");
+    setSnackbarMessage(
+      getCMSDataField(
+        cmsData,
+        "pagesReportBuilderBuilder.linkCopiedMessage",
+        "Link Copied!",
+      ),
+    );
     setSnackbarOpen(true);
   };
 
   const handleSendViaEmail = () => {
     window.open(`mailto:?body=${window.location.href}`, "_blank");
-    setSnackbarMessage("Directed to Email!");
+    setSnackbarMessage(
+      getCMSDataField(
+        cmsData,
+        "pagesReportBuilderBuilder.directedToEmailMessage",
+        "Directed to Email!",
+      ),
+    );
     setSnackbarOpen(true);
   };
 
   const handleDownloadShareableFile =
     (type: "png" | "svg" | "pdf") => async () => {
       await exportReportFromServer(id!, type);
-      setSnackbarMessage(`${type.toUpperCase()} downloaded!`);
+      setSnackbarMessage(
+        `${type.toUpperCase()} ${getCMSDataField(
+          cmsData,
+          "pagesReportBuilderBuilder.downloadedMessageSuffix",
+          "downloaded!",
+        )}`,
+      );
       setSnackbarOpen(true);
     };
 
@@ -210,10 +231,18 @@ export const ReportBuilderPageHeader: React.FC = () => {
                   to="/report-builder"
                   startIcon={<LibraryIcon />}
                 >
-                  My Reports
+                  {getCMSDataField(
+                    cmsData,
+                    "pagesReportBuilderBuilder.myReportsButton",
+                    "My Reports",
+                  )}
                 </Button>
                 <Button variant="outlined" startIcon={<FolderIcon />}>
-                  Assets
+                  {getCMSDataField(
+                    cmsData,
+                    "pagesReportBuilderBuilder.assetsButton",
+                    "Assets",
+                  )}
                 </Button>
               </Box>
             </Box>
@@ -248,20 +277,38 @@ export const ReportBuilderPageHeader: React.FC = () => {
                     >
                       <LoaderSpinner />
                     </Box>
-                    Saving...
+                    {getCMSDataField(
+                      cmsData,
+                      "pagesReportBuilderBuilder.savingStatus",
+                      "Saving...",
+                    )}
                   </Box>
                 ) : updateReport.isSuccess ? (
                   <Box component="span">
-                    <CompleteIcon /> Saved
+                    <CompleteIcon />{" "}
+                    {getCMSDataField(
+                      cmsData,
+                      "pagesReportBuilderBuilder.savedStatus",
+                      "Saved",
+                    )}
                   </Box>
                 ) : updateReport.isError ? (
                   <Box component={"span"}>
-                    <ErrorIcon /> Couldn&apos;t save changes
+                    <ErrorIcon />{" "}
+                    {getCMSDataField(
+                      cmsData,
+                      "pagesReportBuilderBuilder.saveErrorStatus",
+                      "Couldn't save changes",
+                    )}
                   </Box>
                 ) : updateReport.isPaused ? (
                   <Box component={"span"}>
                     <WarningIcon />
-                    Offline — changes will sync when connection is restored
+                    {getCMSDataField(
+                      cmsData,
+                      "pagesReportBuilderBuilder.offlineStatus",
+                      "Offline — changes will sync when connection is restored",
+                    )}
                   </Box>
                 ) : null}
               </Typography>
@@ -285,7 +332,15 @@ export const ReportBuilderPageHeader: React.FC = () => {
                   },
                 }}
               >
-                <Tooltip title="Preview" enterDelay={500} leaveDelay={200}>
+                <Tooltip
+                  title={getCMSDataField(
+                    cmsData,
+                    "pagesReportBuilderBuilder.previewTooltip",
+                    "Preview",
+                  )}
+                  enterDelay={500}
+                  leaveDelay={200}
+                >
                   <IconButton
                     component={Link}
                     to={`/report-builder/reports/${id}`}
@@ -293,7 +348,15 @@ export const ReportBuilderPageHeader: React.FC = () => {
                     <PreviewIcon />
                   </IconButton>
                 </Tooltip>
-                <Tooltip title="Export" enterDelay={500} leaveDelay={200}>
+                <Tooltip
+                  title={getCMSDataField(
+                    cmsData,
+                    "pagesReportBuilderBuilder.exportTooltip",
+                    "Export",
+                  )}
+                  enterDelay={500}
+                  leaveDelay={200}
+                >
                   <IconButton
                     onClick={handleClick}
                     sx={
@@ -328,15 +391,27 @@ export const ReportBuilderPageHeader: React.FC = () => {
               >
                 <MenuItem onClick={handleCopyUrlLink}>
                   <CopyIcon />
-                  Copy URL Link
+                  {getCMSDataField(
+                    cmsData,
+                    "pagesReportBuilderBuilder.copyUrlLinkMenuItem",
+                    "Copy URL Link",
+                  )}
                 </MenuItem>
                 <MenuItem onClick={handleSendViaEmail}>
                   <EmailIcon />
-                  Send via Email
+                  {getCMSDataField(
+                    cmsData,
+                    "pagesReportBuilderBuilder.sendViaEmailMenuItem",
+                    "Send via Email",
+                  )}
                 </MenuItem>
                 <MenuItem onClick={handleClick2}>
                   <DownloadIcon />
-                  Download Shareable File
+                  {getCMSDataField(
+                    cmsData,
+                    "pagesReportBuilderBuilder.downloadShareableFileMenuItem",
+                    "Download Shareable File",
+                  )}
                   <ChevronRight />
                 </MenuItem>
               </Menu>
@@ -358,15 +433,27 @@ export const ReportBuilderPageHeader: React.FC = () => {
               >
                 <MenuItem onClick={handleDownloadShareableFile("png")}>
                   <PNGIcon />
-                  PNG
+                  {getCMSDataField(
+                    cmsData,
+                    "pagesReportBuilderBuilder.pngFileMenuItem",
+                    "PNG",
+                  )}
                 </MenuItem>
                 <MenuItem onClick={handleDownloadShareableFile("svg")}>
                   <SVGIcon />
-                  SVG
+                  {getCMSDataField(
+                    cmsData,
+                    "pagesReportBuilderBuilder.svgFileMenuItem",
+                    "SVG",
+                  )}
                 </MenuItem>
                 <MenuItem onClick={handleDownloadShareableFile("pdf")}>
                   <PDFIcon />
-                  PDF
+                  {getCMSDataField(
+                    cmsData,
+                    "pagesReportBuilderBuilder.pdfFileMenuItem",
+                    "PDF",
+                  )}
                 </MenuItem>
               </Menu>
             </Box>

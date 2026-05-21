@@ -51,7 +51,7 @@ const StyledMenuItem = styled(MenuItem)(() => ({
   fontSize: "16px",
   padding: "12px 16px",
   justifyContent: "space-between",
-  color: appColors.SEARCH.DROPDOWN_ITEM_BACKGROUND_COLOR,
+  color: appColors.SEARCH.DROPDOWN_ITEM_COLOR,
   "&:hover": {
     background: "#eff1fe",
   },
@@ -121,7 +121,7 @@ export const RBDropdown: React.FC<RBDropdownProps> = (props) => {
           },
         }}
       >
-        {selectedItem?.icon ?? props.fixedIcon}
+        {props.fixedIcon}
         <span
           style={{ letterSpacing: "0", fontSize: props.fontSize ?? "14px" }}
         >

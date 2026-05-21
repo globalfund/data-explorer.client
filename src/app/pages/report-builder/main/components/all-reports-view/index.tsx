@@ -13,7 +13,9 @@ import MoreVert from "@mui/icons-material/MoreVert";
 import SharedIcon from "app/assets/vectors/Shared.svg?react";
 import PublicIcon from "app/assets/vectors/Public.svg?react";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useCMSData } from "app/hooks/useCMSData";
 import { ReportBuilderItemMenu } from "app/pages/report-builder/main/components/item-menu";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 import {
   usePatchReport2,
   useDuplicateReport,
@@ -54,6 +56,7 @@ export const AllReportsView: React.FC<{
   const navigate = useNavigate();
   const updateReport = usePatchReport2();
   const duplicateReport = useDuplicateReport();
+  const cmsData = useCMSData({ returnData: true });
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const [anchorElTableId, setAnchorElTableId] = React.useState<string | null>(
@@ -337,8 +340,20 @@ export const AllReportsView: React.FC<{
                   },
                 }}
               >
-                <Button onClick={handleEditClick(item.id)}>Edit</Button>
-                <Button onClick={handleItemClick(item.id)}>Preview</Button>
+                <Button onClick={handleEditClick(item.id)}>
+                  {getCMSDataField(
+                    cmsData,
+                    "pagesReportBuilderMain.editButton",
+                    "Edit",
+                  )}
+                </Button>
+                <Button onClick={handleItemClick(item.id)}>
+                  {getCMSDataField(
+                    cmsData,
+                    "pagesReportBuilderMain.previewButton",
+                    "Preview",
+                  )}
+                </Button>
                 <IconButton id={item.id} onClick={handleItemMenuClick}>
                   <MoreVert />
                 </IconButton>
@@ -350,34 +365,58 @@ export const AllReportsView: React.FC<{
             handleClose={handleClose}
             menuItems={[
               {
-                label: "Rename",
+                label: getCMSDataField(
+                  cmsData,
+                  "pagesReportBuilderMain.renameMenuItem",
+                  "Rename",
+                ),
                 icon: <Pencil />,
                 onClick: handleRename,
               },
               {
-                label: "Share",
+                label: getCMSDataField(
+                  cmsData,
+                  "pagesReportBuilderMain.shareMenuItem",
+                  "Share",
+                ),
                 icon: <Share />,
                 onClick: handleClose,
                 disabled: true,
               },
               {
-                label: "Move to Folder",
+                label: getCMSDataField(
+                  cmsData,
+                  "pagesReportBuilderMain.moveToFolderMenuItem",
+                  "Move to Folder",
+                ),
                 icon: <Folder />,
                 onClick: handleClose,
                 disabled: true,
               },
               {
-                label: "Duplicate",
+                label: getCMSDataField(
+                  cmsData,
+                  "pagesReportBuilderMain.duplicateMenuItem",
+                  "Duplicate",
+                ),
                 icon: <Copy />,
                 onClick: handleDuplicate,
               },
               {
-                label: "Details",
+                label: getCMSDataField(
+                  cmsData,
+                  "pagesReportBuilderMain.detailsMenuItem",
+                  "Details",
+                ),
                 icon: <Details />,
                 onClick: handleDetailsClick,
               },
               {
-                label: "Delete",
+                label: getCMSDataField(
+                  cmsData,
+                  "pagesReportBuilderMain.deleteMenuItem",
+                  "Delete",
+                ),
                 icon: <Backspace />,
                 onClick: handleDelete,
               },
@@ -404,7 +443,11 @@ export const AllReportsView: React.FC<{
           columns={[
             { title: "", field: "id", visible: false },
             {
-              title: "Report name",
+              title: getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.reportNameColumn",
+                "Report name",
+              ),
               field: "name",
               width: "30%",
               cellClick: handleTableCellClick,
@@ -426,11 +469,39 @@ export const AllReportsView: React.FC<{
                   ),
                 ),
             },
-            { title: "Description", field: "description", width: "30%" },
-            { title: "Date Created", field: "dateCreated", width: "15%" },
-            { title: "Last Edited", field: "dateEdited", width: "15%" },
             {
-              title: "Actions",
+              title: getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.descriptionColumn",
+                "Description",
+              ),
+              field: "description",
+              width: "30%",
+            },
+            {
+              title: getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.dateCreatedColumn",
+                "Date Created",
+              ),
+              field: "dateCreated",
+              width: "15%",
+            },
+            {
+              title: getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.lastEditedColumn",
+                "Last Edited",
+              ),
+              field: "dateEdited",
+              width: "15%",
+            },
+            {
+              title: getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.actionsColumn",
+                "Actions",
+              ),
               field: "actions",
               width: "10%",
               formatter: (cell: CellComponent) => {
@@ -451,7 +522,7 @@ export const AllReportsView: React.FC<{
         />
       </React.Fragment>
     );
-  }, [selectedView, reports, anchorEl, selectedItemForRenaming]);
+  }, [selectedView, reports, anchorEl, selectedItemForRenaming, cmsData]);
 
   React.useEffect(() => {
     if (selectedView === "list" && selectedItemForRenaming) {
@@ -485,35 +556,59 @@ export const AllReportsView: React.FC<{
         handleClose={handleCloseTable}
         menuItems={[
           {
-            label: "Rename",
+            label: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.renameMenuItem",
+              "Rename",
+            ),
             icon: <Pencil />,
             onClick: handleRename,
           },
           {
-            label: "Share",
+            label: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.shareMenuItem",
+              "Share",
+            ),
             icon: <Share />,
             onClick: handleCloseTable,
             disabled: true,
           },
           {
-            label: "Move to Folder",
+            label: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.moveToFolderMenuItem",
+              "Move to Folder",
+            ),
             icon: <Folder />,
             onClick: handleCloseTable,
             disabled: true,
           },
           {
-            label: "Duplicate",
+            label: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.duplicateMenuItem",
+              "Duplicate",
+            ),
             icon: <Copy />,
             onClick: handleDuplicate,
           },
           {
-            label: "Details",
+            label: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.detailsMenuItem",
+              "Details",
+            ),
             icon: <Details />,
             onClick: handleCloseTable,
             disabled: true,
           },
           {
-            label: "Delete",
+            label: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.deleteMenuItem",
+              "Delete",
+            ),
             icon: <Backspace />,
             onClick: handleDelete,
           },

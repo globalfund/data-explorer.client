@@ -5,10 +5,12 @@ import Button from "@mui/material/Button";
 import Add from "@mui/icons-material/Add";
 import { Table } from "app/components/table";
 import Typography from "@mui/material/Typography";
+import { useCMSData } from "app/hooks/useCMSData";
 import {
   ReportBuilderLibraryLayouts,
   ReportBuilderLibraryTemplates,
 } from "app/pages/report-builder/main/data";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 const TemplatesIcon = () => (
   <svg width="24" height="25" viewBox="0 0 24 25" fill="none">
@@ -38,6 +40,7 @@ export const TemplatesLayoutsView: React.FC<{
   selectedView: "cards" | "list";
   setNewReportModalOpen: (open: boolean) => void;
 }> = ({ selectedView, setNewReportModalOpen }) => {
+  const cmsData = useCMSData({ returnData: true });
   const [selectedSubView, setSelectedSubView] = React.useState<
     "templates" | "layouts"
   >("templates");
@@ -104,7 +107,12 @@ export const TemplatesLayoutsView: React.FC<{
                     {item.description}
                   </Typography>
                   <Typography variant="body2" mb="20px">
-                    By {item.owner}
+                    {getCMSDataField(
+                      cmsData,
+                      "componentsRBTemplatesLayoutsView.byOwnerPrefix",
+                      "By",
+                    )}{" "}
+                    {item.owner}
                   </Typography>
                 </Box>
                 <Button
@@ -113,8 +121,22 @@ export const TemplatesLayoutsView: React.FC<{
                   startIcon={<Add fontSize="small" />}
                   onClick={() => setNewReportModalOpen(true)}
                 >
-                  Insert{" "}
-                  {selectedSubView === "templates" ? "Template" : "Layout"}
+                  {getCMSDataField(
+                    cmsData,
+                    "componentsRBTemplatesLayoutsView.insertButtonPrefix",
+                    "Insert",
+                  )}{" "}
+                  {selectedSubView === "templates"
+                    ? getCMSDataField(
+                        cmsData,
+                        "componentsRBTemplatesLayoutsView.templateSingular",
+                        "Template",
+                      )
+                    : getCMSDataField(
+                        cmsData,
+                        "componentsRBTemplatesLayoutsView.layoutSingular",
+                        "Layout",
+                      )}
                 </Button>
               </Box>
             </Grid>
@@ -134,17 +156,45 @@ export const TemplatesLayoutsView: React.FC<{
         }))}
         columns={[
           {
-            title: "Title",
+            title: getCMSDataField(
+              cmsData,
+              "componentsRBTemplatesLayoutsView.titleColumn",
+              "Title",
+            ),
             field: "title",
             width: "30%",
           },
-          { title: "Description", field: "description", width: "40%" },
-          { title: "Date Created", field: "dateCreated", width: "15%" },
-          { title: "Last Edited", field: "dateEdited", width: "15%" },
+          {
+            title: getCMSDataField(
+              cmsData,
+              "componentsRBTemplatesLayoutsView.descriptionColumn",
+              "Description",
+            ),
+            field: "description",
+            width: "40%",
+          },
+          {
+            title: getCMSDataField(
+              cmsData,
+              "componentsRBTemplatesLayoutsView.dateCreatedColumn",
+              "Date Created",
+            ),
+            field: "dateCreated",
+            width: "15%",
+          },
+          {
+            title: getCMSDataField(
+              cmsData,
+              "componentsRBTemplatesLayoutsView.lastEditedColumn",
+              "Last Edited",
+            ),
+            field: "dateEdited",
+            width: "15%",
+          },
         ]}
       />
     );
-  }, [selectedView, data, selectedSubView]);
+  }, [selectedView, data, selectedSubView, cmsData]);
 
   return (
     <React.Fragment>
@@ -170,7 +220,11 @@ export const TemplatesLayoutsView: React.FC<{
             ".MuiButton-startIcon": { path: { stroke: "#161616" } },
           }}
         >
-          Templates
+          {getCMSDataField(
+            cmsData,
+            "componentsRBTemplatesLayoutsView.templatesTab",
+            "Templates",
+          )}
         </Button>
         <Button
           startIcon={<LayoutsIcon />}
@@ -182,7 +236,11 @@ export const TemplatesLayoutsView: React.FC<{
             borderTop: `1px solid ${selectedSubView === "layouts" ? "#0f62fe" : "#f1f3f5"}`,
           }}
         >
-          Layouts
+          {getCMSDataField(
+            cmsData,
+            "componentsRBTemplatesLayoutsView.layoutsTab",
+            "Layouts",
+          )}
         </Button>
       </Box>
       {view}

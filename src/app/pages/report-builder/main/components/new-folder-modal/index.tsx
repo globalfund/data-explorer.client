@@ -5,6 +5,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 export const ReportBuilderNewFolderModal: React.FC<{
   open: boolean;
@@ -12,6 +14,8 @@ export const ReportBuilderNewFolderModal: React.FC<{
   onClose: () => void;
   setNameValue: (value: string) => void;
 }> = ({ open, onClose, nameValue, setNameValue }) => {
+  const cmsData = useCMSData({ returnData: true });
+
   return (
     <Modal disableScrollLock open={open} onClose={onClose}>
       <Box
@@ -36,7 +40,11 @@ export const ReportBuilderNewFolderModal: React.FC<{
           }}
         >
           <Typography variant="h6" fontSize="16px">
-            Create Folder
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.createFolderTitle",
+              "Create Folder",
+            )}
           </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon fontSize="small" />
@@ -48,7 +56,11 @@ export const ReportBuilderNewFolderModal: React.FC<{
           }}
         >
           <Typography variant="body2" marginBottom="5px" color="#525252">
-            Folder Name
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.folderNameLabel",
+              "Folder Name",
+            )}
           </Typography>
           <Box
             sx={{
@@ -68,7 +80,11 @@ export const ReportBuilderNewFolderModal: React.FC<{
             <input
               type="text"
               value={nameValue}
-              placeholder="Folder name"
+              placeholder={getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.folderNamePlaceholder",
+                "Folder name",
+              )}
               onChange={(e) => setNameValue(e.target.value)}
             />
           </Box>
@@ -82,7 +98,11 @@ export const ReportBuilderNewFolderModal: React.FC<{
             }}
           >
             <Button variant="outlined" onClick={onClose}>
-              Cancel
+              {getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.cancelButton",
+                "Cancel",
+              )}
             </Button>
             <Button
               variant="contained"
@@ -94,7 +114,11 @@ export const ReportBuilderNewFolderModal: React.FC<{
                 background: "#3154f4",
               }}
             >
-              Create Folder
+              {getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.createFolderButton",
+                "Create Folder",
+              )}
             </Button>
           </Box>
         </Box>
