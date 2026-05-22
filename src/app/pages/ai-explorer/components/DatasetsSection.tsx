@@ -1,10 +1,13 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import { DatasetGroup } from "app/pages/ai-explorer/types";
 import { GLOBAL_FUND_DATASET_GROUPS } from "app/pages/ai-explorer/datasets";
 import { SectionAccordion } from "app/pages/ai-explorer/components/SectionAccordion";
 import { DatasetCard } from "app/pages/ai-explorer/components/dataset-profile";
+import { ProfileDatasetModal } from "app/pages/datasets/common/profile-modal";
 
 const DatasetGroupSection: React.FC<{ group: DatasetGroup }> = ({ group }) => (
   <SectionAccordion
@@ -15,7 +18,7 @@ const DatasetGroupSection: React.FC<{ group: DatasetGroup }> = ({ group }) => (
     detailsSx={{ p: 0 }}
     defaultExpanded
   >
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
       {group.datasets.map((ds) => (
         <DatasetCard key={ds.id} dataset={ds} />
       ))}
@@ -33,7 +36,7 @@ const GlobalFundSection: React.FC = () => (
     detailsSx={{ p: 0 }}
     defaultExpanded
   >
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
       {GLOBAL_FUND_DATASET_GROUPS.map((group) => (
         <DatasetGroupSection key={group.id} group={group} />
       ))}
@@ -54,24 +57,48 @@ const ExternalSourcesSection: React.FC = () => (
       sources including the World Health Organization (WHO), World Bank, and
       others. You will also be able to bring your own data and combine it with
       Global Fund datasets for richer, more contextual analysis. Stay tuned for
-      updates.
+      updates. Currently, you can profile your own datasets using the "Profile your dataset"
+      button above, which will generate a dataset profile that you can use to explore and analyze your data in the AI Explorer.
     </Typography>
   </SectionAccordion>
 );
 
-export const DatasetsSection: React.FC = () => (
-  <SectionAccordion
-    id="ai-explorer-datasets"
-    feedbackId="datasets-section"
-    feedbackLabel="Datasets"
-    title="Datasets"
-    subTitle="Information about available data."
-    detailsSx={{ p: 0 }}
-    defaultExpanded
-  >
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <GlobalFundSection />
-      <ExternalSourcesSection />
-    </Box>
-  </SectionAccordion>
-);
+export const DatasetsSection: React.FC = () => {
+  const [profileModalOpen, setProfileModalOpen] = React.useState(false);
+
+  return (
+    <SectionAccordion
+      id="ai-explorer-datasets"
+      feedbackId="datasets-section"
+      feedbackLabel="Datasets"
+      title="Datasets"
+      subTitle="Information about available data."
+      detailsSx={{ p: 0 }}
+      defaultExpanded
+      headerRightContent={
+        <Button
+          size="small"
+          variant="outlined"
+          startIcon={<BarChartIcon fontSize="small" />}
+          onClick={(e) => {
+            e.stopPropagation();
+            setProfileModalOpen(true);
+          }}
+          data-cy="profile-dataset-btn"
+        >
+          Profile your dataset
+        </Button>
+      }
+    >
+      <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+        <GlobalFundSection />
+        <ExternalSourcesSection />
+      </Box>
+
+      <ProfileDatasetModal
+        open={profileModalOpen}
+        onClose={() => setProfileModalOpen(false)}
+      />
+    </SectionAccordion>
+  );
+};

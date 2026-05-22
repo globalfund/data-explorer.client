@@ -42,6 +42,12 @@ const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => (
   </Box>
 );
 
+const SimpleDatasetCard: React.FC<{ dataset: Dataset }> = ({ dataset }) => (
+  <Typography variant="body2" color="text.secondary" lineHeight={1.75}>
+    <br />{dataset.description}
+  </Typography>
+);
+
 export const DatasetCard: React.FC<DatasetCardProps> = ({ dataset }) => {
   const [expanded, setExpanded] = useState(false);
   const [profile, setProfile] = useState<DatasetProfile | null>(null);
@@ -98,7 +104,7 @@ export const DatasetCard: React.FC<DatasetCardProps> = ({ dataset }) => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            width: "100%",
+            // width: "100%",
             pr: 2,
           }}
         >
@@ -106,7 +112,11 @@ export const DatasetCard: React.FC<DatasetCardProps> = ({ dataset }) => {
             {dataset.name}
           </Typography>
           <Typography variant="caption" color="text.secondary" noWrap>
-            {dataset.description}
+            { // the first 80 characters of the description, to prevent overflow, followed by ellipsis.
+              dataset.description.length > 80
+                ? dataset.description.slice(0, 77) + "..."
+                : dataset.description
+            }
           </Typography>
         </Box>
       </AccordionSummary>
@@ -118,15 +128,19 @@ export const DatasetCard: React.FC<DatasetCardProps> = ({ dataset }) => {
         )}
 
         {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
+          error === "Failed to fetch profile: Not Found" ? (
+            <SimpleDatasetCard dataset={dataset} />
+          ) : (
+            <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
+          )
         )}
+
 
         {profile && (
           <Box>
             <DatasetProfileHeader
               datasetName={dataset.name}
+              datasetDescription={dataset.description}
               profile={profile}
             />
 

@@ -10,6 +10,7 @@ import { DatasetProfile } from "./types";
 
 interface DatasetProfileHeaderProps {
   datasetName: string;
+  datasetDescription: string;
   profile: DatasetProfile;
 }
 
@@ -37,6 +38,7 @@ const StatItem: React.FC<{
 
 export const DatasetProfileHeader: React.FC<DatasetProfileHeaderProps> = ({
   datasetName,
+  datasetDescription,
   profile,
 }) => {
   const formatMemory = (mb: number) => {
@@ -57,6 +59,8 @@ export const DatasetProfileHeader: React.FC<DatasetProfileHeaderProps> = ({
       </Box>
 
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+        {datasetDescription}
+        <br />
         {profile.summary}
       </Typography>
 
