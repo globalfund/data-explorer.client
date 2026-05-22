@@ -59,6 +59,8 @@ export const AllReportsView: React.FC<{
   const [anchorElTableId, setAnchorElTableId] = React.useState<string | null>(
     null,
   );
+
+  const [imageVersion, setImageVersion] = React.useState(Date.now());
   const anchorElTable = React.useMemo(() => {
     if (!anchorElTableId) return null;
     return {
@@ -88,6 +90,10 @@ export const AllReportsView: React.FC<{
     }
     return null;
   };
+
+  React.useEffect(() => {
+    setImageVersion(Date.now());
+  }, []);
 
   const handleRename = () => {
     const id = getAnchorElId();
@@ -242,7 +248,7 @@ export const AllReportsView: React.FC<{
                     border: "1px solid #cfd4da",
                     div: {
                       width: "calc(100% - 10px)",
-                      backgroundImage: `url(${import.meta.env.VITE_API}/report-thumbnail/${item.id}.png)`,
+                      backgroundImage: `url(${import.meta.env.VITE_API}/report-thumbnail/${item.id}.png?v=${imageVersion})`,
                       backgroundRepeat: "no-repeat",
                       backgroundPosition: "center",
                       backgroundSize: "contain",
