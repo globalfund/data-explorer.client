@@ -40,6 +40,7 @@ export interface ReportCardProps {
   description: string;
   createdDate: string;
   updatedDate: string;
+  imageVersion: number;
   selectedItemForRenaming: string | null;
   setSelectedItemForRenaming: (id: string | null) => void;
   handleRenameEnter: (id: string, type: "report" | "folder") => void;

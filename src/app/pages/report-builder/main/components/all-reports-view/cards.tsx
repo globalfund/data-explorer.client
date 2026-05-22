@@ -16,6 +16,7 @@ export const ReportCard: React.FC<ReportCardProps> = ({
   id,
   name,
   description,
+  imageVersion,
   handleItemClick,
   handleEditClick,
   handleRenameEnter,
@@ -36,7 +37,7 @@ export const ReportCard: React.FC<ReportCardProps> = ({
             justifyContent: "center",
             div: {
               width: "calc(100% - 10px)",
-              backgroundImage: `url(${import.meta.env.VITE_API}/report-thumbnail/${id}.png)`,
+              backgroundImage: `url(${import.meta.env.VITE_API}/report-thumbnail/${id}.png?v=${imageVersion})`,
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
               backgroundSize: "contain",
