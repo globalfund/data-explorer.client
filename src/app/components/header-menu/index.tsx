@@ -239,7 +239,7 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
       ))}
       <Divider
         orientation="vertical"
-        sx={{ borderColor: "#98A1AA", height: "30px", mt: "15px" }}
+        sx={{ borderColor: "#98A1AA", height: "30px", mt: "23px" }}
       />
       <HeaderMenuButton
         id={PAGES[3].id}

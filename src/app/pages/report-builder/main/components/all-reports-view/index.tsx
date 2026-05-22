@@ -47,6 +47,8 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
   const [anchorElTableId, setAnchorElTableId] = React.useState<string | null>(
     null,
   );
+
+  const [imageVersion, setImageVersion] = React.useState(Date.now());
   const anchorElTable = React.useMemo(() => {
     if (!anchorElTableId) return null;
     return {
@@ -267,6 +269,7 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
                   <ReportCard
                     id={item.id}
                     name={item.name}
+                    imageVersion={imageVersion}
                     description={item.description}
                     createdDate={item.createdDate}
                     updatedDate={item.updatedDate}
@@ -427,6 +430,10 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
       }, 100);
     }
   }, [selectedView, selectedItemForRenaming]);
+
+  React.useEffect(() => {
+    setImageVersion(Date.now());
+  }, []);
 
   return (
     <React.Fragment>

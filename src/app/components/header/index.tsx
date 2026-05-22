@@ -1,7 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import { HeaderMenu } from "app/components/header-menu";
@@ -13,6 +13,12 @@ export const Header: React.FC = () => {
   const mobile = useMediaQuery("(max-width: 767px)");
   const [searchOpen, setSearchOpen] = React.useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
+  const location = useLocation();
+
+  const isAuthPage = React.useMemo(() => {
+    return location.pathname === "/sign-in" || location.pathname === "/sign-up";
+  }, [location.pathname]);
 
   return (
     <Box sx={{ zIndex: 1000, flexGrow: 1, top: 0, position: "sticky" }}>
@@ -40,10 +46,13 @@ export const Header: React.FC = () => {
                 <HeaderToolbarLogo />
               </NavLink>
             )}
-            <HeaderMenu
-              mobileMenuOpen={mobileMenuOpen}
-              setMobileMenuOpen={setMobileMenuOpen}
-            />
+
+            {isAuthPage ? null : (
+              <HeaderMenu
+                mobileMenuOpen={mobileMenuOpen}
+                setMobileMenuOpen={setMobileMenuOpen}
+              />
+            )}
             <HeaderSearch
               searchOpen={searchOpen}
               setSearchOpen={setSearchOpen}

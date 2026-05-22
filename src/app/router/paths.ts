@@ -19,7 +19,9 @@ export type RouteComponentName =
   | "GrantImplementationPage"
   | "AnnualResultsPage"
   | "GlossaryPage"
-  | "ChangelogPage";
+  | "ChangelogPage"
+  | "SignIn"
+  | "SignUp";
 
 export const ROUTE_CONFIGS: RouteConfig[] = [
   { path: "/", componentName: "Home", importFrom: "app/pages/home" },
@@ -106,5 +108,15 @@ export const ROUTE_CONFIGS: RouteConfig[] = [
     path: "/test/:id/:ip",
     componentName: "Debug",
     importFrom: "app/pages/debug",
+  },
+  {
+    path: "/sign-in",
+    componentName: "SignIn",
+    importFrom: "app/pages/sign-in",
+  },
+  {
+    path: "/sign-up",
+    componentName: "SignUp",
+    importFrom: "app/pages/sign-up",
   },
 ];
