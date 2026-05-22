@@ -17,6 +17,7 @@ interface SectionAccordionProps {
   defaultExpanded?: boolean;
   id?: string;
   detailsSx?: SxProps;
+  headerRightContent?: React.ReactNode;
   children: React.ReactNode;
 }
 
@@ -29,6 +30,7 @@ export const SectionAccordion: React.FC<SectionAccordionProps> = ({
   defaultExpanded = false,
   id,
   detailsSx,
+  headerRightContent,
   children,
 }) => {
   const [expanded, setExpanded] = useState(defaultExpanded);
@@ -50,24 +52,36 @@ export const SectionAccordion: React.FC<SectionAccordionProps> = ({
           <Box
             sx={{
               display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              gap: "2px",
-              py: "4px",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+              pr: 1,
             }}
           >
-            <Typography variant={titleVariant} fontWeight={600}>
-              {title}
-            </Typography>
-            {subTitle && (
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                fontWeight={400}
-              >
-                {subTitle}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "2px",
+                py: "4px",
+              }}
+            >
+              <Typography variant={titleVariant} fontWeight={600}>
+                {title}
               </Typography>
-            )}
+              {subTitle && (
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  fontWeight={400}
+                >
+                  {subTitle}
+                </Typography>
+              )}
+            </Box>
+            {headerRightContent}
           </Box>
         </AccordionSummary>
         <AccordionDetails sx={{ ...detailsSx, mt: 2 }}>

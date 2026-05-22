@@ -113,3 +113,60 @@ export interface Chat {
   createdAt: number;
   updatedAt: number;
 }
+
+export interface CustomUseCaseRunResult {
+  mean_cv_score?: number;
+  test_r2?: number;
+  test_mae?: number;
+  test_rmse?: number;
+  test_accuracy?: number;
+  test_f1?: number;
+  silhouette?: number;
+  n_clusters?: number;
+}
+
+export interface CustomUseCaseConfig {
+  task_type: UseCaseTaskType;
+  target_column?: string;
+  numerical_features?: string[];
+  categorical_features?: string[];
+}
+
+export interface CustomUseCaseSummary {
+  slug: string;
+  name: string;
+  task_type: UseCaseTaskType;
+  description?: string;
+  has_metrics?: boolean;
+  config?: CustomUseCaseConfig;
+  run_result?: CustomUseCaseRunResult;
+}
+
+export interface CustomUseCaseDetail extends CustomUseCaseSummary {
+  supports_predict?: boolean;
+  has_result?: boolean;
+  audience?: string | null;
+  business_question?: string | null;
+  output_interpretation?: string | null;
+  output_unit?: string | null;
+  example_inputs?: Record<string, unknown> | null;
+  interpretation?: string | null;
+  metrics?: Record<string, unknown> | null;
+  shap_summary?: Record<string, number> | null;
+  hyperparameter_tuning?: unknown[] | null;
+  prediction_input?: Record<string, unknown> | null;
+}
+
+export interface CustomUseCaseCreateResponse {
+  name: string;
+  slug: string;
+  task_type: UseCaseTaskType;
+  target_column: string;
+  config: CustomUseCaseConfig;
+  run_result: CustomUseCaseRunResult;
+}
+
+export interface ByocAmbiguousError {
+  error: string;
+  candidates: string[];
+}

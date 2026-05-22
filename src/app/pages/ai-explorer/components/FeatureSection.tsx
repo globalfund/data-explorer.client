@@ -12,6 +12,7 @@ import {
   FEATURE_CATEGORY_LABELS,
   FEATURE_CATEGORY_ORDER,
 } from "app/pages/ai-explorer/data";
+import { ByocSection } from "app/pages/ai-explorer/components/byoc/ByocSection";
 import { SectionAccordion } from "app/pages/ai-explorer/components/SectionAccordion";
 import { FeedbackWidget } from "app/pages/ai-explorer/components/FeedbackWidget";
 import { ModelInsightsSection } from "app/pages/ai-explorer/components/model-insights/ModelInsightsSection";
@@ -178,6 +179,7 @@ export const FeatureSection: React.FC = () => (
   >
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <ModelInsightsSection />
+      <ByocSection />
       <ImplementedSubSection />
       <PipelineSubSection />
     </Box>
