@@ -294,6 +294,19 @@ export interface RBAssetModel {
   data: any;
 }
 
+export interface RBFolderModel {
+  id?: string;
+  name: string;
+  owner?: string;
+  public?: boolean;
+  parentId?: string;
+  locationPath?: string;
+  createdDate?: string;
+  updatedDate?: string;
+  assets?: RBAssetModel[];
+  reports?: RBReportModel[];
+}
+
 export interface RBAssetModelResponse {
   id: string;
   name: string;
@@ -329,6 +342,19 @@ export interface RBReportModelResponse {
   description: string;
   updatedDate: string;
   createdDate: string;
+}
+export interface RBFolderModelResponse {
+  id: string;
+  name: string;
+  owner: string;
+  public: boolean;
+  parentId?: string;
+  createdDate: string;
+  updatedDate: string;
+  locationPath?: string;
+  assets: RBAssetModelResponse[];
+  reports: RBReportModelResponse[];
+  children?: RBFolderModelResponse[];
 }
 export interface RBRenderedChartData {
   renderedContent: string;
