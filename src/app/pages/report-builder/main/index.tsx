@@ -393,11 +393,13 @@ export const ReportBuilder: React.FC = () => {
         </Grid>
       </Box>
       <ReportBuilderNewFolderModal
-        reload={refetch}
         open={newFolderModalOpen}
         onClose={handleNewFolderModalClose}
         nameValue={newFolderModalNameValue}
         setNameValue={setNewFolderModalNameValue}
+        refetchFolders={getFoldersStructure.refetch}
+        currentFolderId={openedFolders[openedFolders.length - 1]?.id}
+        reload={openedFolders.length > 0 ? getFolder.refetch : refetch}
       />
       <ReportBuilderNewReportModal
         open={newReportModalOpen}
@@ -420,18 +422,19 @@ export const ReportBuilder: React.FC = () => {
         folderStructure={getFoldersStructure.data?.data ?? []}
       />
       <ReportBuilderDeleteReportModal
-        refetch={refetch}
         open={deleteReportModalOpen}
         reportId={reportToDelete?.id ?? ""}
         onClose={handleDeleteReportModalClose}
         reportName={reportToDelete?.name ?? ""}
+        refetch={openedFolders.length > 0 ? getFolder.refetch : refetch}
       />
       <ReportBuilderDeleteFolderModal
-        refetch={refetch}
         open={deleteFolderModalOpen}
         folderId={folderToDelete?.id ?? ""}
         onClose={handleDeleteFolderModalClose}
         folderName={folderToDelete?.name ?? ""}
+        refetchFolders={getFoldersStructure.refetch}
+        refetch={openedFolders.length > 0 ? getFolder.refetch : refetch}
       />
     </React.Fragment>
   );

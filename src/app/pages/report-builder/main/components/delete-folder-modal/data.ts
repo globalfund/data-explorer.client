@@ -4,4 +4,5 @@ export interface ReportBuilderDeleteFolderModalProps {
   folderName: string;
   onClose: () => void;
   refetch: () => void;
+  refetchFolders: () => void;
 }

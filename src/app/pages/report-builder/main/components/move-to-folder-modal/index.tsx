@@ -16,18 +16,18 @@ import {
   FolderTreeItem,
 } from "app/pages/report-builder/main/components/move-to-folder-modal/tree-view";
 import {
+  useGetFolders,
   useAddFolderToFolder,
   useAddReportToFolder,
-  useGetFolders,
 } from "app/hooks/queries/report-builder";
 
 export const ReportBuilderMoveToFolderModal: React.FC<
   ReportBuilderMoveToFolderModalProps
 > = ({
   open,
+  itemId,
   refetch,
   onClose,
-  itemId,
   itemType,
   itemLocation,
   folderStructure,

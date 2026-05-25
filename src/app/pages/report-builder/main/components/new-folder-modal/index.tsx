@@ -10,18 +10,27 @@ import { ReportBuilderNewFolderModalProps } from "app/pages/report-builder/main/
 
 export const ReportBuilderNewFolderModal: React.FC<
   ReportBuilderNewFolderModalProps
-> = ({ open, onClose, nameValue, setNameValue, reload }) => {
+> = ({
+  open,
+  reload,
+  onClose,
+  nameValue,
+  setNameValue,
+  refetchFolders,
+  currentFolderId,
+}) => {
   const createFolder = useCreateFolder();
 
   const onSubmit = () => {
     if (nameValue) {
-      const newFolder = { name: nameValue };
+      const newFolder = { name: nameValue, parentId: currentFolderId };
 
       createFolder.mutate(newFolder, {
         onSuccess: () => {
           reload();
-          onClose();
           setNameValue("");
+          refetchFolders();
+          onClose();
         },
       });
     }

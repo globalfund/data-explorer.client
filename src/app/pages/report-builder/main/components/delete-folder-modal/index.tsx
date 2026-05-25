@@ -11,13 +11,14 @@ import { ReportBuilderDeleteFolderModalProps } from "app/pages/report-builder/ma
 
 export const ReportBuilderDeleteFolderModal: React.FC<
   ReportBuilderDeleteFolderModalProps
-> = ({ open, onClose, folderName, refetch, folderId }) => {
+> = ({ open, onClose, folderName, refetch, folderId, refetchFolders }) => {
   const deleteFolder = useDeleteFolder();
 
   const handleDelete = () => {
     deleteFolder.mutate(folderId, {
       onSuccess: () => {
         refetch();
+        refetchFolders();
         onClose();
       },
     });
