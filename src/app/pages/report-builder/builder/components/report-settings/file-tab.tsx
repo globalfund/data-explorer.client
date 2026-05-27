@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { RBReportItemController } from "app/state/api/action-reducers/report-builder/sync";
-import { ComponentOptions } from "../toolbar/data";
+import { ComponentOptions } from "../header/data";
 import EditableDiv from "app/components/editable-div";
 import useEditReportItem from "app/pages/report-builder/hooks/useEditReportItem";
 import useDragReportComponent from "app/pages/report-builder/hooks/useDragReportComponent";

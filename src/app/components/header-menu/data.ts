@@ -108,11 +108,10 @@ export const getPages = (cmsData: any): HeaderMenuPage[] => {
       label: getCMSDataField(
         cmsData,
         "componentsHeader.myReportsLabel",
-        "My Reports",
+        "Reports",
       ),
       link: "/report-builder",
-      style: { color: "#3154F4" },
-      activeButtonStateStyle: { borderBottom: "4px solid #3154F4" },
+      activeButtonStateStyle: { color: "#3154F4" },
     },
   ];
 

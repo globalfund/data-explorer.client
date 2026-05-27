@@ -1,11 +1,12 @@
 import React from "react";
 import { colors } from "app/theme";
 import Box from "@mui/material/Box";
+import { useTitle } from "react-use";
 import { DndProvider } from "react-dnd";
-import { useParams } from "react-router-dom";
 import { uniqueId } from "app/utils/uniqueId";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import SectionDivider from "./components/section-divider";
+import { useParams, useSearchParams } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useGetReport } from "app/hooks/queries/report-builder";
 import KPIBox from "app/pages/report-builder/builder/components/kpi";
@@ -23,9 +24,12 @@ import ElementsController from "app/pages/report-builder/builder/components/pane
 
 export const ReportBuilderPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
 
   const reportQuery = useGetReport(id);
   const reportData = reportQuery?.data?.data;
+
+  useTitle(`The Data Explorer - ${reportData?.name ?? "Report"}`);
 
   const setActiveReport = useStoreActions(
     (actions) => actions.RBReportItemsState.setReport,
@@ -155,6 +159,10 @@ export const ReportBuilderPage: React.FC = () => {
   //   }
   // };
 
+  const thumbnail = React.useMemo(() => {
+    return searchParams.get("screenshot") === "true";
+  }, [searchParams]);
+
   React.useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
 
@@ -173,101 +181,107 @@ export const ReportBuilderPage: React.FC = () => {
   }, [items.length]);
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        position: "relative",
-        justifyContent: "center",
-      }}
-    >
+    <React.Fragment>
       <Box
         sx={{
-          zIndex: 2,
-          top: "68px",
-          left: "20px",
-          width: "220px",
-          position: "fixed",
-          borderRadius: "8px",
-          flexDirection: "column",
-          bgcolor: colors.primary.white,
-          boxShadow: "0 0 10px 0 rgba(152, 161, 170, 0.60)",
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          bgcolor: "#495057",
+          position: "relative",
+          justifyContent: "center",
+          paddingTop: thumbnail ? "0px" : "50px",
+          paddingBottom: thumbnail ? "0px" : "50px",
+          minHeight: thumbnail ? undefined : "calc(100vh - 60px)",
         }}
       >
-        <ReportBuilderPageReportSettings />
-      </Box>
-      <Box
-        sx={{
-          zIndex: 2,
-          top: "68px",
-          right: "20px",
-          position: "fixed",
-        }}
-      >
-        <ElementsController />
-      </Box>
-      {reportQuery.isLoading && (
         <Box
           sx={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            zIndex: 2,
+            top: "130px",
+            left: "10px",
+            width: "220px",
+            position: "fixed",
+            borderRadius: "8px",
+            flexDirection: "column",
+            bgcolor: colors.primary.white,
+            boxShadow: "0 0 10px 0 rgba(152, 161, 170, 0.60)",
           }}
         >
-          <CircularProgress />
+          <ReportBuilderPageReportSettings />
         </Box>
-      )}
-      <DndProvider backend={HTML5Backend}>
-        {!reportQuery.isLoading && (
+        <Box
+          sx={{
+            zIndex: 2,
+            top: "130px",
+            right: "10px",
+            position: "fixed",
+          }}
+        >
+          <ElementsController />
+        </Box>
+        {reportQuery.isLoading && (
           <Box
-            id="items-container"
-            className="scrollbar"
             sx={{
-              gap: "10px",
+              width: "100%",
+              height: "100%",
               display: "flex",
-              overflow: "overlay",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              justifyContent: "flex-start",
-              width: reportState?.settings.width
-                ? `${reportState?.settings.width}px`
-                : "100%",
-              bgcolor: reportState?.settings.backgroundColor,
-              borderRadius: `${reportState?.settings.borderRadius}px`,
-              p: reportState?.settings.padding
-                .map((p: string) => `${p}px`)
-                .join(" "),
-              border: `${reportState?.settings.stroke}px solid ${reportState?.settings.strokeColor}`,
-              ".top-right-actions": {
-                top: 4,
-                right: 4,
-                position: "absolute",
-                ".MuiIconButton-root": {
-                  width: "38px",
-                  height: "38px",
-                  bgcolor: "#fff",
-                  borderRadius: "4px",
-                  border: "1px solid #cfd4da",
-                  "&:hover": {
-                    bgcolor: "#f8f8f8",
-                    borderColor: "#000000",
-                  },
-                },
-              },
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            {items.length === 0 && <Empty />}
-            {items.map((item, index) => (
-              <React.Fragment key={item.id}>
-                {getItemByType(item, index)}
-              </React.Fragment>
-            ))}
+            <CircularProgress />
           </Box>
         )}
-      </DndProvider>
-    </Box>
+        <DndProvider backend={HTML5Backend}>
+          {!reportQuery.isLoading && (
+            <Box
+              id="items-container"
+              className="scrollbar"
+              sx={{
+                gap: "10px",
+                display: "flex",
+                overflow: "overlay",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                justifyContent: "flex-start",
+                width: reportState?.settings.width
+                  ? `${reportState?.settings.width}px`
+                  : "100%",
+                bgcolor: reportState?.settings.backgroundColor,
+                borderRadius: `${reportState?.settings.borderRadius}px`,
+                p: reportState?.settings.padding
+                  .map((p: string) => `${p}px`)
+                  .join(" "),
+                border: `${reportState?.settings.stroke}px solid ${reportState?.settings.strokeColor}`,
+                ".top-right-actions": {
+                  top: 4,
+                  right: 4,
+                  position: "absolute",
+                  ".MuiIconButton-root": {
+                    width: "38px",
+                    height: "38px",
+                    bgcolor: "#fff",
+                    borderRadius: "4px",
+                    border: "1px solid #cfd4da",
+                    "&:hover": {
+                      bgcolor: "#f8f8f8",
+                      borderColor: "#000000",
+                    },
+                  },
+                },
+              }}
+            >
+              {items.length === 0 && <Empty />}
+              {items.map((item, index) => (
+                <React.Fragment key={item.id}>
+                  {getItemByType(item, index)}
+                </React.Fragment>
+              ))}
+            </Box>
+          )}
+        </DndProvider>
+      </Box>
+    </React.Fragment>
   );
 };

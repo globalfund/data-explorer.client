@@ -26,7 +26,7 @@ export const Header: React.FC = () => {
         <Container maxWidth="lg" disableGutters sx={{ background: "#F8F8F8" }}>
           <Toolbar
             sx={{
-              height: "77px",
+              height: "58px",
               background: "#F8F8F8",
               "@media (max-width: 1279px)": {
                 width: "100%",

@@ -14,7 +14,7 @@ import { useStoreState } from "app/state/store/hooks";
 import { AssetSwitch } from "../grid/switchAsset";
 import { GridLayoutTab } from "../grid/gridTab";
 import { ColumnLayoutTab } from "../column/columnTab";
-import { ColumnOptionIcon, GridOptionIcon } from "../../../toolbar/data";
+import { ColumnOptionIcon, GridOptionIcon } from "../../../header/data";
 
 type ImageControllerTab = "source" | "style" | "layout" | "grid" | "column";
 export default function ImageController() {

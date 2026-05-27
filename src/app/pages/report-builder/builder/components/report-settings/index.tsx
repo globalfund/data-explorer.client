@@ -2,18 +2,23 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
+import { DndProvider } from "react-dnd";
+import { useParams } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { useGetReport } from "app/hooks/queries/report-builder";
 import MinimizeIcon from "app/assets/vectors/Minimize.svg?react";
 import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
 import { FileTabView } from "app/pages/report-builder/builder/components/report-settings/file-tab";
 import { SettingsTabView } from "app/pages/report-builder/builder/components/report-settings/settings-tab";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 
 export const ReportBuilderPageReportSettings: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const [isExpanded, setIsExpanded] = React.useState(true);
   const [value, setValue] = React.useState<"file" | "settings">("settings");
+
+  const reportData = useGetReport(id);
 
   const handleExpandToggle = () => {
     setIsExpanded(!isExpanded);
@@ -82,7 +87,7 @@ export const ReportBuilderPageReportSettings: React.FC = () => {
           }}
         >
           <Typography fontSize="16px" color="#000000" fontWeight={700}>
-            Report Title
+            {reportData.data?.data?.name ?? "Report Settings"}
           </Typography>
           <IconButton onClick={handleExpandToggle}>
             {isExpanded ? <MinimizeIcon /> : <MaximizeIcon />}

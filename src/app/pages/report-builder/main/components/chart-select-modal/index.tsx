@@ -19,7 +19,7 @@ import { ChartType } from "app/state/api/action-reducers/report-builder/sync";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 import WarningIcon from "app/assets/vectors/WarningIcon.svg?react";
 import { ArrowForward } from "@mui/icons-material";
-import { TableOptionIcon } from "app/pages/report-builder/builder/components/toolbar/data";
+import { TableOptionIcon } from "app/pages/report-builder/builder/components/header/data";
 
 type IntentId = "all" | "trend" | "compare" | "part" | "geographic" | "table";
 

@@ -155,7 +155,7 @@ export const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
         <Collapse
           sx={{
             left: 0,
-            top: "77px",
+            top: "58px",
             width: "100vw",
             position: "absolute",
           }}
@@ -165,7 +165,7 @@ export const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
             sx={{
               width: "100vw",
               padding: "0 16px",
-              height: "calc(100vh - 77px)",
+              height: "calc(100vh - 58px)",
               bgcolor: colors.primary.gray,
             }}
           >

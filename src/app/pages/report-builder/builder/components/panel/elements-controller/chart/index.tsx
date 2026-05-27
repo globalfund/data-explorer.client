@@ -18,7 +18,7 @@ import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportIt
 import { AssetSwitch } from "../grid/switchAsset";
 import { GridLayoutTab } from "../grid/gridTab";
 import { ColumnLayoutTab } from "../column/columnTab";
-import { ColumnOptionIcon, GridOptionIcon } from "../../../toolbar/data";
+import { ColumnOptionIcon, GridOptionIcon } from "../../../header/data";
 import ChartSelectModal from "app/pages/report-builder/main/components/chart-select-modal";
 
 type ChartControllerTab =

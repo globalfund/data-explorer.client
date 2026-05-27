@@ -158,6 +158,29 @@ export const DividerOptionIcon = () => (
   </svg>
 );
 
+export const BackArrowIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path
+      d="M7.99967 3.33398L3.33301 8.00065L7.99967 12.6673M3.33301 8.00065H12.6663"
+      stroke="#373D43"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const InfoIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+    <path
+      d="M10.9997 14.6673V11.0007M10.9997 7.33398H11.0088M20.1663 11.0007C20.1663 16.0633 16.0623 20.1673 10.9997 20.1673C5.93706 20.1673 1.83301 16.0633 1.83301 11.0007C1.83301 5.93804 5.93706 1.83398 10.9997 1.83398C16.0623 1.83398 20.1663 5.93804 20.1663 11.0007Z"
+      stroke="#684E00"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 export const ComponentOptions = [
   { label: "Text", icon: <TextOptionIcon />, value: "text" },
   { label: "Chart", icon: <ChartOptionIcon />, value: "chart" },
