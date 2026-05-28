@@ -108,7 +108,6 @@ export interface CMSDataValueModel {
   pagesReportBuilderMain: { [key: string]: any };
   pagesReportBuilderBuilder: { [key: string]: any };
   pagesReportBuilderPreview: { [key: string]: any };
-  pagesReportBuilderExportView: { [key: string]: any };
 }
 
 export interface CMSDataModel {
@@ -175,7 +174,6 @@ export const CMSData: CMSDataModel = {
     pagesReportBuilderMain: {},
     pagesReportBuilderBuilder: {},
     pagesReportBuilderPreview: {},
-    pagesReportBuilderExportView: {},
   },
   setValue: action((state, payload: CMSDataValueModel) => {
     state.value = payload;

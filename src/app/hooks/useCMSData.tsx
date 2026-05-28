@@ -261,12 +261,6 @@ export function useCMSData(props: UseCMSDataProps) {
   const pagesReportBuilderPreviewCMSData = useStoreState(
     (state) => state.cms.pagesReportBuilderPreview.data,
   );
-  const pagesReportBuilderExportViewCMSAction = useStoreActions(
-    (actions) => actions.cms.pagesReportBuilderExportView.fetch,
-  );
-  const pagesReportBuilderExportViewCMSData = useStoreState(
-    (state) => state.cms.pagesReportBuilderExportView.data,
-  );
 
   // GENERAL
 
@@ -424,10 +418,6 @@ export function useCMSData(props: UseCMSDataProps) {
         filterString: `locale=${currentLanguage}`,
       });
       pagesReportBuilderPreviewCMSAction({
-        isCMSfetch: true,
-        filterString: `locale=${currentLanguage}`,
-      });
-      pagesReportBuilderExportViewCMSAction({
         isCMSfetch: true,
         filterString: `locale=${currentLanguage}`,
       });
@@ -593,10 +583,6 @@ export function useCMSData(props: UseCMSDataProps) {
         key: "pagesReportBuilderPreview",
         data: pagesReportBuilderPreviewCMSData || {},
       },
-      {
-        key: "pagesReportBuilderExportView",
-        data: pagesReportBuilderExportViewCMSData || {},
-      },
       // GENERAL
       {
         key: "general",
@@ -655,7 +641,6 @@ export function useCMSData(props: UseCMSDataProps) {
     pagesReportBuilderMainCMSData,
     pagesReportBuilderBuilderCMSData,
     pagesReportBuilderPreviewCMSData,
-    pagesReportBuilderExportViewCMSData,
     // GENERAL
     generalCMSData,
   ]);

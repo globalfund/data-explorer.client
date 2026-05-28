@@ -47,7 +47,6 @@ import {
   CMSApiPagesReportBuilderMain,
   CMSApiPagesReportBuilderBuilder,
   CMSApiPagesReportBuilderPreview,
-  CMSApiPagesReportBuilderExportView,
   CMSApiCountrySummary,
   CMSApiComponentsHeader,
   CMSApiComponentsFooter,
@@ -172,7 +171,6 @@ export type CMSApiCallModel = ApiModel<
   | CMSApiPagesReportBuilderMain
   | CMSApiPagesReportBuilderBuilder
   | CMSApiPagesReportBuilderPreview
-  | CMSApiPagesReportBuilderExportView
   | CMSApiCountrySummary
   | CMSApiGlossary
   | CMSApiChangelog
@@ -338,7 +336,6 @@ export interface StoreModel {
     pagesReportBuilderMain: CMSApiCallModel;
     pagesReportBuilderBuilder: CMSApiCallModel;
     pagesReportBuilderPreview: CMSApiCallModel;
-    pagesReportBuilderExportView: CMSApiCallModel;
     pagesGlossary: CMSApiCallModel;
     pagesChangelog: CMSApiCallModel;
     formattedCollections: CMSFormattedCollectionsModel;

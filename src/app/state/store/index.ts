@@ -134,7 +134,6 @@ import {
   componentsRBSelectGridModal,
   componentsRBTemplatesLayoutsView,
   pagesReportBuilderBuilder,
-  pagesReportBuilderExportView,
   pagesReportBuilderMain,
   pagesReportBuilderPreview,
 } from "app/state/api/action-reducers/cms/pagesReportBuilder";
@@ -365,7 +364,6 @@ const storeContent: StoreModel = {
     pagesReportBuilderMain: persist(pagesReportBuilderMain),
     pagesReportBuilderBuilder: persist(pagesReportBuilderBuilder),
     pagesReportBuilderPreview: persist(pagesReportBuilderPreview),
-    pagesReportBuilderExportView: persist(pagesReportBuilderExportView),
     pagesGlossary: persist(pagesGlossary),
     pagesChangelog: persist(pagesChangelog),
     collections: {

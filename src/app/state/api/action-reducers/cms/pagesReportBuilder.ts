@@ -64,9 +64,3 @@ export const pagesReportBuilderBuilder: CMSApiCallModel = {
 export const pagesReportBuilderPreview: CMSApiCallModel = {
   ...APIModel(`${import.meta.env.VITE_CMS_API}/pages-report-builder-preview`),
 };
-
-export const pagesReportBuilderExportView: CMSApiCallModel = {
-  ...APIModel(
-    `${import.meta.env.VITE_CMS_API}/pages-report-builder-export-view`,
-  ),
-};

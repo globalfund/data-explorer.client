@@ -176,10 +176,6 @@ export interface CMSApiPagesReportBuilderPreview {
   data: { [key: string]: { [key: string]: string } };
 }
 
-export interface CMSApiPagesReportBuilderExportView {
-  data: { [key: string]: { [key: string]: string } };
-}
-
 export interface CMSApiCountrySummary {
   data: {
     meta: {
