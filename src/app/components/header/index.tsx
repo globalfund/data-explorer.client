@@ -1,7 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import { HeaderMenu } from "app/components/header-menu";
@@ -14,13 +14,19 @@ export const Header: React.FC = () => {
   const [searchOpen, setSearchOpen] = React.useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
+  const location = useLocation();
+
+  const isAuthPage = React.useMemo(() => {
+    return location.pathname === "/sign-in" || location.pathname === "/sign-up";
+  }, [location.pathname]);
+
   return (
     <Box sx={{ zIndex: 1000, flexGrow: 1, top: 0, position: "sticky" }}>
       <AppBar position="static" sx={{ background: "#F8F8F8" }}>
         <Container maxWidth="lg" disableGutters sx={{ background: "#F8F8F8" }}>
           <Toolbar
             sx={{
-              height: "77px",
+              height: "58px",
               background: "#F8F8F8",
               "@media (max-width: 1279px)": {
                 width: "100%",
@@ -40,10 +46,13 @@ export const Header: React.FC = () => {
                 <HeaderToolbarLogo />
               </NavLink>
             )}
-            <HeaderMenu
-              mobileMenuOpen={mobileMenuOpen}
-              setMobileMenuOpen={setMobileMenuOpen}
-            />
+
+            {isAuthPage ? null : (
+              <HeaderMenu
+                mobileMenuOpen={mobileMenuOpen}
+                setMobileMenuOpen={setMobileMenuOpen}
+              />
+            )}
             <HeaderSearch
               searchOpen={searchOpen}
               setSearchOpen={setSearchOpen}

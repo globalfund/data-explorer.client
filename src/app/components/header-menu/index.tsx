@@ -83,7 +83,7 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
       <Collapse
         sx={{
           left: 0,
-          top: "77px",
+          top: "58px",
           width: "100vw",
           position: "absolute",
         }}
@@ -93,7 +93,7 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
           sx={{
             width: "100vw",
             padding: "0 16px",
-            height: "calc(100vh - 77px)",
+            height: "calc(100vh - 58px)",
             bgcolor: colors.primary.gray,
             borderBottom: "1px solid #cfd4da",
             "> button": {
@@ -239,7 +239,7 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
       ))}
       <Divider
         orientation="vertical"
-        sx={{ borderColor: "#98A1AA", height: "30px", mt: "15px" }}
+        sx={{ borderColor: "#98A1AA", height: "18px", mt: "20px" }}
       />
       <HeaderMenuButton
         id={PAGES[3].id}
@@ -276,7 +276,7 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
           "& .MuiPopover-paper": {
             maxWidth: "100vw",
             left: "0 !important",
-            top: "77px !important",
+            top: "58px !important",
           },
         }}
       >

@@ -5,22 +5,20 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import { useCMSData } from "app/hooks/useCMSData";
-import { useDeleteReport } from "app/hooks/queries/report-builder";
+import { useDeleteFolder } from "app/hooks/queries/report-builder";
 import WarningIcon from "app/assets/vectors/WarningIconBig.svg?react";
-import { getCMSDataField } from "app/utils/getCMSDataField";
-import { ReportBuilderDeleteReportModalProps } from "app/pages/report-builder/main/components/delete-report-modal/data";
+import { ReportBuilderDeleteFolderModalProps } from "app/pages/report-builder/main/components/delete-folder-modal/data";
 
-export const ReportBuilderDeleteReportModal: React.FC<
-  ReportBuilderDeleteReportModalProps
-> = ({ open, onClose, reportName, refetch, reportId }) => {
-  const deleteReport = useDeleteReport();
-  const cmsData = useCMSData({ returnData: true });
+export const ReportBuilderDeleteFolderModal: React.FC<
+  ReportBuilderDeleteFolderModalProps
+> = ({ open, onClose, folderName, refetch, folderId, refetchFolders }) => {
+  const deleteFolder = useDeleteFolder();
 
   const handleDelete = () => {
-    deleteReport.mutate(reportId, {
+    deleteFolder.mutate(folderId, {
       onSuccess: () => {
         refetch();
+        refetchFolders();
         onClose();
       },
     });
@@ -60,18 +58,10 @@ export const ReportBuilderDeleteReportModal: React.FC<
             <WarningIcon />
             <Box>
               <Typography variant="h6" fontSize="16px">
-                {getCMSDataField(
-                  cmsData,
-                  "pagesReportBuilderMain.deleteReportTitle",
-                  "Delete report?",
-                )}
+                Delete folder?
               </Typography>
               <Typography fontSize="14px">
-                {getCMSDataField(
-                  cmsData,
-                  "pagesReportBuilderMain.deleteActionCannotBeUndone",
-                  "This action cannot be undone.",
-                )}
+                This action cannot be undone.
               </Typography>
             </Box>
           </Box>
@@ -85,12 +75,7 @@ export const ReportBuilderDeleteReportModal: React.FC<
           }}
         >
           <Typography variant="body2" marginBottom="5px" color="#525252">
-            {getCMSDataField(
-              cmsData,
-              "pagesReportBuilderMain.deleteReportConfirmationPrefix",
-              "Are you sure you want to delete",
-            )}{" "}
-            <b>{reportName}</b>?
+            Are you sure you want to delete <b>{folderName}</b>?
           </Typography>
           <Box
             sx={{
@@ -102,11 +87,7 @@ export const ReportBuilderDeleteReportModal: React.FC<
             }}
           >
             <Button variant="outlined" onClick={onClose}>
-              {getCMSDataField(
-                cmsData,
-                "pagesReportBuilderMain.cancelButton",
-                "Cancel",
-              )}
+              Cancel
             </Button>
             <Button
               variant="contained"
@@ -118,11 +99,7 @@ export const ReportBuilderDeleteReportModal: React.FC<
                 background: "#ea1541",
               }}
             >
-              {getCMSDataField(
-                cmsData,
-                "pagesReportBuilderMain.deleteButton",
-                "Delete",
-              )}
+              Delete
             </Button>
           </Box>
         </Box>

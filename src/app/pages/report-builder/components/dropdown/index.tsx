@@ -51,7 +51,6 @@ const StyledMenuItem = styled(MenuItem)(() => ({
   fontSize: "16px",
   padding: "12px 16px",
   justifyContent: "space-between",
-  color: appColors.SEARCH.DROPDOWN_ITEM_COLOR,
   "&:hover": {
     background: "#eff1fe",
   },
@@ -100,7 +99,7 @@ export const RBDropdown: React.FC<RBDropdownProps> = (props) => {
           justifyContent: "space-between",
           maxHeight: props.height ?? "35px",
           color: appColors.SEARCH.DROPDOWN_BUTTON_TEXT_COLOR,
-          border: `1px solid ${anchorEl ? "#3154f4" : appColors.SEARCH.DROPDOWN_BUTTON_BORDER_COLOR}`,
+          border: `1px solid ${anchorEl ? "#3154f4" : "#dfe3e5"}`,
           background: anchorEl
             ? "#eff1fe"
             : appColors.SEARCH.DROPDOWN_BUTTON_BACKGROUND_COLOR,

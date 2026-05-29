@@ -21,7 +21,7 @@ import WarningIcon from "app/assets/vectors/WarningIcon.svg?react";
 import { ArrowForward } from "@mui/icons-material";
 import { useCMSData } from "app/hooks/useCMSData";
 import { getCMSDataField } from "app/utils/getCMSDataField";
-import { TableOptionIcon } from "app/pages/report-builder/builder/components/toolbar/data";
+import { TableOptionIcon } from "app/pages/report-builder/builder/components/header/data";
 
 type IntentId = "all" | "trend" | "compare" | "part" | "geographic" | "table";
 

@@ -4,9 +4,9 @@ import Button from "@mui/material/Button";
 import Add from "@mui/icons-material/Add";
 import MenuItem from "@mui/material/MenuItem";
 import { uniqueId } from "app/utils/uniqueId";
-import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
-import { ComponentOptions } from "app/pages/report-builder/builder/components/toolbar/data";
 import { useStoreActions } from "app/state/store/hooks";
+import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync";
+import { ComponentOptions } from "app/pages/report-builder/builder/components/header/data";
 import { ReportBuilderSelectGridModal } from "app/pages/report-builder/main/components/select-grid-modal";
 import { ReportBuilderSelectColumnModal } from "app/pages/report-builder/main/components/select-column-modal";
 import { useCMSData } from "app/hooks/useCMSData";
@@ -311,6 +311,7 @@ export default function AddComponent() {
   };
 
   const open = Boolean(anchorEl);
+
   return (
     <React.Fragment>
       <Button

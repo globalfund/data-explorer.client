@@ -7,14 +7,36 @@ import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import { useCMSData } from "app/hooks/useCMSData";
 import { getCMSDataField } from "app/utils/getCMSDataField";
+import { useCreateFolder } from "app/hooks/queries/report-builder";
+import { ReportBuilderNewFolderModalProps } from "app/pages/report-builder/main/components/new-folder-modal/data";
 
-export const ReportBuilderNewFolderModal: React.FC<{
-  open: boolean;
-  nameValue: string;
-  onClose: () => void;
-  setNameValue: (value: string) => void;
-}> = ({ open, onClose, nameValue, setNameValue }) => {
+export const ReportBuilderNewFolderModal: React.FC<
+  ReportBuilderNewFolderModalProps
+> = ({
+  open,
+  reload,
+  onClose,
+  nameValue,
+  setNameValue,
+  refetchFolders,
+  currentFolderId,
+}) => {
+  const createFolder = useCreateFolder();
   const cmsData = useCMSData({ returnData: true });
+  const onSubmit = () => {
+    if (nameValue) {
+      const newFolder = { name: nameValue, parentId: currentFolderId };
+
+      createFolder.mutate(newFolder, {
+        onSuccess: () => {
+          reload();
+          setNameValue("");
+          refetchFolders();
+          onClose();
+        },
+      });
+    }
+  };
 
   return (
     <Modal disableScrollLock open={open} onClose={onClose}>
@@ -32,7 +54,7 @@ export const ReportBuilderNewFolderModal: React.FC<{
           sx={{
             width: "100%",
             display: "flex",
-            padding: "10px",
+            padding: "4px 10px",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
@@ -46,8 +68,8 @@ export const ReportBuilderNewFolderModal: React.FC<{
               "Create Folder",
             )}
           </Typography>
-          <IconButton onClick={onClose}>
-            <CloseIcon fontSize="small" />
+          <IconButton onClick={onClose} sx={{ mr: "-12px" }}>
+            <CloseIcon fontSize="small" htmlColor="#000" />
           </IconButton>
         </Box>
         <Box
@@ -55,7 +77,7 @@ export const ReportBuilderNewFolderModal: React.FC<{
             padding: "10px",
           }}
         >
-          <Typography variant="body2" marginBottom="5px" color="#525252">
+          <Typography variant="body2" marginBottom="5px">
             {getCMSDataField(
               cmsData,
               "pagesReportBuilderMain.folderNameLabel",
@@ -67,10 +89,10 @@ export const ReportBuilderNewFolderModal: React.FC<{
               width: "100%",
               input: {
                 width: "100%",
+                borderRadius: "4px",
                 padding: "11px 16px",
-                background: "#f1f3f5",
-                border: "2px solid #f1f3f5",
-                borderBottomColor: "#868e96",
+                background: "#fff",
+                border: "1px solid #98a1aa",
                 "&:focus, &:active": {
                   borderColor: "#3154f4",
                 },
@@ -78,6 +100,7 @@ export const ReportBuilderNewFolderModal: React.FC<{
             }}
           >
             <input
+              autoFocus
               type="text"
               value={nameValue}
               placeholder={getCMSDataField(
@@ -113,6 +136,7 @@ export const ReportBuilderNewFolderModal: React.FC<{
                 textTransform: "none",
                 background: "#3154f4",
               }}
+              onClick={onSubmit}
             >
               {getCMSDataField(
                 cmsData,
