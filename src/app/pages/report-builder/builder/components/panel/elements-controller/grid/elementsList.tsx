@@ -11,8 +11,11 @@ import ChartIcon from "./assets/ChartIcon.svg?react";
 import TableIcon from "./assets/TableIcon.svg?react";
 import ImageIcon from "./assets/ImageIcon.svg?react";
 import KPIIcon from "./assets/KPIIcon.svg?react";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 export default function GridElementsList(props: { type: "grid" | "column" }) {
+  const cmsData = useCMSData({ returnData: true });
   const [selectedElementType, setSelectedElementType] =
     React.useState<string>("");
   const setSelectedController = useStoreActions(
@@ -29,30 +32,40 @@ export default function GridElementsList(props: { type: "grid" | "column" }) {
       icon: TextIcon,
       name: "Text",
       description: "Add formatted text, titles, or paragraphs",
+      nameKey: "componentTextOption",
+      descriptionKey: "componentTextDescription",
     },
     {
       type: "chart",
       name: "Chart",
       description: "Visualize your data with bar, line, or pie charts",
       icon: ChartIcon,
+      nameKey: "componentChartOption",
+      descriptionKey: "componentChartDescription",
     },
     {
       type: "table",
       name: "Table",
       description: "Organize data in a grid with rows and columns.",
       icon: TableIcon,
+      nameKey: "componentTableOption",
+      descriptionKey: "componentTableDescription",
     },
     {
       type: "image",
       name: "Image",
       description: "Upload a logo, photo, or other graphic",
       icon: ImageIcon,
+      nameKey: "componentImageOption",
+      descriptionKey: "componentImageDescription",
     },
     {
       type: "kpi_box",
       name: "Key Metrics Box",
       description: "Highlight a single, important number, like a KPI or total",
       icon: KPIIcon,
+      nameKey: "componentKeyMetricsBoxOption",
+      descriptionKey: "componentKeyMetricsBoxDescription",
     },
   ];
 
@@ -331,7 +344,11 @@ export default function GridElementsList(props: { type: "grid" | "column" }) {
       }}
     >
       <Typography color="#000" fontSize="14px">
-        Select Component for Box{" "}
+        {getCMSDataField(
+          cmsData,
+          "componentsRBGridElementsList.selectComponentForBox",
+          "Select Component for Box",
+        )}{" "}
         {(selectedItem?.data?.items?.findIndex(
           (i) => i?.id === selectedController?.id,
         ) || 0) + 1}
@@ -389,14 +406,22 @@ export default function GridElementsList(props: { type: "grid" | "column" }) {
                 fontWeight={700}
                 lineHeight={"normal"}
               >
-                {item.name}
+                {getCMSDataField(
+                  cmsData,
+                  `componentsRBComponentOptions.${item.nameKey}`,
+                  item.name,
+                )}
               </Typography>
               <Typography
                 fontSize={"14px"}
                 color={"#373D43"}
                 lineHeight={"normal"}
               >
-                {item.description}
+                {getCMSDataField(
+                  cmsData,
+                  `componentsRBGridElementsList.${item.descriptionKey}`,
+                  item.description,
+                )}
               </Typography>
             </Box>
           </Box>
@@ -432,7 +457,11 @@ export default function GridElementsList(props: { type: "grid" | "column" }) {
             textTransform: "none",
           }}
         >
-          Back
+          {getCMSDataField(
+            cmsData,
+            "componentsRBGridElementsList.backButton",
+            "Back",
+          )}
         </Button>
         <Button
           disabled={!selectedType}
@@ -455,7 +484,11 @@ export default function GridElementsList(props: { type: "grid" | "column" }) {
             },
           }}
         >
-          Apply
+          {getCMSDataField(
+            cmsData,
+            "componentsRBGridElementsList.applyButton",
+            "Apply",
+          )}
         </Button>
       </Box>
     </Box>

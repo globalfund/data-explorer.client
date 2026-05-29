@@ -9,9 +9,12 @@ import { RBReportItem } from "app/state/api/action-reducers/report-builder/sync"
 import { ComponentOptions } from "app/pages/report-builder/builder/components/header/data";
 import { ReportBuilderSelectGridModal } from "app/pages/report-builder/main/components/select-grid-modal";
 import { ReportBuilderSelectColumnModal } from "app/pages/report-builder/main/components/select-column-modal";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 export default function AddComponent() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const cmsData = useCMSData({ returnData: true });
   const addItem = useStoreActions(
     (actions) => actions.RBReportItemsState.addItem,
   );
@@ -325,7 +328,11 @@ export default function AddComponent() {
         }}
         onClick={handleClick}
       >
-        Add a Component
+        {getCMSDataField(
+          cmsData,
+          "pagesReportBuilderBuilder.addComponentButton",
+          "Add a Component",
+        )}
       </Button>
       <Menu
         open={open}
@@ -363,7 +370,11 @@ export default function AddComponent() {
             onClick={() => handleMenuItemClick(option.value)}
           >
             {option.icon}
-            {option.label}
+            {getCMSDataField(
+              cmsData,
+              `componentsRBComponentOptions.${option.cmsKey}`,
+              option.label,
+            )}
           </MenuItem>
         ))}
       </Menu>

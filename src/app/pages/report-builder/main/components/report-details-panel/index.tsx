@@ -3,7 +3,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
+import { useCMSData } from "app/hooks/useCMSData";
 import { getMonthFromNumber } from "app/utils/getMonthFromNumber";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 export const ReportBuilderReportDetailsPanel: React.FC<{
   open: boolean;
@@ -18,6 +20,7 @@ export const ReportBuilderReportDetailsPanel: React.FC<{
 }> = ({ open, onClose, details }) => {
   const created = new Date(details.createdDate);
   const updated = new Date(details.updatedDate);
+  const cmsData = useCMSData({ returnData: true });
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Escape") {
@@ -60,7 +63,11 @@ export const ReportBuilderReportDetailsPanel: React.FC<{
         }}
       >
         <Typography variant="h6" fontSize="16px">
-          File Details
+          {getCMSDataField(
+            cmsData,
+            "pagesReportBuilderMain.fileDetailsTitle",
+            "File Details",
+          )}
         </Typography>
         <IconButton onClick={onClose}>
           <CloseIcon fontSize="small" htmlColor="#000" />
@@ -96,21 +103,38 @@ export const ReportBuilderReportDetailsPanel: React.FC<{
         </Box>
         <Box>
           <Typography fontSize="14px" fontWeight="700">
-            Name
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.nameLabel",
+              "Name",
+            )}
           </Typography>
           <Typography fontSize="14px">{details.name}</Typography>
         </Box>
         <Box>
           <Typography fontSize="14px" fontWeight="700">
-            Description
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.descriptionLabel",
+              "Description",
+            )}
           </Typography>
           <Typography fontSize="14px">
-            {details.description ?? "No description provided."}
+            {details.description ??
+              getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.noDescriptionProvided",
+                "No description provided.",
+              )}
           </Typography>
         </Box>
         <Box>
           <Typography fontSize="14px" fontWeight="700">
-            Created
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.createdLabel",
+              "Created",
+            )}
           </Typography>
           <Typography fontSize="14px">
             {getMonthFromNumber(created.getMonth() + 1, true)}{" "}
@@ -119,7 +143,11 @@ export const ReportBuilderReportDetailsPanel: React.FC<{
         </Box>
         <Box>
           <Typography fontSize="14px" fontWeight="700">
-            Modified
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.modifiedLabel",
+              "Modified",
+            )}
           </Typography>
           <Typography fontSize="14px">
             {getMonthFromNumber(updated.getMonth() + 1, true)}{" "}

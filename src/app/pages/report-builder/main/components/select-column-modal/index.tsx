@@ -5,6 +5,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 import SelectField from "app/pages/report-builder/builder/components/panel/elements-controller/components/selectfield";
 
 export const ReportBuilderSelectColumnModal: React.FC<{
@@ -13,6 +15,7 @@ export const ReportBuilderSelectColumnModal: React.FC<{
   onSelect: (columns: number) => void;
 }> = ({ open, onClose, onSelect }) => {
   const [columns, setColumns] = React.useState(2);
+  const cmsData = useCMSData({ returnData: true });
 
   const handleColumnsChange = (value: string) => {
     const parsedValue = parseInt(value, 10);
@@ -45,7 +48,11 @@ export const ReportBuilderSelectColumnModal: React.FC<{
           }}
         >
           <Typography variant="h6" fontSize="16px">
-            Select Column Structure
+            {getCMSDataField(
+              cmsData,
+              "componentsRBSelectColumnModal.selectColumnStructureTitle",
+              "Select Column Structure",
+            )}
           </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon fontSize="small" />
@@ -65,7 +72,11 @@ export const ReportBuilderSelectColumnModal: React.FC<{
             }}
           >
             <SelectField
-              label="Number of Columns"
+              label={getCMSDataField(
+                cmsData,
+                "componentsRBSelectColumnModal.numberOfColumnsLabel",
+                "Number of Columns",
+              )}
               value={String(columns)}
               onChange={handleColumnsChange}
               options={Array.from({ length: 10 }, (_, i) => ({
@@ -85,7 +96,11 @@ export const ReportBuilderSelectColumnModal: React.FC<{
             }}
           >
             <Button variant="outlined" onClick={onClose}>
-              Cancel
+              {getCMSDataField(
+                cmsData,
+                "componentsRBSelectColumnModal.cancelButton",
+                "Cancel",
+              )}
             </Button>
             <Button
               variant="contained"
@@ -100,7 +115,11 @@ export const ReportBuilderSelectColumnModal: React.FC<{
                 onClose();
               }}
             >
-              Apply
+              {getCMSDataField(
+                cmsData,
+                "componentsRBSelectColumnModal.applyButton",
+                "Apply",
+              )}
             </Button>
           </Box>
         </Box>

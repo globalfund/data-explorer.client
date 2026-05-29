@@ -33,7 +33,7 @@ export const ReportBuilder: React.FC = () => {
   useTitle("The Data Explorer - Report Builder");
 
   const [sidebarSelectedItem, setSidebarSelectedItem] =
-    React.useState("All Reports");
+    React.useState("allReports");
   const [search, setSearch] = React.useState("");
   const [selectedView, setSelectedView] = useSessionStorage<"cards" | "list">(
     "cards",
@@ -227,7 +227,7 @@ export const ReportBuilder: React.FC = () => {
 
   const view = React.useMemo(() => {
     switch (sidebarSelectedItem) {
-      case "All Reports":
+      case "allReports":
         return (
           <AllReportsView
             reports={{
@@ -247,14 +247,14 @@ export const ReportBuilder: React.FC = () => {
             onDetailsClick={handleReportDetailsPanelOpen}
           />
         );
-      case "Templates and Layouts":
+      case "templatesAndLayouts":
         return (
           <TemplatesLayoutsView
             selectedView={selectedView}
             setNewReportModalOpen={setNewReportModalOpen}
           />
         );
-      case "All Assets":
+      case "allAssets":
         return (
           <React.Fragment>
             <ReportBuilderAssetsToolbar
@@ -272,7 +272,7 @@ export const ReportBuilder: React.FC = () => {
             />
           </React.Fragment>
         );
-      case "Tutorials":
+      case "tutorials":
       default:
         return <React.Fragment />;
     }
@@ -297,7 +297,7 @@ export const ReportBuilder: React.FC = () => {
   }, [itemToMove, allReportsViewItems]);
 
   React.useEffect(() => {
-    if (sidebarSelectedItem === "All Reports") {
+    if (sidebarSelectedItem === "allReports") {
       getReports.refetch().then((res) => {
         const reportsData = get(res, "data.data", []);
         setAllReportsViewItems(reportsData);

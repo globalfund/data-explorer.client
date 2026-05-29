@@ -5,6 +5,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 export const SaveAsAssetModal: React.FC<{
   open: boolean;
@@ -23,6 +25,7 @@ export const SaveAsAssetModal: React.FC<{
   setDescriptionValue,
   onSubmit,
 }) => {
+  const cmsData = useCMSData({ returnData: true });
   const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length <= 100) {
       setNameValue(e.target.value);
@@ -60,7 +63,11 @@ export const SaveAsAssetModal: React.FC<{
           }}
         >
           <Typography variant="h6" fontSize="16px">
-            Save As Asset
+            {getCMSDataField(
+              cmsData,
+              "componentsRBSaveAsAssetModal.saveAsAssetTitle",
+              "Save As Asset",
+            )}
           </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon fontSize="small" />
@@ -72,7 +79,11 @@ export const SaveAsAssetModal: React.FC<{
           marginTop="10px"
           color="#525252"
         >
-          Save component as an asset to reuse.
+          {getCMSDataField(
+            cmsData,
+            "componentsRBSaveAsAssetModal.saveAsAssetDescription",
+            "Save component as an asset to reuse.",
+          )}
         </Typography>
         <Box
           sx={{
@@ -88,7 +99,11 @@ export const SaveAsAssetModal: React.FC<{
             }}
           >
             <Typography variant="body2" marginBottom="5px" color="#525252">
-              Asset Name
+              {getCMSDataField(
+                cmsData,
+                "componentsRBSaveAsAssetModal.assetNameLabel",
+                "Asset Name",
+              )}
             </Typography>
             <Typography variant="body2" marginBottom="5px" color="#525252">
               {nameValue.length}/100
@@ -114,7 +129,11 @@ export const SaveAsAssetModal: React.FC<{
               type="text"
               value={nameValue}
               onChange={onNameChange}
-              placeholder="Asset name"
+              placeholder={getCMSDataField(
+                cmsData,
+                "componentsRBSaveAsAssetModal.assetNamePlaceholder",
+                "Asset name",
+              )}
             />
           </Box>
           <Box
@@ -126,7 +145,11 @@ export const SaveAsAssetModal: React.FC<{
             }}
           >
             <Typography variant="body2" marginBottom="5px" color="#525252">
-              Description
+              {getCMSDataField(
+                cmsData,
+                "componentsRBSaveAsAssetModal.descriptionLabel",
+                "Description",
+              )}
             </Typography>
             <Typography variant="body2" marginBottom="5px" color="#525252">
               {descriptionValue.length}/250
@@ -151,11 +174,19 @@ export const SaveAsAssetModal: React.FC<{
               type="text"
               value={descriptionValue}
               onChange={onDescriptionChange}
-              placeholder="Description"
+              placeholder={getCMSDataField(
+                cmsData,
+                "componentsRBSaveAsAssetModal.descriptionPlaceholder",
+                "Description",
+              )}
             />
           </Box>
           <Typography variant="body2" color="#525252" fontSize={"12px"}>
-            State the asset use case
+            {getCMSDataField(
+              cmsData,
+              "componentsRBSaveAsAssetModal.assetUseCaseHint",
+              "State the asset use case",
+            )}
           </Typography>
           <Box
             sx={{
@@ -167,7 +198,11 @@ export const SaveAsAssetModal: React.FC<{
             }}
           >
             <Button variant="outlined" onClick={onClose}>
-              Cancel
+              {getCMSDataField(
+                cmsData,
+                "componentsRBSaveAsAssetModal.cancelButton",
+                "Cancel",
+              )}
             </Button>
             <Button
               variant="contained"
@@ -184,7 +219,11 @@ export const SaveAsAssetModal: React.FC<{
                 }
               }}
             >
-              Save
+              {getCMSDataField(
+                cmsData,
+                "componentsRBSaveAsAssetModal.saveButton",
+                "Save",
+              )}
             </Button>
           </Box>
         </Box>

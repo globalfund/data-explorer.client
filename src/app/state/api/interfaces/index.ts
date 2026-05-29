@@ -35,6 +35,18 @@ import {
   CMSApiPagesGrantGrantImplementation,
   CMSApiPagesGrantOverview,
   CMSApiPagesGrantTargetResults,
+  CMSApiComponentsRBChartSelectModal,
+  CMSApiComponentsRBTemplatesLayoutsView,
+  CMSApiComponentsRBAllAssetsEmpty,
+  CMSApiComponentsRBAllAssetsToolbar,
+  CMSApiComponentsRBSaveAsAssetModal,
+  CMSApiComponentsRBSelectGridModal,
+  CMSApiComponentsRBSelectColumnModal,
+  CMSApiComponentsRBComponentOptions,
+  CMSApiComponentsRBGridElementsList,
+  CMSApiPagesReportBuilderMain,
+  CMSApiPagesReportBuilderBuilder,
+  CMSApiPagesReportBuilderPreview,
   CMSApiCountrySummary,
   CMSApiComponentsHeader,
   CMSApiComponentsFooter,
@@ -147,6 +159,18 @@ export type CMSApiCallModel = ApiModel<
   | CMSApiPagesGrantGrantImplementation
   | CMSApiPagesGrantOverview
   | CMSApiPagesGrantTargetResults
+  | CMSApiComponentsRBChartSelectModal
+  | CMSApiComponentsRBTemplatesLayoutsView
+  | CMSApiComponentsRBAllAssetsEmpty
+  | CMSApiComponentsRBAllAssetsToolbar
+  | CMSApiComponentsRBSaveAsAssetModal
+  | CMSApiComponentsRBSelectGridModal
+  | CMSApiComponentsRBSelectColumnModal
+  | CMSApiComponentsRBComponentOptions
+  | CMSApiComponentsRBGridElementsList
+  | CMSApiPagesReportBuilderMain
+  | CMSApiPagesReportBuilderBuilder
+  | CMSApiPagesReportBuilderPreview
   | CMSApiCountrySummary
   | CMSApiGlossary
   | CMSApiChangelog
@@ -300,6 +324,18 @@ export interface StoreModel {
     pagesGrantGrantImplementation: CMSApiCallModel;
     pagesGrantOverview: CMSApiCallModel;
     pagesGrantTargetResults: CMSApiCallModel;
+    componentsRBChartSelectModal: CMSApiCallModel;
+    componentsRBTemplatesLayoutsView: CMSApiCallModel;
+    componentsRBAllAssetsEmpty: CMSApiCallModel;
+    componentsRBAllAssetsToolbar: CMSApiCallModel;
+    componentsRBSaveAsAssetModal: CMSApiCallModel;
+    componentsRBSelectGridModal: CMSApiCallModel;
+    componentsRBSelectColumnModal: CMSApiCallModel;
+    componentsRBComponentOptions: CMSApiCallModel;
+    componentsRBGridElementsList: CMSApiCallModel;
+    pagesReportBuilderMain: CMSApiCallModel;
+    pagesReportBuilderBuilder: CMSApiCallModel;
+    pagesReportBuilderPreview: CMSApiCallModel;
     pagesGlossary: CMSApiCallModel;
     pagesChangelog: CMSApiCallModel;
     formattedCollections: CMSFormattedCollectionsModel;

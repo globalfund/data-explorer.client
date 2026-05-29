@@ -8,6 +8,8 @@ import { ComponentOptions } from "../header/data";
 import EditableDiv from "app/components/editable-div";
 import useEditReportItem from "app/pages/report-builder/hooks/useEditReportItem";
 import useDragReportComponent from "app/pages/report-builder/hooks/useDragReportComponent";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 const DragWrapper: React.FC<{
   children: React.ReactNode;
@@ -40,6 +42,7 @@ const DragWrapper: React.FC<{
 };
 
 export const FileTabView: React.FC = () => {
+  const cmsData = useCMSData({ returnData: true });
   const items = useStoreState((state) => state.RBReportItemsState.items);
   const selectedItem = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
@@ -93,7 +96,13 @@ export const FileTabView: React.FC = () => {
           padding: "8px",
         }}
       >
-        <Typography fontSize="14px">Layers</Typography>
+        <Typography fontSize="14px">
+          {getCMSDataField(
+            cmsData,
+            "pagesReportBuilderBuilder.layersTitle",
+            "Layers",
+          )}
+        </Typography>
       </Box>
 
       <Box

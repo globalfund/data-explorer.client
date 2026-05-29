@@ -1,8 +1,12 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 export const EmptyAssetsView: React.FC = () => {
+  const cmsData = useCMSData({ returnData: true });
+
   return (
     <Box
       sx={{
@@ -31,11 +35,18 @@ export const EmptyAssetsView: React.FC = () => {
         />
       </svg>
       <Typography fontSize="20px" fontWeight="700">
-        No assets saved yet
+        {getCMSDataField(
+          cmsData,
+          "componentsRBAllAssetsEmpty.emptyAssetsTitle",
+          "No assets saved yet",
+        )}
       </Typography>
       <Typography fontSize="16px">
-        Save charts, text blocks, images, and layouts here for quick reuse
-        across your reports.
+        {getCMSDataField(
+          cmsData,
+          "componentsRBAllAssetsEmpty.emptyAssetsDescription",
+          "Save charts, text blocks, images, and layouts here for quick reuse across your reports.",
+        )}
       </Typography>
       <Box
         sx={{
@@ -85,7 +96,13 @@ export const EmptyAssetsView: React.FC = () => {
               strokeLinejoin="round"
             />
           </svg>
-          <Typography fontSize="16px">Start a new report</Typography>
+          <Typography fontSize="16px">
+            {getCMSDataField(
+              cmsData,
+              "componentsRBAllAssetsEmpty.emptyAssetsStartNewReport",
+              "Start a new report",
+            )}
+          </Typography>
         </Box>
         <Box>
           <svg width="70" height="70" viewBox="0 0 70 70" fill="none">
@@ -147,7 +164,11 @@ export const EmptyAssetsView: React.FC = () => {
             />
           </svg>
           <Typography fontSize="16px">
-            Create your perfect chart, layout, or text block.
+            {getCMSDataField(
+              cmsData,
+              "componentsRBAllAssetsEmpty.emptyAssetsCreateAsset",
+              "Create your perfect chart, layout, or text block.",
+            )}
           </Typography>
         </Box>
         <Box>
@@ -174,7 +195,11 @@ export const EmptyAssetsView: React.FC = () => {
             </svg>
           </Box>
           <Typography fontSize="16px">
-            Save it to your assets library with one click.
+            {getCMSDataField(
+              cmsData,
+              "componentsRBAllAssetsEmpty.emptyAssetsSaveAsset",
+              "Save it to your assets library with one click.",
+            )}
           </Typography>
         </Box>
         <Box>
@@ -223,7 +248,11 @@ export const EmptyAssetsView: React.FC = () => {
             />
           </svg>
           <Typography fontSize="16px">
-            Access it here instantly for use across any report.
+            {getCMSDataField(
+              cmsData,
+              "componentsRBAllAssetsEmpty.emptyAssetsAccessAsset",
+              "Access it here instantly for use across any report.",
+            )}
           </Typography>
         </Box>
       </Box>

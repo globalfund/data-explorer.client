@@ -5,6 +5,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 import SelectField from "app/pages/report-builder/builder/components/panel/elements-controller/components/selectfield";
 
 export const ReportBuilderSelectGridModal: React.FC<{
@@ -14,6 +16,7 @@ export const ReportBuilderSelectGridModal: React.FC<{
 }> = ({ open, onClose, onSelect }) => {
   const [rows, setRows] = React.useState(2);
   const [columns, setColumns] = React.useState(2);
+  const cmsData = useCMSData({ returnData: true });
 
   const handleRowsChange = (value: string) => {
     const parsedValue = parseInt(value, 10);
@@ -53,7 +56,11 @@ export const ReportBuilderSelectGridModal: React.FC<{
           }}
         >
           <Typography variant="h6" fontSize="16px">
-            Select Grid Structure
+            {getCMSDataField(
+              cmsData,
+              "componentsRBSelectGridModal.selectGridStructureTitle",
+              "Select Grid Structure",
+            )}
           </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon fontSize="small" />
@@ -73,7 +80,11 @@ export const ReportBuilderSelectGridModal: React.FC<{
             }}
           >
             <SelectField
-              label="Number of Columns"
+              label={getCMSDataField(
+                cmsData,
+                "componentsRBSelectGridModal.numberOfColumnsLabel",
+                "Number of Columns",
+              )}
               value={String(columns)}
               onChange={handleColumnsChange}
               options={Array.from({ length: 10 }, (_, i) => ({
@@ -83,7 +94,11 @@ export const ReportBuilderSelectGridModal: React.FC<{
               width={"100%"}
             />
             <SelectField
-              label="Number of Rows"
+              label={getCMSDataField(
+                cmsData,
+                "componentsRBSelectGridModal.numberOfRowsLabel",
+                "Number of Rows",
+              )}
               value={String(rows)}
               onChange={handleRowsChange}
               options={Array.from({ length: 10 }, (_, i) => ({
@@ -103,7 +118,11 @@ export const ReportBuilderSelectGridModal: React.FC<{
             }}
           >
             <Button variant="outlined" onClick={onClose}>
-              Cancel
+              {getCMSDataField(
+                cmsData,
+                "componentsRBSelectGridModal.cancelButton",
+                "Cancel",
+              )}
             </Button>
             <Button
               variant="contained"
@@ -118,7 +137,11 @@ export const ReportBuilderSelectGridModal: React.FC<{
                 onClose();
               }}
             >
-              Apply
+              {getCMSDataField(
+                cmsData,
+                "componentsRBSelectGridModal.applyButton",
+                "Apply",
+              )}
             </Button>
           </Box>
         </Box>

@@ -5,6 +5,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 import { useCreateFolder } from "app/hooks/queries/report-builder";
 import { ReportBuilderNewFolderModalProps } from "app/pages/report-builder/main/components/new-folder-modal/data";
 
@@ -20,7 +22,7 @@ export const ReportBuilderNewFolderModal: React.FC<
   currentFolderId,
 }) => {
   const createFolder = useCreateFolder();
-
+  const cmsData = useCMSData({ returnData: true });
   const onSubmit = () => {
     if (nameValue) {
       const newFolder = { name: nameValue, parentId: currentFolderId };
@@ -60,7 +62,11 @@ export const ReportBuilderNewFolderModal: React.FC<
           }}
         >
           <Typography variant="h6" fontSize="16px">
-            Create Folder
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.createFolderTitle",
+              "Create Folder",
+            )}
           </Typography>
           <IconButton onClick={onClose} sx={{ mr: "-12px" }}>
             <CloseIcon fontSize="small" htmlColor="#000" />
@@ -72,7 +78,11 @@ export const ReportBuilderNewFolderModal: React.FC<
           }}
         >
           <Typography variant="body2" marginBottom="5px">
-            Folder Name
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.folderNameLabel",
+              "Folder Name",
+            )}
           </Typography>
           <Box
             sx={{
@@ -93,7 +103,11 @@ export const ReportBuilderNewFolderModal: React.FC<
               autoFocus
               type="text"
               value={nameValue}
-              placeholder="Folder name"
+              placeholder={getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.folderNamePlaceholder",
+                "Folder name",
+              )}
               onChange={(e) => setNameValue(e.target.value)}
             />
           </Box>
@@ -107,7 +121,11 @@ export const ReportBuilderNewFolderModal: React.FC<
             }}
           >
             <Button variant="outlined" onClick={onClose}>
-              Cancel
+              {getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.cancelButton",
+                "Cancel",
+              )}
             </Button>
             <Button
               variant="contained"
@@ -120,7 +138,11 @@ export const ReportBuilderNewFolderModal: React.FC<
               }}
               onClick={onSubmit}
             >
-              Create Folder
+              {getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.createFolderButton",
+                "Create Folder",
+              )}
             </Button>
           </Box>
         </Box>

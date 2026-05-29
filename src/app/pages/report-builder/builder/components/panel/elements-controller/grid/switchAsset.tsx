@@ -10,8 +10,11 @@ import ChartIcon from "./assets/ChartIcon.svg?react";
 import TableIcon from "./assets/TableIcon.svg?react";
 import ImageIcon from "./assets/ImageIcon.svg?react";
 import KPIIcon from "./assets/KPIIcon.svg?react";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 export function AssetSwitch() {
+  const cmsData = useCMSData({ returnData: true });
   const setSelectedController = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
   );
@@ -24,26 +27,31 @@ export function AssetSwitch() {
       type: "text",
       icon: <TextIcon />,
       name: "Text",
+      nameKey: "componentTextOption",
     },
     {
       type: "chart",
       name: "Chart",
       icon: <ChartIcon />,
+      nameKey: "componentChartOption",
     },
     {
       type: "table",
       name: "Table",
       icon: <TableIcon />,
+      nameKey: "componentTableOption",
     },
     {
       type: "image",
       name: "Image",
       icon: <ImageIcon />,
+      nameKey: "componentImageOption",
     },
     {
       type: "kpi_box",
       name: "Key Metrics Box",
       icon: <KPIIcon />,
+      nameKey: "componentKeyMetricsBoxOption",
     },
   ];
   const selectedItem = elements.find(
@@ -103,7 +111,13 @@ export function AssetSwitch() {
           }
         }}
       >
-        <Typography>{selectedItem?.name}</Typography>
+        <Typography>
+          {getCMSDataField(
+            cmsData,
+            `componentsRBComponentOptions.${selectedItem?.nameKey}`,
+            selectedItem?.name || "",
+          )}
+        </Typography>
         <ArrowUpDown />
       </Button>
     </Box>

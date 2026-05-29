@@ -7,7 +7,9 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import { PageLoader } from "app/components/page-loader";
+import { useCMSData } from "app/hooks/useCMSData";
 import { useCreateReport } from "app/hooks/queries/report-builder";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 import { ReportBuilderNewReportModalProps } from "app/pages/report-builder/main/components/new-report-modal/data";
 
 export const ReportBuilderNewReportModal: React.FC<
@@ -21,6 +23,7 @@ export const ReportBuilderNewReportModal: React.FC<
   setDescriptionValue,
 }) => {
   const navigate = useNavigate();
+  const cmsData = useCMSData({ returnData: true });
   const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length <= 100) {
       setNameValue(e.target.value);
@@ -88,7 +91,11 @@ export const ReportBuilderNewReportModal: React.FC<
           }}
         >
           <Typography variant="h6" fontSize="16px">
-            Create a New Report
+            {getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.createNewReportTitle",
+              "Create a New Report",
+            )}
           </Typography>
           <IconButton onClick={onClose} sx={{ mr: "-12px" }}>
             <CloseIcon fontSize="small" htmlColor="#000" />
@@ -108,7 +115,11 @@ export const ReportBuilderNewReportModal: React.FC<
             }}
           >
             <Typography variant="body2" marginBottom="5px">
-              Report Name
+              {getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.reportNameLabel",
+                "Report Name",
+              )}
             </Typography>
             <Typography fontSize="12px" marginBottom="5px">
               {nameValue.length}/100
@@ -135,7 +146,11 @@ export const ReportBuilderNewReportModal: React.FC<
               type="text"
               value={nameValue}
               onChange={onNameChange}
-              placeholder="Report name"
+              placeholder={getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.reportNamePlaceholder",
+                "Report name",
+              )}
             />
           </Box>
           <Box
@@ -147,7 +162,11 @@ export const ReportBuilderNewReportModal: React.FC<
             }}
           >
             <Typography variant="body2" marginBottom="5px">
-              Report Description
+              {getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.reportDescriptionLabel",
+                "Report Description",
+              )}
             </Typography>
             <Typography fontSize="12px" marginBottom="5px">
               {descriptionValue.length}/250
@@ -172,7 +191,11 @@ export const ReportBuilderNewReportModal: React.FC<
             <textarea
               value={descriptionValue}
               onChange={onDescriptionChange}
-              placeholder="Report description"
+              placeholder={getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.reportDescriptionPlaceholder",
+                "Report description",
+              )}
             />
           </Box>
           <Box
@@ -185,7 +208,11 @@ export const ReportBuilderNewReportModal: React.FC<
             }}
           >
             <Button variant="outlined" onClick={onClose}>
-              Cancel
+              {getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.cancelButton",
+                "Cancel",
+              )}
             </Button>
             <Button
               variant="contained"
@@ -198,7 +225,11 @@ export const ReportBuilderNewReportModal: React.FC<
               }}
               onClick={onSubmit}
             >
-              Create Report
+              {getCMSDataField(
+                cmsData,
+                "pagesReportBuilderMain.createReportButton",
+                "Create Report",
+              )}
             </Button>
           </Box>
         </Box>

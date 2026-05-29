@@ -12,11 +12,14 @@ import MinimizeIcon from "app/assets/vectors/Minimize.svg?react";
 import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
 import { FileTabView } from "app/pages/report-builder/builder/components/report-settings/file-tab";
 import { SettingsTabView } from "app/pages/report-builder/builder/components/report-settings/settings-tab";
+import { useCMSData } from "app/hooks/useCMSData";
+import { getCMSDataField } from "app/utils/getCMSDataField";
 
 export const ReportBuilderPageReportSettings: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [isExpanded, setIsExpanded] = React.useState(true);
   const [value, setValue] = React.useState<"file" | "settings">("settings");
+  const cmsData = useCMSData({ returnData: true });
 
   const reportData = useGetReport(id);
 
@@ -87,7 +90,12 @@ export const ReportBuilderPageReportSettings: React.FC = () => {
           }}
         >
           <Typography fontSize="16px" color="#000000" fontWeight={700}>
-            {reportData.data?.data?.name ?? "Report Settings"}
+            {reportData.data?.data?.name ??
+              getCMSDataField(
+                cmsData,
+                "pagesReportBuilderBuilder.reportSettingsTitle",
+                "Report Settings",
+              )}
           </Typography>
           <IconButton onClick={handleExpandToggle}>
             {isExpanded ? <MinimizeIcon /> : <MaximizeIcon />}
@@ -119,8 +127,32 @@ export const ReportBuilderPageReportSettings: React.FC = () => {
             },
           }}
         >
-          <Tab value="file" aria-label="file" label="File" />
-          <Tab value="settings" aria-label="settings" label="Settings" />
+          <Tab
+            value="file"
+            aria-label={getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.fileTabAriaLabel",
+              "file",
+            )}
+            label={getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.fileTab",
+              "File",
+            )}
+          />
+          <Tab
+            value="settings"
+            aria-label={getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.settingsTabAriaLabel",
+              "settings",
+            )}
+            label={getCMSDataField(
+              cmsData,
+              "pagesReportBuilderBuilder.settingsTab",
+              "Settings",
+            )}
+          />
         </Tabs>
         {renderTabPanel()}
       </Box>
