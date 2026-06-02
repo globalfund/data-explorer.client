@@ -7,7 +7,8 @@ export interface ReportBuilderMoveToFolderModalProps {
   refetch: () => void;
   onClose: () => void;
   itemLocation: string;
-  itemType: "report" | "folder";
+  type: "report" | "asset";
+  itemType: "report" | "asset" | "folder";
   refetchOpenedFolder: () => void;
   folderStructure: RBFolderModelResponse[];
   setOpenedFolders: React.Dispatch<

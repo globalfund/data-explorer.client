@@ -17,10 +17,10 @@ interface FolderTreeItemProps {
   node: TreeNode;
   itemId: string;
   selectedId: string | null;
-  itemType: "report" | "folder";
   onToggle: (id: string) => void;
   onSelect: (id: string) => void;
   expanded: Record<string, boolean>;
+  itemType: "report" | "asset" | "folder";
 }
 
 export const FolderTreeItem: React.FC<FolderTreeItemProps> = ({

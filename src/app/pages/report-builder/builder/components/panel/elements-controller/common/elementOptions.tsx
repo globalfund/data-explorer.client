@@ -85,6 +85,7 @@ export function Options() {
     if (value === "save") {
       setSaveAsModalOpen(true);
     }
+    setAnchorEl(null);
   };
 
   const onSaveAsset = () => {

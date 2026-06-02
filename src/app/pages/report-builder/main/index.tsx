@@ -9,10 +9,12 @@ import NavigateNext from "@mui/icons-material/NavigateNext";
 import { ReportBuilderSidebar } from "app/pages/report-builder/main/components/sidebar";
 import { ReportBuilderToolbar } from "app/pages/report-builder/main/components/toolbar";
 import { AllAssetsView } from "app/pages/report-builder/main/components/all-assets-view";
+import { RBFolderModelResponse } from "app/state/api/action-reducers/report-builder/sync";
 import { AllReportsView } from "app/pages/report-builder/main/components/all-reports-view";
 import { TemplatesLayoutsView } from "app/pages/report-builder/main/components/templates-layouts-view";
 import { ReportBuilderNewFolderModal } from "app/pages/report-builder/main/components/new-folder-modal";
 import { ReportBuilderNewReportModal } from "app/pages/report-builder/main/components/new-report-modal";
+import { ReportBuilderDeleteAssetModal } from "app/pages/report-builder/main/components/delete-asset-modal";
 import { ReportBuilderDeleteFolderModal } from "app/pages/report-builder/main/components/delete-folder-modal";
 import { ReportBuilderDeleteReportModal } from "app/pages/report-builder/main/components/delete-report-modal";
 import { ReportBuilderMoveToFolderModal } from "app/pages/report-builder/main/components/move-to-folder-modal";
@@ -27,7 +29,6 @@ import {
   useGetFolders,
   useGetReports,
 } from "app/hooks/queries/report-builder";
-import { RBFolderModelResponse } from "app/state/api/action-reducers/report-builder/sync";
 
 export const ReportBuilder: React.FC = () => {
   useTitle("The Data Explorer - Report Builder");
@@ -55,7 +56,7 @@ export const ReportBuilder: React.FC = () => {
   const [itemToMove, setItemToMove] = React.useState<{
     id: string;
     name: string;
-    type: "report" | "folder";
+    type: "report" | "asset" | "folder";
   } | null>(null);
   const [deleteReportModalOpen, setDeleteReportModalOpen] =
     React.useState(false);
@@ -84,6 +85,11 @@ export const ReportBuilder: React.FC = () => {
     createdDate: "",
     updatedDate: "",
   });
+  const [deleteAssetModalOpen, setDeleteAssetModalOpen] = React.useState(false);
+  const [assetToDelete, setAssetToDelete] = React.useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const getReports = useGetReports({
     search: search,
@@ -92,10 +98,18 @@ export const ReportBuilder: React.FC = () => {
     onlyRootLevel: true,
   });
 
+  const getAssets = useGetAssets({
+    search: search,
+    sort: selectedSort,
+    includeFolders: true,
+    type: selectedAssetView,
+  });
+
   const getFoldersStructure = useGetFolders({
     search: "",
     sort: selectedSort,
     includeSubFolders: true,
+    type: sidebarSelectedItem === "allAssets" ? "asset" : "report",
   });
 
   const [openedFolders, setOpenedFolders] = React.useState<
@@ -106,24 +120,31 @@ export const ReportBuilder: React.FC = () => {
     {
       id: string;
       name: string;
+      isFolder?: boolean;
       description: string;
       createdDate: string;
       updatedDate: string;
-      isFolder?: boolean;
-      assetCount?: number;
       reportCount?: number;
       folderCount?: number;
       locationPath?: string;
     }[]
   >(get(getReports, "data.data", []));
 
-  const getFolder = useGetFolder(openedFolders[openedFolders.length - 1]?.id);
+  const [allAssetsViewItems, setAllAssetsViewItems] = React.useState<
+    {
+      id: string;
+      name: string;
+      isFolder?: boolean;
+      description: string;
+      createdDate: string;
+      updatedDate: string;
+      assetCount?: number;
+      folderCount?: number;
+      locationPath?: string;
+    }[]
+  >(get(getAssets, "data.data", []));
 
-  const getAssets = useGetAssets({
-    search: search,
-    sort: selectedSort,
-    type: selectedAssetView,
-  });
+  const getFolder = useGetFolder(openedFolders[openedFolders.length - 1]?.id);
 
   const handleNewFolderModalOpen = () => {
     setNewFolderModalOpen(true);
@@ -152,24 +173,35 @@ export const ReportBuilder: React.FC = () => {
   const handleItemMoveToFolder = (
     id: string,
     name: string,
-    type: "report" | "folder",
+    type: "report" | "asset" | "folder",
   ) => {
     setItemToMove({ id, name, type });
     handleMoveToFolderModalOpen();
   };
 
   const handleFolderOpen = (id: string) => {
-    const folder = allReportsViewItems.find((item) => item.id === id);
+    const items =
+      sidebarSelectedItem === "allReports"
+        ? allReportsViewItems
+        : allAssetsViewItems;
+    const folder = items.find((item) => item.id === id);
     if (!folder) return;
     setOpenedFolders((prev) => [...prev, { id, name: folder.name }]);
   };
 
   const handleRootBreadcrumbClick = () => {
     setOpenedFolders([]);
-    getReports.refetch().then((res) => {
-      const reportsData = get(res, "data.data", []);
-      setAllReportsViewItems(reportsData);
-    });
+    if (sidebarSelectedItem === "allReports") {
+      getReports.refetch().then((res) => {
+        const reportsData = get(res, "data.data", []);
+        setAllReportsViewItems(reportsData);
+      });
+    } else if (sidebarSelectedItem === "allAssets") {
+      getAssets.refetch().then((res) => {
+        const assetsData = get(res, "data.data", []);
+        setAllAssetsViewItems(assetsData);
+      });
+    }
   };
 
   const handleFolderBreadcrumbClick = (index: number) => () => {
@@ -191,6 +223,14 @@ export const ReportBuilder: React.FC = () => {
 
   const handleDeleteFolderModalClose = () => {
     setDeleteFolderModalOpen(false);
+  };
+
+  const handleDeleteAssetModalOpen = () => {
+    setDeleteAssetModalOpen(true);
+  };
+
+  const handleDeleteAssetModalClose = () => {
+    setDeleteAssetModalOpen(false);
   };
 
   const handleReportDetailsPanelOpen = (details: {
@@ -218,10 +258,22 @@ export const ReportBuilder: React.FC = () => {
     handleDeleteFolderModalOpen();
   };
 
+  const handleDeleteAsset = (id: string, name: string) => {
+    setAssetToDelete({ id, name });
+    handleDeleteAssetModalOpen();
+  };
+
   const refetch = () => {
     getReports.refetch().then((res) => {
       const reportsData = get(res, "data.data", []);
       setAllReportsViewItems(reportsData);
+    });
+  };
+
+  const refetchAssets = () => {
+    getAssets.refetch().then((res) => {
+      const assetsData = get(res, "data.data", []);
+      setAllAssetsViewItems(assetsData);
     });
   };
 
@@ -263,12 +315,20 @@ export const ReportBuilder: React.FC = () => {
             />
             <Box height="20px" />
             <AllAssetsView
-              selectedView={selectedView}
               assets={{
-                isLoading: getAssets.isFetching,
-                data: get(getAssets, "data.data", []),
+                data: allAssetsViewItems,
+                isLoading:
+                  getAssets.isFetching ||
+                  getAssets.isLoading ||
+                  getFolder.isFetching ||
+                  getFolder.isLoading,
               }}
-              refetch={getAssets.refetch}
+              refetch={refetchAssets}
+              onDeleteAsset={handleDeleteAsset}
+              onDeleteFolder={handleDeleteFolder}
+              handleFolderOpen={handleFolderOpen}
+              selectedView={selectedView ?? "cards"}
+              onMoveItemToFolder={handleItemMoveToFolder}
             />
           </React.Fragment>
         );
@@ -279,6 +339,7 @@ export const ReportBuilder: React.FC = () => {
   }, [
     selectedView,
     selectedAssetView,
+    allAssetsViewItems,
     allReportsViewItems,
     sidebarSelectedItem,
     getReports.isLoading,
@@ -286,7 +347,7 @@ export const ReportBuilder: React.FC = () => {
     getFolder.isLoading,
     getFolder.isFetching,
     getAssets.isLoading,
-    getAssets.data?.data,
+    getAssets.isFetching,
   ]);
 
   const selectedItemToMove = React.useMemo(() => {
@@ -302,11 +363,17 @@ export const ReportBuilder: React.FC = () => {
         const reportsData = get(res, "data.data", []);
         setAllReportsViewItems(reportsData);
       });
+    } else if (sidebarSelectedItem === "allAssets") {
+      getAssets.refetch().then((res) => {
+        const assetsData = get(res, "data.data", []);
+        setAllAssetsViewItems(assetsData);
+      });
     }
   }, [sidebarSelectedItem, search]);
 
   React.useEffect(() => {
     if (openedFolders.length > 0 && getFolder.data) {
+      const subAssets = get(getFolder, "data.data.assets", []);
       const subReports = get(getFolder, "data.data.reports", []);
       const subFolders = get(getFolder, "data.data.children", []).map(
         (folder: RBFolderModelResponse) => ({
@@ -322,10 +389,19 @@ export const ReportBuilder: React.FC = () => {
           locationPath: folder.locationPath,
         }),
       );
-      const folderData = [...subReports, ...subFolders];
-      setAllReportsViewItems(folderData);
+      if (sidebarSelectedItem === "allReports") {
+        setAllReportsViewItems([...subFolders, ...subReports]);
+      } else if (sidebarSelectedItem === "allAssets") {
+        setAllAssetsViewItems([...subFolders, ...subAssets]);
+      }
     }
   }, [getFolder.data, openedFolders]);
+
+  React.useEffect(() => {
+    if (sidebarSelectedItem === "allAssets") {
+      setAllAssetsViewItems(get(getAssets, "data.data", []));
+    }
+  }, [sidebarSelectedItem, selectedAssetView, getAssets.data]);
 
   return (
     <React.Fragment>
@@ -399,6 +475,7 @@ export const ReportBuilder: React.FC = () => {
         setNameValue={setNewFolderModalNameValue}
         refetchFolders={getFoldersStructure.refetch}
         currentFolderId={openedFolders[openedFolders.length - 1]?.id}
+        type={sidebarSelectedItem === "allAssets" ? "asset" : "report"}
         reload={openedFolders.length > 0 ? getFolder.refetch : refetch}
       />
       <ReportBuilderNewReportModal
@@ -413,13 +490,14 @@ export const ReportBuilder: React.FC = () => {
         refetch={refetch}
         open={moveToFolderModalOpen}
         itemId={itemToMove?.id ?? ""}
-        setOpenedFolders={setOpenedFolders}
         itemName={itemToMove?.name ?? ""}
+        setOpenedFolders={setOpenedFolders}
         onClose={handleMoveToFolderModalClose}
         refetchOpenedFolder={getFolder.refetch}
         itemType={itemToMove?.type ?? "report"}
         itemLocation={selectedItemToMove?.locationPath ?? ""}
         folderStructure={getFoldersStructure.data?.data ?? []}
+        type={sidebarSelectedItem === "allAssets" ? "asset" : "report"}
       />
       <ReportBuilderDeleteReportModal
         open={deleteReportModalOpen}
@@ -435,6 +513,13 @@ export const ReportBuilder: React.FC = () => {
         folderName={folderToDelete?.name ?? ""}
         refetchFolders={getFoldersStructure.refetch}
         refetch={openedFolders.length > 0 ? getFolder.refetch : refetch}
+      />
+      <ReportBuilderDeleteAssetModal
+        refetch={getAssets.refetch}
+        open={deleteAssetModalOpen}
+        assetId={assetToDelete?.id ?? ""}
+        onClose={handleDeleteAssetModalClose}
+        assetName={assetToDelete?.name ?? ""}
       />
     </React.Fragment>
   );

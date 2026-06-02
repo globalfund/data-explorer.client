@@ -118,6 +118,7 @@ export const ReportBuilderPageImage: React.FC<{
   useClickOutsideEditor({
     editorId: "image-render",
     toolbarId: "image-controller",
+    modalId: "save-as-asset-modal",
     onOutsideClick: () => {
       clearSelectedItem();
     },

@@ -28,6 +28,7 @@ const SectionDivider = ({ id, viewMode }: Readonly<Props>) => {
   useClickOutsideEditor({
     editorId: "section-divider-render",
     toolbarId: "section-divider-controller",
+    modalId: "save-as-asset-modal",
     onOutsideClick: () => {
       clearSelectedItem();
     },

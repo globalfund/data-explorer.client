@@ -85,6 +85,12 @@ export const useGetReports = (params: {
   } else {
     filter = `{"order":["${params.sort}"]}`;
   }
+  let folderFilter = "";
+  if (params.search) {
+    folderFilter = `{"where":{"name":{"like":".*${params.search}.*","options":"i"},"type":"report"},"order":["${params.sort}"]}`;
+  } else {
+    folderFilter = `{"where":{"type":"report"},"order":["${params.sort}"]}`;
+  }
   return useQuery({
     queryKey: [
       "ReportBuilderGetReports",
@@ -97,7 +103,7 @@ export const useGetReports = (params: {
       axiosInstance.get<RBReportModelResponse[]>(`/reports`, {
         params: {
           filter,
-          folderFilter: filter,
+          folderFilter,
           onlyRootLevel: params.onlyRootLevel,
           includeFolders: params.includeFolders,
         },
@@ -110,6 +116,8 @@ export const useGetAssets = (params: {
   sort: string;
   search: string;
   type: AssetViewType;
+  onlyRootLevel?: boolean;
+  includeFolders?: boolean;
 }) => {
   let filter = "";
   if (params.search && params.type !== "all") {
@@ -121,16 +129,29 @@ export const useGetAssets = (params: {
   } else {
     filter = `{"order":["${params.sort}"]}`;
   }
+  let folderFilter = "";
+  if (params.search) {
+    folderFilter = `{"where":{"name":{"like":".*${params.search}.*","options":"i"},"type":"asset"},"order":["${params.sort}"]}`;
+  } else {
+    folderFilter = `{"where":{"type":"asset"},"order":["${params.sort}"]}`;
+  }
   return useQuery({
     queryKey: [
       "ReportBuilderGetAssets",
       params.search,
       params.sort,
       params.type,
+      params.onlyRootLevel,
+      params.includeFolders,
     ],
     queryFn: () =>
       axiosInstance.get<RBAssetModelResponse[]>(`/assets`, {
-        params: { filter },
+        params: {
+          filter,
+          folderFilter,
+          onlyRootLevel: params.onlyRootLevel,
+          includeFolders: params.includeFolders,
+        },
       }),
     staleTime: 1000 * 60 * 5,
   });
@@ -139,13 +160,14 @@ export const useGetAssets = (params: {
 export const useGetFolders = (params: {
   sort: string;
   search: string;
+  type: "report" | "asset";
   includeSubFolders?: boolean;
 }) => {
   let filter = "";
   if (params.search) {
-    filter = `{"where":{"name":{"like":".*${params.search}.*","options":"i"}},"order":["${params.sort}"]}`;
+    filter = `{"where":{"name":{"like":".*${params.search}.*","options":"i"},"type":"${params.type}"},"order":["${params.sort}"]}`;
   } else {
-    filter = `{"order":["${params.sort}"]}`;
+    filter = `{"where":{"type":"${params.type}"},"order":["${params.sort}"]}`;
   }
   return useQuery({
     queryKey: [
@@ -245,6 +267,18 @@ export const usePatchAsset = (assetId?: string) => {
       queryClient.invalidateQueries({
         queryKey: ["ReportBuilderGetAsset", assetId],
       });
+    },
+  });
+};
+
+export const usePatchAsset2 = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["ReportBuilderPatchAsset"],
+    mutationFn: (data: Partial<RBAssetModel>) =>
+      axiosInstance.patch<RBAssetModel>(`/asset/${data.id}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ReportBuilderGetAssets"] });
     },
   });
 };
