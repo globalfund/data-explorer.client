@@ -94,7 +94,10 @@ type RBReportItemDataByType = {
     renderedChartData?: Omit<RBRenderedChartData, "mappedData"> | null;
   };
 
-  table: null;
+  table: {
+    dataset?: string | null;
+    mapping?: MappedDimension;
+  };
 
   grid: {
     rows: number;
@@ -147,6 +150,9 @@ export interface RBReportItemController {
         datasetId: string;
         open: boolean;
       };
+    };
+    table?: {
+      showDatasetModal?: boolean;
     };
   };
 }

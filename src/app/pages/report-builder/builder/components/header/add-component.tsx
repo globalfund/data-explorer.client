@@ -162,7 +162,14 @@ export default function AddComponent() {
         };
         break;
       case "table":
-        newItem = { id: uniqueId(), type: "table", open: false, data: null };
+        newItem = {
+          id: uniqueId(),
+          type: "table",
+          open: false,
+          data: {
+            dataset: null,
+          },
+        };
         break;
       case "image":
         newItem = {
@@ -366,7 +373,6 @@ export default function AddComponent() {
         {ComponentOptions.map((option) => (
           <MenuItem
             key={option.value}
-            disabled={option.disabled}
             onClick={() => handleMenuItemClick(option.value)}
           >
             {option.icon}
