@@ -206,6 +206,25 @@ export const useAddReportToFolder = () => {
   });
 };
 
+export const useAddAssetToFolder = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["ReportBuilderAddAssetToFolder"],
+    mutationFn: (data: { folderId: string; assetId: string }) =>
+      axiosInstance.get(`/folder/add-asset/${data.folderId}`, {
+        params: { assetId: data.assetId },
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["ReportBuilderGetFolders"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["ReportBuilderGetAssets"],
+      });
+    },
+  });
+};
+
 export const useAddFolderToFolder = () => {
   const queryClient = useQueryClient();
   return useMutation({

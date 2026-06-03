@@ -102,6 +102,7 @@ export const ReportBuilder: React.FC = () => {
     search: search,
     sort: selectedSort,
     includeFolders: true,
+    onlyRootLevel: true,
     type: selectedAssetView,
   });
 
@@ -264,17 +265,17 @@ export const ReportBuilder: React.FC = () => {
   };
 
   const refetch = () => {
-    getReports.refetch().then((res) => {
-      const reportsData = get(res, "data.data", []);
-      setAllReportsViewItems(reportsData);
-    });
-  };
-
-  const refetchAssets = () => {
-    getAssets.refetch().then((res) => {
-      const assetsData = get(res, "data.data", []);
-      setAllAssetsViewItems(assetsData);
-    });
+    if (sidebarSelectedItem === "allReports") {
+      getReports.refetch().then((res) => {
+        const reportsData = get(res, "data.data", []);
+        setAllReportsViewItems(reportsData);
+      });
+    } else if (sidebarSelectedItem === "allAssets") {
+      getAssets.refetch().then((res) => {
+        const assetsData = get(res, "data.data", []);
+        setAllAssetsViewItems(assetsData);
+      });
+    }
   };
 
   const view = React.useMemo(() => {
@@ -323,7 +324,7 @@ export const ReportBuilder: React.FC = () => {
                   getFolder.isFetching ||
                   getFolder.isLoading,
               }}
-              refetch={refetchAssets}
+              refetch={refetch}
               onDeleteAsset={handleDeleteAsset}
               onDeleteFolder={handleDeleteFolder}
               handleFolderOpen={handleFolderOpen}
@@ -356,6 +357,10 @@ export const ReportBuilder: React.FC = () => {
       allReportsViewItems.find((item) => item.id === itemToMove.id) ?? null
     );
   }, [itemToMove, allReportsViewItems]);
+
+  React.useEffect(() => {
+    getFoldersStructure.refetch();
+  }, [sidebarSelectedItem]);
 
   React.useEffect(() => {
     if (sidebarSelectedItem === "allReports") {
