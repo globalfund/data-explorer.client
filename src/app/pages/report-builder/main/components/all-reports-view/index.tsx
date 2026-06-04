@@ -4,11 +4,11 @@ import Grid from "@mui/material/Grid";
 import { Table } from "app/components/table";
 import { useNavigate } from "react-router-dom";
 import { CellComponent } from "tabulator-tables";
-import { renderToString } from "react-dom/server";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useCMSData } from "app/hooks/useCMSData";
-import { ReportBuilderItemMenu } from "app/pages/report-builder/main/components/item-menu";
+import { renderToString } from "react-dom/server";
 import { getCMSDataField } from "app/utils/getCMSDataField";
+import CircularProgress from "@mui/material/CircularProgress";
+import { ReportBuilderItemMenu } from "app/pages/report-builder/main/components/item-menu";
 import { AllReportsViewProps } from "app/pages/report-builder/main/components/all-reports-view/data";
 import {
   ReportCard,
@@ -43,8 +43,8 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
   const updateReport = usePatchReport2();
   const updateFolder = usePatchFolder2();
   const duplicateReport = useDuplicateReport();
-  const cmsData = useCMSData({ returnData: true });
   const duplicateFolder = useDuplicateFolder();
+  const cmsData = useCMSData({ returnData: true });
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const [anchorElTableId, setAnchorElTableId] = React.useState<string | null>(
@@ -98,7 +98,10 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
     }, 100);
   };
 
-  const handleRenameEnter = (id: string, type: "report" | "folder") => {
+  const handleRenameEnter = (
+    id: string,
+    type: "report" | "asset" | "folder",
+  ) => {
     const name = (
       document.getElementById(`rename-field-${id}`) as HTMLInputElement
     )?.value;
@@ -112,6 +115,7 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
         {
           onSuccess: () => {
             setSelectedItemForRenaming(null);
+            refetch();
           },
         },
       );
@@ -121,6 +125,7 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
         {
           onSuccess: () => {
             setSelectedItemForRenaming(null);
+            refetch();
           },
         },
       );
@@ -158,13 +163,14 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
     }
   };
 
-  const handleItemClick = (id: string, type: "report" | "folder") => () => {
-    if (type === "folder") {
-      handleFolderOpen(id);
-    } else {
-      navigate(`/report-builder/reports/${id}`);
-    }
-  };
+  const handleItemClick =
+    (id: string, type: "report" | "asset" | "folder") => () => {
+      if (type === "folder") {
+        handleFolderOpen(id);
+      } else {
+        navigate(`/report-builder/reports/${id}`);
+      }
+    };
 
   const handleEditClick = (id: string) => () => {
     navigate(`/report-builder/reports/${id}/edit`);
@@ -252,7 +258,7 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
       return (
         <Grid container spacing={2.5}>
           {reports.data.map((item) => (
-            <Grid item xs={12} sm={6} md={4} lg={4} key={item.id}>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
               <Box
                 sx={{
                   width: "100%",
@@ -276,22 +282,22 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
                     description={item.description}
                     createdDate={item.createdDate}
                     updatedDate={item.updatedDate}
-                    selectedItemForRenaming={selectedItemForRenaming}
-                    setSelectedItemForRenaming={setSelectedItemForRenaming}
-                    handleRenameEnter={handleRenameEnter}
-                    handleItemMenuClick={handleItemMenuClick}
                     handleItemClick={handleItemClick}
                     handleEditClick={handleEditClick}
+                    handleRenameEnter={handleRenameEnter}
+                    handleItemMenuClick={handleItemMenuClick}
+                    selectedItemForRenaming={selectedItemForRenaming}
+                    setSelectedItemForRenaming={setSelectedItemForRenaming}
                   />
                 )}
                 {item.isFolder && (
                   <FolderCard
                     id={item.id}
+                    assetCount={0}
                     name={item.name}
                     createdDate={item.createdDate}
                     updatedDate={item.updatedDate}
                     handleItemClick={handleItemClick}
-                    assetCount={item.assetCount ?? 0}
                     reportCount={item.reportCount ?? 0}
                     folderCount={item.folderCount ?? 0}
                     handleRenameEnter={handleRenameEnter}
@@ -368,87 +374,86 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
       );
     }
     return (
-      <React.Fragment>
-        <Table
-          id="reports-table"
-          data={reports.data.map((item) => {
-            const cdate = new Date(item.createdDate);
-            const edate = new Date(item.updatedDate);
-            return {
-              id: item.id,
-              name: item.name,
-              description: item.description,
-              dateCreated: `${cdate.getDate()}-${cdate.getMonth() + 1}-${cdate.getFullYear()}`,
-              dateEdited: `${edate.getDate()}-${edate.getMonth() + 1}-${edate.getFullYear()}`,
-            };
-          })}
-          columns={[
-            { title: "", field: "id", visible: false },
-            {
-              title: getCMSDataField(
-                cmsData,
-                "pagesReportBuilderMain.reportNameColumn",
-                "Report name",
-              ),
-              field: "name",
-              width: "30%",
-              cellClick: handleTableCellClick,
-              formatter: (cell) =>
-                renderToString(
-                  selectedItemForRenaming === cell.getRow().getData()?.id ? (
-                    <input
-                      type="text"
-                      defaultValue={cell.getValue()}
-                      name="reports-table-cell-input"
-                      id={`rename-field-${cell.getRow().getData()?.id}`}
-                      style={{
-                        width: "100%",
-                        border: "2px solid #3154f4",
-                      }}
-                    />
-                  ) : (
-                    <u style={{ color: "#3154f4" }}>{cell.getValue()}</u>
-                  ),
+      <Table
+        id="reports-table"
+        data={reports.data.map((item) => {
+          const cdate = new Date(item.createdDate);
+          const edate = new Date(item.updatedDate);
+          return {
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            dateCreated: `${cdate.getDate()}-${cdate.getMonth() + 1}-${cdate.getFullYear()}`,
+            dateEdited: `${edate.getDate()}-${edate.getMonth() + 1}-${edate.getFullYear()}`,
+          };
+        })}
+        columns={[
+          { title: "", field: "id", visible: false },
+          {
+            title: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.reportNameColumn",
+              "Report name",
+            ),
+            field: "name",
+            width: "30%",
+            cellClick: handleTableCellClick,
+            formatter: (cell) =>
+              renderToString(
+                selectedItemForRenaming === cell.getRow().getData()?.id ? (
+                  <input
+                    type="text"
+                    defaultValue={cell.getValue()}
+                    name="reports-table-cell-input"
+                    id={`rename-field-${cell.getRow().getData()?.id}`}
+                    style={{
+                      width: "100%",
+                      border: "2px solid #3154f4",
+                    }}
+                  />
+                ) : (
+                  <u style={{ color: "#3154f4" }}>{cell.getValue()}</u>
                 ),
-            },
-            {
-              title: getCMSDataField(
-                cmsData,
-                "pagesReportBuilderMain.descriptionColumn",
-                "Description",
               ),
-              field: "description",
-              width: "30%",
-            },
-            {
-              title: getCMSDataField(
-                cmsData,
-                "pagesReportBuilderMain.dateCreatedColumn",
-                "Date Created",
-              ),
-              field: "dateCreated",
-              width: "15%",
-            },
-            {
-              title: getCMSDataField(
-                cmsData,
-                "pagesReportBuilderMain.lastEditedColumn",
-                "Last Edited",
-              ),
-              field: "dateEdited",
-              width: "15%",
-            },
-            {
-              title: getCMSDataField(
-                cmsData,
-                "pagesReportBuilderMain.actionsColumn",
-                "Actions",
-              ),
-              field: "actions",
-              width: "10%",
-              formatter: (cell: CellComponent) => {
-                const id = cell.getRow().getData()?.id;
-                return `<div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+          },
+          {
+            title: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.descriptionColumn",
+              "Description",
+            ),
+            field: "description",
+            width: "30%",
+          },
+          {
+            title: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.dateCreatedColumn",
+              "Date Created",
+            ),
+            field: "dateCreated",
+            width: "15%",
+          },
+          {
+            title: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.lastEditedColumn",
+              "Last Edited",
+            ),
+            field: "dateEdited",
+            width: "15%",
+          },
+          {
+            title: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.actionsColumn",
+              "Actions",
+            ),
+            field: "actions",
+            width: "10%",
+            formatter: (cell: CellComponent) => {
+              const id = cell.getRow().getData()?.id;
+              return `<div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
                   <button id="${id}" class="table-action-btn" tabindex="0" type="button" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
                     <svg width="3" height="14" viewBox="0 0 3 14" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M1.0625 2.125C1.6493 2.125 2.125 1.6493 2.125 1.0625C2.125 0.475697 1.6493 0 1.0625 0C0.475697 0 0 0.475697 0 1.0625C0 1.6493 0.475697 2.125 1.0625 2.125Z" fill="#454545"/>
@@ -457,12 +462,11 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
   </svg>
                   </button>
                 </div>`;
-              },
             },
-          ]}
-          onClick={handleTableClick}
-        />
-      </React.Fragment>
+          },
+        ]}
+        onClick={handleTableClick}
+      />
     );
   }, [selectedView, reports, anchorEl, selectedItemForRenaming, cmsData]);
 

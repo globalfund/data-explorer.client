@@ -14,6 +14,7 @@ export const ReportBuilderNewFolderModal: React.FC<
   ReportBuilderNewFolderModalProps
 > = ({
   open,
+  type,
   reload,
   onClose,
   nameValue,
@@ -25,7 +26,7 @@ export const ReportBuilderNewFolderModal: React.FC<
   const cmsData = useCMSData({ returnData: true });
   const onSubmit = () => {
     if (nameValue) {
-      const newFolder = { name: nameValue, parentId: currentFolderId };
+      const newFolder = { name: nameValue, parentId: currentFolderId, type };
 
       createFolder.mutate(newFolder, {
         onSuccess: () => {

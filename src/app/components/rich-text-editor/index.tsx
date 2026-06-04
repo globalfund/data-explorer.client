@@ -50,6 +50,7 @@ export const RichEditor: React.FC<{
   useClickOutsideEditor({
     editorId: "rte-editor",
     toolbarId: "rte-toolbar",
+    modalId: "save-as-asset-modal",
     onOutsideClick: () => {
       setActiveRTE(null);
       clearSelectedController();

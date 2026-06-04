@@ -33,6 +33,7 @@ export default function KPIBox({ id, viewMode, parent }: Readonly<Props>) {
   useClickOutsideEditor({
     editorId: "kpi-render",
     toolbarId: "kpi-controller",
+    modalId: "save-as-asset-modal",
     onOutsideClick: () => {
       clearSelectedItem();
     },
