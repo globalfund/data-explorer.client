@@ -13,6 +13,7 @@ import ImageIcon from "./assets/ImageIcon.svg?react";
 import KPIIcon from "./assets/KPIIcon.svg?react";
 import { useCMSData } from "app/hooks/useCMSData";
 import { getCMSDataField } from "app/utils/getCMSDataField";
+import { DEFAULT_TABLE_OPTIONS } from "app/pages/report-builder/builder/components/table/options";
 
 export default function GridElementsList(props: { type: "grid" | "column" }) {
   const cmsData = useCMSData({ returnData: true });
@@ -148,7 +149,15 @@ export default function GridElementsList(props: { type: "grid" | "column" }) {
         };
         break;
       case "table":
-        newItem = { type: "table", open: false, data: null };
+        newItem = {
+          type: "table",
+          open: false,
+          options: DEFAULT_TABLE_OPTIONS,
+          data: {
+            dataset: null,
+            columns: [],
+          },
+        };
         break;
       case "image":
         newItem = {

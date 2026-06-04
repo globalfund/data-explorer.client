@@ -5,7 +5,6 @@ import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
 import TableIcon from "app/assets/vectors/RBTable.svg?react";
 import { Options } from "../common/elementOptions";
 import DatabaseIcon from "app/assets/vectors/RBDatabase.svg?react";
-import DatasetList from "./asset-select/list/datasetList";
 import { tabList } from "./data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import Mapping from "./mapping";
@@ -16,9 +15,9 @@ import { AssetSwitch } from "../grid/switchAsset";
 import { GridLayoutTab } from "../grid/gridTab";
 import { ColumnLayoutTab } from "../column/columnTab";
 import { ColumnOptionIcon, GridOptionIcon } from "../../../header/data";
-import ChartSelectModal from "app/pages/report-builder/main/components/chart-select-modal";
 import { AssetSelect } from "./asset-select/asset-select";
 import { datasetItems } from "../../../chart/data";
+import { DatasetSelectModal } from "../../../dataset-select-modal";
 
 type TableControllerTab = "mapping" | "layout" | "style" | "grid" | "column";
 
@@ -48,7 +47,7 @@ export default function TableController() {
   };
 
   const handleChange = (
-    event: React.SyntheticEvent,
+    _event: React.SyntheticEvent,
     newValue: TableControllerTab,
   ) => {
     setValue(newValue);
@@ -77,8 +76,9 @@ export default function TableController() {
       ...selectedController,
       extra: {
         ...selectedController?.extra,
-        chart: {
-          listToDisplay: null,
+        table: {
+          ...selectedController?.extra?.table,
+          showDatasetModal: false,
         },
       },
     });
@@ -196,89 +196,86 @@ export default function TableController() {
             {selectedController?.parent?.id ? <AssetSwitch /> : null}
           </Box>
           <Box sx={{ display: isExpanded ? "block" : "none" }}>
-            {selectedController?.extra?.table?.showDatasetModal ? (
-              <DatasetList />
-            ) : (
-              <Box>
-                <Box
+            <Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "8px",
+                  padding: "0 8px",
+                }}
+              >
+                <AssetSelect
+                  key={"Select Dataset"}
+                  buttonLabel={"Select Dataset"}
+                  helperText={"Select a dataset to get started"}
+                  icon={<DatabaseIcon />}
+                  selectedItem={
+                    datasetItems.find(
+                      (dataset) => dataset.id === item?.data?.dataset,
+                    )?.name || ""
+                  }
+                  type={"dataset"}
+                  componentType="table"
+                />
+              </Box>
+              <Box sx={{ borderTop: "1px solid #CFD4DA", marginTop: "8px" }}>
+                <Tabs
+                  value={tableConfigured ? value : null}
+                  onChange={tableConfigured ? handleChange : undefined}
+                  textColor="secondary"
+                  indicatorColor="primary"
+                  aria-label="secondary tabs example"
                   sx={{
-                    display: "flex",
-                    flexDirection: "column",
                     gap: "8px",
-                    padding: "0 8px",
+                    display: "flex",
+                    width: "100%",
+                    "& .MuiTabs-flexContainer": { width: "100%", gap: "8px" },
+                    "& .MuiTab-root": {
+                      flex: 1,
+                      maxWidth: "none",
+                      minWidth: "30px",
+                    },
+                    "& .MuiTabs-indicator": {
+                      backgroundColor: "#0F62FE",
+                      height: "2px",
+                    },
+                    svg: {
+                      flexShrink: 0,
+                    },
                   }}
                 >
-                  <AssetSelect
-                    key={"Select Dataset"}
-                    buttonLabel={"Select Dataset"}
-                    helperText={"Select a dataset to get started"}
-                    icon={<DatabaseIcon />}
-                    selectedItem={
-                      datasetItems.find(
-                        (dataset) => dataset.id === item?.data?.dataset,
-                      )?.name || ""
-                    }
-                    type={"dataset"}
-                  />
-                </Box>
-                <Box sx={{ borderTop: "1px solid #CFD4DA", marginTop: "8px" }}>
-                  <Tabs
-                    value={tableConfigured ? value : null}
-                    onChange={tableConfigured ? handleChange : undefined}
-                    textColor="secondary"
-                    indicatorColor="primary"
-                    aria-label="secondary tabs example"
-                    sx={{
-                      gap: "8px",
-                      display: "flex",
-                      width: "100%",
-                      "& .MuiTabs-flexContainer": { width: "100%", gap: "8px" },
-                      "& .MuiTab-root": {
-                        flex: 1,
-                        maxWidth: "none",
-                        minWidth: "30px",
-                      },
-                      "& .MuiTabs-indicator": {
-                        backgroundColor: "#0F62FE",
-                        height: "2px",
-                      },
-                      svg: {
-                        flexShrink: 0,
-                      },
-                    }}
-                  >
-                    {[...extraTabs, ...tabList].map((tab) => (
-                      <Tab
-                        key={tab.value}
-                        value={tab.value}
-                        aria-label={tab.value}
-                        sx={tab.sx}
-                        icon={tab.icon}
-                      />
-                    ))}
-                  </Tabs>
-                </Box>
-
-                {tableConfigured ? (
-                  renderTabPanel()
-                ) : (
-                  <Box
-                    sx={{
-                      padding: "38.5px 8px",
-                      fontSize: "14px",
-                      textAlign: "center",
-                    }}
-                  >
-                    *Configure table first to start editing.
-                  </Box>
-                )}
+                  {[...extraTabs, ...tabList].map((tab) => (
+                    <Tab
+                      key={tab.value}
+                      value={tab.value}
+                      aria-label={tab.value}
+                      sx={tab.sx}
+                      icon={tab.icon}
+                    />
+                  ))}
+                </Tabs>
               </Box>
-            )}
+
+              {tableConfigured ? (
+                renderTabPanel()
+              ) : (
+                <Box
+                  sx={{
+                    padding: "38.5px 8px",
+                    fontSize: "14px",
+                    textAlign: "center",
+                  }}
+                >
+                  *Configure table first to start editing.
+                </Box>
+              )}
+            </Box>
           </Box>
         </Box>
       )}
-      <ChartSelectModal
-        open={selectedController?.extra?.chart?.listToDisplay == "chartType"}
+      <DatasetSelectModal
+        open={!!selectedController?.extra?.table?.showDatasetModal}
         onClose={handleBack}
       />
     </Box>

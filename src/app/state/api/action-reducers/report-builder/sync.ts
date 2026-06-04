@@ -96,7 +96,12 @@ type RBReportItemDataByType = {
 
   table: {
     dataset?: string | null;
-    mapping?: MappedDimension;
+    columns?: {
+      name: string;
+      id: string;
+      type: string;
+    }[];
+    filters?: Record<string, any[]>;
   };
 
   grid: {

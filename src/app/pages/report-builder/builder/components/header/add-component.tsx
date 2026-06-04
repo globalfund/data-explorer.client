@@ -11,6 +11,7 @@ import { ReportBuilderSelectGridModal } from "app/pages/report-builder/main/comp
 import { ReportBuilderSelectColumnModal } from "app/pages/report-builder/main/components/select-column-modal";
 import { useCMSData } from "app/hooks/useCMSData";
 import { getCMSDataField } from "app/utils/getCMSDataField";
+import { DEFAULT_TABLE_OPTIONS } from "../table/options";
 
 export default function AddComponent() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -166,8 +167,10 @@ export default function AddComponent() {
           id: uniqueId(),
           type: "table",
           open: false,
+          options: DEFAULT_TABLE_OPTIONS,
           data: {
             dataset: null,
+            columns: [],
           },
         };
         break;

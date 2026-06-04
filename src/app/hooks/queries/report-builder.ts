@@ -356,17 +356,17 @@ export const useGFSampleDataset = (datasetId: string) => {
   });
 };
 
-export const useGFDataset = (datasetId: string) => {
+export const useGFDataset = (datasetId: string, pageSize = 50) => {
   return useInfiniteQuery({
     initialPageParam: 1,
-    queryKey: ["ReportBuilderGFDataset", datasetId],
+    queryKey: ["ReportBuilderGFDataset", datasetId, pageSize],
     queryFn: ({ pageParam }) =>
       axiosInstance.get<RBDatasetResponse>(
         `/report-builder/gf-dataset/${datasetId}`,
         {
           params: {
             page: pageParam,
-            pageSize: 50,
+            pageSize,
           },
         },
       ),
@@ -389,5 +389,27 @@ export const useGFDataset = (datasetId: string) => {
       }
     },
     enabled: !!datasetId,
+  });
+};
+
+export const useGFDatasetPage = (
+  datasetId: string,
+  page: number,
+  pageSize: number,
+) => {
+  return useQuery({
+    queryKey: ["ReportBuilderGFDatasetPage", datasetId, page, pageSize],
+    queryFn: () =>
+      axiosInstance.get<RBDatasetResponse>(
+        `/report-builder/gf-dataset/${datasetId}`,
+        {
+          params: {
+            page,
+            pageSize,
+          },
+        },
+      ),
+    enabled: !!datasetId,
+    placeholderData: (previousData) => previousData,
   });
 };

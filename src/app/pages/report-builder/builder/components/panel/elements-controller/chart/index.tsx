@@ -19,7 +19,7 @@ import { AssetSwitch } from "../grid/switchAsset";
 import { GridLayoutTab } from "../grid/gridTab";
 import { ColumnLayoutTab } from "../column/columnTab";
 import { ColumnOptionIcon, GridOptionIcon } from "../../../header/data";
-import ChartSelectModal from "app/pages/report-builder/main/components/chart-select-modal";
+import ChartSelectModal from "app/pages/report-builder/builder/components/chart-select-modal";
 
 type ChartControllerTab =
   | "mapping"
