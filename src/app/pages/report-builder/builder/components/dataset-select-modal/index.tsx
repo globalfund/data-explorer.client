@@ -17,7 +17,7 @@ import { datasetItems } from "app/pages/report-builder/builder/components/chart/
 import { useStoreState } from "app/state/store/hooks";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 import { DatasetSelect } from "./select";
-import DataView from "./view";
+import DatasetSelectModalDataView from "./view";
 import DataPreview from "./preview";
 import {
   DatasetColumn,
@@ -368,7 +368,7 @@ export const DatasetSelectModal: React.FC<{
           </React.Fragment>
         ) : step === "view" ? (
           <DndProvider backend={HTML5Backend}>
-            <DataView
+            <DatasetSelectModalDataView
               selectedDataset={selectedDataset}
               initialSelectedColumns={initialSelectedColumns.map(
                 (col) => col.id,

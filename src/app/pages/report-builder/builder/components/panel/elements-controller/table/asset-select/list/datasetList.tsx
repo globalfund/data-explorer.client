@@ -90,7 +90,7 @@ export default function DatasetList() {
       }[],
   );
 
-  const useGetDatasetLatestUpdate = (id: string) => {
+  const getDatasetLatestUpdate = (id: string) => {
     let key = "";
     switch (id) {
       case "gf_results":
@@ -208,7 +208,7 @@ export default function DatasetList() {
               >
                 <Typography fontSize="14px" color="#373D43">
                   {" "}
-                  Updated on {useGetDatasetLatestUpdate(item.id)}
+                  Updated on {getDatasetLatestUpdate(item.id)}
                 </Typography>
                 <IconButton
                   onClick={handleExpandDataset(item.id)}

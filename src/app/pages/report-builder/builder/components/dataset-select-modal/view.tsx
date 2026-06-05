@@ -55,7 +55,7 @@ const fieldChipSx = {
   },
 };
 
-const DataView: React.FC<DataViewProps> = ({
+const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
   selectedDataset,
   initialSelectedColumns = [],
   rowsPerPage,
@@ -640,4 +640,4 @@ const DataView: React.FC<DataViewProps> = ({
   );
 };
 
-export default DataView;
+export default DatasetSelectModalDataView;
