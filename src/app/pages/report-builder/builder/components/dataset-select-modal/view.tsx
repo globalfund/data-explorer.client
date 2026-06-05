@@ -131,10 +131,21 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
   const handleInsertColumn = (column: DatasetColumn, newIndex: number) => {
     setSelectedColumnNames((current) => {
       const withoutColumn = current.filter((name) => name !== column.name);
+      const currentIndex = current.indexOf(column.name);
+      if (currentIndex === -1) {
+        // column is being added from available fields, insert at newIndex
+        return [
+          ...withoutColumn.slice(0, newIndex),
+          column.name,
+          ...withoutColumn.slice(newIndex),
+        ];
+      }
+      // column is being moved within selected columns, insert at newIndex with current column removed
+      const adjustedIndex = currentIndex < newIndex ? newIndex - 1 : newIndex;
       return [
-        ...withoutColumn.slice(0, newIndex),
+        ...withoutColumn.slice(0, adjustedIndex),
         column.name,
-        ...withoutColumn.slice(newIndex),
+        ...withoutColumn.slice(adjustedIndex),
       ];
     });
   };
@@ -266,7 +277,7 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
           <Box
             sx={{
               columnGap: isDraggingColumn ? 0 : "10px",
-              p: "16px",
+              padding: "16px",
               display: "flex",
               rowGap: "10px",
               flexWrap: "wrap",
@@ -292,7 +303,7 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                           sx={{
                             height: "100%",
                             position: "relative",
-                            minWidth: "10px",
+                            minWidth: index === 0 ? undefined : "10px",
                             minHeight: "28px",
                           }}
                           dropHandler={(item) =>
@@ -306,6 +317,11 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                                 color="#adb5bd"
                                 sx={{
                                   padding: "0 10px",
+                                  width: "100%",
+                                  whiteSpace: "nowrap",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  marginLeft: index === 0 ? "-16px" : "0",
                                 }}
                               >
                                 {itemType === "COLUMN"
@@ -318,7 +334,7 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                                   height: "28px",
                                   width: "100px",
                                   position: "absolute",
-                                  left: "-45px",
+                                  left: index === 0 ? "-16px" : "-45px",
                                 }}
                               />
                             )
@@ -394,11 +410,21 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                   }}
                   sx={{
                     flex: 1,
+                    minWidth: "120px",
                   }}
                 >
                   {({ isOver, item, itemType }) =>
                     isOver ? (
-                      <Typography fontSize="14px" color="#adb5bd">
+                      <Typography
+                        fontSize="14px"
+                        color="#adb5bd"
+                        sx={{
+                          width: "100%",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
                         {itemType === "COLUMN"
                           ? `Release to add "${item.name}"`
                           : `Release to move "${item.name}" here`}
@@ -407,7 +433,7 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                       <Typography
                         fontSize="14px"
                         color="#adb5bd"
-                        sx={{ width: "100%", minWidth: "120px" }}
+                        sx={{ width: "100%" }}
                       >
                         + drop more
                       </Typography>
@@ -423,6 +449,7 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                 }}
                 sx={{
                   flex: 1,
+                  minWidth: "120px",
                 }}
               >
                 {({ isOver, item, itemType }) =>
@@ -436,7 +463,7 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                     <Typography
                       fontSize="14px"
                       color="#adb5bd"
-                      sx={{ width: "100%", minWidth: "120px" }}
+                      sx={{ width: "100%" }}
                     >
                       Drop fields here {"->"}
                     </Typography>
