@@ -19,8 +19,8 @@ import {
   formatNumber,
   getColumnType,
 } from "./utils";
-import DragWrapper from "./drag-wrapper";
-import DropWrapper from "./drop-wrapper";
+import DropWrapper from "app/components/drop-wrapper";
+import DragWrapper from "app/components/drag-wrapper";
 
 interface DataViewProps {
   selectedDataset: string;
@@ -416,9 +416,33 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                 </DropWrapper>
               </React.Fragment>
             ) : (
-              <Typography fontSize="14px" color="#adb5bd">
-                Drop fields here {"->"}
-              </Typography>
+              <DropWrapper
+                accept={["COLUMN", "SELECTED_COLUMN"]}
+                dropHandler={(item) => {
+                  handleAddColumn(item);
+                }}
+                sx={{
+                  flex: 1,
+                }}
+              >
+                {({ isOver, item, itemType }) =>
+                  isOver ? (
+                    <Typography fontSize="14px" color="#adb5bd">
+                      {itemType === "COLUMN"
+                        ? `Release to add "${item.name}"`
+                        : `Release to move "${item.name}" here`}
+                    </Typography>
+                  ) : (
+                    <Typography
+                      fontSize="14px"
+                      color="#adb5bd"
+                      sx={{ width: "100%", minWidth: "120px" }}
+                    >
+                      Drop fields here {"->"}
+                    </Typography>
+                  )
+                }
+              </DropWrapper>
             )}
           </Box>
         </Box>
