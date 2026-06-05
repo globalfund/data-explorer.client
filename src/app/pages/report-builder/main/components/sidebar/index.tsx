@@ -52,6 +52,7 @@ export const ReportBuilderSidebar: React.FC<{
         "Tutorials",
       ),
       icon: <TutorialsIcon />,
+      disabled: true,
     },
     {
       name: "templatesAndLayouts",
@@ -61,6 +62,7 @@ export const ReportBuilderSidebar: React.FC<{
         "Templates and Layouts",
       ),
       icon: <TemplatesLibrariesIcon />,
+      disabled: true,
     },
   ];
 
@@ -118,6 +120,7 @@ export const ReportBuilderSidebar: React.FC<{
               <Button
                 key={item.name}
                 startIcon={item.icon}
+                disabled={item.disabled}
                 onClick={handleItemClick(item.name)}
                 sx={{
                   background:

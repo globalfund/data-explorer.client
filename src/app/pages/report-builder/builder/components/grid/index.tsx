@@ -242,6 +242,7 @@ export const ReportBuilderPageGrid: React.FC<{
   useClickOutsideEditor({
     editorId: "grid-container",
     toolbarId: "rte-toolbar",
+    modalId: "save-as-asset-modal",
     onOutsideClick: () => {
       clearSelectedController();
     },

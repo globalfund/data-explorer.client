@@ -17,6 +17,7 @@ import {
 } from "app/pages/report-builder/main/components/move-to-folder-modal/tree-view";
 import {
   useGetFolders,
+  useAddAssetToFolder,
   useAddFolderToFolder,
   useAddReportToFolder,
 } from "app/hooks/queries/report-builder";
@@ -25,6 +26,7 @@ export const ReportBuilderMoveToFolderModal: React.FC<
   ReportBuilderMoveToFolderModalProps
 > = ({
   open,
+  type,
   itemId,
   refetch,
   onClose,
@@ -41,8 +43,10 @@ export const ReportBuilderMoveToFolderModal: React.FC<
   });
 
   const addReportToFolder = useAddReportToFolder();
+  const addAssetToFolder = useAddAssetToFolder();
   const addFolderToFolder = useAddFolderToFolder();
   const allFolders = useGetFolders({
+    type,
     search: "",
     includeSubFolders: true,
     sort: "createdDate DESC",
@@ -97,6 +101,11 @@ export const ReportBuilderMoveToFolderModal: React.FC<
     if (itemType === "report") {
       addReportToFolder.mutate(
         { reportId: itemId, folderId: selectedId },
+        { onSuccess },
+      );
+    } else if (itemType === "asset") {
+      addAssetToFolder.mutate(
+        { assetId: itemId, folderId: selectedId },
         { onSuccess },
       );
     } else {

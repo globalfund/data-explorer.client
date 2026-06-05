@@ -1,15 +1,22 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import capitalize from "lodash/capitalize";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MoreVert from "@mui/icons-material/MoreVert";
+import GridIcon from "app/assets/vectors/RBGrid.svg?react";
+import ChartIcon from "app/assets/vectors/RBChart.svg?react";
+import ImageIcon from "app/assets/vectors/RBImage.svg?react";
+import ColumnIcon from "app/assets/vectors/RBColumn.svg?react";
 import FolderIcon from "app/assets/vectors/FolderBig.svg?react";
+import LetterTextIcon from "app/assets/vectors/Letter_Text.svg?react";
 import EmptyFolderIcon from "app/assets/vectors/EmptyFolder.svg?react";
 import {
   ReportCardProps,
   FolderCardProps,
+  AssetCardProps,
 } from "app/pages/report-builder/main/components/all-reports-view/data";
 
 export const ReportCard: React.FC<ReportCardProps> = ({
@@ -139,6 +146,136 @@ export const ReportCard: React.FC<ReportCardProps> = ({
   );
 };
 
+export const AssetCard: React.FC<AssetCardProps> = ({
+  id,
+  name,
+  type,
+  description,
+  handleItemClick,
+  handleRenameEnter,
+  handleItemMenuClick,
+  selectedItemForRenaming,
+  setSelectedItemForRenaming,
+}) => {
+  const iconMap: Record<string, React.ReactNode> = {
+    chart: <ChartIcon />,
+    column: <ColumnIcon />,
+    text: <LetterTextIcon />,
+    grid: <GridIcon />,
+    image: <ImageIcon />,
+  };
+
+  return (
+    <React.Fragment>
+      <Box
+        sx={{
+          width: "100%",
+          height: "180px",
+          display: "flex",
+          cursor: "pointer",
+          borderRadius: "2px",
+          justifyContent: "center",
+        }}
+        onClick={handleItemClick(id, "asset")}
+      >
+        <img src="/static/images/layout-placeholder.png" alt={name} />
+      </Box>
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          margin: "10px 0 5px 0",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+        }}
+      >
+        {type && (
+          <Box
+            sx={{
+              borderRadius: "4px",
+              background: "#D6DDFD",
+              gap: "4px",
+              alignItems: "center",
+              padding: "3px 5.5px",
+              display: "flex",
+            }}
+          >
+            {iconMap[type]}
+            <Typography variant="body2" fontSize={"16px"}>
+              {capitalize(type)}
+            </Typography>
+          </Box>
+        )}
+        <IconButton
+          id={id}
+          onClick={handleItemMenuClick}
+          sx={{ padding: 0, marginLeft: "10px" }}
+        >
+          <MoreVert />
+        </IconButton>
+      </Box>
+      <Box
+        sx={{
+          margin: "10px 0 5px 0",
+        }}
+      >
+        {selectedItemForRenaming === id ? (
+          <TextField
+            fullWidth
+            autoFocus
+            size="small"
+            variant="standard"
+            defaultValue={name}
+            id={`rename-field-${id}`}
+            slotProps={{ htmlInput: { maxLength: 100 } }}
+            onBlur={(e) => {
+              if (e.relatedTarget?.id === "rb-item-menu-paper") {
+                return;
+              }
+              handleRenameEnter(id, "asset");
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                setSelectedItemForRenaming(null);
+              }
+              if (e.key === "Enter") {
+                handleRenameEnter(id, "asset");
+              }
+            }}
+            sx={{
+              input: {
+                fontWeight: "700",
+                pl: "0 !important",
+              },
+              ".MuiInputBase-root:before, .MuiInputBase-root:after": {
+                borderBottom: "2px solid #3154F4 !important",
+              },
+            }}
+          />
+        ) : (
+          <Typography
+            variant="h6"
+            fontSize="16px"
+            lineHeight="normal"
+            sx={{ cursor: "pointer" }}
+            onClick={handleItemClick(id, "asset")}
+          >
+            {name}
+          </Typography>
+        )}
+      </Box>
+      <Typography
+        variant="body2"
+        width="calc(100% - 40px)"
+        sx={{ cursor: "pointer" }}
+        onClick={handleItemClick(id, "asset")}
+      >
+        {description}
+      </Typography>
+    </React.Fragment>
+  );
+};
+
 export const FolderCard: React.FC<FolderCardProps> = ({
   id,
   name,
@@ -173,6 +310,10 @@ export const FolderCard: React.FC<FolderCardProps> = ({
     return `${reportCount} ${reportCount === 1 ? "Report" : "Reports"}, ${assetCount} ${assetCount === 1 ? "Asset" : "Assets"} and ${folderCount} ${folderCount === 1 ? "Folder" : "Folders"} inside`;
   }, [assetCount, reportCount, folderCount]);
 
+  const disableClick = React.useMemo(() => {
+    return reportCount === 0 && assetCount === 0 && folderCount === 0;
+  }, [reportCount, assetCount, folderCount]);
+
   return (
     <React.Fragment>
       <Box>
@@ -183,13 +324,13 @@ export const FolderCard: React.FC<FolderCardProps> = ({
             height: "180px",
             display: "flex",
             paddingTop: "8px",
-            cursor: "pointer",
             alignItems: "center",
             bgcolor: "#f8f9fa",
             flexDirection: "column",
             justifyContent: "center",
+            cursor: disableClick ? "default" : "pointer",
           }}
-          onClick={handleItemClick(id, "folder")}
+          onClick={!disableClick ? handleItemClick(id, "folder") : undefined}
         >
           {assetCount === 0 && reportCount === 0 && folderCount === 0 ? (
             <React.Fragment>
@@ -246,8 +387,10 @@ export const FolderCard: React.FC<FolderCardProps> = ({
               variant="h6"
               fontSize="16px"
               lineHeight="normal"
-              sx={{ cursor: "pointer" }}
-              onClick={handleItemClick(id, "folder")}
+              sx={{ cursor: disableClick ? "default" : "pointer" }}
+              onClick={
+                !disableClick ? handleItemClick(id, "folder") : undefined
+              }
             >
               {name}
             </Typography>
@@ -277,10 +420,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
           },
         }}
       >
-        <Button
-          disabled={reportCount === 0}
-          onClick={handleItemClick(id, "folder")}
-        >
+        <Button disabled={disableClick} onClick={handleItemClick(id, "folder")}>
           Open Folder
         </Button>
         <IconButton
