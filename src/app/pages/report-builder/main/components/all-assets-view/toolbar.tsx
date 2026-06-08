@@ -87,10 +87,6 @@ export const ReportBuilderAssetsToolbar: React.FC<{
         width: "100%",
         display: "flex",
         justifyContent: "space-between",
-        button: {
-          fontSize: "16px",
-          textTransform: "none",
-        },
       }}
     >
       <Box
@@ -100,7 +96,11 @@ export const ReportBuilderAssetsToolbar: React.FC<{
           button: {
             borderRadius: 0,
             fontWeight: "400",
-            padding: "8px 12px",
+            padding: "8px 16px",
+            fontSize: "16px",
+            textTransform: "none",
+            width: "fit-content",
+            minWidth: "94px",
           },
         }}
       >

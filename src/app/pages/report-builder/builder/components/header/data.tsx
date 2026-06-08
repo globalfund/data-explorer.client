@@ -1,3 +1,5 @@
+import SavedAssetIcon from "app/assets/vectors/SavedAsset.svg?react";
+
 export const TextOptionIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
     <rect
@@ -230,5 +232,10 @@ export const ComponentOptions = [
     icon: <DividerOptionIcon />,
     value: "section_divider",
     cmsKey: "componentSectionDividerOption",
+  },
+  {
+    label: "Saved Asset",
+    icon: <SavedAssetIcon />,
+    value: "saved_asset",
   },
 ];

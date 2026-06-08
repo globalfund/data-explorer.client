@@ -35,6 +35,7 @@ import {
   InfoIcon,
   BackArrowIcon,
 } from "app/pages/report-builder/builder/components/header/data";
+import { AssetLibraryModal } from "app/pages/report-builder/builder/components/asset-library-modal";
 
 export const menuSx = {
   zIndex: 1400,
@@ -82,6 +83,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
   const [name, setName] = React.useState(reportData?.data?.data.name ?? "");
   const [anchorEl2, setAnchorEl2] = React.useState<null | HTMLElement>(null);
   const [signedIn] = React.useState(true); // Replace with actual authentication state
+  const [assetLibraryOpen, setAssetLibraryOpen] = React.useState(false);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -97,6 +99,14 @@ export const ReportBuilderPageHeader: React.FC = () => {
 
   const handleClose2 = () => {
     setAnchorEl2(null);
+  };
+
+  const handleOpenAssetLibrary = () => {
+    setAssetLibraryOpen(true);
+  };
+
+  const handleCloseAssetLibrary = () => {
+    setAssetLibraryOpen(false);
   };
 
   const handleCopyUrlLink = () => {
@@ -362,7 +372,10 @@ export const ReportBuilderPageHeader: React.FC = () => {
                         },
                       }}
                     >
-                      <Button startIcon={<LibraryIcon />}>
+                      <Button
+                        startIcon={<LibraryIcon />}
+                        onClick={handleOpenAssetLibrary}
+                      >
                         {getCMSDataField(
                           cmsData,
                           "pagesReportBuilderBuilder.assetsButton",
@@ -377,7 +390,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                         Preview
                       </Button>
                     </Box>
-                    <AddComponent />
+                    <AddComponent onOpenAssets={handleOpenAssetLibrary} />
                   </React.Fragment>
                 )}
                 {previewMode && (
@@ -572,6 +585,10 @@ export const ReportBuilderPageHeader: React.FC = () => {
             padding: "10px",
           },
         }}
+      />
+      <AssetLibraryModal
+        open={assetLibraryOpen}
+        onClose={handleCloseAssetLibrary}
       />
     </React.Fragment>
   );

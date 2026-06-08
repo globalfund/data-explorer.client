@@ -29,10 +29,14 @@ export const useCreateReport = () => {
 };
 
 export const useCreateAsset = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["ReportBuilderCreateAsset"],
     mutationFn: (data: RBAssetModel) =>
       axiosInstance.post<RBAssetModel>(`/asset`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ReportBuilderGetAssets"] });
+    },
   });
 };
 
