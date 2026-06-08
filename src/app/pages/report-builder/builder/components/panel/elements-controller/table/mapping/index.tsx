@@ -332,6 +332,7 @@ export default function Mapping() {
               minHeight: "35px",
               py: "7px",
             },
+            width: "100%",
           }}
         >
           <Box sx={{ display: "flex", gap: "8px", alignItems: "flex-start" }}>
@@ -344,7 +345,13 @@ export default function Mapping() {
               Sort By
             </Typography>
             <Box
-              sx={{ display: "flex", gap: "8px", flexWrap: "wrap", flex: 1 }}
+              sx={{
+                display: "flex",
+                gap: "8px",
+                flexDirection: "column",
+                width: "100%",
+                overflow: "hidden",
+              }}
             >
               <SelectField
                 value={tableOptions.sortBy}

@@ -79,9 +79,21 @@ export default function SelectField({
             bgcolor: "#fff",
             borderColor: "#98A1AA",
           },
+          maxWidth: "100%",
         }}
       >
-        {options.find((o) => o.value === value)?.label || "Select..."}
+        <Typography
+          title={options.find((o) => o.value === value)?.label || "Select..."}
+          fontSize="14px"
+          sx={{
+            maxWidth: "calc(100% - 24px)",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {options.find((o) => o.value === value)?.label || "Select..."}
+        </Typography>
       </Button>
       <Menu
         open={open}
