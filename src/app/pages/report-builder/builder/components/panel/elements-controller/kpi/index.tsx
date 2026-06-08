@@ -2,7 +2,7 @@ import { Box, IconButton, Tab, Tabs, Typography } from "@mui/material";
 import React from "react";
 import MinimizeIcon from "app/assets/vectors/Minimize.svg?react";
 import KPIIcon from "app/assets/vectors/RB_KPI.svg?react";
-
+import InfoIcon from "@mui/icons-material/Info";
 import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
 import UploadIcon from "app/assets/vectors/RBUpload.svg?react";
 import PaintBucketIcon from "app/assets/vectors/Paint_Bucket.svg?react";
@@ -16,6 +16,7 @@ import { useStoreState } from "app/state/store/hooks";
 import { GridLayoutTab } from "../grid/gridTab";
 import { ColumnLayoutTab } from "../column/columnTab";
 import { ColumnOptionIcon, GridOptionIcon } from "../../../header/data";
+import RadioCheck from "app/components/radio-check";
 
 type KPIControllerTab = "text" | "style" | "layout" | "grid" | "column";
 export default function KPIController() {
@@ -24,6 +25,8 @@ export default function KPIController() {
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
+
+  const [source, setSource] = React.useState<"manual" | "dataset">("manual");
 
   const handleExpandToggle = () => {
     setIsExpanded(!isExpanded);
@@ -109,6 +112,73 @@ export default function KPIController() {
           <Options />
         </Box>
         {selectedController?.parent?.id ? <AssetSwitch /> : null}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            borderRadius: "4px",
+            border: "0.5px solid #98A1AA",
+            overflow: "hidden",
+            gap: "8px",
+          }}
+        >
+          <Typography
+            fontSize="14px"
+            color="#000000"
+            lineHeight="normal"
+            fontWeight={700}
+            sx={{
+              backgroundColor: "#E9ECEF",
+              padding: "10px 5px",
+              borderRight: "0.5px solid #98A1AA",
+              borderRadius: "4px 0 0 4px",
+            }}
+          >
+            Source
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "14px",
+            }}
+          >
+            <RadioCheck
+              checked={source === "manual"}
+              onChange={() => setSource("manual")}
+              label="Manual"
+            />
+            <RadioCheck
+              checked={source === "dataset"}
+              onChange={() => setSource("dataset")}
+              label="Dataset"
+            />
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            marginTop: "8px",
+            display: "flex",
+            border: "0.5px dashed #0E8410",
+            padding: "8px",
+            gap: "6px",
+            backgroundColor: "#E5F2E5",
+            borderRadius: "4px",
+            alignItems: "center",
+          }}
+        >
+          <InfoIcon
+            sx={{
+              flexShrink: 0,
+              fill: "#0E8410",
+            }}
+          />
+          <Typography fontSize="14px" color="#000000" lineHeight="normal">
+            {source === "dataset"
+              ? "Pulls a number from a connected dataset. Updates automatically."
+              : "Manual entry is a fixed value. Good for static reports."}
+          </Typography>
+        </Box>
       </Box>
       <Box sx={{ display: isExpanded ? "block" : "none" }}>
         <Box>
