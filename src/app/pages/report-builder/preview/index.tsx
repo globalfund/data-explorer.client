@@ -48,7 +48,7 @@ export const ReportBuilderPreviewPage: React.FC = () => {
       case "kpi_box":
         return item.open;
       case "table":
-        return false; // tables are not supported in preview currently
+        return !!item.data?.dataset;
       case "grid":
         return item.data.items.some((child) => checkEmptyItem(child));
       case "column":

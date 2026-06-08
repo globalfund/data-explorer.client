@@ -1,21 +1,43 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import { Table } from "app/components/table";
-import Close from "@mui/icons-material/Close";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import MoreVert from "@mui/icons-material/MoreVert";
-import ArrowBack from "@mui/icons-material/ArrowBack";
+import CircularProgress from "@mui/material/CircularProgress";
+import EditableDiv from "app/components/editable-div";
 import { useStoreActions } from "app/state/store/hooks";
-import { DraggableModal } from "app/components/draggable-modal";
-import { SelectDatasetStep } from "app/pages/report-builder/builder/components/chart/steps";
-import { CustomiseTableStep } from "app/pages/report-builder/builder/components/table/steps";
-import { ReportBuilderPageItemMenu } from "app/pages/report-builder/builder/components/item-menu";
+import { useGFDataset } from "app/hooks/queries/report-builder";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
+import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
 import {
-  TABLE_VARIATION_8_DATA,
-  TABLE_VARIATION_8_COLUMNS,
-} from "app/components/table/data";
+  formatTableCellValue,
+  getRowValue,
+  getTableCellSizing,
+  getTableOptions,
+  getTableRowLimit,
+  getTableRowsPerPageSize,
+  normalizeTableColumns,
+  tablePaletteOptions,
+  TableColumn,
+} from "./options";
+
+const headerTooltip = "Click on headers to edit the text.";
+const otherRowLabel = "Other";
+
+const buildOtherRow = (columns: TableColumn[]) => {
+  return columns.reduce<Record<string, any>>((otherRow, column, index) => {
+    if (index === 0) {
+      otherRow[column.id] = otherRowLabel;
+      otherRow[column.name] = otherRowLabel;
+      return otherRow;
+    }
+
+    otherRow[column.id] = "";
+
+    otherRow[column.name] = otherRow[column.id];
+
+    return otherRow;
+  }, {});
+};
 
 export const ReportBuilderPageTable: React.FC<{
   id: string;
@@ -25,101 +47,230 @@ export const ReportBuilderPageTable: React.FC<{
     id: string;
     type: "grid" | "column";
   };
-}> = ({ id, extRemoveItem }) => {
-  const [step, setStep] = React.useState(1);
-  const [clicked, setClicked] = React.useState(false);
-  const [tableReady, setTableReady] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-  const removeItem = useStoreActions(
-    (actions) => actions.RBReportItemsState.removeItem,
+}> = ({ id, viewMode, parent }) => {
+  const { selectedItem, editItem } = useGetReportItemState<"table">({
+    id,
+    parent,
+  });
+  const setSelectedController = useStoreActions(
+    (actions) => actions.RBReportItemsControllerState.setItem,
   );
 
-  const handleMoreVertClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const clearSelectedItem = useStoreActions(
+    (actions) => actions.RBReportItemsControllerState.clearItem,
+  );
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const tableOptions = getTableOptions(selectedItem?.options);
+  const tableRowLimit = getTableRowLimit(tableOptions);
+  const pageSize = getTableRowsPerPageSize(tableOptions);
+  const configured = !!selectedItem?.data?.dataset;
+  const columns = normalizeTableColumns(selectedItem?.data?.columns);
+  const scrollContainerRef = React.useRef<HTMLDivElement | null>(null);
+  const loadMoreRef = React.useRef<HTMLDivElement | null>(null);
+  const datasetQuery = useGFDataset(
+    selectedItem?.data?.dataset || "",
+    pageSize,
+  );
+  const datasetRows = React.useMemo(
+    () =>
+      datasetQuery.data?.pages.flatMap(
+        (page) => page.data?.data?.result?.data ?? [],
+      ) ?? [],
+    [datasetQuery.data],
+  );
+  const totalRowCount =
+    datasetQuery.data?.pages[0]?.data?.data?.result?.count ??
+    datasetRows.length;
 
-  const handleDeleteItem = (e: React.MouseEvent) => {
-    if (extRemoveItem) {
-      extRemoveItem(e);
+  useClickOutsideEditor({
+    editorId: "table-render",
+    toolbarId: "table-controller",
+    modalId: "save-as-asset-modal",
+    extraIds: [`dataset-rows-per-page-select`, "table-palette-menu"],
+    onOutsideClick: () => {
+      clearSelectedItem();
+    },
+  });
+
+  const handleOpenController = () => {
+    if (viewMode || !selectedItem) return;
+
+    editItem({
+      ...selectedItem,
+      id,
+      type: "table",
+      open: true,
+    });
+
+    if (parent?.id) {
+      setSelectedController({
+        type: "table",
+        open: true,
+        id,
+        parent: {
+          id: parent.id,
+          type: parent.type,
+          open: false,
+        },
+      });
     } else {
-      removeItem(id);
+      setSelectedController({
+        type: "table",
+        open: true,
+        id,
+      });
     }
-    handleClose();
   };
 
-  const title = React.useMemo(() => {
-    if (step === 1) {
-      return "Select Dataset";
-    }
-    if (step === 2) {
-      return "Customise Table";
-    }
-    return "Unknown Step";
-  }, [step]);
+  const handleColumnNameChange = (
+    column: TableColumn,
+    columnIndex: number,
+    nextName: string,
+  ) => {
+    if (!selectedItem) return;
+    const currentColumns = normalizeTableColumns(selectedItem?.data?.columns);
 
-  const content = React.useMemo(() => {
-    if (step === 1) {
-      return <SelectDatasetStep />;
-    }
-    if (step === 2) {
-      return <CustomiseTableStep />;
-    }
-    return undefined;
-  }, [step]);
-
-  const actions = React.useMemo(() => {
-    if (step === 1) {
-      return (
-        <React.Fragment>
-          <Button variant="outlined" onClick={() => setClicked(false)}>
-            Cancel
-          </Button>
-          <Button variant="outlined" onClick={() => setStep(2)}>
-            Continue
-          </Button>
-        </React.Fragment>
-      );
-    }
-    if (step === 2) {
-      return (
-        <React.Fragment>
-          <Button
-            variant="outlined"
-            onClick={() => setStep(1)}
-            startIcon={<ArrowBack sx={{ transform: "scale(0.8)" }} />}
-          >
-            Go Back to Data
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              setClicked(false);
-              setTableReady(true);
-            }}
-            sx={{
-              color: "#fff",
-              fontWeight: "400",
-              bgcolor: "#3154f4",
-              "&:hover": {
-                bgcolor: "#2548c4",
+    editItem({
+      ...selectedItem,
+      id,
+      type: "table",
+      open: selectedItem.open || false,
+      data: {
+        ...selectedItem.data,
+        columns: currentColumns.map((currentColumn, index) =>
+          currentColumn.id === column.id && index === columnIndex
+            ? {
+                id: currentColumn.id,
+                name: nextName,
+                type: currentColumn.type || "string",
+              }
+            : {
+                id: currentColumn.id,
+                name: currentColumn.name,
+                type: currentColumn.type || "string",
               },
-            }}
-          >
-            Apply
-          </Button>
-        </React.Fragment>
-      );
+        ),
+      },
+    });
+  };
+
+  const visibleRows = React.useMemo(() => {
+    const rows = [...datasetRows];
+    if (tableOptions.sortBy) {
+      rows.sort((a, b) => {
+        const column = columns.find((item) => item.id === tableOptions.sortBy);
+        if (!column) return 0;
+        const aValue = getRowValue(a, column);
+        const bValue = getRowValue(b, column);
+        const aNumber = Number(aValue);
+        const bNumber = Number(bValue);
+        const bothNumbers =
+          Number.isFinite(aNumber) && Number.isFinite(bNumber);
+        const result = bothNumbers
+          ? aNumber - bNumber
+          : formatTableCellValue(aValue).localeCompare(
+              formatTableCellValue(bValue),
+              undefined,
+              { numeric: true, sensitivity: "base" },
+            );
+
+        return tableOptions.sortDirection === "descending" ? -result : result;
+      });
     }
-    return undefined;
-  }, [step]);
+
+    if (!tableOptions.limitToTop) return rows;
+
+    const topRows = rows.slice(0, tableRowLimit);
+    const hasRemainderRows = totalRowCount > tableRowLimit;
+
+    if (!tableOptions.groupRemainderAsOther || !hasRemainderRows) {
+      return topRows;
+    }
+
+    return [...topRows, buildOtherRow(columns)];
+  }, [
+    columns,
+    datasetRows,
+    tableOptions.groupRemainderAsOther,
+    tableOptions.limitToTop,
+    tableOptions.sortBy,
+    tableOptions.sortDirection,
+    tableRowLimit,
+    totalRowCount,
+  ]);
+
+  const palette =
+    tablePaletteOptions[tableOptions.colorPalette] ??
+    tablePaletteOptions.default;
+  const cellSizing = getTableCellSizing(tableOptions.size);
+  const rowNumberColumnWidth = tableOptions.showRowNumbers ? 51 : 0;
+  const minTableWidth = Math.max(
+    columns.length * 128 + rowNumberColumnWidth,
+    420,
+  );
+  const borderlessBody = tableOptions.display === "list";
+  const bodyCellBorder = borderlessBody
+    ? "0.5px solid transparent"
+    : "0.5px solid #CFD4DA";
+  const headerCellBorder =
+    tableOptions.display === "list"
+      ? "0.5px solid transparent"
+      : "0.5px solid #CFD4DA";
+  const tableCellSx = {
+    p: cellSizing.padding,
+    height: cellSizing.height,
+    fontSize: "14px",
+    lineHeight: "normal",
+    border: bodyCellBorder,
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+  };
+  const tableHeaderCellSx = {
+    ...tableCellSx,
+    border: headerCellBorder,
+  };
+  const rowHeight = Number.parseInt(cellSizing.height, 10) || 31;
+  const viewportBodyRowCount = tableOptions.limitToTop
+    ? tableRowLimit + (tableOptions.groupRemainderAsOther ? 1 : 0)
+    : pageSize;
+  const tableViewportHeight = rowHeight * (viewportBodyRowCount + 1) + 2;
+  const shouldLoadMoreRows =
+    configured &&
+    datasetQuery.hasNextPage &&
+    !datasetQuery.isFetchingNextPage &&
+    (!tableOptions.limitToTop || datasetRows.length < tableRowLimit);
+
+  React.useEffect(() => {
+    const loadMoreElement = loadMoreRef.current;
+    if (!loadMoreElement || !shouldLoadMoreRows) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          datasetQuery.fetchNextPage();
+        }
+      },
+      {
+        root: null,
+        rootMargin: "80px 0px",
+        threshold: 0.01,
+      },
+    );
+
+    observer.observe(loadMoreElement);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [datasetQuery.fetchNextPage, shouldLoadMoreRows]);
 
   return (
     <Box
+      id="table-render"
+      onClick={handleOpenController}
       sx={{
         width: "100%",
         display: "flex",
@@ -132,14 +283,266 @@ export const ReportBuilderPageTable: React.FC<{
         },
       }}
     >
-      {!tableReady && (
+      {configured ? (
+        <Box
+          sx={{
+            width: parent?.id ? "100%" : tableOptions.width,
+            height: parent?.id ? "100%" : tableOptions.height,
+            minHeight: tableOptions.height === "auto" ? "auto" : 0,
+            display: "flex",
+            p: `${tableOptions.paddingTop} ${tableOptions.paddingRight} ${tableOptions.paddingBottom} ${tableOptions.paddingLeft}`,
+            cursor: viewMode ? "default" : "pointer",
+            borderRadius: "5px",
+            alignItems: "flex-start",
+            justifyContent: "center",
+            border:
+              selectedItem?.open && !viewMode
+                ? "0.5px solid #3154F4"
+                : "0.5px solid transparent",
+          }}
+        >
+          <Box
+            ref={scrollContainerRef}
+            sx={{
+              width: "100%",
+              maxHeight: `${tableViewportHeight}px`,
+              overflow: "auto",
+              scrollbarWidth: "thin",
+              scrollbarColor: "#000 #D9D9D9",
+              "&::-webkit-scrollbar": {
+                width: "4px",
+                height: "4px",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "#000",
+              },
+              "&::-webkit-scrollbar-track": {
+                backgroundColor: "#D9D9D9",
+              },
+            }}
+          >
+            <Box
+              component="table"
+              sx={{
+                width: "100%",
+                minWidth: `${minTableWidth}px`,
+                borderCollapse: "collapse",
+                tableLayout: "fixed",
+              }}
+            >
+              <Box component="thead">
+                <Box component="tr">
+                  {tableOptions.showRowNumbers ? (
+                    <Box
+                      component="th"
+                      sx={{
+                        ...tableHeaderCellSx,
+                        width: "51px",
+                        top: 0,
+                        zIndex: 2,
+                        position: "sticky",
+                        color: palette.headerText,
+                        fontWeight: 400,
+                        textAlign: "center",
+                        bgcolor: palette.headerBg,
+                        borderTopLeftRadius: "4px",
+                      }}
+                    >
+                      #
+                    </Box>
+                  ) : null}
+                  {columns.map((column, index) => (
+                    <Box
+                      key={`${column.id}-${index}`}
+                      component="th"
+                      sx={{
+                        ...tableHeaderCellSx,
+                        top: 0,
+                        zIndex: 2,
+                        position: "sticky",
+                        color: palette.headerText,
+                        fontWeight: 700,
+                        textAlign: "left",
+                        bgcolor: palette.headerBg,
+                        ...(!tableOptions.showRowNumbers && index === 0
+                          ? { borderTopLeftRadius: "4px" }
+                          : {}),
+                        ...(index === columns.length - 1
+                          ? { borderTopRightRadius: "4px" }
+                          : {}),
+                      }}
+                    >
+                      <Tooltip title={headerTooltip} arrow>
+                        <Box
+                          sx={{
+                            minWidth: 0,
+                            ".MuiBox-root > div": {
+                              width: "100%",
+                            },
+                          }}
+                        >
+                          <EditableDiv
+                            disabled={viewMode}
+                            title={column.name}
+                            onTitleChange={(nextName) =>
+                              handleColumnNameChange(column, index, nextName)
+                            }
+                            sx={{
+                              width: "100%",
+                              p: 0,
+                              color: "inherit",
+                              display: "block",
+                              minWidth: 0,
+                              fontSize: "14px",
+                              fontWeight: 700,
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                              backgroundColor: "transparent",
+                            }}
+                          />
+                        </Box>
+                      </Tooltip>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+              <Box component="tbody">
+                {datasetQuery.isLoading ? (
+                  <Box component="tr">
+                    <Box
+                      component="td"
+                      colSpan={
+                        columns.length + (tableOptions.showRowNumbers ? 1 : 0)
+                      }
+                      sx={{
+                        ...tableCellSx,
+                        height: "72px",
+                        textAlign: "center",
+                        bgcolor: "#FFFFFF",
+                      }}
+                    >
+                      <CircularProgress size={18} />
+                    </Box>
+                  </Box>
+                ) : null}
+                {!datasetQuery.isLoading && visibleRows.length === 0 ? (
+                  <Box component="tr">
+                    <Box
+                      component="td"
+                      colSpan={
+                        columns.length + (tableOptions.showRowNumbers ? 1 : 0)
+                      }
+                      sx={{
+                        ...tableCellSx,
+                        height: "72px",
+                        color: "#373D43",
+                        textAlign: "center",
+                        bgcolor: "#FFFFFF",
+                      }}
+                    >
+                      No rows to display
+                    </Box>
+                  </Box>
+                ) : null}
+                {!datasetQuery.isLoading
+                  ? visibleRows.map((row, rowIndex) => {
+                      const rowStriped =
+                        tableOptions.rowStripping === "zebra" &&
+                        rowIndex % 2 === 0;
+                      const textCellBg =
+                        tableOptions.rowStripping === "none"
+                          ? "#FFFFFF"
+                          : rowStriped
+                            ? palette.oddRowBg
+                            : palette.evenRowBg;
+                      const indexCellBg =
+                        tableOptions.rowStripping === "none"
+                          ? "#FFFFFF"
+                          : rowStriped
+                            ? palette.oddIndexBg
+                            : palette.evenIndexBg;
+
+                      return (
+                        <Box component="tr" key={`table-row-${rowIndex}`}>
+                          {tableOptions.showRowNumbers ? (
+                            <Box
+                              component="td"
+                              sx={{
+                                ...tableCellSx,
+                                color: "#373D43",
+                                textAlign: "center",
+                                bgcolor: indexCellBg,
+                                ...(rowIndex === visibleRows.length - 1
+                                  ? { borderBottomLeftRadius: "4px" }
+                                  : {}),
+                              }}
+                            >
+                              {rowIndex + 1}
+                            </Box>
+                          ) : null}
+                          {columns.map((column, columnIndex) => (
+                            <Box
+                              key={`${column.id}-${rowIndex}-${columnIndex}`}
+                              component="td"
+                              sx={{
+                                ...tableCellSx,
+                                color: "#373D43",
+                                bgcolor: textCellBg,
+                                ...(!tableOptions.showRowNumbers &&
+                                rowIndex === visibleRows.length - 1 &&
+                                columnIndex === 0
+                                  ? { borderBottomLeftRadius: "4px" }
+                                  : {}),
+                                ...(rowIndex === visibleRows.length - 1 &&
+                                columnIndex === columns.length - 1
+                                  ? { borderBottomRightRadius: "4px" }
+                                  : {}),
+                              }}
+                            >
+                              {formatTableCellValue(getRowValue(row, column))}
+                            </Box>
+                          ))}
+                        </Box>
+                      );
+                    })
+                  : null}
+                {datasetQuery.isFetchingNextPage ? (
+                  <Box component="tr">
+                    <Box
+                      component="td"
+                      colSpan={
+                        columns.length + (tableOptions.showRowNumbers ? 1 : 0)
+                      }
+                      sx={{
+                        ...tableCellSx,
+                        height: "48px",
+                        textAlign: "center",
+                        bgcolor: "#FFFFFF",
+                      }}
+                    >
+                      <CircularProgress size={16} />
+                    </Box>
+                  </Box>
+                ) : null}
+              </Box>
+            </Box>
+            {shouldLoadMoreRows ? (
+              <Box
+                ref={loadMoreRef}
+                sx={{ width: "100%", height: "1px", pointerEvents: "none" }}
+              />
+            ) : null}
+          </Box>
+        </Box>
+      ) : (
         <Box
           sx={{
             gap: "10px",
             width: "100%",
             display: "flex",
             padding: "10px",
-            cursor: "pointer",
+            cursor: viewMode ? "default" : "pointer",
             borderRadius: "4px",
             alignItems: "center",
             bgcolor: "#d6ddfd",
@@ -147,9 +550,8 @@ export const ReportBuilderPageTable: React.FC<{
             justifyContent: "center",
             border: "1px dashed #3154f4",
             transition: "all 0.3s ease-in-out",
-            height: !clicked ? "130px" : "330px",
+            height: "330px",
           }}
-          onClick={() => setClicked(true)}
         >
           <svg width="24" height="25" viewBox="0 0 24 25" fill="none">
             <path
@@ -165,45 +567,6 @@ export const ReportBuilderPageTable: React.FC<{
           </Typography>
         </Box>
       )}
-      {tableReady && (
-        <Box sx={{ padding: "10px" }}>
-          <Table
-            id={`table-${id}`}
-            data={TABLE_VARIATION_8_DATA}
-            columns={TABLE_VARIATION_8_COLUMNS}
-          />
-        </Box>
-      )}
-      <Box className="top-right-actions">
-        {tableReady && (
-          <React.Fragment>
-            <IconButton onClick={handleMoreVertClick}>
-              <MoreVert fontSize="small" />
-            </IconButton>
-            <ReportBuilderPageItemMenu
-              anchorEl={anchorEl}
-              deleteItem={handleDeleteItem}
-              itemId={id}
-              handleClose={() => setAnchorEl(null)}
-            />
-          </React.Fragment>
-        )}
-        {!tableReady && (
-          <IconButton onClick={handleDeleteItem}>
-            <Close fontSize="small" htmlColor="#ea1541" />
-          </IconButton>
-        )}
-      </Box>
-      <DraggableModal
-        id="report-builder-table-modal"
-        width={550}
-        title={title}
-        open={clicked}
-        actions={actions}
-        setOpen={setClicked}
-      >
-        {content}
-      </DraggableModal>
     </Box>
   );
 };

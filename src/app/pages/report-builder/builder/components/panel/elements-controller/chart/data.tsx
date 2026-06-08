@@ -34,71 +34,26 @@ export const tabList = [
   {
     value: "mapping",
     icon: <DataIcon />,
-    sx: {
-      borderBottom: "2px solid #98A1AA",
-      width: "59.2px",
-      svg: {
-        path: {
-          stroke: "#70777E",
-        },
-      },
-    },
     ariaLabel: "Data",
   },
   {
     value: "filter",
     icon: <FilterIcon />,
-    sx: {
-      borderBottom: "2px solid #98A1AA",
-      width: "59.2px",
-      svg: {
-        path: {
-          stroke: "#70777E",
-        },
-      },
-    },
     ariaLabel: "Filter",
   },
   {
     value: "layout",
     icon: <LayoutTemplateIcon />,
-    sx: {
-      borderBottom: "2px solid #98A1AA",
-      width: "59.2px",
-      svg: {
-        path: {
-          stroke: "#70777E",
-        },
-      },
-    },
     ariaLabel: "Layout",
   },
   {
     value: "style",
     icon: <PaintBucketIcon />,
-    sx: {
-      borderBottom: "2px solid #98A1AA",
-      width: "59.2px",
-      svg: {
-        path: {
-          stroke: "#70777E",
-        },
-      },
-    },
     ariaLabel: "Style",
   },
   {
     value: "advanced",
     icon: <MoreVert htmlColor="#70777E" fontSize="small" />,
-    sx: {
-      borderBottom: "2px solid #98A1AA",
-      width: "59.2px",
-      svg: {
-        path: {
-          stroke: "#70777E",
-        },
-      },
-    },
     ariaLabel: "Advanced",
   },
 ];
