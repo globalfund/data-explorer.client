@@ -1,4 +1,4 @@
-import { Box, IconButton, Tab, Tabs, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import React from "react";
 import MinimizeIcon from "app/assets/vectors/Minimize.svg?react";
 import KPIIcon from "app/assets/vectors/RB_KPI.svg?react";
@@ -10,6 +10,7 @@ import { Options } from "../common/elementOptions";
 import Layout from "./layout";
 import Customise from "./customise";
 import { useStoreState } from "app/state/store/hooks";
+import ControllerTabs from "app/components/tabs";
 
 type SectionDividerControllerTab = "customise" | "layout";
 export default function SectionDividerController() {
@@ -96,41 +97,22 @@ export default function SectionDividerController() {
 
       <Box sx={{ display: isExpanded ? "block" : "none" }}>
         <Box>
-          <Tabs
+          <ControllerTabs
+            tabs={[
+              {
+                value: "layout",
+                icon: <LayoutTemplateIcon />,
+                ariaLabel: "Layout",
+              },
+              {
+                value: "customise",
+                icon: <PaintBucketIcon />,
+                ariaLabel: "Customise",
+              },
+            ]}
             value={value}
-            onChange={handleChange}
-            textColor="secondary"
-            indicatorColor="primary"
-            aria-label="secondary tabs example"
-            // variant="fullWidth"
-            sx={{
-              gap: "8px",
-              display: "flex",
-              width: "100%",
-              "& .MuiTabs-flexContainer": { width: "100%", gap: "8px" },
-              "& .MuiTab-root": { flex: 1, maxWidth: "none", minWidth: "30px" },
-              "& .MuiTabs-indicator": {
-                backgroundColor: "#0F62FE",
-                height: "2px",
-              },
-              svg: {
-                flexShrink: 0,
-              },
-            }}
-          >
-            <Tab
-              value="layout"
-              aria-label="Layout"
-              icon={<LayoutTemplateIcon />}
-              sx={{ borderBottom: "2px solid #98A1AA" }}
-            />
-            <Tab
-              value="customise"
-              aria-label="Customise"
-              icon={<PaintBucketIcon />}
-              sx={{ borderBottom: "2px solid #98A1AA" }}
-            />
-          </Tabs>
+            handleChange={handleChange}
+          />
         </Box>
         {renderTabPanel()}
       </Box>
