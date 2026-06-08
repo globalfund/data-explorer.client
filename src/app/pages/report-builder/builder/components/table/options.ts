@@ -49,7 +49,7 @@ export const DEFAULT_TABLE_OPTIONS: TableOptions = {
   sortBy: "",
   sortDirection: "ascending",
   limitToTop: true,
-  limitToTopValue: "6",
+  limitToTopValue: "10",
   groupRemainderAsOther: true,
 };
 
@@ -165,11 +165,7 @@ export const normalizeTableColumns = (columns?: Partial<TableColumn>[]) => {
 };
 
 export const getTableRowLimit = (options: TableOptions) => {
-  const parsed = Number(
-    options.limitToTop
-      ? options.limitToTopValue
-      : DEFAULT_TABLE_OPTIONS.limitToTopValue,
-  );
+  const parsed = Number(options.limitToTopValue);
   if (!Number.isFinite(parsed) || parsed <= 0) return 1;
   return Math.floor(parsed);
 };

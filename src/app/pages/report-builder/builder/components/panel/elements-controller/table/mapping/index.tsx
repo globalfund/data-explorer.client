@@ -366,49 +366,46 @@ export default function Mapping() {
             </Box>
           </Box>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <Checkfield
-              checked={tableOptions.limitToTop}
-              onChange={(event) =>
-                updateOptions({ limitToTop: event.target.checked })
-              }
-            />
-            <Typography fontSize="14px" color="#000">
-              Limit to Top
-            </Typography>
-            <TextField
-              value={tableOptions.limitToTopValue}
-              type="number"
-              disabled={!tableOptions.limitToTop}
-              onChange={(value) => updateOptions({ limitToTopValue: value })}
-              width="45px"
-              sx={{
-                height: "35px",
-                px: "10px",
-                opacity: tableOptions.limitToTop ? 1 : 0.6,
-                input: {
-                  p: 0,
-                  fontSize: "14px",
-                },
-              }}
-            />
-          </Box>
+          <Checkfield
+            checked={tableOptions.limitToTop}
+            onChange={(event) =>
+              updateOptions({ limitToTop: event.target.checked })
+            }
+            label={
+              <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <Typography fontSize="14px" color="#000">
+                  Limit to Top
+                </Typography>
+                <TextField
+                  value={tableOptions.limitToTopValue}
+                  type="number"
+                  disabled={!tableOptions.limitToTop}
+                  onChange={(value) =>
+                    updateOptions({ limitToTopValue: value })
+                  }
+                  width="45px"
+                  sx={{
+                    height: "35px",
+                    px: "5px",
+                    opacity: tableOptions.limitToTop ? 1 : 0.6,
+                    input: {
+                      p: 0,
+                      fontSize: "14px",
+                    },
+                  }}
+                />
+              </Box>
+            }
+          />
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <Checkfield
-              checked={tableOptions.groupRemainderAsOther}
-              disabled={!tableOptions.limitToTop}
-              onChange={(event) =>
-                updateOptions({ groupRemainderAsOther: event.target.checked })
-              }
-            />
-            <Typography
-              fontSize="14px"
-              color={tableOptions.limitToTop ? "#000" : "#ADB5BD"}
-            >
-              Group remainder as &quot;Other&quot;
-            </Typography>
-          </Box>
+          <Checkfield
+            checked={tableOptions.groupRemainderAsOther}
+            disabled={!tableOptions.limitToTop}
+            onChange={(event) =>
+              updateOptions({ groupRemainderAsOther: event.target.checked })
+            }
+            label="Group remainder as 'Other'"
+          />
         </Box>
       </TableControlAccordion>
     </Box>

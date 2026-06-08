@@ -21,6 +21,23 @@ import {
 } from "./options";
 
 const headerTooltip = "Click on headers to edit the text.";
+const otherRowLabel = "Other";
+
+const buildOtherRow = (columns: TableColumn[]) => {
+  return columns.reduce<Record<string, any>>((otherRow, column, index) => {
+    if (index === 0) {
+      otherRow[column.id] = otherRowLabel;
+      otherRow[column.name] = otherRowLabel;
+      return otherRow;
+    }
+
+    otherRow[column.id] = "";
+
+    otherRow[column.name] = otherRow[column.id];
+
+    return otherRow;
+  }, {});
+};
 
 export const ReportBuilderPageTable: React.FC<{
   id: string;
@@ -44,11 +61,12 @@ export const ReportBuilderPageTable: React.FC<{
   );
 
   const tableOptions = getTableOptions(selectedItem?.options);
-  const viewportRowCount = getTableRowLimit(tableOptions);
+  const tableRowLimit = getTableRowLimit(tableOptions);
   const pageSize = getTableRowsPerPageSize(tableOptions);
   const configured = !!selectedItem?.data?.dataset;
   const columns = normalizeTableColumns(selectedItem?.data?.columns);
   const scrollContainerRef = React.useRef<HTMLDivElement | null>(null);
+  const loadMoreRef = React.useRef<HTMLDivElement | null>(null);
   const datasetQuery = useGFDataset(
     selectedItem?.data?.dataset || "",
     pageSize,
@@ -60,6 +78,9 @@ export const ReportBuilderPageTable: React.FC<{
       ) ?? [],
     [datasetQuery.data],
   );
+  const totalRowCount =
+    datasetQuery.data?.pages[0]?.data?.data?.result?.count ??
+    datasetRows.length;
 
   useClickOutsideEditor({
     editorId: "table-render",
@@ -157,8 +178,26 @@ export const ReportBuilderPageTable: React.FC<{
       });
     }
 
-    return rows;
-  }, [columns, datasetRows, tableOptions.sortBy, tableOptions.sortDirection]);
+    if (!tableOptions.limitToTop) return rows;
+
+    const topRows = rows.slice(0, tableRowLimit);
+    const hasRemainderRows = totalRowCount > tableRowLimit;
+
+    if (!tableOptions.groupRemainderAsOther || !hasRemainderRows) {
+      return topRows;
+    }
+
+    return [...topRows, buildOtherRow(columns)];
+  }, [
+    columns,
+    datasetRows,
+    tableOptions.groupRemainderAsOther,
+    tableOptions.limitToTop,
+    tableOptions.sortBy,
+    tableOptions.sortDirection,
+    tableRowLimit,
+    totalRowCount,
+  ]);
 
   const palette =
     tablePaletteOptions[tableOptions.colorPalette] ??
@@ -192,50 +231,41 @@ export const ReportBuilderPageTable: React.FC<{
     border: headerCellBorder,
   };
   const rowHeight = Number.parseInt(cellSizing.height, 10) || 31;
-  const tableViewportHeight = rowHeight * (viewportRowCount + 1) + 2;
-
-  const handleScroll = React.useCallback(
-    (event: React.UIEvent<HTMLDivElement>) => {
-      const target = event.currentTarget;
-      const nearBottom =
-        target.scrollHeight - target.scrollTop - target.clientHeight < 80;
-      if (
-        nearBottom &&
-        datasetQuery.hasNextPage &&
-        !datasetQuery.isFetchingNextPage
-      ) {
-        datasetQuery.fetchNextPage();
-      }
-    },
-    [
-      datasetQuery.fetchNextPage,
-      datasetQuery.hasNextPage,
-      datasetQuery.isFetchingNextPage,
-    ],
-  );
+  const viewportBodyRowCount = tableOptions.limitToTop
+    ? tableRowLimit + (tableOptions.groupRemainderAsOther ? 1 : 0)
+    : pageSize;
+  const tableViewportHeight = rowHeight * (viewportBodyRowCount + 1) + 2;
+  const shouldLoadMoreRows =
+    configured &&
+    datasetQuery.hasNextPage &&
+    !datasetQuery.isFetchingNextPage &&
+    (!tableOptions.limitToTop || datasetRows.length < tableRowLimit);
 
   React.useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (
-      !configured ||
-      !container ||
-      !datasetQuery.hasNextPage ||
-      datasetQuery.isFetchingNextPage
-    ) {
+    const loadMoreElement = loadMoreRef.current;
+    if (!loadMoreElement || !shouldLoadMoreRows) {
       return;
     }
 
-    if (container.scrollHeight <= container.clientHeight) {
-      datasetQuery.fetchNextPage();
-    }
-  }, [
-    configured,
-    datasetQuery.fetchNextPage,
-    datasetQuery.hasNextPage,
-    datasetQuery.isFetchingNextPage,
-    tableViewportHeight,
-    visibleRows.length,
-  ]);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          datasetQuery.fetchNextPage();
+        }
+      },
+      {
+        root: null,
+        rootMargin: "80px 0px",
+        threshold: 0.01,
+      },
+    );
+
+    observer.observe(loadMoreElement);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [datasetQuery.fetchNextPage, shouldLoadMoreRows]);
 
   return (
     <Box
@@ -273,11 +303,22 @@ export const ReportBuilderPageTable: React.FC<{
         >
           <Box
             ref={scrollContainerRef}
-            onScroll={handleScroll}
             sx={{
               width: "100%",
               maxHeight: `${tableViewportHeight}px`,
               overflow: "auto",
+              scrollbarWidth: "thin",
+              scrollbarColor: "#000 #D9D9D9",
+              "&::-webkit-scrollbar": {
+                width: "4px",
+                height: "4px",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "#000",
+              },
+              "&::-webkit-scrollbar-track": {
+                backgroundColor: "#D9D9D9",
+              },
             }}
           >
             <Box
@@ -486,6 +527,12 @@ export const ReportBuilderPageTable: React.FC<{
                 ) : null}
               </Box>
             </Box>
+            {shouldLoadMoreRows ? (
+              <Box
+                ref={loadMoreRef}
+                sx={{ width: "100%", height: "1px", pointerEvents: "none" }}
+              />
+            ) : null}
           </Box>
         </Box>
       ) : (

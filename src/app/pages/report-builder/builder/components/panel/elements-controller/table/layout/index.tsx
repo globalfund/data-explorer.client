@@ -1,7 +1,5 @@
-import { Box, Checkbox, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Direction from "app/assets/vectors/RBAlignBottom.svg?react";
-import CheckboxCheckedIcon from "app/assets/vectors/Checkbox_checked.svg?react";
-import CheckboxIcon from "app/assets/vectors/Checkbox_notchecked.svg?react";
 import SelectField from "../../components/selectfield";
 import TextField from "../../components/textfield";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
@@ -10,6 +8,7 @@ import {
   getTableOptions,
   TableOptions,
 } from "app/pages/report-builder/builder/components/table/options";
+import Checkfield from "../../components/checkfield";
 
 const rowsPerPageOptions = [
   { label: "5", value: "5" },
@@ -118,18 +117,13 @@ export default function LayoutTab() {
       />
 
       <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-        <Checkbox
+        <Checkfield
           checked={tableOptions.showRowNumbers}
-          icon={<CheckboxIcon />}
-          checkedIcon={<CheckboxCheckedIcon />}
           onChange={(event) =>
             updateOptions({ showRowNumbers: event.target.checked })
           }
-          sx={{ p: 0, width: 20, height: 20 }}
+          label="Show row numbers"
         />
-        <Typography fontSize="14px" color="#000">
-          Show row numbers
-        </Typography>
       </Box>
 
       <Box>
