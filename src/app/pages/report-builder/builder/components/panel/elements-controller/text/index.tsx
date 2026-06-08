@@ -1,4 +1,4 @@
-import { Box, IconButton, Tab, Tabs, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import React from "react";
 import MinimizeIcon from "app/assets/vectors/Minimize.svg?react";
 import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
@@ -14,7 +14,8 @@ import { RTEToolbar } from "./font-style-tab";
 import { AssetSwitch } from "../grid/switchAsset";
 import { GridLayoutTab } from "../grid/gridTab";
 import { ColumnLayoutTab } from "../column/columnTab";
-import { ColumnOptionIcon, GridOptionIcon } from "../../../header/data";
+import { extraTabs } from "../common/tabOptions";
+import ControllerTabs from "app/components/tabs";
 
 type TextControllerTab = "font" | "style" | "layout" | "grid" | "column";
 export default function TextController() {
@@ -108,62 +109,28 @@ export default function TextController() {
       </Box>
       <Box sx={{ display: isExpanded ? "block" : "none" }}>
         <Box>
-          <Tabs
+          <ControllerTabs
+            tabs={[
+              ...extraTabs(selectedController?.parent?.type),
+              {
+                value: "font",
+                icon: <TypeIcon />,
+                ariaLabel: "Text",
+              },
+              {
+                value: "style",
+                icon: <PaintBucketIcon />,
+                ariaLabel: "Style",
+              },
+              {
+                value: "layout",
+                icon: <LayoutTemplateIcon />,
+                ariaLabel: "Layout",
+              },
+            ]}
             value={value}
-            onChange={handleChange}
-            textColor="secondary"
-            indicatorColor="primary"
-            aria-label="secondary tabs example"
-            sx={{
-              gap: "8px",
-              display: "flex",
-              width: "100%",
-              "& .MuiTabs-flexContainer": { width: "100%", gap: "8px" },
-              "& .MuiTab-root": { flex: 1, maxWidth: "none", minWidth: "30px" },
-              "& .MuiTabs-indicator": {
-                backgroundColor: "#0F62FE",
-                height: "2px",
-              },
-              svg: {
-                flexShrink: 0,
-              },
-            }}
-          >
-            {" "}
-            {selectedController?.parent?.type === "grid" ? (
-              <Tab
-                value="grid"
-                aria-label="Grid"
-                sx={{ borderBottom: "2px solid #98A1AA" }}
-                icon={<GridOptionIcon />}
-              />
-            ) : selectedController?.parent?.type === "column" ? (
-              <Tab
-                value="column"
-                aria-label="Column"
-                sx={{ borderBottom: "2px solid #98A1AA" }}
-                icon={<ColumnOptionIcon />}
-              />
-            ) : null}
-            <Tab
-              value="font"
-              aria-label="Text"
-              sx={{ borderBottom: "2px solid #98A1AA" }}
-              icon={<TypeIcon />}
-            />
-            <Tab
-              value="style"
-              aria-label="Style"
-              icon={<PaintBucketIcon />}
-              sx={{ borderBottom: "2px solid #98A1AA", marginLeft: "8px" }}
-            />
-            <Tab
-              value="layout"
-              aria-label="Layout"
-              icon={<LayoutTemplateIcon />}
-              sx={{ borderBottom: "2px solid #98A1AA", marginLeft: "8px" }}
-            />
-          </Tabs>
+            handleChange={handleChange}
+          />
         </Box>
         {renderTabPanel()}
       </Box>

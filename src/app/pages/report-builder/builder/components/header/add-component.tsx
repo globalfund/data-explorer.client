@@ -13,7 +13,11 @@ import { useCMSData } from "app/hooks/useCMSData";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import { DEFAULT_TABLE_OPTIONS } from "../table/options";
 
-export default function AddComponent() {
+export default function AddComponent({
+  onOpenAssets,
+}: {
+  onOpenAssets: () => void;
+}) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const cmsData = useCMSData({ returnData: true });
   const addItem = useStoreActions(
@@ -311,6 +315,10 @@ export default function AddComponent() {
         return;
       case "column":
         setColumnModalOpen(true);
+        return;
+      case "saved_asset":
+        setAnchorEl(null);
+        onOpenAssets();
         return;
       default:
         break;
