@@ -5,13 +5,10 @@ import {
   AccordionSummary,
   Box,
   Button,
-  Checkbox,
   Tooltip,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CheckboxCheckedIcon from "app/assets/vectors/Checkbox_checked.svg?react";
-import CheckboxIcon from "app/assets/vectors/Checkbox_notchecked.svg?react";
 import DatasetFieldCloseIcon from "app/assets/vectors/DatasetFieldClose.svg?react";
 import DatasetFieldDateIcon from "app/assets/vectors/DatasetFieldDate.svg?react";
 import DatasetFieldNumberIcon from "app/assets/vectors/DatasetFieldNumber.svg?react";
@@ -27,6 +24,7 @@ import {
   TableColumn,
   TableOptions,
 } from "app/pages/report-builder/builder/components/table/options";
+import Checkfield from "../../components/checkfield";
 
 const accordionSx = {
   m: 0,
@@ -160,91 +158,105 @@ export default function Mapping() {
         table: {
           ...selectedController.extra?.table,
           showDatasetModal: true,
+          datasetModalStep: "view",
         },
       },
     });
   };
 
   return (
-    <Box sx={{ width: "100%", bgcolor: "#F8F9FA" }}>
+    <Box
+      sx={{
+        width: "100%",
+        bgcolor: "#F8F9FA",
+        maxHeight: "500px",
+        overflowY: "auto",
+      }}
+      className="scrollbar"
+    >
       <TableControlAccordion title="Columns">
-        <Box
-          sx={{
-            gap: "8px",
-            p: "8px",
-            display: "flex",
-            flexWrap: "wrap",
-            alignItems: "flex-start",
-          }}
-        >
-          {columns.map((column, index) => {
-            const FieldIcon = getFieldIcon(column.type);
+        <Box sx={{ p: "8px" }}>
+          <Box
+            sx={{
+              gap: "8px",
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "flex-start",
+            }}
+          >
+            {columns.map((column, index) => {
+              const FieldIcon = getFieldIcon(column.type);
 
-            return (
-              <Tooltip key={`${column.id}-${index}`} title={column.name} arrow>
-                <Box
-                  sx={{
-                    gap: "6px",
-                    px: "12px",
-                    py: "6px",
-                    minWidth: 0,
-                    color: "#fff",
-                    display: "flex",
-                    maxWidth: "100%",
-                    borderRadius: "6px",
-                    alignItems: "center",
-                    bgcolor: getChipColor(column.type),
-                    svg: {
-                      flexShrink: 0,
-                    },
-                  }}
+              return (
+                <Tooltip
+                  key={`${column.id}-${index}`}
+                  title={column.name}
+                  arrow
                 >
-                  <FieldIcon />
-                  <Typography
-                    component="span"
-                    fontSize="14px"
-                    lineHeight="normal"
-                    color="inherit"
-                    sx={{
-                      minWidth: 0,
-                      overflow: "hidden",
-                      whiteSpace: "nowrap",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    {column.name}
-                  </Typography>
                   <Box
-                    component="button"
-                    type="button"
-                    aria-label={`Remove ${column.name}`}
-                    onClick={() => handleRemoveColumn(column.id, index)}
                     sx={{
-                      p: 0,
-                      m: 0,
-                      width: 14,
-                      height: 14,
-                      border: 0,
-                      display: "flex",
+                      gap: "6px",
+                      px: "12px",
+                      py: "6px",
+                      minWidth: 0,
                       color: "#fff",
-                      cursor: columns.length <= 1 ? "default" : "pointer",
-                      bgcolor: "transparent",
+                      display: "flex",
+                      maxWidth: "100%",
+                      borderRadius: "6px",
                       alignItems: "center",
-                      justifyContent: "center",
-                      opacity: columns.length <= 1 ? 0.45 : 1,
+                      bgcolor: getChipColor(column.type),
+                      svg: {
+                        flexShrink: 0,
+                      },
                     }}
                   >
-                    <DatasetFieldCloseIcon />
+                    <FieldIcon />
+                    <Typography
+                      component="span"
+                      fontSize="14px"
+                      lineHeight="normal"
+                      color="inherit"
+                      sx={{
+                        minWidth: 0,
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {column.name}
+                    </Typography>
+                    <Box
+                      component="button"
+                      type="button"
+                      aria-label={`Remove ${column.name}`}
+                      onClick={() => handleRemoveColumn(column.id, index)}
+                      sx={{
+                        p: 0,
+                        m: 0,
+                        width: 14,
+                        height: 14,
+                        border: 0,
+                        display: "flex",
+                        color: "#fff",
+                        cursor: columns.length <= 1 ? "default" : "pointer",
+                        bgcolor: "transparent",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        opacity: columns.length <= 1 ? 0.45 : 1,
+                      }}
+                    >
+                      <DatasetFieldCloseIcon />
+                    </Box>
                   </Box>
-                </Box>
-              </Tooltip>
-            );
-          })}
+                </Tooltip>
+              );
+            })}
+          </Box>
           <Button
             variant="outlined"
             onClick={handleEditColumns}
             sx={{
-              mt: "2px",
+              mt: "8px",
               px: "12px",
               py: "9px",
               height: "35px",
@@ -355,14 +367,11 @@ export default function Mapping() {
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <Checkbox
+            <Checkfield
               checked={tableOptions.limitToTop}
-              icon={<CheckboxIcon />}
-              checkedIcon={<CheckboxCheckedIcon />}
               onChange={(event) =>
                 updateOptions({ limitToTop: event.target.checked })
               }
-              sx={{ p: 0, width: 20, height: 20 }}
             />
             <Typography fontSize="14px" color="#000">
               Limit to Top
@@ -386,15 +395,12 @@ export default function Mapping() {
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <Checkbox
+            <Checkfield
               checked={tableOptions.groupRemainderAsOther}
               disabled={!tableOptions.limitToTop}
-              icon={<CheckboxIcon />}
-              checkedIcon={<CheckboxCheckedIcon />}
               onChange={(event) =>
                 updateOptions({ groupRemainderAsOther: event.target.checked })
               }
-              sx={{ p: 0, width: 20, height: 20 }}
             />
             <Typography
               fontSize="14px"

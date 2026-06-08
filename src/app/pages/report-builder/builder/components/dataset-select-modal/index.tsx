@@ -105,6 +105,12 @@ export const DatasetSelectModal: React.FC<{
     }
   }, [item?.data?.dataset, open]);
 
+  React.useEffect(() => {
+    if (selectedController?.extra?.table?.datasetModalStep) {
+      setStep(selectedController.extra.table.datasetModalStep);
+    }
+  }, [selectedController?.extra?.table?.datasetModalStep]);
+
   const getDatasetLatestUpdate = React.useCallback(
     (id: string) => {
       const key = getDatasetLatestUpdateKey(id);

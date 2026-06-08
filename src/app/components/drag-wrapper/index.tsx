@@ -44,6 +44,7 @@ const DragWrapper: React.FC<DragWrapperProps> = ({
       sx={{
         cursor: disabled ? "not-allowed" : isDragging ? "grabbing" : "grab",
         opacity: isDragging ? 0.5 : 1,
+        transform: "translate(0, 0)", // Fixes a potential issue where the dragged had a background shadow
         ...sx,
       }}
     >

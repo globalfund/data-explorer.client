@@ -79,6 +79,7 @@ export default function TableController() {
         table: {
           ...selectedController?.extra?.table,
           showDatasetModal: false,
+          datasetModalStep: null,
         },
       },
     });

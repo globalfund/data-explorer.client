@@ -158,6 +158,7 @@ export interface RBReportItemController {
     };
     table?: {
       showDatasetModal?: boolean;
+      datasetModalStep?: "select" | "view" | "preview" | null;
     };
   };
 }

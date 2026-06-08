@@ -290,11 +290,8 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
               bgcolor: "#f8f9fa",
               borderRadius: "9px",
               alignItems: "center",
-              border: "0.5px dashed #98a1aa",
+              border: `0.5px dashed ${isDraggingColumn ? "#3154F4" : "#98a1aa"}`,
             }}
-            // hoverHandler={(item) => {
-            //   handleAddColumn(item);
-            // }}
           >
             {selectedColumns.length ? (
               <React.Fragment>
@@ -448,7 +445,7 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
               </React.Fragment>
             ) : (
               <DropWrapper
-                accept={["COLUMN", "SELECTED_COLUMN"]}
+                accept={["COLUMN"]}
                 dropHandler={(item) => {
                   handleAddColumn(item);
                 }}
