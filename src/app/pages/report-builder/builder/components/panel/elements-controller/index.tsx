@@ -7,6 +7,7 @@ import ChartController from "./chart";
 import SectionDividerController from "./section-divider";
 import GridController from "./grid";
 import ColumnController from "./column";
+import TableController from "./table";
 
 export default function ElementsController() {
   const selectedItem = useStoreState(
@@ -34,6 +35,8 @@ export default function ElementsController() {
         return <ChartController />;
       case "section_divider":
         return <SectionDividerController />;
+      case "table":
+        return <TableController />;
       default:
         return null;
     }

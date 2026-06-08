@@ -11,6 +11,7 @@ import { ReportBuilderSelectGridModal } from "app/pages/report-builder/main/comp
 import { ReportBuilderSelectColumnModal } from "app/pages/report-builder/main/components/select-column-modal";
 import { useCMSData } from "app/hooks/useCMSData";
 import { getCMSDataField } from "app/utils/getCMSDataField";
+import { DEFAULT_TABLE_OPTIONS } from "../table/options";
 
 export default function AddComponent({
   onOpenAssets,
@@ -166,7 +167,16 @@ export default function AddComponent({
         };
         break;
       case "table":
-        newItem = { id: uniqueId(), type: "table", open: false, data: null };
+        newItem = {
+          id: uniqueId(),
+          type: "table",
+          open: false,
+          options: DEFAULT_TABLE_OPTIONS,
+          data: {
+            dataset: null,
+            columns: [],
+          },
+        };
         break;
       case "image":
         newItem = {
@@ -374,7 +384,6 @@ export default function AddComponent({
         {ComponentOptions.map((option) => (
           <MenuItem
             key={option.value}
-            disabled={option.disabled}
             onClick={() => handleMenuItemClick(option.value)}
           >
             {option.icon}

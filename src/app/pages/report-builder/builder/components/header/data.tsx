@@ -200,7 +200,6 @@ export const ComponentOptions = [
     label: "Table",
     icon: <TableOptionIcon />,
     value: "table",
-    disabled: true,
     cmsKey: "componentTableOption",
   },
   {

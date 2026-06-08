@@ -13,6 +13,7 @@ interface Props {
   icon: React.ReactNode;
   selectedItem: string;
   type: ChartProperty;
+  componentType?: "chart" | "table";
 }
 export function AssetSelect({
   buttonLabel,
@@ -20,6 +21,7 @@ export function AssetSelect({
   icon,
   type,
   selectedItem,
+  componentType,
 }: Readonly<Props>) {
   const setSelectedController = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
@@ -70,14 +72,25 @@ export function AssetSelect({
             }}
             onClick={() => {
               if (selectedController) {
-                setSelectedController({
-                  ...selectedController,
-                  extra: {
-                    chart: {
-                      listToDisplay: type,
+                if (componentType === "table") {
+                  setSelectedController({
+                    ...selectedController,
+                    extra: {
+                      table: {
+                        showDatasetModal: true,
+                      },
                     },
-                  },
-                });
+                  });
+                } else {
+                  setSelectedController({
+                    ...selectedController,
+                    extra: {
+                      chart: {
+                        listToDisplay: type,
+                      },
+                    },
+                  });
+                }
               }
             }}
           >
@@ -97,14 +110,25 @@ export function AssetSelect({
             <Button
               onClick={() => {
                 if (selectedController) {
-                  setSelectedController({
-                    ...selectedController,
-                    extra: {
-                      chart: {
-                        listToDisplay: type,
+                  if (componentType === "table") {
+                    setSelectedController({
+                      ...selectedController,
+                      extra: {
+                        table: {
+                          showDatasetModal: true,
+                        },
                       },
-                    },
-                  });
+                    });
+                  } else {
+                    setSelectedController({
+                      ...selectedController,
+                      extra: {
+                        chart: {
+                          listToDisplay: type,
+                        },
+                      },
+                    });
+                  }
                 }
               }}
               startIcon={<AddIcon htmlColor="#000000" />}

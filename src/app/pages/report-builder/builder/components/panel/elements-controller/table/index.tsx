@@ -1,47 +1,35 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Tab, Tabs, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import MinimizeIcon from "app/assets/vectors/Minimize.svg?react";
 import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
-import ChartIcon from "app/assets/vectors/RBChart.svg?react";
+import TableIcon from "app/assets/vectors/RBTable.svg?react";
 import { Options } from "../common/elementOptions";
-import { chartInfo, tabList } from "./data";
+import DatabaseIcon from "app/assets/vectors/RBDatabase.svg?react";
+import { tabList } from "./data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import DataDetail from "./dataDetail";
 import Mapping from "./mapping";
-import Filtering from "./filtering";
 import LayoutTab from "./layout";
 import Customise from "./customise";
-import Advanced from "./advanced";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 import { AssetSwitch } from "../grid/switchAsset";
 import { GridLayoutTab } from "../grid/gridTab";
 import { ColumnLayoutTab } from "../column/columnTab";
-import ChartSelectModal from "app/pages/report-builder/builder/components/chart-select-modal";
+import { ColumnOptionIcon, GridOptionIcon } from "../../../header/data";
+import { datasetItems } from "../../../chart/data";
 import { DatasetSelectModal } from "../../../dataset-select-modal";
 import { AssetSelect } from "../common/asset-select";
-import { chartTypes, datasetItems } from "../../../chart/data";
-import { ChartProperty } from "app/state/api/action-reducers/report-builder/sync";
-import ControllerTabs from "app/components/tabs";
-import { extraTabs } from "../common/tabOptions";
 
-type ChartControllerTab =
-  | "mapping"
-  | "filter"
-  | "layout"
-  | "style"
-  | "advanced"
-  | "grid"
-  | "column";
+type TableControllerTab = "mapping" | "layout" | "style" | "grid" | "column";
 
-export default function ChartController() {
+export default function TableController() {
   const [isExpanded, setIsExpanded] = React.useState(true);
-  const [value, setValue] = React.useState<ChartControllerTab>("mapping");
+  const [value, setValue] = React.useState<TableControllerTab>("mapping");
 
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
 
-  const { selectedItem: item, editItem } = useGetReportItemState<"chart">({
+  const { selectedItem: item, editItem } = useGetReportItemState<"table">({
     id: selectedController?.id || "",
     parent: selectedController?.parent ?? undefined,
   });
@@ -50,19 +38,17 @@ export default function ChartController() {
     (actions) => actions.RBReportItemsControllerState.setItem,
   );
 
-  const chartExtra = selectedController?.extra?.chart || {};
+  const tableExtra = selectedController?.extra?.table || {};
 
-  const chartData = item?.data || {};
-
-  const chartConfigured = item?.data?.dataset && item?.data?.chartType;
+  const tableConfigured = !!item?.data?.dataset;
 
   const handleExpandToggle = () => {
     setIsExpanded(!isExpanded);
   };
 
   const handleChange = (
-    event: React.SyntheticEvent,
-    newValue: ChartControllerTab,
+    _event: React.SyntheticEvent,
+    newValue: TableControllerTab,
   ) => {
     setValue(newValue);
   };
@@ -71,14 +57,10 @@ export default function ChartController() {
     switch (value) {
       case "mapping":
         return <Mapping />;
-      case "filter":
-        return <Filtering />;
       case "layout":
         return <LayoutTab />;
       case "style":
         return <Customise />;
-      case "advanced":
-        return <Advanced />;
       case "grid":
         return <GridLayoutTab />;
       case "column":
@@ -94,63 +76,68 @@ export default function ChartController() {
       ...selectedController,
       extra: {
         ...selectedController?.extra,
-        chart: {
-          listToDisplay: null,
+        table: {
+          ...selectedController?.extra?.table,
+          showDatasetModal: false,
+          datasetModalStep: null,
         },
       },
     });
   };
 
-  const handleApply = (selectedDataset: string) => {
-    if (!item || !selectedDataset) return;
-    const datasetUnchanged = item?.data?.dataset === selectedDataset;
-    editItem({
-      ...item,
-      id: selectedController?.id || "",
-      type: "chart",
-      data: {
-        ...item?.data,
-        dataset: selectedDataset,
-        mapping: datasetUnchanged ? item?.data?.mapping : {},
-        appliedFilters: datasetUnchanged ? item?.data?.appliedFilters : {},
-      },
-    });
-    handleBack();
-  };
-
-  const getSelectedItem = (type: "chartType" | "dataset") => {
-    if (type === "chartType") {
-      const chartTypeId = chartData[type];
-      const chartType = chartTypes.find((chart) => chart.id === chartTypeId);
-      return chartType ? chartType.chartType : "";
-    } else if (type === "dataset") {
-      return (
-        datasetItems.find((dataset) => dataset.id === chartData.dataset)
-          ?.name || ""
-      );
-    }
-    return chartExtra?.[type] || "";
-  };
+  const extraTabs = [
+    ...(selectedController?.parent?.type === "grid"
+      ? [
+          {
+            value: "grid" as TableControllerTab,
+            ariaLabel: "Grid",
+            icon: <GridOptionIcon />,
+            sx: {
+              borderBottom: "2px solid #98A1AA",
+              svg: {
+                path: {
+                  stroke: "#70777E",
+                },
+              },
+            },
+          },
+        ]
+      : []),
+    ...(selectedController?.parent?.type === "column"
+      ? [
+          {
+            value: "column" as TableControllerTab,
+            ariaLabel: "Column",
+            icon: <ColumnOptionIcon />,
+            sx: {
+              borderBottom: "2px solid #98A1AA",
+              svg: {
+                path: {
+                  stroke: "#70777E",
+                },
+              },
+            },
+          },
+        ]
+      : []),
+  ];
 
   useEffect(() => {
-    if (chartConfigured) {
+    if (tableConfigured) {
       setValue("mapping");
     }
-  }, [chartConfigured, item?.data?.dataset, item?.data?.chartType]);
+  }, [tableConfigured, item?.data?.dataset]);
 
   return (
     <Box
-      id="chart-controller"
+      id="table-controller"
       key={selectedController?.id}
       sx={{
         minWidth: "300px",
         maxWidth: "max-content",
       }}
     >
-      {chartExtra.showDatasetTable?.open && (
-        <DataDetail datasetId={chartExtra.showDatasetTable?.datasetId ?? ""} />
-      )}
-      {!chartExtra.showDatasetTable?.open && (
+      {!tableExtra.showDatasetModal && (
         <Box
           sx={{
             border: "1px solid #98A1AA",
@@ -199,9 +186,9 @@ export default function ChartController() {
                 <IconButton onClick={handleExpandToggle}>
                   {isExpanded ? <MinimizeIcon /> : <MaximizeIcon />}
                 </IconButton>
-                <ChartIcon />
+                <TableIcon />
                 <Typography fontSize="16px" color="#000000" fontWeight={700}>
-                  Chart
+                  Table
                 </Typography>
               </Box>
 
@@ -219,29 +206,59 @@ export default function ChartController() {
                   padding: "0 8px",
                 }}
               >
-                {chartInfo.map((data) => (
-                  <AssetSelect
-                    key={data.buttonLabel}
-                    buttonLabel={data.buttonLabel}
-                    helperText={data.helperText}
-                    icon={data.icon}
-                    selectedItem={getSelectedItem(data.type)}
-                    type={data.type as ChartProperty}
-                  />
-                ))}
-              </Box>
-              <Box sx={{ borderTop: "1px solid #CFD4DA", marginTop: "8px" }}>
-                <ControllerTabs
-                  tabs={[
-                    ...extraTabs(selectedController?.parent?.type),
-                    ...tabList,
-                  ]}
-                  value={chartConfigured ? value : null}
-                  handleChange={chartConfigured ? handleChange : undefined}
+                <AssetSelect
+                  key={"Select Dataset"}
+                  buttonLabel={"Select Dataset"}
+                  helperText={"Select a dataset to get started"}
+                  icon={<DatabaseIcon />}
+                  selectedItem={
+                    datasetItems.find(
+                      (dataset) => dataset.id === item?.data?.dataset,
+                    )?.name || ""
+                  }
+                  type={"dataset"}
+                  componentType="table"
                 />
               </Box>
+              <Box sx={{ borderTop: "1px solid #CFD4DA", marginTop: "8px" }}>
+                <Tabs
+                  value={tableConfigured ? value : null}
+                  onChange={tableConfigured ? handleChange : undefined}
+                  textColor="secondary"
+                  indicatorColor="primary"
+                  aria-label="secondary tabs example"
+                  sx={{
+                    gap: "8px",
+                    display: "flex",
+                    width: "100%",
+                    "& .MuiTabs-flexContainer": { width: "100%", gap: "8px" },
+                    "& .MuiTab-root": {
+                      flex: 1,
+                      maxWidth: "none",
+                      minWidth: "30px",
+                    },
+                    "& .MuiTabs-indicator": {
+                      backgroundColor: "#0F62FE",
+                      height: "2px",
+                    },
+                    svg: {
+                      flexShrink: 0,
+                    },
+                  }}
+                >
+                  {[...extraTabs, ...tabList].map((tab) => (
+                    <Tab
+                      key={tab.value}
+                      value={tab.value}
+                      aria-label={tab.value}
+                      sx={tab.sx}
+                      icon={tab.icon}
+                    />
+                  ))}
+                </Tabs>
+              </Box>
 
-              {chartConfigured ? (
+              {tableConfigured ? (
                 renderTabPanel()
               ) : (
                 <Box
@@ -251,22 +268,32 @@ export default function ChartController() {
                     textAlign: "center",
                   }}
                 >
-                  *Configure chart first to start editing.
+                  *Configure table first to start editing.
                 </Box>
               )}
             </Box>
           </Box>
         </Box>
       )}
-      <ChartSelectModal
-        open={selectedController?.extra?.chart?.listToDisplay == "chartType"}
-        onClose={handleBack}
-      />
       <DatasetSelectModal
-        open={selectedController?.extra?.chart?.listToDisplay == "dataset"}
+        open={!!selectedController?.extra?.table?.showDatasetModal}
         onClose={handleBack}
-        skipColumnSelection
-        handleSelectDataset={handleApply}
+        handleSelectDataset={(selectedDataset, previewColumns) => {
+          editItem({
+            ...item,
+            id: selectedController?.id || "",
+            type: "table",
+            data: {
+              ...item.data,
+              dataset: selectedDataset,
+              columns: previewColumns.map((col) => ({
+                name: col.name,
+                id: col.name,
+                type: col.type,
+              })),
+            },
+          });
+        }}
       />
     </Box>
   );
