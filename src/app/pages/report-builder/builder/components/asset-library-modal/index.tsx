@@ -98,6 +98,7 @@ const AssetCard: React.FC<{
     sx={{
       gap: "12px",
       width: "100%",
+      height: "fit-content",
       display: "flex",
       cursor: "pointer",
       padding: "16px",
