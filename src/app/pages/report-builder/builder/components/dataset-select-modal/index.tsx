@@ -22,10 +22,12 @@ import DataPreview from "./preview";
 import {
   DatasetColumn,
   DatasetRowsPerPage,
+  getColumnType,
   getDatasetLatestUpdateKey,
 } from "./utils";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { useGFSampleDataset } from "app/hooks/queries/report-builder";
 
 type DatasetSort = "updatedDate DESC" | "name ASC" | "name DESC";
 type DatasetTypeFilter = "all" | "global-fund";
@@ -51,7 +53,15 @@ const vectorIconSx = {
 export const DatasetSelectModal: React.FC<{
   open: boolean;
   onClose: () => void;
-}> = ({ open, onClose }) => {
+  skipColumnSelection?: boolean;
+  handleSelectDataset?: (
+    selectedDataset: string,
+    previewColumns: {
+      name: string;
+      type: string;
+    }[],
+  ) => void;
+}> = ({ open, onClose, skipColumnSelection, handleSelectDataset }) => {
   const [step, setStep] = React.useState<DatasetModalStep>("select");
   const [search, setSearch] = React.useState("");
   const [selectedSort, setSelectedSort] =
@@ -67,10 +77,13 @@ export const DatasetSelectModal: React.FC<{
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-  const { selectedItem: item, editItem } = useGetReportItemState<"table">({
+  const { selectedItem: item } = useGetReportItemState<"table">({
     id: selectedController?.id || "",
     parent: selectedController?.parent ?? undefined,
   });
+
+  const sampledDatasetQuery = useGFSampleDataset(selectedDataset);
+  const sampledDataset = sampledDatasetQuery?.data?.data?.data?.result;
 
   const datasetsLatestUpdate = useStoreState(
     (state) =>
@@ -136,8 +149,22 @@ export const DatasetSelectModal: React.FC<{
     return item?.data?.columns ?? [];
   }, [item?.data?.dataset, item?.data?.columns, selectedDataset]);
 
+  console.log("sampledDataset", sampledDataset);
   const handleOpenView = () => {
     if (!selectedDataset) return;
+
+    if (skipColumnSelection && sampledDataset) {
+      const dataTypes = sampledDataset?.dataTypes ?? {};
+      const columns =
+        sampledDataset?.stats?.map((stat) => ({
+          name: stat.name,
+          type: getColumnType(dataTypes[stat.name]),
+        })) ?? [];
+
+      setPreviewColumns(columns);
+      setStep("preview");
+      return;
+    }
     setStep("view");
   };
 
@@ -148,20 +175,7 @@ export const DatasetSelectModal: React.FC<{
 
   const handleUseDataset = () => {
     if (!item || !selectedDataset || !previewColumns.length) return;
-    editItem({
-      ...item,
-      id: selectedController?.id || "",
-      type: "table",
-      data: {
-        ...item.data,
-        dataset: selectedDataset,
-        columns: previewColumns.map((col) => ({
-          name: col.name,
-          id: col.name,
-          type: col.type,
-        })),
-      },
-    });
+    handleSelectDataset?.(selectedDataset, previewColumns);
     onClose();
   };
 
@@ -378,6 +392,8 @@ export const DatasetSelectModal: React.FC<{
               onBack={() => setStep("select")}
               onCancel={onClose}
               onPreviewTable={handlePreviewTable}
+              sampledDataset={sampledDataset}
+              sampledDatasetLoading={sampledDatasetQuery.isFetching}
             />{" "}
           </DndProvider>
         ) : (

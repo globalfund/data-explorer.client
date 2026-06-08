@@ -15,9 +15,9 @@ import { AssetSwitch } from "../grid/switchAsset";
 import { GridLayoutTab } from "../grid/gridTab";
 import { ColumnLayoutTab } from "../column/columnTab";
 import { ColumnOptionIcon, GridOptionIcon } from "../../../header/data";
-import { AssetSelect } from "./asset-select/asset-select";
 import { datasetItems } from "../../../chart/data";
 import { DatasetSelectModal } from "../../../dataset-select-modal";
+import { AssetSelect } from "../common/asset-select";
 
 type TableControllerTab = "mapping" | "layout" | "style" | "grid" | "column";
 
@@ -29,7 +29,7 @@ export default function TableController() {
     (state) => state.RBReportItemsControllerState.item,
   );
 
-  const { selectedItem: item } = useGetReportItemState<"table">({
+  const { selectedItem: item, editItem } = useGetReportItemState<"table">({
     id: selectedController?.id || "",
     parent: selectedController?.parent ?? undefined,
   });
@@ -277,6 +277,22 @@ export default function TableController() {
       <DatasetSelectModal
         open={!!selectedController?.extra?.table?.showDatasetModal}
         onClose={handleBack}
+        handleSelectDataset={(selectedDataset, previewColumns) => {
+          editItem({
+            ...item,
+            id: selectedController?.id || "",
+            type: "table",
+            data: {
+              ...item.data,
+              dataset: selectedDataset,
+              columns: previewColumns.map((col) => ({
+                name: col.name,
+                id: col.name,
+                type: col.type,
+              })),
+            },
+          });
+        }}
       />
     </Box>
   );

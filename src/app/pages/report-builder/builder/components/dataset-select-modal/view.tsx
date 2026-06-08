@@ -9,8 +9,10 @@ import DatasetFieldDateIcon from "app/assets/vectors/DatasetFieldDate.svg?react"
 import DatasetFieldNumberIcon from "app/assets/vectors/DatasetFieldNumber.svg?react";
 import DatasetFieldTextIcon from "app/assets/vectors/DatasetFieldText.svg?react";
 import { datasetItems } from "app/pages/report-builder/builder/components/chart/data";
-import { useGFSampleDataset } from "app/hooks/queries/report-builder";
-import { DataType } from "app/state/api/action-reducers/report-builder/sync";
+import {
+  DataType,
+  RBSampledDatasetResponse,
+} from "app/state/api/action-reducers/report-builder/sync";
 import { DatasetStepHeader } from "./step-header";
 import {
   DatasetColumn,
@@ -30,6 +32,8 @@ interface DataViewProps {
   onBack: () => void;
   onCancel: () => void;
   onPreviewTable: (columns: DatasetColumn[]) => void;
+  sampledDataset?: RBSampledDatasetResponse["data"]["result"];
+  sampledDatasetLoading?: boolean;
 }
 
 const getFieldIcon = (type: DataType) => {
@@ -63,12 +67,13 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
   onBack,
   onCancel,
   onPreviewTable,
+  sampledDataset,
+  sampledDatasetLoading,
 }) => {
   const [selectedColumnNames, setSelectedColumnNames] = React.useState<
     string[]
   >([]);
-  const sampledDatasetQuery = useGFSampleDataset(selectedDataset);
-  const sampledDataset = sampledDatasetQuery?.data?.data?.data?.result;
+
   const selectedDatasetItem = datasetItems.find(
     (dataset) => dataset.id === selectedDataset,
   );
@@ -114,7 +119,7 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
     typeof sampledDataset?.count === "number"
       ? sampledDataset.count * columns.length
       : undefined;
-  const stepSubtitle = sampledDatasetQuery.isFetching
+  const stepSubtitle = sampledDatasetLoading
     ? "Loading dataset..."
     : `${formatNumber(sampledDataset?.count)} rows (${formatNumber(
         cellCount,
@@ -214,7 +219,7 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
               alignItems: "flex-start",
             }}
           >
-            {sampledDatasetQuery.isFetching ? (
+            {sampledDatasetLoading ? (
               <Typography fontSize="14px" color="#adb5bd">
                 Loading fields...
               </Typography>
