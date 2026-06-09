@@ -18,6 +18,7 @@ import { ColumnLayoutTab } from "../column/columnTab";
 import RadioCheck from "app/components/radio-check";
 import ControllerTabs from "app/components/tabs";
 import { extraTabs } from "../common/tabOptions";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
 type KPIControllerTab = "text" | "style" | "layout" | "grid" | "column";
 export default function KPIController() {
@@ -27,7 +28,10 @@ export default function KPIController() {
     (state) => state.RBReportItemsControllerState.item,
   );
 
-  const [source, setSource] = React.useState<"manual" | "dataset">("manual");
+  const { selectedItem, editItem } = useGetReportItemState<"kpi_box">({
+    id: selectedController?.id || "",
+    parent: selectedController?.parent ?? undefined,
+  });
 
   const handleExpandToggle = () => {
     setIsExpanded(!isExpanded);
@@ -43,7 +47,7 @@ export default function KPIController() {
   const renderTabPanel = () => {
     switch (value) {
       case "text":
-        return <KPITextFormatting />;
+        return <KPITextFormatting source={selectedItem?.data?.source} />;
       case "style":
         return <Customise />;
       case "layout":
@@ -55,6 +59,20 @@ export default function KPIController() {
       default:
         return null;
     }
+  };
+
+  const setSource = (source: "manual" | "dataset") => {
+    if (!selectedItem) return;
+    editItem({
+      ...selectedItem,
+      id: selectedController?.id || "",
+      type: "kpi_box",
+      open: selectedItem.open || false,
+      data: {
+        ...selectedItem.data,
+        source,
+      },
+    });
   };
 
   return (
@@ -145,12 +163,12 @@ export default function KPIController() {
             }}
           >
             <RadioCheck
-              checked={source === "manual"}
+              checked={selectedItem?.data?.source === "manual"}
               onChange={() => setSource("manual")}
               label="Manual"
             />
             <RadioCheck
-              checked={source === "dataset"}
+              checked={selectedItem?.data?.source === "dataset"}
               onChange={() => setSource("dataset")}
               label="Dataset"
             />
@@ -175,7 +193,7 @@ export default function KPIController() {
             }}
           />
           <Typography fontSize="14px" color="#000000" lineHeight="normal">
-            {source === "dataset"
+            {selectedItem?.data?.source === "dataset"
               ? "Pulls a number from a connected dataset. Updates automatically."
               : "Manual entry is a fixed value. Good for static reports."}
           </Typography>

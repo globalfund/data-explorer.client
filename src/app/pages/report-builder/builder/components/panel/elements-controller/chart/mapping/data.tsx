@@ -112,8 +112,8 @@ export const dimensions = [
 ];
 
 export const aggregationOptions = [
-  { value: "sum", id: "agg-1", label: "Sum" },
-  { value: "mean", id: "agg-2", label: "Average" },
-  { value: "count", id: "agg-3", label: "Count" },
-  { value: "median", id: "agg-4", label: "Median" },
+  { value: "sum", id: "agg-1", label: "SUM" },
+  { value: "mean", id: "agg-2", label: "AVERAGE" },
+  { value: "count", id: "agg-3", label: "COUNT" },
+  { value: "median", id: "agg-4", label: "MEDIAN" },
 ];

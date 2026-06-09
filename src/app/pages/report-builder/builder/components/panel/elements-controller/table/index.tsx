@@ -1,4 +1,4 @@
-import { Box, IconButton, Tab, Tabs, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import MinimizeIcon from "app/assets/vectors/Minimize.svg?react";
 import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
@@ -14,10 +14,11 @@ import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportIt
 import { AssetSwitch } from "../grid/switchAsset";
 import { GridLayoutTab } from "../grid/gridTab";
 import { ColumnLayoutTab } from "../column/columnTab";
-import { ColumnOptionIcon, GridOptionIcon } from "../../../header/data";
 import { datasetItems } from "../../../chart/data";
 import { DatasetSelectModal } from "../../../dataset-select-modal";
 import { AssetSelect } from "../common/asset-select";
+import ControllerTabs from "app/components/tabs";
+import { extraTabs } from "../common/tabOptions";
 
 type TableControllerTab = "mapping" | "layout" | "style" | "grid" | "column";
 
@@ -84,43 +85,6 @@ export default function TableController() {
       },
     });
   };
-
-  const extraTabs = [
-    ...(selectedController?.parent?.type === "grid"
-      ? [
-          {
-            value: "grid" as TableControllerTab,
-            ariaLabel: "Grid",
-            icon: <GridOptionIcon />,
-            sx: {
-              borderBottom: "2px solid #98A1AA",
-              svg: {
-                path: {
-                  stroke: "#70777E",
-                },
-              },
-            },
-          },
-        ]
-      : []),
-    ...(selectedController?.parent?.type === "column"
-      ? [
-          {
-            value: "column" as TableControllerTab,
-            ariaLabel: "Column",
-            icon: <ColumnOptionIcon />,
-            sx: {
-              borderBottom: "2px solid #98A1AA",
-              svg: {
-                path: {
-                  stroke: "#70777E",
-                },
-              },
-            },
-          },
-        ]
-      : []),
-  ];
 
   useEffect(() => {
     if (tableConfigured) {
@@ -221,41 +185,14 @@ export default function TableController() {
                 />
               </Box>
               <Box sx={{ borderTop: "1px solid #CFD4DA", marginTop: "8px" }}>
-                <Tabs
+                <ControllerTabs
+                  tabs={[
+                    ...extraTabs(selectedController?.parent?.type),
+                    ...tabList,
+                  ]}
                   value={tableConfigured ? value : null}
-                  onChange={tableConfigured ? handleChange : undefined}
-                  textColor="secondary"
-                  indicatorColor="primary"
-                  aria-label="secondary tabs example"
-                  sx={{
-                    gap: "8px",
-                    display: "flex",
-                    width: "100%",
-                    "& .MuiTabs-flexContainer": { width: "100%", gap: "8px" },
-                    "& .MuiTab-root": {
-                      flex: 1,
-                      maxWidth: "none",
-                      minWidth: "30px",
-                    },
-                    "& .MuiTabs-indicator": {
-                      backgroundColor: "#0F62FE",
-                      height: "2px",
-                    },
-                    svg: {
-                      flexShrink: 0,
-                    },
-                  }}
-                >
-                  {[...extraTabs, ...tabList].map((tab) => (
-                    <Tab
-                      key={tab.value}
-                      value={tab.value}
-                      aria-label={tab.value}
-                      sx={tab.sx}
-                      icon={tab.icon}
-                    />
-                  ))}
-                </Tabs>
+                  handleChange={tableConfigured ? handleChange : undefined}
+                />
               </Box>
 
               {tableConfigured ? (

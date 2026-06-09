@@ -286,6 +286,10 @@ export default function AddComponent({
               bgColor: "#ffffff",
               enabled: true,
             },
+            dataset: null,
+            datasetColumn: null,
+            source: "manual",
+            aggregation: "sum",
           },
           options: {
             paddingTop: "10px",

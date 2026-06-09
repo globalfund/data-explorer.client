@@ -116,4 +116,5 @@ export type ChartType =
   | "sankey"
   | "treemap"
   | "heatmap"
-  | "radar";
+  | "radar"
+  | "bigNumber";

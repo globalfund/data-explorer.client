@@ -155,7 +155,6 @@ export const DatasetSelectModal: React.FC<{
     return item?.data?.columns ?? [];
   }, [item?.data?.dataset, item?.data?.columns, selectedDataset]);
 
-  console.log("sampledDataset", sampledDataset);
   const handleOpenView = () => {
     if (!selectedDataset) return;
 
