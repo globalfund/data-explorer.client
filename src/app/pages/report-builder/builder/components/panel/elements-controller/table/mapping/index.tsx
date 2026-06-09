@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Button,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Box, Button, Tooltip, Typography } from "@mui/material";
 import DatasetFieldCloseIcon from "app/assets/vectors/DatasetFieldClose.svg?react";
 import DatasetFieldDateIcon from "app/assets/vectors/DatasetFieldDate.svg?react";
 import DatasetFieldNumberIcon from "app/assets/vectors/DatasetFieldNumber.svg?react";
@@ -25,39 +16,7 @@ import {
   TableOptions,
 } from "app/pages/report-builder/builder/components/table/options";
 import Checkfield from "../../components/checkfield";
-
-const accordionSx = {
-  m: 0,
-  boxShadow: "none",
-  bgcolor: "transparent",
-  borderRadius: "0px",
-  borderBottom: "0.5px solid #CFD4DA",
-  "&:before": {
-    display: "none",
-  },
-  "&.Mui-expanded": {
-    m: 0,
-  },
-};
-
-const accordionSummarySx = {
-  px: "8px",
-  py: "7px",
-  minHeight: "32px",
-  "&.Mui-expanded": {
-    minHeight: "32px",
-  },
-  ".MuiAccordionSummary-content": {
-    m: 0,
-    alignItems: "center",
-  },
-  ".MuiAccordionSummary-content.Mui-expanded": {
-    m: 0,
-  },
-  ".MuiAccordionSummary-expandIconWrapper": {
-    color: "#373D43",
-  },
-};
+import ControlAccordion from "../../components/accordion";
 
 const getFieldIcon = (type?: string) => {
   if (type === "number") return DatasetFieldNumberIcon;
@@ -67,23 +26,6 @@ const getFieldIcon = (type?: string) => {
 
 const getChipColor = (type?: string) =>
   type === "number" ? "#0E6027" : "#3154F4";
-
-const TableControlAccordion = ({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) => (
-  <Accordion defaultExpanded sx={accordionSx}>
-    <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={accordionSummarySx}>
-      <Typography fontSize="14px" fontWeight={700} color="#000">
-        {title}
-      </Typography>
-    </AccordionSummary>
-    <AccordionDetails sx={{ p: 0 }}>{children}</AccordionDetails>
-  </Accordion>
-);
 
 export default function Mapping() {
   const selectedController = useStoreState(
@@ -174,7 +116,7 @@ export default function Mapping() {
       }}
       className="scrollbar"
     >
-      <TableControlAccordion title="Columns">
+      <ControlAccordion title="Columns">
         <Box sx={{ p: "8px" }}>
           <Box
             sx={{
@@ -276,9 +218,9 @@ export default function Mapping() {
             Edit Columns
           </Button>
         </Box>
-      </TableControlAccordion>
+      </ControlAccordion>
 
-      <TableControlAccordion title="Filter">
+      <ControlAccordion title="Filter">
         <Box
           sx={{
             gap: "10px",
@@ -318,9 +260,9 @@ export default function Mapping() {
             Edit Filters
           </Button>
         </Box>
-      </TableControlAccordion>
+      </ControlAccordion>
 
-      <TableControlAccordion title="Sort">
+      <ControlAccordion title="Sort">
         <Box
           sx={{
             gap: "8px",
@@ -414,7 +356,7 @@ export default function Mapping() {
             label="Group remainder as 'Other'"
           />
         </Box>
-      </TableControlAccordion>
+      </ControlAccordion>
     </Box>
   );
 }

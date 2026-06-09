@@ -7,6 +7,7 @@ export interface AdvancedOptionsProps {
   children?: React.ReactNode;
   sx?: SxProps<Theme>;
   disabled?: boolean;
+  label?: string;
 }
 export default function AdvancedOptions(props: Readonly<AdvancedOptionsProps>) {
   const [isAdvancedOptionsExpanded, setIsAdvancedOptionsExpanded] =
@@ -33,7 +34,7 @@ export default function AdvancedOptions(props: Readonly<AdvancedOptionsProps>) {
           onClick={() => setIsAdvancedOptionsExpanded(true)}
         >
           {" "}
-          <AddIcon /> Expand advanced options
+          <AddIcon /> {props.label ?? "Expand advanced options"}
         </Button>
       )}
       {isOpen && <Box sx={props.sx}> {props.children ?? null} </Box>}

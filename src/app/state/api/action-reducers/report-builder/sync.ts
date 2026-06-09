@@ -22,6 +22,7 @@ export type ObjectFitTypes =
   | "scale-down";
 
 export type ChartType =
+  | "bigNumber"
   | "line"
   | "bar"
   | "pie"
@@ -52,6 +53,11 @@ export interface RBRKPIBoxField {
   bigNumberText?: AdvancedTextFormatting;
   bottomLabel?: AdvancedTextFormatting;
   optionalText?: AdvancedTextFormatting;
+  dataset?: string | null;
+  datasetColumn?: string | null;
+  source: "manual" | "dataset";
+  aggregation?: string;
+  appliedFilters?: Record<string, any[]>;
 }
 
 export interface MappedDimension {
@@ -159,6 +165,9 @@ export interface RBReportItemController {
     table?: {
       showDatasetModal?: boolean;
       datasetModalStep?: "select" | "view" | "preview" | null;
+    };
+    kpi_box?: {
+      showDatasetModal?: boolean;
     };
   };
 }

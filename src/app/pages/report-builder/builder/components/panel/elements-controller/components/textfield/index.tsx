@@ -33,13 +33,13 @@ export default function TextField(props: Readonly<TextFieldProps>) {
       <Box
         sx={{
           width: "100%",
-          height: "40px",
+          height: "35px",
           display: "flex",
           alignItems: "center",
           border: "0.5px solid #98A1AA",
           backgroundColor: "#FFF",
           borderRadius: "4px",
-          padding: "0 16px",
+          padding: "0 8px",
           ...props.sx,
         }}
       >

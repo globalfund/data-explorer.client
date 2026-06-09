@@ -13,7 +13,8 @@ interface Props {
   icon: React.ReactNode;
   selectedItem: string;
   type: ChartProperty;
-  componentType?: "chart" | "table";
+  componentType?: "chart" | "table" | "kpi_box";
+  error?: string;
 }
 export function AssetSelect({
   buttonLabel,
@@ -22,6 +23,7 @@ export function AssetSelect({
   type,
   selectedItem,
   componentType,
+  error,
 }: Readonly<Props>) {
   const setSelectedController = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
@@ -37,7 +39,7 @@ export function AssetSelect({
           display: "flex",
           maxHeight: "65px",
           minHeight: "40px",
-          border: "0.5px solid #ADB5BD",
+          border: `0.5px solid ${error ? "#EA1541" : "#ADB5BD"}`,
           borderRadius: "4px",
           background: "#FFFFFF",
         }}
@@ -81,6 +83,15 @@ export function AssetSelect({
                       },
                     },
                   });
+                } else if (componentType === "kpi_box") {
+                  setSelectedController({
+                    ...selectedController,
+                    extra: {
+                      kpi_box: {
+                        showDatasetModal: true,
+                      },
+                    },
+                  });
                 } else {
                   setSelectedController({
                     ...selectedController,
@@ -115,6 +126,15 @@ export function AssetSelect({
                       ...selectedController,
                       extra: {
                         table: {
+                          showDatasetModal: true,
+                        },
+                      },
+                    });
+                  } else if (componentType === "kpi_box") {
+                    setSelectedController({
+                      ...selectedController,
+                      extra: {
+                        kpi_box: {
                           showDatasetModal: true,
                         },
                       },
@@ -156,11 +176,11 @@ export function AssetSelect({
           </Box>
         )}
       </Box>
-      {selectedItem ? null : (
+      {error || !selectedItem ? (
         <Typography color="#EA1541" fontSize={"14px"}>
-          {helperText}
+          {error ?? helperText}
         </Typography>
-      )}
+      ) : null}
     </Box>
   );
 }
