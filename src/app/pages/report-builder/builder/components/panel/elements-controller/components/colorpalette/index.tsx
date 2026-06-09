@@ -53,11 +53,11 @@ export function ColorPalette(props: Readonly<ColorPaletteProps>) {
           color: "#000",
           bgcolor: "#fff",
           width: "100%",
-          height: "40px",
+          height: "35px",
           justifyContent: "space-between",
           borderRadius: "4px",
           border: "0.5px solid #98A1AA",
-          padding: "11px 16px",
+          padding: "0px 8px",
         }}
       >
         <Typography color="#161616" fontSize={"14px"}>

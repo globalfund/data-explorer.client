@@ -20,6 +20,7 @@ interface SelectFieldProps {
   width?: number | string;
   label?: React.ReactNode;
   disabled?: boolean;
+  placeholder?: string;
 }
 
 export default function SelectField({
@@ -29,6 +30,7 @@ export default function SelectField({
   width,
   label,
   disabled,
+  placeholder,
 }: Readonly<SelectFieldProps>) {
   const activeIndex = options.findIndex((o) => o.value === value);
 
@@ -80,10 +82,16 @@ export default function SelectField({
             borderColor: "#98A1AA",
           },
           maxWidth: "100%",
+          height: "35px",
+          padding: "0px 8px",
         }}
       >
         <Typography
-          title={options.find((o) => o.value === value)?.label || "Select..."}
+          title={
+            options.find((o) => o.value === value)?.label ||
+            placeholder ||
+            "Select..."
+          }
           fontSize="14px"
           sx={{
             maxWidth: "calc(100% - 24px)",
@@ -92,7 +100,9 @@ export default function SelectField({
             whiteSpace: "nowrap",
           }}
         >
-          {options.find((o) => o.value === value)?.label || "Select..."}
+          {options.find((o) => o.value === value)?.label ||
+            placeholder ||
+            "Select..."}
         </Typography>
       </Button>
       <Menu

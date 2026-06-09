@@ -17,23 +17,23 @@ export default function Trigger(props: Readonly<ITrigger>) {
     <Box
       sx={{
         width: props.triggerWidth ?? "134px",
-        height: "40px",
+        height: "35px",
         display: "flex",
         alignItems: "center",
         gap: "10px",
         borderRadius: "4px",
         border: "0.5px solid #98A1AA",
         backgroundColor: "#FFF",
-        padding: "5px",
+        padding: "0px 8px",
       }}
     >
       {props.color ? (
         <Button
           onClick={props.onClick}
           sx={{
-            height: "30px",
-            width: "30px",
-            minWidth: "30px",
+            height: "22px",
+            width: "22px",
+            minWidth: "22px",
             border: "0.75px solid #252C34",
             backgroundColor: props.color,
             borderRadius: "4px",
