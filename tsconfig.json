@@ -16,6 +16,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "ignoreDeprecations": "6.0",
     "paths": {
       "@mui/styled-engine": ["./node_modules/@mui/styled-engine-sc"],
       "app/*": ["app/*"]

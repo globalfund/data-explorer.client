@@ -26,7 +26,7 @@ import {
   Share,
   Folder,
   Pencil,
-  Settings,
+  Details,
   Backspace,
 } from "app/pages/report-builder/builder/components/report-settings/icons";
 
@@ -35,9 +35,11 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
   refetch,
   selectedView,
   onDeleteAsset,
+  onDetailsClick,
   onDeleteFolder,
   handleFolderOpen,
   onMoveItemToFolder,
+  detailsSidePanelOpen,
 }) => {
   const updateAsset = usePatchAsset2();
   const updateFolder = usePatchFolder2();
@@ -213,6 +215,28 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
     );
   };
 
+  const handleDetailsClick = () => {
+    const id = getAnchorElId();
+    const isFolder = getAnchorElName() === "folder";
+    if (!id) return;
+    setAnchorEl(null);
+    setAnchorElTableId(null);
+    const item = assets.data.find((r) => r.id === id);
+    if (item) {
+      onDetailsClick({
+        ...item,
+        type: isFolder ? "folder" : "asset",
+        content: isFolder
+          ? {
+              reportCount: 0,
+              assetCount: item.assetCount ?? 0,
+              folderCount: item.folderCount ?? 0,
+            }
+          : undefined,
+      });
+    }
+  };
+
   const handleMoveToFolder = () => {
     const id = getAnchorElId();
     const isFolder = getAnchorElName() === "folder";
@@ -246,7 +270,14 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
       return (
         <Grid container spacing={2.5}>
           {assets.data.map((item) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
+            <Grid
+              item
+              xs={12}
+              key={item.id}
+              sm={detailsSidePanelOpen ? 12 : 6}
+              md={detailsSidePanelOpen ? 6 : 4}
+              lg={detailsSidePanelOpen ? 6 : 3}
+            >
               <Box
                 sx={{
                   width: "100%",
@@ -312,16 +343,6 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
               {
                 label: getCMSDataField(
                   cmsData,
-                  "pagesReportBuilderMain.settingsMenuItem",
-                  "Settings",
-                ),
-                icon: <Settings />,
-                onClick: handleClose,
-                disabled: true,
-              },
-              {
-                label: getCMSDataField(
-                  cmsData,
                   "pagesReportBuilderMain.shareMenuItem",
                   "Share",
                 ),
@@ -346,6 +367,15 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
                 ),
                 icon: <Copy />,
                 onClick: handleDuplicate,
+              },
+              {
+                label: getCMSDataField(
+                  cmsData,
+                  "pagesReportBuilderMain.detailsMenuItem",
+                  "Details",
+                ),
+                icon: <Details />,
+                onClick: handleDetailsClick,
               },
               {
                 label: getCMSDataField(
@@ -469,7 +499,14 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
         onClick={handleTableClick}
       />
     );
-  }, [selectedView, assets, anchorEl, selectedItemForRenaming, cmsData]);
+  }, [
+    assets,
+    cmsData,
+    anchorEl,
+    selectedView,
+    detailsSidePanelOpen,
+    selectedItemForRenaming,
+  ]);
 
   React.useEffect(() => {
     if (selectedView === "list" && selectedItemForRenaming) {
@@ -514,16 +551,6 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
           {
             label: getCMSDataField(
               cmsData,
-              "pagesReportBuilderMain.settingsMenuItem",
-              "Settings",
-            ),
-            icon: <Settings />,
-            onClick: handleClose,
-            disabled: true,
-          },
-          {
-            label: getCMSDataField(
-              cmsData,
               "pagesReportBuilderMain.shareMenuItem",
               "Share",
             ),
@@ -548,6 +575,15 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
             ),
             icon: <Copy />,
             onClick: handleDuplicate,
+          },
+          {
+            label: getCMSDataField(
+              cmsData,
+              "pagesReportBuilderMain.detailsMenuItem",
+              "Details",
+            ),
+            icon: <Details />,
+            onClick: handleDetailsClick,
           },
           {
             label: getCMSDataField(

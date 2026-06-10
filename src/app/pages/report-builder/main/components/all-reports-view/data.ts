@@ -2,6 +2,7 @@ import { RBReportItemTypes } from "app/state/api/action-reducers/report-builder/
 
 export interface AllReportsViewProps {
   refetch: () => void;
+  detailsSidePanelOpen: boolean;
   selectedView: "cards" | "list";
   handleFolderOpen: (id: string) => void;
   onDeleteReport: (id: string, name: string) => void;
@@ -17,6 +18,12 @@ export interface AllReportsViewProps {
     description: string;
     createdDate: string;
     updatedDate: string;
+    type: "report" | "asset" | "folder";
+    content?: {
+      assetCount: number;
+      reportCount: number;
+      folderCount: number;
+    };
   }) => void;
   reports: {
     isLoading: boolean;

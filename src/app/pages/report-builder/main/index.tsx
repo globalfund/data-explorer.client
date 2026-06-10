@@ -17,8 +17,8 @@ import { ReportBuilderNewReportModal } from "app/pages/report-builder/main/compo
 import { ReportBuilderDeleteAssetModal } from "app/pages/report-builder/main/components/delete-asset-modal";
 import { ReportBuilderDeleteFolderModal } from "app/pages/report-builder/main/components/delete-folder-modal";
 import { ReportBuilderDeleteReportModal } from "app/pages/report-builder/main/components/delete-report-modal";
+import { ReportBuilderDetailsSidePanel } from "app/pages/report-builder/main/components/details-side-panel";
 import { ReportBuilderMoveToFolderModal } from "app/pages/report-builder/main/components/move-to-folder-modal";
-import { ReportBuilderReportDetailsPanel } from "app/pages/report-builder/main/components/report-details-panel";
 import {
   AssetViewType,
   ReportBuilderAssetsToolbar,
@@ -70,17 +70,23 @@ export const ReportBuilder: React.FC = () => {
     id: string;
     name: string;
   } | null>(null);
-  const [reportDetailsPanelOpen, setReportDetailsPanelOpen] =
-    React.useState(false);
-  const [reportDetails, setReportDetails] = React.useState<{
+  const [detailsSidePanelOpen, setDetailsSidePanelOpen] = React.useState(false);
+  const [detailsSidePanelInfo, setDetailsSidePanelInfo] = React.useState<{
     id: string;
     name: string;
     description: string;
     createdDate: string;
     updatedDate: string;
+    type: "report" | "asset" | "folder";
+    content?: {
+      assetCount: number;
+      reportCount: number;
+      folderCount: number;
+    };
   }>({
     id: "",
     name: "",
+    type: "report",
     description: "",
     createdDate: "",
     updatedDate: "",
@@ -234,19 +240,25 @@ export const ReportBuilder: React.FC = () => {
     setDeleteAssetModalOpen(false);
   };
 
-  const handleReportDetailsPanelOpen = (details: {
+  const handleDetailsSidePanelOpen = (details: {
     id: string;
     name: string;
     description: string;
     createdDate: string;
     updatedDate: string;
+    type: "report" | "asset" | "folder";
+    content?: {
+      assetCount: number;
+      reportCount: number;
+      folderCount: number;
+    };
   }) => {
-    setReportDetails(details);
-    setReportDetailsPanelOpen(true);
+    setDetailsSidePanelInfo(details);
+    setDetailsSidePanelOpen(true);
   };
 
-  const handleReportDetailsPanelClose = () => {
-    setReportDetailsPanelOpen(false);
+  const handleDetailsSidePanelClose = () => {
+    setDetailsSidePanelOpen(false);
   };
 
   const handleDeleteReport = (id: string, name: string) => {
@@ -297,7 +309,8 @@ export const ReportBuilder: React.FC = () => {
             handleFolderOpen={handleFolderOpen}
             selectedView={selectedView ?? "cards"}
             onMoveItemToFolder={handleItemMoveToFolder}
-            onDetailsClick={handleReportDetailsPanelOpen}
+            detailsSidePanelOpen={detailsSidePanelOpen}
+            onDetailsClick={handleDetailsSidePanelOpen}
           />
         );
       case "templatesAndLayouts":
@@ -309,7 +322,7 @@ export const ReportBuilder: React.FC = () => {
         );
       case "allAssets":
         return (
-          <React.Fragment>
+          <Box width="100%">
             <ReportBuilderAssetsToolbar
               selectedView={selectedAssetView}
               setSelectedView={setSelectedAssetView}
@@ -330,8 +343,10 @@ export const ReportBuilder: React.FC = () => {
               handleFolderOpen={handleFolderOpen}
               selectedView={selectedView ?? "cards"}
               onMoveItemToFolder={handleItemMoveToFolder}
+              detailsSidePanelOpen={detailsSidePanelOpen}
+              onDetailsClick={handleDetailsSidePanelOpen}
             />
-          </React.Fragment>
+          </Box>
         );
       case "tutorials":
       default:
@@ -349,6 +364,7 @@ export const ReportBuilder: React.FC = () => {
     getFolder.isFetching,
     getAssets.isLoading,
     getAssets.isFetching,
+    detailsSidePanelOpen,
   ]);
 
   const selectedItemToMove = React.useMemo(() => {
@@ -462,13 +478,14 @@ export const ReportBuilder: React.FC = () => {
               </Breadcrumbs>
             )}
             {openedFolders.length > 0 && <Box width="100%" height="40px" />}
-            <Box position="relative">
+            <Box sx={{ display: "flex", flexDirection: "row", gap: "20px" }}>
               {view}
-              <ReportBuilderReportDetailsPanel
-                details={reportDetails}
-                open={reportDetailsPanelOpen}
-                onClose={handleReportDetailsPanelClose}
-              />
+              {detailsSidePanelOpen && (
+                <ReportBuilderDetailsSidePanel
+                  details={detailsSidePanelInfo}
+                  onClose={handleDetailsSidePanelClose}
+                />
+              )}
             </Box>
           </Grid>
         </Grid>

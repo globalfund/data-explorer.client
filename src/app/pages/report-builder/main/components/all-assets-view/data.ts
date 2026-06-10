@@ -19,6 +19,7 @@ export interface AllAssetsViewProps {
     }[];
   };
   refetch: () => void;
+  detailsSidePanelOpen: boolean;
   handleFolderOpen: (id: string) => void;
   onDeleteAsset: (id: string, name: string) => void;
   onDeleteFolder: (id: string, name: string) => void;
@@ -27,4 +28,17 @@ export interface AllAssetsViewProps {
     name: string,
     type: "asset" | "folder",
   ) => void;
+  onDetailsClick: (details: {
+    id: string;
+    name: string;
+    description: string;
+    createdDate: string;
+    updatedDate: string;
+    type: "report" | "asset" | "folder";
+    content?: {
+      assetCount: number;
+      reportCount: number;
+      folderCount: number;
+    };
+  }) => void;
 }

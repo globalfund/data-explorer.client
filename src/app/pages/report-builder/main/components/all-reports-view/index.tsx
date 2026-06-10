@@ -38,6 +38,7 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
   onDeleteFolder,
   handleFolderOpen,
   onMoveItemToFolder,
+  detailsSidePanelOpen,
 }) => {
   const navigate = useNavigate();
   const updateReport = usePatchReport2();
@@ -219,12 +220,23 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
 
   const handleDetailsClick = () => {
     const id = getAnchorElId();
+    const isFolder = getAnchorElName() === "folder";
     if (!id) return;
     setAnchorEl(null);
     setAnchorElTableId(null);
-    const report = reports.data.find((r) => r.id === id);
-    if (report) {
-      onDetailsClick(report);
+    const item = reports.data.find((r) => r.id === id);
+    if (item) {
+      onDetailsClick({
+        ...item,
+        type: isFolder ? "folder" : "report",
+        content: isFolder
+          ? {
+              assetCount: item.assetCount,
+              reportCount: item.reportCount,
+              folderCount: item.folderCount,
+            }
+          : undefined,
+      });
     }
   };
 
@@ -258,7 +270,14 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
       return (
         <Grid container spacing={2.5}>
           {reports.data.map((item) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
+            <Grid
+              item
+              xs={12}
+              key={item.id}
+              sm={detailsSidePanelOpen ? 12 : 6}
+              md={detailsSidePanelOpen ? 6 : 4}
+              lg={detailsSidePanelOpen ? 6 : 3}
+            >
               <Box
                 sx={{
                   width: "100%",
@@ -468,7 +487,14 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
         onClick={handleTableClick}
       />
     );
-  }, [selectedView, reports, anchorEl, selectedItemForRenaming, cmsData]);
+  }, [
+    reports,
+    cmsData,
+    anchorEl,
+    selectedView,
+    detailsSidePanelOpen,
+    selectedItemForRenaming,
+  ]);
 
   React.useEffect(() => {
     if (selectedView === "list" && selectedItemForRenaming) {
