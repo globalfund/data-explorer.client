@@ -97,7 +97,10 @@ type RBReportItemDataByType = {
     chartType?: ChartType;
     mapping?: MappedDimension;
     appliedFilters?: Record<string, any[]>;
-    renderedChartData?: Omit<RBRenderedChartData, "mappedData"> | null;
+    renderedChartData?: Omit<
+      RBRenderedChartData,
+      "mappedData" | "filterOptionGroups"
+    > | null;
   };
 
   table: {
@@ -262,6 +265,11 @@ export interface RBReportTooltipModel {
     RBReportTooltipModel,
     { visible: boolean; id: string | null }
   >;
+}
+
+export interface FilterOptionGroupsStateModel {
+  value: FilterGroupModel[];
+  setValue: Action<FilterOptionGroupsStateModel, FilterGroupModel[]>;
 }
 
 export interface IChartDimension {
@@ -658,5 +666,12 @@ export const RBTooltipTriggerState: RBReportTooltipModel = {
   },
   setValue: action((state, payload) => {
     state.tooltip = payload;
+  }),
+};
+
+export const FilterOptionGroupsState: FilterOptionGroupsStateModel = {
+  value: [],
+  setValue: action((state, payload) => {
+    state.value = payload;
   }),
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useStoreActions } from "app/state/store/hooks";
+import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import ChartIcon from "app/assets/vectors/RBChart.svg?react";
 import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
 import ChartPlaceholder from "./placeholders/placeholder";
@@ -33,6 +33,14 @@ export const ReportBuilderPageChart: React.FC<{
     (actions) => actions.RBReportItemsControllerState.setItem,
   );
 
+  const selectedController = useStoreState(
+    (state) => state.RBReportItemsControllerState.item,
+  );
+
+  const setFilterOptionGroups = useStoreActions(
+    (actions) => actions.FilterOptionGroupsState.setValue,
+  );
+
   const renderChartData = useRenderChartData();
 
   const chartExtra = selectedItem?.data;
@@ -52,7 +60,11 @@ export const ReportBuilderPageChart: React.FC<{
   React.useEffect(() => {
     if (
       chartExtra?.dataset &&
-      checkValidDimensionMapping(chartExtra.chartType || "", chartExtra.mapping)
+      checkValidDimensionMapping(
+        chartExtra.chartType || "",
+        chartExtra.mapping,
+      ) &&
+      selectedController?.id === id
     ) {
       renderChartData.mutate(
         {
@@ -64,8 +76,11 @@ export const ReportBuilderPageChart: React.FC<{
         },
         {
           onSuccess: (data) => {
-            const { mappedData, ...rendered } = data.data;
+            const { mappedData, filterOptionGroups, ...rendered } = data.data;
+            // We store mappedData and filterOptionGroups in local state and global state because we don't want to write to them to the report as they're too large,
+            // but we need to persist them when the user switches between different controllers or tabs in the chart controller
             setMappedData(mappedData);
+            setFilterOptionGroups(filterOptionGroups);
             editItem({
               ...selectedItem,
               id,
@@ -79,6 +94,11 @@ export const ReportBuilderPageChart: React.FC<{
           },
         },
       );
+
+      return () => {
+        setMappedData(null);
+        setFilterOptionGroups([]);
+      };
     }
   }, [
     chartExtra?.mapping,
@@ -86,6 +106,7 @@ export const ReportBuilderPageChart: React.FC<{
     chartExtra?.dataset,
     chartExtra?.appliedFilters,
     selectedItem?.options,
+    selectedController?.id,
   ]);
 
   useClickOutsideEditor({

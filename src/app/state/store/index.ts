@@ -160,6 +160,7 @@ import { formattedCollections } from "../api/action-reducers/cms/formatted";
 import componentHeader from "../api/action-reducers/cms/componentsHeader";
 import componentFooter from "../api/action-reducers/cms/componentsFooter";
 import {
+  FilterOptionGroupsState,
   RBReportItemOrderState,
   RBReportItemsControllerState,
   RBReportItemsState,
@@ -321,6 +322,7 @@ const storeContent: StoreModel = {
   RBReportRTEState: RBReportRTEState,
   RBReportItemOrderState: persist(RBReportItemOrderState),
   RBReportNotesState: persist(RBReportNotesState),
+  FilterOptionGroupsState: persist(FilterOptionGroupsState),
   // CMS API
   CMSData: persist(CMSData),
   cms: {
