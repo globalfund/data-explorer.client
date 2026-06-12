@@ -57,14 +57,14 @@ export const ReportBuilderPageChart: React.FC<{
     });
   };
 
+  // We want to re-render the chart when the selected controller changes to this chart, or when the chart's own properties change. But we don't want to re-render when other controllers are selected,
+  // so we check if the selected controller's id matches this chart's id and include that in the dependency array
+  const selectedControllerChange = selectedController?.id === id;
+
   React.useEffect(() => {
     if (
       chartExtra?.dataset &&
-      checkValidDimensionMapping(
-        chartExtra.chartType || "",
-        chartExtra.mapping,
-      ) &&
-      selectedController?.id === id
+      checkValidDimensionMapping(chartExtra.chartType || "", chartExtra.mapping)
     ) {
       renderChartData.mutate(
         {
@@ -80,7 +80,10 @@ export const ReportBuilderPageChart: React.FC<{
             // We store mappedData and filterOptionGroups in local state and global state because we don't want to write to them to the report as they're too large,
             // but we need to persist them when the user switches between different controllers or tabs in the chart controller
             setMappedData(mappedData);
-            setFilterOptionGroups(filterOptionGroups);
+            if (selectedControllerChange) {
+              setFilterOptionGroups(filterOptionGroups);
+            }
+
             editItem({
               ...selectedItem,
               id,
@@ -106,7 +109,7 @@ export const ReportBuilderPageChart: React.FC<{
     chartExtra?.dataset,
     chartExtra?.appliedFilters,
     selectedItem?.options,
-    selectedController?.id,
+    selectedControllerChange,
   ]);
 
   useClickOutsideEditor({
