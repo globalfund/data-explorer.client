@@ -28,6 +28,7 @@ export interface TableProps {
   dataTreeStartExpanded?: boolean;
   extraColumns?: ColumnDefinition[];
   dataTreeStartExpandedFn?: (row: RowComponent, level: number) => boolean;
+  disableHover?: boolean;
 }
 
 export const cellBGColorFormatter = (cell: CellComponent) => {

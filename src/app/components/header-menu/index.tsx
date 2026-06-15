@@ -92,6 +92,7 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
           sx={{
             width: "100vw",
             padding: "0 16px",
+            height: "calc(100vh - 77px)",
             bgcolor: colors.primary.gray,
             borderBottom: "1px solid #cfd4da",
             "> button": {

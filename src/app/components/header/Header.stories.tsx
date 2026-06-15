@@ -1,18 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Header } from "app/components/header";
-import { withRouter } from "storybook-addon-remix-react-router";
 
 const meta = {
   title: "Components/Header",
   component: Header,
-  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  tags: [],
   argTypes: {},
-} satisfies Meta<typeof Header>;
+} as Meta<typeof Header>;
 
 export default meta;
 type StoryType = StoryObj<typeof meta>;

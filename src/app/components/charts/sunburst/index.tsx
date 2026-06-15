@@ -22,7 +22,7 @@ import {
   SunburstSeriesOption,
   SunburstChart as EChartsSunburst,
 } from "echarts/charts";
-import { ChevronRight } from "@mui/icons-material";
+import ChevronRight from "@mui/icons-material/ChevronRight";
 
 echarts.use([EChartsSunburst, TooltipComponent, SVGRenderer]);
 

@@ -47,7 +47,7 @@ export function SearchResults(props: SearchResultsProps) {
           }}
         />
       )}
-      <Results>
+      <Results id="search-results-component">
         {props.results.map((result: SearchResultModel) => {
           if (!result.link) {
             return (
