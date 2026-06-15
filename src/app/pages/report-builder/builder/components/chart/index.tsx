@@ -1,8 +1,8 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useStoreActions } from "app/state/store/hooks";
-import ChartIcon from "app/assets/vectors/RBChart.svg?react";
+import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import ChartIcon from "app/assets/vectors/RBChartLarge.svg?react";
 import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
 import ChartPlaceholder from "./placeholders/placeholder";
 import { checkValidDimensionMapping } from "../panel/elements-controller/chart/utils";
@@ -29,6 +29,10 @@ export const ReportBuilderPageChart: React.FC<{
     (actions) => actions.RBReportItemsControllerState.clearItem,
   );
 
+  const selectedController = useStoreState(
+    (state) => state.RBReportItemsControllerState.item,
+  );
+
   const setSelectedController = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
   );
@@ -38,6 +42,9 @@ export const ReportBuilderPageChart: React.FC<{
   const chartExtra = selectedItem?.data;
   const renderedChartData = chartExtra?.renderedChartData;
   const [mappedData, setMappedData] = React.useState<any>(null);
+
+  const active =
+    selectedController?.id === id && selectedController?.type === "chart";
 
   const setVisualOptions = (newVisualOptions: Record<string, any>) => {
     if (!selectedItem) return;
@@ -186,17 +193,20 @@ export const ReportBuilderPageChart: React.FC<{
             cursor: "pointer",
             borderRadius: "4px",
             alignItems: "center",
-            bgcolor: "#d6ddfd",
+            bgcolor: active ? "#F8F9FA" : "#EFF1FE",
             flexDirection: "column",
             justifyContent: "center",
-            border: "1px dashed #3154f4",
+            border: active ? "0px solid #3154f4" : "0.5px dashed #3154f4",
             transition: "all 0.3s ease-in-out",
             height: selectedItem?.options?.height,
+            path: {
+              stroke: "#3154f4",
+            },
           }}
         >
           <ChartIcon />
           <Typography fontSize="16px" color="#3154f4">
-            Configure Chart
+            {active ? "Configure Chart" : "Click to edit chart"}
           </Typography>
         </Box>
       )}

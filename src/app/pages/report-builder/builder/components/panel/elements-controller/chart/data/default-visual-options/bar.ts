@@ -75,7 +75,7 @@ const options: IDefaultChartVisualOptions = {
   ...borderAndFillOptions,
   logarithmicYAxis: {
     type: "boolean",
-    default: true,
+    default: false,
     label: "Logarithmic Y Axis",
     tab: "advanced",
   },
@@ -120,6 +120,12 @@ const options: IDefaultChartVisualOptions = {
     type: "text",
     default: "",
     placeholder: "(default axis name here)",
+  },
+  groupStyle: {
+    tab: "mapping",
+    type: "text",
+    default: "grouped",
+    label: "Group Style",
   },
 };
 
