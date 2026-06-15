@@ -22,7 +22,7 @@
     "@types/react-router-hash-link": "^2.4.9",
     "@types/tabulator-tables": "^5.7.0",
     "@vitejs/plugin-react": "^4.7.0",
-    "axios": "^1.13.5",
+    "axios": "^1.15.2",
     "detect-it": "^4.0.1",
     "dom-to-image": "^2.6.0",
     "dotenv": "^16.4.6",
@@ -41,7 +41,7 @@
     "styled-components": "^6.1.8",
     "tabulator-tables": "^6.2.1",
     "typescript": "^5.4.5",
-    "vite": "^7.2.4",
+    "vite": "^7.3.2",
     "web-vitals": "^3.3.1"
   },
   "devDependencies": {
