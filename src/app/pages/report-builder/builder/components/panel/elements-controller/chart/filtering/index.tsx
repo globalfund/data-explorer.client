@@ -30,13 +30,15 @@ export default function Filtering() {
 
   const chartExtra = item?.data;
 
-  const renderedChartData = chartExtra?.renderedChartData;
+  const filterOptionGroups = useStoreState(
+    (state) => state.FilterOptionGroupsState.value,
+  );
 
   const [searchValue, setSearchValue] = React.useState("");
 
   const [optionGroupsToShow, setOptionGroupsToShow] = React.useState<
     FilterGroupModel[]
-  >(renderedChartData?.filterOptionGroups || []);
+  >(filterOptionGroups || []);
 
   const [expandedGroupNames, setExpandedGroupNames] = React.useState<string[]>(
     [],
@@ -99,20 +101,20 @@ export default function Filtering() {
 
   const handleSearch = (value: string) => {
     if (value.length === 0) {
-      setOptionGroupsToShow(renderedChartData?.filterOptionGroups || []);
+      setOptionGroupsToShow(filterOptionGroups || []);
       return;
     }
 
     try {
       setOptionGroupsToShow(
-        renderedChartData?.filterOptionGroups?.map((group) => {
+        filterOptionGroups?.map((group) => {
           const searchResults = searchOptions(group.options, value);
           return { ...group, options: searchResults };
         }) || [],
       );
     } catch (e) {
       console.error(e);
-      setOptionGroupsToShow(renderedChartData?.filterOptionGroups || []);
+      setOptionGroupsToShow(filterOptionGroups || []);
       return;
     }
   };
@@ -121,7 +123,7 @@ export default function Filtering() {
       handleSearch(searchValue);
     },
     500,
-    [searchValue, renderedChartData?.filterOptionGroups],
+    [searchValue, filterOptionGroups],
   );
 
   useDebounce(
