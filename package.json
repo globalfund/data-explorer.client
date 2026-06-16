@@ -36,8 +36,8 @@
     "@tiptap/starter-kit": "^3.2.0",
     "@types/react-router-hash-link": "^2.4.9",
     "@types/tabulator-tables": "^5.7.0",
-    "@vitejs/plugin-react": "^4.7.0",
-    "axios": "^1.13.5",
+    "@vitejs/plugin-react": "^6.0.2",
+    "axios": "^1.16.0",
     "detect-it": "^4.0.1",
     "dotenv": "^16.4.6",
     "easy-peasy": "^6.1.0",
@@ -64,7 +64,7 @@
     "styled-components": "^6.1.8",
     "tabulator-tables": "^6.2.1",
     "typescript": "^5.4.5",
-    "vite": "^7.2.4",
+    "vite": "8.0.13",
     "web-vitals": "^3.3.1"
   },
   "devDependencies": {
