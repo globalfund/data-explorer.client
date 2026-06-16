@@ -76,10 +76,14 @@ export const ReportBuilderPageChart: React.FC<{
         },
         {
           onSuccess: (data) => {
-            const { mappedData, filterOptionGroups, ...rendered } = data.data;
+            const {
+              mappedData: newMappedData,
+              filterOptionGroups,
+              ...rendered
+            } = data.data;
             // We store mappedData and filterOptionGroups in local state and global state because we don't want to write to them to the report as they're too large,
             // but we need to persist them when the user switches between different controllers or tabs in the chart controller
-            setMappedData(mappedData);
+            setMappedData(newMappedData);
             if (selectedControllerChange) {
               setFilterOptionGroups(filterOptionGroups);
             }
