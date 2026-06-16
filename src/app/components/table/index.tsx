@@ -105,6 +105,7 @@ export const Table: React.FC<TableProps> = (props: TableProps) => {
       data-cy="table"
       onClick={props.onClick}
       sx={{
+        width: "100%",
         ".tabulator-col-title, .tabulator-cell": {
           color: "#373D43",
           fontSize: "12px",
