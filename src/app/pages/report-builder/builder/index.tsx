@@ -2,9 +2,7 @@ import React from "react";
 import { colors } from "app/theme";
 import Box from "@mui/material/Box";
 import { useTitle } from "react-use";
-import { DndProvider } from "react-dnd";
 import { uniqueId } from "app/utils/uniqueId";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import SectionDivider from "./components/section-divider";
 import { useParams, useSearchParams } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -21,6 +19,8 @@ import { ReportBuilderPageTable } from "app/pages/report-builder/builder/compone
 import { ReportBuilderPageImage } from "app/pages/report-builder/builder/components/image";
 import { ItemComponent } from "app/pages/report-builder/builder/components/order-container";
 import ElementsController from "app/pages/report-builder/builder/components/panel/elements-controller";
+import { DragDropProvider } from "@dnd-kit/react";
+import { move } from "@dnd-kit/helpers";
 
 export const ReportBuilderPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -37,6 +37,10 @@ export const ReportBuilderPage: React.FC = () => {
   const reportState = useStoreState((state) => state.RBReportItemsState);
   const items = reportState.items;
   const addedItemRef = React.useRef(items.length > 0);
+
+  const setItems = useStoreActions(
+    (actions) => actions.RBReportItemsState.setItems,
+  );
 
   const setNotes = useStoreActions(
     (actions) => actions.RBReportNotesState.setValue,
@@ -233,7 +237,11 @@ export const ReportBuilderPage: React.FC = () => {
             <CircularProgress />
           </Box>
         )}
-        <DndProvider backend={HTML5Backend}>
+        <DragDropProvider
+          onDragOver={(event) => {
+            setItems(move(items, event));
+          }}
+        >
           {!reportQuery.isLoading && (
             <Box
               id="items-container"
@@ -280,7 +288,7 @@ export const ReportBuilderPage: React.FC = () => {
               ))}
             </Box>
           )}
-        </DndProvider>
+        </DragDropProvider>
       </Box>
     </React.Fragment>
   );

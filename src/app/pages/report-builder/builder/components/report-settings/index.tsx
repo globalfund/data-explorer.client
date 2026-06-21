@@ -2,11 +2,9 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
-import { DndProvider } from "react-dnd";
 import { useParams } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { useGetReport } from "app/hooks/queries/report-builder";
 import MinimizeIcon from "app/assets/vectors/Minimize.svg?react";
 import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
@@ -37,11 +35,7 @@ export const ReportBuilderPageReportSettings: React.FC = () => {
   const renderTabPanel = () => {
     switch (value) {
       case "file":
-        return (
-          <DndProvider backend={HTML5Backend}>
-            <FileTabView />
-          </DndProvider>
-        );
+        return <FileTabView />;
       case "settings":
         return <SettingsTabView />;
       default:

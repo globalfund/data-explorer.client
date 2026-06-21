@@ -140,6 +140,7 @@ export default function GridElementsList(props: { type: "grid" | "column" }) {
             width: "100%",
             height: "100%",
             justifyContent: "start",
+            orderList: ["title", "chart", "legend"],
           },
           data: {
             dataset: null,

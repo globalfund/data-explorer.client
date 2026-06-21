@@ -21,8 +21,11 @@ import {
   formatNumber,
   getColumnType,
 } from "./utils";
-import DropWrapper from "app/components/drop-wrapper";
-import DragWrapper from "app/components/drag-wrapper";
+import ColumnSortWrapper from "./sort-wrapper";
+import DropArea from "./drop-area";
+import { DragDropProvider } from "@dnd-kit/react";
+import { move } from "@dnd-kit/helpers";
+import uniq from "lodash/uniq";
 
 interface DataViewProps {
   selectedDataset: string;
@@ -78,7 +81,10 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
     (dataset) => dataset.id === selectedDataset,
   );
 
-  const [isDraggingColumn, setIsDraggingColumn] = React.useState(false);
+  const [isDraggingColumn1, setIsDraggingColumn1] = React.useState(false);
+  const [isDraggingColumn2, setIsDraggingColumn2] = React.useState(false);
+
+  const isDraggingColumn = isDraggingColumn1 || isDraggingColumn2;
 
   React.useEffect(() => {
     setSelectedColumnNames(initialSelectedColumns);
@@ -125,36 +131,6 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
         cellCount,
       )} cells) have been successfully parsed, now you can choose table columns!`;
 
-  const handleAddColumn = (column: DatasetColumn) => {
-    setSelectedColumnNames((current) =>
-      current.includes(column.name)
-        ? [...current.filter((name) => name !== column.name), column.name]
-        : [...current, column.name],
-    );
-  };
-
-  const handleInsertColumn = (column: DatasetColumn, newIndex: number) => {
-    setSelectedColumnNames((current) => {
-      const withoutColumn = current.filter((name) => name !== column.name);
-      const currentIndex = current.indexOf(column.name);
-      if (currentIndex === -1) {
-        // column is being added from available fields, insert at newIndex
-        return [
-          ...withoutColumn.slice(0, newIndex),
-          column.name,
-          ...withoutColumn.slice(newIndex),
-        ];
-      }
-      // column is being moved within selected columns, insert at newIndex with current column removed
-      const adjustedIndex = currentIndex < newIndex ? newIndex - 1 : newIndex;
-      return [
-        ...withoutColumn.slice(0, adjustedIndex),
-        column.name,
-        ...withoutColumn.slice(adjustedIndex),
-      ];
-    });
-  };
-
   const handleRemoveColumn = (columnName: string) => {
     setSelectedColumnNames((current) =>
       current.filter((name) => name !== columnName),
@@ -167,84 +143,97 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
   };
 
   return (
-    <React.Fragment>
-      <Box
-        sx={{
-          minHeight: 0,
-          flex: 1,
-          display: "flex",
-          overflowY: "auto",
-          flexDirection: "column",
-          bgcolor: "#ffffff",
-          "&::-webkit-scrollbar": {
-            width: "4px",
-          },
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "#000",
-          },
-          "&::-webkit-scrollbar-track": {
-            backgroundColor: "#D9D9D9",
-          },
-        }}
-      >
-        <DatasetStepHeader
-          title={selectedDatasetItem?.name || "Selected Dataset"}
-          subtitle={stepSubtitle}
-          rowsPerPage={rowsPerPage}
-          onBack={onBack}
-          onRowsPerPageChange={onRowsPerPageChange}
-        />
-
+    <DragDropProvider
+      onDragOver={(event) => {
+        setSelectedColumnNames((current) => {
+          const newOrder = move(
+            {
+              SELECT_AREA: columns
+                .filter((column) => !current.includes(column.name))
+                .map((c) => c.name),
+              DROP_AREA: current,
+            },
+            event,
+          ).DROP_AREA;
+          console.log("newOrder", newOrder);
+          return uniq(newOrder);
+        });
+      }}
+    >
+      <React.Fragment>
         <Box
           sx={{
-            p: "16px",
+            minHeight: 0,
+            flex: 1,
             display: "flex",
-            gap: "10px",
+            overflowY: "auto",
             flexDirection: "column",
-            borderBottom: "0.5px solid #cfd4da",
+            bgcolor: "#ffffff",
+            "&::-webkit-scrollbar": {
+              width: "4px",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "#000",
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: "#D9D9D9",
+            },
           }}
         >
-          <Typography fontSize="16px" fontWeight={700} color="#000">
-            Available Fields - drag into table columns
-          </Typography>
+          <DatasetStepHeader
+            title={selectedDatasetItem?.name || "Selected Dataset"}
+            subtitle={stepSubtitle}
+            rowsPerPage={rowsPerPage}
+            onBack={onBack}
+            onRowsPerPageChange={onRowsPerPageChange}
+          />
+
           <Box
             sx={{
-              gap: "10px",
               p: "16px",
               display: "flex",
-              flexWrap: "wrap",
-              minHeight: "70px",
-              bgcolor: "#f8f9fa",
-              borderRadius: "9px",
-              alignItems: "flex-start",
+              gap: "10px",
+              flexDirection: "column",
+              borderBottom: "0.5px solid #cfd4da",
             }}
           >
-            {sampledDatasetLoading ? (
-              <Typography fontSize="14px" color="#adb5bd">
-                Loading fields...
-              </Typography>
-            ) : columns.length ? (
-              columns.map((column) => {
-                const selected = selectedColumnNames.includes(column.name);
-                const FieldIcon = getFieldIcon(column.type);
-                return (
-                  <DragWrapper
-                    key={column.name}
-                    data={column}
-                    type="COLUMN"
-                    sx={{ borderRadius: "26px" }}
-                    disabled={selected}
-                    setIsDragging={setIsDraggingColumn}
-                  >
-                    <Box
-                      component="button"
-                      type="button"
+            <Typography fontSize="16px" fontWeight={700} color="#000">
+              Available Fields - drag into table columns
+            </Typography>
+            <Box
+              sx={{
+                gap: "10px",
+                p: "16px",
+                display: "flex",
+                flexWrap: "wrap",
+                minHeight: "70px",
+                bgcolor: "#f8f9fa",
+                borderRadius: "9px",
+                alignItems: "flex-start",
+              }}
+            >
+              {sampledDatasetLoading ? (
+                <Typography fontSize="14px" color="#adb5bd">
+                  Loading fields...
+                </Typography>
+              ) : columns.length ? (
+                columns.map((column, index) => {
+                  const selected = selectedColumnNames.includes(column.name);
+                  const FieldIcon = getFieldIcon(column.type);
+                  return (
+                    <ColumnSortWrapper
+                      id={column.name}
+                      index={index}
+                      key={column.name}
                       disabled={selected}
+                      type="AVAILABLE_COLUMN"
                       sx={{
                         ...fieldChipSx,
                         color: selected ? "#adb5bd" : "#373d43",
                         borderColor: selected ? "#dfe3e5" : "#98a1aa",
                       }}
+                      setIsDragging={setIsDraggingColumn1}
+                      group="SELECT_AREA"
                     >
                       <FieldIcon />
                       <Typography
@@ -255,337 +244,261 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                       >
                         {column.name}
                       </Typography>
-                    </Box>
-                  </DragWrapper>
-                );
-              })
-            ) : (
-              <Typography fontSize="14px" color="#adb5bd">
-                No fields available
-              </Typography>
-            )}
+                    </ColumnSortWrapper>
+                  );
+                })
+              ) : (
+                <Typography fontSize="14px" color="#adb5bd">
+                  No fields available
+                </Typography>
+              )}
+            </Box>
           </Box>
-        </Box>
 
-        <Box
-          sx={{
-            p: "16px",
-            display: "flex",
-            gap: "10px",
-            flexDirection: "column",
-            borderBottom: "0.5px solid #cfd4da",
-          }}
-        >
-          <Typography fontSize="16px" fontWeight={700} color="#000">
-            Table columns (ordered) - drag to reorder, x to remove
-          </Typography>
           <Box
             sx={{
-              columnGap: isDraggingColumn ? 0 : "10px",
-              padding: "16px",
+              p: "16px",
               display: "flex",
-              rowGap: "10px",
-              flexWrap: "wrap",
-              minHeight: "44px",
-              bgcolor: "#f8f9fa",
-              borderRadius: "9px",
-              alignItems: "center",
-              border: `0.5px dashed ${isDraggingColumn ? "#3154F4" : "#98a1aa"}`,
+              gap: "10px",
+              flexDirection: "column",
+              borderBottom: "0.5px solid #cfd4da",
             }}
           >
-            {selectedColumns.length ? (
-              <React.Fragment>
-                {selectedColumns.map((column, index) => {
-                  const FieldIcon = getFieldIcon(column.type);
-                  return (
-                    <React.Fragment key={column.name}>
-                      {isDraggingColumn ? (
-                        <DropWrapper
-                          accept={["SELECTED_COLUMN", "COLUMN"]}
-                          sx={{
-                            height: "100%",
-                            position: "relative",
-                            minWidth: index === 0 ? undefined : "10px",
-                            minHeight: "28px",
-                          }}
-                          dropHandler={(item) =>
-                            handleInsertColumn(item, index)
-                          }
-                        >
-                          {({ isOver, item, itemType }) =>
-                            isOver ? (
+            <Typography fontSize="16px" fontWeight={700} color="#000">
+              Table columns (ordered) - drag to reorder, x to remove
+            </Typography>
+            <DropArea
+              key="DROP_AREA"
+              id="DROP_AREA"
+              sx={{
+                columnGap: "10px",
+                padding: "16px",
+                display: "flex",
+                rowGap: "10px",
+                flexWrap: "wrap",
+                minHeight: "44px",
+                bgcolor: "#f8f9fa",
+                borderRadius: "9px",
+                alignItems: "center",
+                border: `0.5px dashed ${isDraggingColumn ? "#3154F4" : "#98a1aa"}`,
+              }}
+            >
+              {({ isDropTarget }) => (
+                <>
+                  {selectedColumns.length ? (
+                    <React.Fragment>
+                      {selectedColumns.map((column, index) => {
+                        const FieldIcon = getFieldIcon(column.type);
+                        return (
+                          <React.Fragment key={column.name}>
+                            <ColumnSortWrapper
+                              index={index}
+                              id={column.name}
+                              key={column.name}
+                              type="SELECTED_COLUMN"
+                              sx={{
+                                gap: "6px",
+                                px: "12px",
+                                py: "6px",
+                                display: "flex",
+                                color: "#ffffff",
+                                border: "none",
+                                borderRadius: "6px",
+                                alignItems: "center",
+                                bgcolor:
+                                  column.type === "number"
+                                    ? "#0E6027"
+                                    : "#3154f4",
+                                svg: {
+                                  flexShrink: 0,
+                                },
+                              }}
+                              setIsDragging={setIsDraggingColumn2}
+                              group="DROP_AREA"
+                            >
+                              <FieldIcon />
                               <Typography
+                                component="span"
                                 fontSize="14px"
-                                color="#adb5bd"
+                                lineHeight="normal"
+                                color="inherit"
+                              >
+                                {column.name}
+                              </Typography>
+                              <Box
+                                component="button"
+                                type="button"
+                                aria-label={`Remove ${column.name}`}
+                                onClick={() => handleRemoveColumn(column.name)}
                                 sx={{
-                                  padding: "0 10px",
-                                  width: "100%",
-                                  whiteSpace: "nowrap",
-                                  overflow: "hidden",
-                                  textOverflow: "ellipsis",
-                                  marginLeft: index === 0 ? "-16px" : "0",
+                                  p: 0,
+                                  m: 0,
+                                  width: 14,
+                                  height: 14,
+                                  border: 0,
+                                  color: "#ffffff",
+                                  display: "flex",
+                                  cursor: "pointer",
+                                  bgcolor: "transparent",
+                                  alignItems: "center",
+                                  justifyContent: "center",
                                 }}
                               >
-                                {itemType === "COLUMN"
-                                  ? `Release to add "${item.name}"`
-                                  : `Release to move "${item.name}" here`}
-                              </Typography>
-                            ) : (
-                              <Box
-                                sx={{
-                                  height: "28px",
-                                  width: "100px",
-                                  position: "absolute",
-                                  left: index === 0 ? "-16px" : "-45px",
-                                }}
-                              />
-                            )
-                          }
-                        </DropWrapper>
-                      ) : null}
-                      <DragWrapper
-                        type="SELECTED_COLUMN"
-                        data={column}
-                        sx={{
-                          gap: "6px",
-                          px: "12px",
-                          py: "6px",
-                          display: "flex",
-                          color: "#ffffff",
-                          borderRadius: "6px",
-                          alignItems: "center",
-                          bgcolor:
-                            column.type === "number" ? "#0E6027" : "#3154f4",
-                          svg: {
-                            flexShrink: 0,
-                          },
-                        }}
-                        setIsDragging={setIsDraggingColumn}
-                      >
-                        <FieldIcon />
-                        <Typography
-                          component="span"
-                          fontSize="14px"
-                          lineHeight="normal"
-                          color="inherit"
-                        >
-                          {column.name}
-                        </Typography>
-                        <Box
-                          component="button"
-                          type="button"
-                          aria-label={`Remove ${column.name}`}
-                          onClick={() => handleRemoveColumn(column.name)}
-                          sx={{
-                            p: 0,
-                            m: 0,
-                            width: 14,
-                            height: 14,
-                            border: 0,
-                            color: "#ffffff",
-                            display: "flex",
-                            cursor: "pointer",
-                            bgcolor: "transparent",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <DatasetFieldCloseIcon />
-                        </Box>
-                      </DragWrapper>
-                      {isDraggingColumn &&
-                      index === selectedColumns.length - 1 ? (
-                        <Box
-                          sx={{
-                            height: "28px",
-                            width: "10px",
-                          }}
-                        />
-                      ) : null}
-                    </React.Fragment>
-                  );
-                })}
-                <DropWrapper
-                  accept={["COLUMN", "SELECTED_COLUMN"]}
-                  dropHandler={(item) => {
-                    handleAddColumn(item);
-                  }}
-                  sx={{
-                    flex: 1,
-                    minWidth: "120px",
-                  }}
-                >
-                  {({ isOver, item, itemType }) =>
-                    isOver ? (
-                      <Typography
-                        fontSize="14px"
-                        color="#adb5bd"
-                        sx={{
-                          width: "100%",
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        {itemType === "COLUMN"
-                          ? `Release to add "${item.name}"`
-                          : `Release to move "${item.name}" here`}
-                      </Typography>
-                    ) : (
+                                <DatasetFieldCloseIcon />
+                              </Box>
+                            </ColumnSortWrapper>
+                          </React.Fragment>
+                        );
+                      })}
+
                       <Typography
                         fontSize="14px"
                         color="#adb5bd"
                         sx={{ width: "100%" }}
                       >
-                        + drop more
+                        {isDropTarget ? "Release to drop" : "+ drop more"}
                       </Typography>
-                    )
-                  }
-                </DropWrapper>
-              </React.Fragment>
-            ) : (
-              <DropWrapper
-                accept={["COLUMN"]}
-                dropHandler={(item) => {
-                  handleAddColumn(item);
-                }}
-                sx={{
-                  flex: 1,
-                  minWidth: "120px",
-                }}
-              >
-                {({ isOver, item, itemType }) =>
-                  isOver ? (
-                    <Typography fontSize="14px" color="#adb5bd">
-                      {itemType === "COLUMN"
-                        ? `Release to add "${item.name}"`
-                        : `Release to move "${item.name}" here`}
-                    </Typography>
+                    </React.Fragment>
                   ) : (
                     <Typography
                       fontSize="14px"
                       color="#adb5bd"
                       sx={{ width: "100%" }}
                     >
-                      Drop fields here {"->"}
+                      {isDropTarget ? "Release to drop" : "Drop fields here ->"}
                     </Typography>
-                  )
-                }
-              </DropWrapper>
-            )}
+                  )}
+                </>
+              )}
+            </DropArea>
           </Box>
-        </Box>
 
-        <Box
-          sx={{
-            p: "20px",
-            minHeight: "312px",
-            display: "flex",
-            flex: 1,
-          }}
-        >
           <Box
             sx={{
-              width: "100%",
-              minHeight: "242px",
-              overflow: "auto",
-              bgcolor: "#f8f9fa",
-              border: "0.5px solid #cfd4da",
-              "&::-webkit-scrollbar": {
-                width: "4px",
-                height: "4px",
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: "#000",
-              },
-              "&::-webkit-scrollbar-track": {
-                backgroundColor: "#D9D9D9",
-              },
+              p: "20px",
+              minHeight: "312px",
+              display: "flex",
+              flex: 1,
             }}
           >
             <Box
               sx={{
-                height: "40px",
-                px: "16px",
-                display: "flex",
-                alignItems: "center",
+                width: "100%",
+                minHeight: "242px",
+                overflow: "auto",
                 bgcolor: "#f8f9fa",
-                borderBottom: "0.5px solid #cfd4da",
+                border: "0.5px solid #cfd4da",
+                "&::-webkit-scrollbar": {
+                  width: "4px",
+                  height: "4px",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "#000",
+                },
+                "&::-webkit-scrollbar-track": {
+                  backgroundColor: "#D9D9D9",
+                },
               }}
             >
-              <Typography fontSize="16px" fontWeight={700} color="#000">
-                Data Preview (first 5 rows)
-              </Typography>
-            </Box>
+              <Box
+                sx={{
+                  height: "40px",
+                  px: "16px",
+                  display: "flex",
+                  alignItems: "center",
+                  bgcolor: "#f8f9fa",
+                  borderBottom: "0.5px solid #cfd4da",
+                }}
+              >
+                <Typography fontSize="16px" fontWeight={700} color="#000">
+                  Data Preview (first 5 rows)
+                </Typography>
+              </Box>
 
-            {selectedColumns.length ? (
-              previewRows.length ? (
-                <Box
-                  component="table"
-                  sx={{
-                    width: "max-content",
-                    minWidth:
-                      selectedColumns.length === 1
-                        ? "240px"
-                        : `${selectedColumns.length * 220}px`,
-                    borderCollapse: "collapse",
-                    tableLayout: "fixed",
-                    th: {
-                      height: "48px",
-                      px: "16px",
-                      py: "12px",
-                      fontSize: "14px",
-                      fontWeight: 700,
-                      color: "#101018",
-                      textAlign: "left",
-                      bgcolor: "#f8f9fa",
-                      border: "0.5px solid #cfd4da",
-                    },
-                    td: {
-                      height: "48px",
-                      px: "16px",
-                      py: "12px",
-                      fontSize: "14px",
-                      color: "#373d43",
-                      overflow: "hidden",
-                      whiteSpace: "nowrap",
-                      textOverflow: "ellipsis",
-                      bgcolor: "#f8f9fa",
-                      border: "0.5px solid #cfd4da",
-                    },
-                  }}
-                >
-                  <Box component="thead">
-                    <Box component="tr">
-                      {selectedColumns.map((column) => (
+              {selectedColumns.length ? (
+                previewRows.length ? (
+                  <Box
+                    component="table"
+                    sx={{
+                      width: "max-content",
+                      minWidth:
+                        selectedColumns.length === 1
+                          ? "240px"
+                          : `${selectedColumns.length * 220}px`,
+                      borderCollapse: "collapse",
+                      tableLayout: "fixed",
+                      th: {
+                        height: "48px",
+                        px: "16px",
+                        py: "12px",
+                        fontSize: "14px",
+                        fontWeight: 700,
+                        color: "#101018",
+                        textAlign: "left",
+                        bgcolor: "#f8f9fa",
+                        border: "0.5px solid #cfd4da",
+                      },
+                      td: {
+                        height: "48px",
+                        px: "16px",
+                        py: "12px",
+                        fontSize: "14px",
+                        color: "#373d43",
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        textOverflow: "ellipsis",
+                        bgcolor: "#f8f9fa",
+                        border: "0.5px solid #cfd4da",
+                      },
+                    }}
+                  >
+                    <Box component="thead">
+                      <Box component="tr">
+                        {selectedColumns.map((column) => (
+                          <Box
+                            key={column.name}
+                            component="th"
+                            sx={{ width: "220px" }}
+                          >
+                            {column.name}
+                          </Box>
+                        ))}
+                      </Box>
+                    </Box>
+                    <Box component="tbody">
+                      {previewRows.map((row, rowIndex) => (
                         <Box
-                          key={column.name}
-                          component="th"
-                          sx={{ width: "220px" }}
+                          key={`preview-row-${rowIndex.toString()}`}
+                          component="tr"
                         >
-                          {column.name}
+                          {selectedColumns.map((column) => (
+                            <Box
+                              key={`${rowIndex.toString()}-${column.name}`}
+                              component="td"
+                            >
+                              {formatCellValue(row?.[column.name])}
+                            </Box>
+                          ))}
                         </Box>
                       ))}
                     </Box>
                   </Box>
-                  <Box component="tbody">
-                    {previewRows.map((row, rowIndex) => (
-                      <Box
-                        key={`preview-row-${rowIndex.toString()}`}
-                        component="tr"
-                      >
-                        {selectedColumns.map((column) => (
-                          <Box
-                            key={`${rowIndex.toString()}-${column.name}`}
-                            component="td"
-                          >
-                            {formatCellValue(row?.[column.name])}
-                          </Box>
-                        ))}
-                      </Box>
-                    ))}
+                ) : (
+                  <Box
+                    sx={{
+                      height: "74px",
+                      px: "16px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderBottom: "0.5px solid #cfd4da",
+                    }}
+                  >
+                    <Typography fontSize="14px" color="#373d43">
+                      No preview rows available
+                    </Typography>
                   </Box>
-                </Box>
+                )
               ) : (
                 <Box
                   sx={{
@@ -598,98 +511,83 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                   }}
                 >
                   <Typography fontSize="14px" color="#373d43">
-                    No preview rows available
+                    Add columns to preview
                   </Typography>
                 </Box>
-              )
-            ) : (
-              <Box
-                sx={{
-                  height: "74px",
-                  px: "16px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderBottom: "0.5px solid #cfd4da",
-                }}
-              >
-                <Typography fontSize="14px" color="#373d43">
-                  Add columns to preview
-                </Typography>
-              </Box>
-            )}
+              )}
+            </Box>
           </Box>
         </Box>
-      </Box>
 
-      <Box
-        sx={{
-          gap: "16px",
-          p: "16px",
-          display: "flex",
-          bgcolor: "#f8f9fa",
-          alignItems: "center",
-          justifyContent: "flex-end",
-          borderTop: "0.5px solid #cfd4da",
-          "@media (max-width: 767px)": {
-            alignItems: "stretch",
-            flexDirection: "column",
-          },
-        }}
-      >
-        <Button
-          variant="outlined"
-          startIcon={<DatasetArrowLeftIcon />}
-          onClick={onBack}
+        <Box
           sx={{
-            color: "#000",
-            fontSize: "16px",
-            borderRadius: "4px",
-            textTransform: "none",
-            borderColor: "#98a1aa",
-            bgcolor: "#ffffff",
-          }}
-        >
-          Back to Datasets
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={onCancel}
-          sx={{
-            color: "#000",
-            fontSize: "16px",
-            borderRadius: "4px",
-            textTransform: "none",
-            borderColor: "#98a1aa",
-            bgcolor: "#ffffff",
-          }}
-        >
-          Cancel
-        </Button>
-        <Button
-          variant="contained"
-          disabled={!selectedColumns.length}
-          endIcon={<DatasetArrowRightIcon />}
-          onClick={handlePreviewTable}
-          sx={{
-            color: "#ffffff",
-            fontSize: "16px",
-            borderRadius: "4px",
-            textTransform: "none",
-            bgcolor: "#3154f4",
-            "&:hover": {
-              bgcolor: "#2542c7",
-            },
-            "&.Mui-disabled": {
-              color: "#adb5bd",
-              bgcolor: "#dfe3e5",
+            gap: "16px",
+            p: "16px",
+            display: "flex",
+            bgcolor: "#f8f9fa",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            borderTop: "0.5px solid #cfd4da",
+            "@media (max-width: 767px)": {
+              alignItems: "stretch",
+              flexDirection: "column",
             },
           }}
         >
-          Preview Table
-        </Button>
-      </Box>
-    </React.Fragment>
+          <Button
+            variant="outlined"
+            startIcon={<DatasetArrowLeftIcon />}
+            onClick={onBack}
+            sx={{
+              color: "#000",
+              fontSize: "16px",
+              borderRadius: "4px",
+              textTransform: "none",
+              borderColor: "#98a1aa",
+              bgcolor: "#ffffff",
+            }}
+          >
+            Back to Datasets
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={onCancel}
+            sx={{
+              color: "#000",
+              fontSize: "16px",
+              borderRadius: "4px",
+              textTransform: "none",
+              borderColor: "#98a1aa",
+              bgcolor: "#ffffff",
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            disabled={!selectedColumns.length}
+            endIcon={<DatasetArrowRightIcon />}
+            onClick={handlePreviewTable}
+            sx={{
+              color: "#ffffff",
+              fontSize: "16px",
+              borderRadius: "4px",
+              textTransform: "none",
+              bgcolor: "#3154f4",
+              "&:hover": {
+                bgcolor: "#2542c7",
+              },
+              "&.Mui-disabled": {
+                color: "#adb5bd",
+                bgcolor: "#dfe3e5",
+              },
+            }}
+          >
+            Preview Table
+          </Button>
+        </Box>
+      </React.Fragment>
+    </DragDropProvider>
   );
 };
 

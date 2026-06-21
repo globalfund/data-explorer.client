@@ -3,7 +3,7 @@ import { TitleStaticArea } from "./title-static-area";
 import { TitleDragArea } from "./title-drag-area";
 
 interface TitleAreaProps {
-  position: string;
+  index: number;
   visualOptions: Record<string, any>;
   setVisualOptions?: (value: Record<string, any>) => void;
   viewMode?: boolean;
