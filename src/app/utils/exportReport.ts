@@ -5,9 +5,10 @@ import axios from "axios";
 export const exportReportFromServer = async (
   reportId: string,
   type: "png" | "svg" | "pdf",
+  asset: boolean = false,
 ) => {
   const response = await axios.get(
-    `${import.meta.env.VITE_API}/report/${reportId}/export/${type}`,
+    `${import.meta.env.VITE_API}/report/${reportId}/export/${type}?asset=${asset}`,
     {
       responseType: "blob",
     },
@@ -21,7 +22,7 @@ export const exportReportFromServer = async (
 
   const link = document.createElement("a");
   link.href = downloadUrl;
-  link.download = `report-${reportId}.${type}`;
+  link.download = `${asset ? "asset" : "report"}-${reportId}.${type}`;
   document.body.appendChild(link);
   link.click();
 

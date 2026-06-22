@@ -7,7 +7,10 @@ import { Outlet, useLocation } from "react-router-dom";
 import { useUrlFilters } from "app/hooks/useUrlFilters";
 import { useRouteListener } from "app/hooks/useRouteListener";
 import { useScrollToAnchor } from "app/hooks/useScrollToAnchor";
-import { ReportBuilderPageHeader } from "app/pages/report-builder/builder/components/header";
+import {
+  ReportBuilderAssetPageHeader,
+  ReportBuilderPageHeader,
+} from "app/pages/report-builder/builder/components/header";
 
 export const Page: React.FC = () => {
   useUrlFilters();
@@ -24,10 +27,19 @@ export const Page: React.FC = () => {
     return location.pathname.includes("/export");
   }, [location.pathname]);
 
+  const assetPreviewMode = React.useMemo(() => {
+    return location.pathname.includes("/assets/");
+  }, [location.pathname]);
+
   if (inReportBuilder) {
     return (
       <React.Fragment>
-        {!exportMode && (
+        {exportMode ? null : assetPreviewMode ? (
+          <React.Fragment>
+            <Header />
+            <ReportBuilderAssetPageHeader />
+          </React.Fragment>
+        ) : (
           <React.Fragment>
             <Header />
             <ReportBuilderPageHeader />

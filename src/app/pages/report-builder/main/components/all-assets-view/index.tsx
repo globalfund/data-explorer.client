@@ -29,6 +29,7 @@ import {
   Details,
   Backspace,
 } from "app/pages/report-builder/builder/components/report-settings/icons";
+import { useNavigate } from "react-router-dom";
 
 export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
   assets,
@@ -47,11 +48,14 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
   const duplicateFolder = useDuplicateFolder();
   const cmsData = useCMSData({ returnData: true });
 
+  const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const [anchorElTableId, setAnchorElTableId] = React.useState<string | null>(
     null,
   );
 
+  const [imageVersion, setImageVersion] = React.useState(Date.now());
   const anchorElTable = React.useMemo(() => {
     if (!anchorElTableId) return null;
     return {
@@ -170,7 +174,7 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
       if (type === "folder") {
         handleFolderOpen(id);
       } else {
-        console.log("Clicked asset with id: ", id);
+        navigate(`/report-builder/assets/${id}`);
       }
     };
 
@@ -247,6 +251,10 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
     onMoveItemToFolder(id, name, isFolder ? "folder" : "asset");
   };
 
+  React.useEffect(() => {
+    setImageVersion(Date.now());
+  }, []);
+
   const view = React.useMemo(() => {
     if (assets.isLoading) {
       return (
@@ -298,9 +306,10 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
                     id={item.id}
                     name={item.name}
                     type={item.type}
-                    description={item.description}
+                    handleUseAsset={() => () => {}}
                     createdDate={item.createdDate}
                     updatedDate={item.updatedDate}
+                    imageVersion={imageVersion}
                     handleItemClick={handleItemClick}
                     handleRenameEnter={handleRenameEnter}
                     handleItemMenuClick={handleItemMenuClick}
@@ -506,6 +515,7 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
     selectedView,
     detailsSidePanelOpen,
     selectedItemForRenaming,
+    imageVersion,
   ]);
 
   React.useEffect(() => {
