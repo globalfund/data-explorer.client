@@ -14,16 +14,12 @@ import { ReportBuilderNewReportModalProps } from "app/pages/report-builder/main/
 
 export const ReportBuilderNewReportModal: React.FC<
   ReportBuilderNewReportModalProps
-> = ({
-  open,
-  onClose,
-  nameValue,
-  setNameValue,
-  descriptionValue,
-  setDescriptionValue,
-}) => {
+> = ({ open, onClose }) => {
   const navigate = useNavigate();
   const cmsData = useCMSData({ returnData: true });
+  const [nameValue, setNameValue] = React.useState("");
+  const [descriptionValue, setDescriptionValue] = React.useState("");
+
   const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length <= 100) {
       setNameValue(e.target.value);
@@ -39,11 +35,19 @@ export const ReportBuilderNewReportModal: React.FC<
   const createReport = useCreateReport();
 
   const onSubmit = () => {
+    const assetToInsertInNewReport = localStorage.getItem(
+      "assetToInsertInNewReport",
+    );
+    let asset = null;
+    if (assetToInsertInNewReport) {
+      asset = JSON.parse(assetToInsertInNewReport).asset;
+      localStorage.removeItem("assetToInsertInNewReport");
+    }
     if (nameValue && descriptionValue) {
       const newReport = {
         name: nameValue,
         description: descriptionValue,
-        items: [],
+        items: asset ? [{ ...asset, open: false }] : [],
         settings: {
           width: (window.innerWidth > 1440
             ? 1392
@@ -65,6 +69,12 @@ export const ReportBuilderNewReportModal: React.FC<
       });
     }
   };
+
+  React.useEffect(() => {
+    return () => {
+      localStorage.removeItem("assetToInsertInNewReport");
+    };
+  }, []);
 
   return (
     <Modal disableScrollLock open={open} onClose={onClose}>

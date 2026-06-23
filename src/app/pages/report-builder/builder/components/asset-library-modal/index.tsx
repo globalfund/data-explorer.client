@@ -30,6 +30,8 @@ import AssetLibraryCloseIcon from "app/assets/vectors/AssetLibraryClose.svg?reac
 import AssetLibraryFolderIcon from "app/assets/vectors/AssetLibraryFolder.svg?react";
 import AssetLibraryArrowRightIcon from "app/assets/vectors/AssetLibraryArrowRight.svg?react";
 import { useStoreActions } from "app/state/store/hooks";
+import { uniqueId } from "app/utils/uniqueId";
+import { format } from "date-fns";
 
 const sortOptions = [
   { label: "Updated", value: "updatedDate DESC" },
@@ -58,20 +60,6 @@ const vectorIconSx = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-};
-
-const formatAssetDate = (value: string) => {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-  return date
-    .toLocaleDateString("en-US", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    })
-    .replace(/\//g, "-");
 };
 
 const assetTypeLabel = (type: string) => {
@@ -128,12 +116,18 @@ const AssetCard: React.FC<{
           width: "183px",
           height: "218px",
           display: "flex",
-          bgcolor: "#dfe3e5",
-          alignItems: "center",
+
           justifyContent: "center",
+          div: {
+            width: "calc(100% - 10px)",
+            backgroundImage: `url(${import.meta.env.VITE_API}/asset-thumbnail/${asset.id}.png?v=${uniqueId()})`,
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            backgroundSize: "contain",
+          },
         }}
       >
-        <AssetLibraryFileIcon />
+        <div />
       </Box>
     </Box>
     <Box
@@ -166,7 +160,7 @@ const AssetCard: React.FC<{
         {asset.name}
       </Typography>
       <Typography fontSize="14px" lineHeight="normal" color="#373d43">
-        Saved on {formatAssetDate(asset.createdDate)}
+        Saved on {format(new Date(asset.createdDate), "dd-MM-yyyy")}
       </Typography>
     </Box>
   </Box>
@@ -279,6 +273,7 @@ export const AssetLibraryModal: React.FC<{
     addItem({
       ...selectedAsset,
       open: true,
+      id: uniqueId(),
     });
     onClose();
   };

@@ -79,13 +79,14 @@ export interface FolderCardProps {
 export interface AssetCardProps {
   id: string;
   name: string;
-  description: string;
   createdDate: string;
   updatedDate: string;
   type?: RBReportItemTypes;
+  imageVersion: number;
   selectedItemForRenaming: string | null;
   setSelectedItemForRenaming: (id: string | null) => void;
   handleRenameEnter: (id: string, type: "asset" | "folder") => void;
   handleItemMenuClick: (event: React.MouseEvent<HTMLElement>) => void;
   handleItemClick: (id: string, type: "asset" | "folder") => () => void;
+  handleUseAsset: (id: string) => void;
 }

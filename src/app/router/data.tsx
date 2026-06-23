@@ -17,6 +17,8 @@ import { ROUTE_CONFIGS } from "app/router/paths";
 import { ReportBuilder } from "app/pages/report-builder/main";
 import { ReportBuilderPage } from "app/pages/report-builder/builder";
 import { ReportBuilderPreviewPage } from "app/pages/report-builder/preview";
+import { ReportBuilderAssetPreviewPage } from "app/pages/report-builder/asset-preview";
+import { ReportBuilderAssetExportViewPage } from "app/pages/report-builder/asset-export-view";
 import { Debug } from "app/pages/debug";
 import { GlossaryPage } from "app/pages/glossary";
 import { ChangelogPage } from "app/pages/changelog";
@@ -94,6 +96,8 @@ const COMPONENT_MAP: Record<string, React.ComponentType> = {
   ReportBuilderPage,
   ReportBuilderPreviewPage,
   ReportBuilderExportViewPage,
+  ReportBuilderAssetPreviewPage,
+  ReportBuilderAssetExportViewPage,
   GlossaryPage,
   ChangelogPage,
   Debug,

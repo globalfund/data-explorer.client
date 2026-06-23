@@ -50,8 +50,25 @@ export const ReportBuilderPage: React.FC = () => {
   );
 
   React.useEffect(() => {
+    const assetToInsert = localStorage.getItem("assetToInsert");
     if (reportData) {
-      setActiveReport(reportData);
+      if (assetToInsert) {
+        const { asset, reportId } = JSON.parse(assetToInsert);
+        if (reportId === reportData.id) {
+          setActiveReport({
+            ...reportData,
+            items: [
+              ...reportData.items,
+              { ...asset, open: false, id: uniqueId() },
+            ],
+          });
+        } else {
+          setActiveReport(reportData);
+        }
+        localStorage.removeItem("assetToInsert");
+      } else {
+        setActiveReport(reportData);
+      }
     }
   }, [reportData]);
 
