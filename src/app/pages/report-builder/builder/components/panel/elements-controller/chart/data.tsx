@@ -1,6 +1,5 @@
 import DatabaseIcon from "app/assets/vectors/RBDatabase.svg?react";
 import ChartIconLarge from "app/assets/vectors/RBChartLarge.svg?react";
-import FilterIcon from "app/assets/vectors/FunnelPlus.svg?react";
 import DataIcon from "app/assets/vectors/RBDatabase2.svg?react";
 import PaintBucketIcon from "app/assets/vectors/Paint_Bucket.svg?react";
 import LayoutTemplateIcon from "app/assets/vectors/Layout_Template.svg?react";
@@ -32,14 +31,9 @@ export const chartInfo: ChartInfoItem[] = [
 
 export const tabList = [
   {
-    value: "mapping",
+    value: "data-settings",
     icon: <DataIcon />,
-    ariaLabel: "Data",
-  },
-  {
-    value: "filter",
-    icon: <FilterIcon />,
-    ariaLabel: "Filter",
+    ariaLabel: "Data Settings",
   },
   {
     value: "layout",

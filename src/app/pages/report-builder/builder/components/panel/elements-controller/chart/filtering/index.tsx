@@ -140,6 +140,7 @@ export default function Filtering() {
     <Box
       sx={{
         padding: "8px",
+        width: "100%",
         display: "flex",
         flexDirection: "column",
         gap: "8px",
