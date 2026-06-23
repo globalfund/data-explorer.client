@@ -95,6 +95,16 @@ export const ROUTE_CONFIGS: RouteConfig[] = [
     importFrom: "app/pages/report-builder/export-view",
   },
   {
+    path: "/report-builder/assets/:id",
+    componentName: "ReportBuilderAssetPreviewPage",
+    importFrom: "app/pages/report-builder/asset-preview",
+  },
+  {
+    path: "/report-builder/assets/:id/export",
+    componentName: "ReportBuilderAssetExportViewPage",
+    importFrom: "app/pages/report-builder/asset-export-view",
+  },
+  {
     path: "/glossary",
     componentName: "GlossaryPage",
     importFrom: "app/pages/glossary",

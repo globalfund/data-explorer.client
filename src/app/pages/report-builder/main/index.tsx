@@ -19,6 +19,7 @@ import { ReportBuilderDeleteFolderModal } from "app/pages/report-builder/main/co
 import { ReportBuilderDeleteReportModal } from "app/pages/report-builder/main/components/delete-report-modal";
 import { ReportBuilderDetailsSidePanel } from "app/pages/report-builder/main/components/details-side-panel";
 import { ReportBuilderMoveToFolderModal } from "app/pages/report-builder/main/components/move-to-folder-modal";
+import { ReportBuilderUseAssetModal } from "app/pages/report-builder/main/components/use-asset-modal";
 import {
   AssetViewType,
   ReportBuilderAssetsToolbar,
@@ -47,10 +48,7 @@ export const ReportBuilder: React.FC = () => {
   const [newFolderModalNameValue, setNewFolderModalNameValue] =
     React.useState("");
   const [newReportModalOpen, setNewReportModalOpen] = React.useState(false);
-  const [newReportModalNameValue, setNewReportModalNameValue] =
-    React.useState("");
-  const [newReportModalDescriptionValue, setNewReportModalDescriptionValue] =
-    React.useState("");
+
   const [moveToFolderModalOpen, setMoveToFolderModalOpen] =
     React.useState(false);
   const [itemToMove, setItemToMove] = React.useState<{
@@ -96,6 +94,8 @@ export const ReportBuilder: React.FC = () => {
     id: string;
     name: string;
   } | null>(null);
+
+  const [useAssetId, setUseAssetId] = React.useState<string | null>(null);
 
   const getReports = useGetReports({
     search: search,
@@ -177,6 +177,10 @@ export const ReportBuilder: React.FC = () => {
     setMoveToFolderModalOpen(false);
   };
 
+  const handleUseAsset = (assetId: string) => {
+    setUseAssetId(assetId);
+  };
+
   const handleItemMoveToFolder = (
     id: string,
     name: string,
@@ -240,6 +244,9 @@ export const ReportBuilder: React.FC = () => {
     setDeleteAssetModalOpen(false);
   };
 
+  const handleUseAssetModalClose = () => {
+    setUseAssetId(null);
+  };
   const handleDetailsSidePanelOpen = (details: {
     id: string;
     name: string;
@@ -339,6 +346,7 @@ export const ReportBuilder: React.FC = () => {
               }}
               refetch={refetch}
               onDeleteAsset={handleDeleteAsset}
+              handleUseAsset={handleUseAsset}
               onDeleteFolder={handleDeleteFolder}
               handleFolderOpen={handleFolderOpen}
               selectedView={selectedView ?? "cards"}
@@ -503,10 +511,6 @@ export const ReportBuilder: React.FC = () => {
       <ReportBuilderNewReportModal
         open={newReportModalOpen}
         onClose={handleNewReportModalClose}
-        nameValue={newReportModalNameValue}
-        setNameValue={setNewReportModalNameValue}
-        descriptionValue={newReportModalDescriptionValue}
-        setDescriptionValue={setNewReportModalDescriptionValue}
       />
       <ReportBuilderMoveToFolderModal
         refetch={refetch}
@@ -542,6 +546,12 @@ export const ReportBuilder: React.FC = () => {
         assetId={assetToDelete?.id ?? ""}
         onClose={handleDeleteAssetModalClose}
         assetName={assetToDelete?.name ?? ""}
+      />
+      <ReportBuilderUseAssetModal
+        open={!!useAssetId}
+        onClose={handleUseAssetModalClose}
+        assetId={useAssetId}
+        setNewReportModalOpen={setNewReportModalOpen}
       />
     </React.Fragment>
   );

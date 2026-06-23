@@ -2,7 +2,7 @@ import React from "react";
 import Box from "@mui/material/Box";
 import DragIndicator from "@mui/icons-material/DragIndicator";
 import { useStoreState } from "app/state/store/hooks";
-import useDragReportComponent from "app/pages/report-builder/hooks/useDragReportComponent";
+import { useSortable } from "@dnd-kit/react/sortable";
 
 interface ItemComponentProps {
   id: string;
@@ -28,18 +28,19 @@ export const ItemComponent = (props: ItemComponentProps) => {
     !props.viewMode &&
     (selectedController?.id === id || selectedController?.parent?.id === id);
 
-  const ref = React.useRef<HTMLDivElement>(null);
+  const handleRef = React.useRef<HTMLButtonElement | null>(null);
+  const [element, setElement] = React.useState<Element | null>(null);
 
-  const { drag, drop, handlerId, isDragging } = useDragReportComponent({
+  const { isDragging } = useSortable({
     id,
     index,
-    ref,
+    handle: handleRef,
+    element,
   });
-
-  drag(drop(ref));
 
   return (
     <Box
+      data-shadow={isDragging}
       id={`container-${id}`}
       className="order-item-container"
       sx={{
@@ -49,12 +50,11 @@ export const ItemComponent = (props: ItemComponentProps) => {
         border: active ? "0.5px solid #3154F4" : "0.5px solid transparent",
         borderRadius: "4px",
       }}
+      ref={setElement}
     >
       <Box
         id={`item-${id}`}
-        ref={ref}
         className="drag-indicator"
-        data-handler-id={handlerId}
         sx={{
           top: 0,
           zIndex: 1,
@@ -69,6 +69,7 @@ export const ItemComponent = (props: ItemComponentProps) => {
               ? "none"
               : "flex",
         }}
+        ref={handleRef}
       >
         <DragIndicator fontSize="small" />
       </Box>

@@ -25,7 +25,11 @@ import { useCMSData } from "app/hooks/useCMSData";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import DownloadIcon from "app/assets/vectors/Download.svg?react";
-import { useGetReport, usePatchReport } from "app/hooks/queries/report-builder";
+import {
+  useGetAsset,
+  useGetReport,
+  usePatchReport,
+} from "app/hooks/queries/report-builder";
 import ErrorIcon from "app/assets/vectors/ReportBuilderAutoSaveError.svg?react";
 import CompleteIcon from "app/assets/vectors/ReportBuilderCompleteIcon.svg?react";
 import WarningIcon from "app/assets/vectors/ReportBuilderAutoSaveWarning.svg?react";
@@ -36,6 +40,9 @@ import {
   BackArrowIcon,
 } from "app/pages/report-builder/builder/components/header/data";
 import { AssetLibraryModal } from "app/pages/report-builder/builder/components/asset-library-modal";
+import { Add } from "@mui/icons-material";
+import { ReportBuilderUseAssetModal } from "app/pages/report-builder/main/components/use-asset-modal";
+import { ReportBuilderNewReportModal } from "app/pages/report-builder/main/components/new-report-modal";
 
 export const menuSx = {
   zIndex: 1400,
@@ -589,6 +596,380 @@ export const ReportBuilderPageHeader: React.FC = () => {
       <AssetLibraryModal
         open={assetLibraryOpen}
         onClose={handleCloseAssetLibrary}
+      />
+    </React.Fragment>
+  );
+};
+
+export const ReportBuilderAssetPageHeader: React.FC = () => {
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const cmsData = useCMSData({ returnData: true });
+  const assetQuery = useGetAsset(id);
+  const assetData = assetQuery.data?.data;
+
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState("");
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl2, setAnchorEl2] = React.useState<null | HTMLElement>(null);
+  const [signedIn] = React.useState(true); // Replace with actual authentication state
+
+  const [useAssetModalOpen, setUseAssetModalOpen] = React.useState(false);
+  const [newReportModalOpen, setNewReportModalOpen] = React.useState(false);
+
+  const handleNewReportModalClose = () => {
+    setNewReportModalOpen(false);
+  };
+
+  const handleUseAssetModalClose = () => {
+    setUseAssetModalOpen(false);
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleClick2 = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl2(event.currentTarget);
+  };
+
+  const handleClose2 = () => {
+    setAnchorEl2(null);
+  };
+
+  const handleCopyUrlLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setSnackbarMessage(
+      getCMSDataField(
+        cmsData,
+        "pagesReportBuilderBuilder.linkCopiedMessage",
+        "Link Copied!",
+      ),
+    );
+    setSnackbarOpen(true);
+  };
+
+  const handleSendViaEmail = () => {
+    window.open(`mailto:?body=${window.location.href}`, "_blank");
+    setSnackbarMessage(
+      getCMSDataField(
+        cmsData,
+        "pagesReportBuilderBuilder.directedToEmailMessage",
+        "Directed to Email!",
+      ),
+    );
+    setSnackbarOpen(true);
+  };
+
+  const handleDownloadShareableFile =
+    (type: "png" | "svg" | "pdf") => async () => {
+      await exportReportFromServer(id!, type, true);
+      setSnackbarMessage(
+        `${type.toUpperCase()} ${getCMSDataField(
+          cmsData,
+          "pagesReportBuilderBuilder.downloadedMessageSuffix",
+          "downloaded!",
+        )}`,
+      );
+      setSnackbarOpen(true);
+    };
+
+  const handleSnackbarClose = (
+    e: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
+    setTimeout(() => {
+      setSnackbarMessage("");
+    }, 200);
+  };
+
+  const handleBackToEditClick = () => {
+    navigate(`/report-builder`);
+  };
+
+  const open = Boolean(anchorEl);
+  const open2 = Boolean(anchorEl2);
+
+  const nameInputRef = React.useRef<HTMLInputElement>(null);
+
+  return (
+    <React.Fragment>
+      <Box
+        sx={{
+          top: 59,
+          zIndex: 999,
+          flexGrow: 1,
+          position: "sticky",
+          borderBottom: "1px solid #cfd4da",
+        }}
+      >
+        <Toolbar
+          sx={{
+            gap: "20px",
+            height: "59px",
+            padding: "10px 20px !important",
+            justifyContent: "space-between",
+            bgcolor: signedIn ? "#f8f9fa" : "#fff6d8",
+          }}
+        >
+          {signedIn && (
+            <React.Fragment>
+              <Box
+                sx={{
+                  gap: "5px",
+                  display: "flex",
+                  alignItems: "center",
+                  "> *": { fontSize: "16px", color: "#000" },
+                  "> input": {
+                    fontWeight: "700",
+                    borderStyle: "none",
+                    bgcolor: "transparent",
+                  },
+                }}
+              >
+                <Link to="/report-builder">
+                  {getCMSDataField(
+                    cmsData,
+                    "pagesReportBuilderBuilder.myReportsButton",
+                    "My Reports",
+                  )}
+                </Link>
+                <Typography>/</Typography>
+                <input
+                  type="text"
+                  value={assetData?.name ?? ""}
+                  ref={nameInputRef}
+                  disabled
+                  size={assetData?.name.length ?? 1}
+                />
+
+                <Typography
+                  sx={{
+                    fontSize: "14px",
+                    padding: "5px 8px",
+                    borderRadius: "4px",
+                    bgcolor: "#d6ddfd",
+                  }}
+                >
+                  Previewing
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  gap: "10px",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <React.Fragment>
+                  <Box
+                    sx={{
+                      gap: "10px",
+                      display: "flex",
+                      alignItems: "center",
+                      ".MuiButtonBase-root": {
+                        height: "35px",
+                        fontSize: "14px",
+                        bgcolor: "#fff",
+                        fontWeight: "400",
+                        padding: "6px 12px",
+                        borderRadius: "4px",
+                        textTransform: "none",
+                        border: "1px solid #dfe3e5",
+                        "&:hover": {
+                          bgcolor: "#f1f3f5",
+                          borderColor: "#70777e",
+                        },
+                      },
+                    }}
+                  >
+                    <Button
+                      startIcon={<BackArrowIcon />}
+                      onClick={handleBackToEditClick}
+                    >
+                      Back to Assets
+                    </Button>
+                    <Button onClick={handleClick2} startIcon={<DownloadIcon />}>
+                      Export
+                    </Button>
+                    <Button onClick={handleClick} startIcon={<ShareIcon />}>
+                      Share
+                    </Button>
+                    <Button
+                      onClick={() => setUseAssetModalOpen(true)}
+                      startIcon={<Add />}
+                      sx={{
+                        color: "#fff !important",
+                        bgcolor: "#3154f4 !important",
+                        svg: { path: { fill: "#fff !important" } },
+                      }}
+                    >
+                      Use Asset
+                    </Button>
+                  </Box>
+                  <Menu
+                    open={open}
+                    keepMounted
+                    disableScrollLock
+                    anchorEl={anchorEl}
+                    onClose={handleClose}
+                    transformOrigin={{
+                      vertical: -5,
+                      horizontal: "right",
+                    }}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    sx={menuSx}
+                  >
+                    <MenuItem onClick={handleCopyUrlLink}>
+                      <CopyIcon />
+                      {getCMSDataField(
+                        cmsData,
+                        "pagesReportBuilderBuilder.copyUrlLinkMenuItem",
+                        "Copy URL Link",
+                      )}
+                    </MenuItem>
+                    <MenuItem onClick={handleSendViaEmail}>
+                      <EmailIcon />
+                      {getCMSDataField(
+                        cmsData,
+                        "pagesReportBuilderBuilder.sendViaEmailMenuItem",
+                        "Send via Email",
+                      )}
+                    </MenuItem>
+                  </Menu>
+                  <Menu
+                    keepMounted
+                    open={open2}
+                    disableScrollLock
+                    anchorEl={anchorEl2}
+                    onClose={handleClose2}
+                    transformOrigin={{
+                      vertical: -5,
+                      horizontal: "right",
+                    }}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    sx={menuSx}
+                  >
+                    <MenuItem onClick={handleDownloadShareableFile("png")}>
+                      <PNGIcon />
+                      {getCMSDataField(
+                        cmsData,
+                        "pagesReportBuilderBuilder.pngFileMenuItem",
+                        "PNG",
+                      )}
+                    </MenuItem>
+                    <MenuItem onClick={handleDownloadShareableFile("svg")}>
+                      <SVGIcon />
+                      {getCMSDataField(
+                        cmsData,
+                        "pagesReportBuilderBuilder.svgFileMenuItem",
+                        "SVG",
+                      )}
+                    </MenuItem>
+                    <MenuItem onClick={handleDownloadShareableFile("pdf")}>
+                      <PDFIcon />
+                      {getCMSDataField(
+                        cmsData,
+                        "pagesReportBuilderBuilder.pdfFileMenuItem",
+                        "PDF",
+                      )}
+                    </MenuItem>
+                  </Menu>
+                </React.Fragment>
+              </Box>
+            </React.Fragment>
+          )}
+          {!signedIn && (
+            <Container maxWidth="lg" disableGutters>
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Box
+                  sx={{
+                    gap: "12px",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <InfoIcon />
+                  <Box>
+                    <Typography
+                      fontSize="16px"
+                      fontWeight="700"
+                      color="#684e00"
+                    >
+                      This report was created by a user with the Global Fund
+                      Report Builder.
+                    </Typography>
+                    <Typography fontSize="16px" color="#684e00">
+                      It is not an official Global Fund publication.
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box
+                  sx={{
+                    p: "6px 8px",
+                    fontSize: "14px",
+                    borderRadius: "4px",
+                    bgcolor: "#fff1bf",
+                    height: "fit-content",
+                    border: "1px solid #be8e00",
+                  }}
+                >
+                  User-generated Report
+                </Box>
+              </Box>
+            </Container>
+          )}
+        </Toolbar>
+      </Box>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={5000}
+        message={snackbarMessage}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        sx={{
+          "& .MuiPaper-root": {
+            padding: "0px",
+            fontSize: "14px",
+            bgcolor: "#000000",
+            minWidth: "fit-content",
+          },
+          "& .MuiSnackbarContent-message": {
+            padding: "10px",
+          },
+        }}
+      />
+      <ReportBuilderUseAssetModal
+        open={useAssetModalOpen}
+        onClose={handleUseAssetModalClose}
+        assetId={id ?? ""}
+        setNewReportModalOpen={setNewReportModalOpen}
+      />
+      <ReportBuilderNewReportModal
+        open={newReportModalOpen}
+        onClose={handleNewReportModalClose}
       />
     </React.Fragment>
   );

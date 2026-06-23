@@ -8,6 +8,9 @@ import { useGFSampleDataset } from "app/hooks/queries/report-builder";
 import { MappedDimension } from "app/state/api/action-reducers/report-builder/sync";
 import { isEmpty } from "lodash";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
+import RBBarGroupedIcon from "app/assets/vectors/RBBarGrouped.svg?react";
+import RBBarStackedIcon from "app/assets/vectors/RBBarStacked.svg?react";
+import RBBarPercentIcon from "app/assets/vectors/RBBarPercent.svg?react";
 
 export default function Mapping() {
   const selectedController = useStoreState(
@@ -130,13 +133,32 @@ export default function Mapping() {
     });
   };
 
+  const barGroupOptions = [
+    {
+      name: "Grouped",
+      value: "grouped",
+      icon: <RBBarGroupedIcon />,
+    },
+    {
+      name: "Stacked",
+      value: "stacked",
+      icon: <RBBarStackedIcon />,
+    },
+    {
+      name: "100% Stack",
+      value: "percent",
+      icon: <RBBarPercentIcon />,
+    },
+  ];
+
   return (
     <Box
       sx={{
-        padding: "16px 8px",
+        padding: "8px",
         display: "flex",
         flexDirection: "column",
         gap: "16px",
+        width: "100%",
       }}
     >
       {dimensions.map((dimension) => {
@@ -187,6 +209,54 @@ export default function Mapping() {
               : setSelectedAggregation
           }
         />
+      )}
+
+      {item?.data?.chartType === "bar" && (
+        <Box
+          sx={{
+            display: "grid",
+            gap: "8px",
+            gridTemplateColumns: "repeat(3, 1fr)",
+          }}
+        >
+          {barGroupOptions.map((option) => (
+            <Box
+              key={option.value}
+              component="button"
+              sx={{
+                padding: "5px",
+                border: `0.5px solid ${option.value === item?.options?.groupStyle ? "#3154f4" : "#98A1AA"}`,
+                backgroundColor: "#ffffff",
+                borderRadius: "4px",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexDirection: "column",
+                gap: "10px",
+                "&:hover": {
+                  border: "0.5px solid #3154f4",
+                },
+              }}
+              onClick={() => {
+                if (!item) return;
+                editItem({
+                  ...item,
+                  id: selectedController?.id || "",
+                  type: "chart",
+                  open: true,
+                  options: {
+                    ...item.options,
+                    groupStyle: option.value,
+                  },
+                });
+              }}
+            >
+              {option.icon}
+              {option.name}
+            </Box>
+          ))}
+        </Box>
       )}
     </Box>
   );

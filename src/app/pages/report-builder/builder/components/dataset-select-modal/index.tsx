@@ -25,8 +25,6 @@ import {
   getColumnType,
   getDatasetLatestUpdateKey,
 } from "./utils";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { useGFSampleDataset } from "app/hooks/queries/report-builder";
 
 type DatasetSort = "updatedDate DESC" | "name ASC" | "name DESC";
@@ -386,21 +384,17 @@ export const DatasetSelectModal: React.FC<{
             </Box>
           </React.Fragment>
         ) : step === "view" ? (
-          <DndProvider backend={HTML5Backend}>
-            <DatasetSelectModalDataView
-              selectedDataset={selectedDataset}
-              initialSelectedColumns={initialSelectedColumns.map(
-                (col) => col.id,
-              )}
-              rowsPerPage={rowsPerPage}
-              onRowsPerPageChange={setRowsPerPage}
-              onBack={() => setStep("select")}
-              onCancel={onClose}
-              onPreviewTable={handlePreviewTable}
-              sampledDataset={sampledDataset}
-              sampledDatasetLoading={sampledDatasetQuery.isFetching}
-            />{" "}
-          </DndProvider>
+          <DatasetSelectModalDataView
+            selectedDataset={selectedDataset}
+            initialSelectedColumns={initialSelectedColumns.map((col) => col.id)}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={setRowsPerPage}
+            onBack={() => setStep("select")}
+            onCancel={onClose}
+            onPreviewTable={handlePreviewTable}
+            sampledDataset={sampledDataset}
+            sampledDatasetLoading={sampledDatasetQuery.isFetching}
+          />
         ) : (
           <DataPreview
             selectedDataset={selectedDataset}

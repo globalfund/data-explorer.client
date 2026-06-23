@@ -13,6 +13,8 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
+    "@dnd-kit/helpers": "^0.5.0",
+    "@dnd-kit/react": "^0.5.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "6.5.0",
@@ -38,6 +40,7 @@
     "@types/tabulator-tables": "^5.7.0",
     "@vitejs/plugin-react": "^6.0.2",
     "axios": "^1.16.0",
+    "date-fns": "^4.4.0",
     "detect-it": "^4.0.1",
     "dotenv": "^16.4.6",
     "easy-peasy": "^6.1.0",
@@ -51,8 +54,6 @@
     "react": "^18.3.1",
     "react-advanced-cropper": "^0.20.1",
     "react-csv": "^2.2.2",
-    "react-dnd": "^16.0.1",
-    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.3.1",
     "react-draggable": "^4.5.0",
     "react-dropzone": "^14.3.8",
