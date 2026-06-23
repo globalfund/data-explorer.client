@@ -92,7 +92,7 @@ export function useEcharts({
   }
   echarts.registerTransform(transform.regression);
 
-  function echartsBarchart(data: any[], visualOptions: any) {
+  function echartsBarchart(data: any, visualOptions: any, mapping: any) {
     const vo = visualOptions ?? {};
 
     const {
@@ -112,13 +112,19 @@ export function useEcharts({
       chartOrientation,
     } = vo;
 
-    const sortedData = sortBy(data ?? [], (d) => d?.bars);
-    const bars = sortedData.map((d: any) => d?.bars);
-    const sizes = sortedData.map((d: any) => d?.size);
-
     const paletteColors: string[] =
       colorPaletteCategoricalData.find((item) => item.name === colorPalette)
         ?.colors ?? [];
+
+    const totalData: number[] = [];
+
+    for (let i = 0; i < data.series[0].values.length; ++i) {
+      let sum = 0;
+      for (let j = 0; j < data.series.length; ++j) {
+        sum += data.series[j].values[i];
+      }
+      totalData.push(sum);
+    }
 
     const isMonetaryValue = !!monetaryValueTooltip;
 
@@ -136,7 +142,7 @@ export function useEcharts({
       xAxis: {
         ...(chartOrientation === "horizontal"
           ? { type: logarithmicYAxis ? "log" : "value" }
-          : { type: "category", data: bars }),
+          : { type: "category", data: data.xAxisValues }),
         splitLine: { show: true },
         axisTick: { show: false },
         axisLine: { show: true, lineStyle: { color: "#8D8D8D", width: 1 } },
@@ -145,7 +151,7 @@ export function useEcharts({
 
       yAxis: {
         ...(chartOrientation === "horizontal"
-          ? { type: "category", data: bars }
+          ? { type: "category", data: data.yAxisValues }
           : { type: logarithmicYAxis ? "log" : "value" }),
         splitLine: { show: true },
         axisTick: { show: false },
@@ -159,15 +165,25 @@ export function useEcharts({
         confine: true,
         formatter: (params: any) => valueFormatter3(params, isMonetaryValue),
       },
-      colorBy: "data",
-      series: [
-        {
+      colorBy: mapping?.breakdown?.value ? "series" : "data",
+      series: data.series?.map((d: any) => {
+        return {
           type: "bar",
-          data: sizes,
+          name: d?.name,
+          data:
+            visualOptions?.groupStyle === "percent"
+              ? d?.values.map((val: number, dataIndex: number) =>
+                  totalData[dataIndex] <= 0 ? 0 : val / totalData[dataIndex],
+                )
+              : d?.values,
+          stack: visualOptions?.groupStyle === "grouped" ? false : "total",
           realtimeSort: realTimeSort ?? true,
           barWidth: customBarWidth ? parseBarWidth(barWidth) : undefined,
-        },
-      ],
+          emphasis: {
+            focus: "series",
+          },
+        };
+      }),
     };
 
     return option;
@@ -1059,7 +1075,7 @@ export function useEcharts({
     window.removeEventListener("resize", () => onResize(chart, id));
 
     const CHART_TYPE_TO_COMPONENT = {
-      bar: () => echartsBarchart(data, visualOptions),
+      bar: () => echartsBarchart(data, visualOptions, mapping),
       geomap: () => echartsGeomap(data, visualOptions),
       line: () => echartsLinechart(data, visualOptions),
       sankey: () => echartsSankey(data, visualOptions),
@@ -1068,6 +1084,7 @@ export function useEcharts({
       scatter: () => echartsBubblechart(data, visualOptions, mapping),
       heatmap: () => echartsHeatmap(data, visualOptions, mapping),
       radar: () => echartsRadarchart(data, visualOptions),
+      bigNumber: () => {},
     };
 
     chart.setOption(CHART_TYPE_TO_COMPONENT[chartType](), true);

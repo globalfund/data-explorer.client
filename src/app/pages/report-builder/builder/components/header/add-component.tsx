@@ -158,6 +158,7 @@ export default function AddComponent({
             width: "100%",
             height: "500px",
             justifyContent: "start",
+            orderList: ["title", "chart", "legend"],
           },
           data: {
             dataset: null,
