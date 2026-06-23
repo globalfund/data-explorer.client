@@ -88,5 +88,5 @@ export interface AssetCardProps {
   handleRenameEnter: (id: string, type: "asset" | "folder") => void;
   handleItemMenuClick: (event: React.MouseEvent<HTMLElement>) => void;
   handleItemClick: (id: string, type: "asset" | "folder") => () => void;
-  handleUseAsset: (id: string) => () => void;
+  handleUseAsset: (id: string) => void;
 }

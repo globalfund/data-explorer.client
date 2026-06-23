@@ -23,6 +23,7 @@ export interface AllAssetsViewProps {
   handleFolderOpen: (id: string) => void;
   onDeleteAsset: (id: string, name: string) => void;
   onDeleteFolder: (id: string, name: string) => void;
+  handleUseAsset: (assetId: string) => void;
   onMoveItemToFolder: (
     id: string,
     name: string,

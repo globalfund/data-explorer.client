@@ -41,6 +41,8 @@ import {
 } from "app/pages/report-builder/builder/components/header/data";
 import { AssetLibraryModal } from "app/pages/report-builder/builder/components/asset-library-modal";
 import { Add } from "@mui/icons-material";
+import { ReportBuilderUseAssetModal } from "app/pages/report-builder/main/components/use-asset-modal";
+import { ReportBuilderNewReportModal } from "app/pages/report-builder/main/components/new-report-modal";
 
 export const menuSx = {
   zIndex: 1400,
@@ -612,6 +614,17 @@ export const ReportBuilderAssetPageHeader: React.FC = () => {
   const [anchorEl2, setAnchorEl2] = React.useState<null | HTMLElement>(null);
   const [signedIn] = React.useState(true); // Replace with actual authentication state
 
+  const [useAssetModalOpen, setUseAssetModalOpen] = React.useState(false);
+  const [newReportModalOpen, setNewReportModalOpen] = React.useState(false);
+
+  const handleNewReportModalClose = () => {
+    setNewReportModalOpen(false);
+  };
+
+  const handleUseAssetModalClose = () => {
+    setUseAssetModalOpen(false);
+  };
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -792,7 +805,7 @@ export const ReportBuilderAssetPageHeader: React.FC = () => {
                       Share
                     </Button>
                     <Button
-                      onClick={() => {}}
+                      onClick={() => setUseAssetModalOpen(true)}
                       startIcon={<Add />}
                       sx={{
                         color: "#fff !important",
@@ -947,6 +960,16 @@ export const ReportBuilderAssetPageHeader: React.FC = () => {
             padding: "10px",
           },
         }}
+      />
+      <ReportBuilderUseAssetModal
+        open={useAssetModalOpen}
+        onClose={handleUseAssetModalClose}
+        assetId={id ?? ""}
+        setNewReportModalOpen={setNewReportModalOpen}
+      />
+      <ReportBuilderNewReportModal
+        open={newReportModalOpen}
+        onClose={handleNewReportModalClose}
       />
     </React.Fragment>
   );

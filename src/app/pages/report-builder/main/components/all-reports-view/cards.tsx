@@ -19,6 +19,7 @@ import {
   AssetCardProps,
 } from "app/pages/report-builder/main/components/all-reports-view/data";
 import { format } from "date-fns";
+import { Add } from "@mui/icons-material";
 
 export const ReportCard: React.FC<ReportCardProps> = ({
   id,
@@ -298,7 +299,9 @@ export const AssetCard: React.FC<AssetCardProps> = ({
           },
         }}
       >
-        <Button onClick={handleUseAsset(id)}>{"+  Use Asset"}</Button>
+        <Button startIcon={<Add />} onClick={() => handleUseAsset(id)}>
+          Use Asset
+        </Button>
         <Button onClick={handleItemClick(id, "asset")}>Preview</Button>
         <IconButton id={id} onClick={handleItemMenuClick} sx={{ p: "0px" }}>
           <MoreVert htmlColor="#454545" />

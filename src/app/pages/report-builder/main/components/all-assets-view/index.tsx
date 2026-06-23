@@ -41,6 +41,7 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
   handleFolderOpen,
   onMoveItemToFolder,
   detailsSidePanelOpen,
+  handleUseAsset,
 }) => {
   const updateAsset = usePatchAsset2();
   const updateFolder = usePatchFolder2();
@@ -284,7 +285,7 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
               key={item.id}
               sm={detailsSidePanelOpen ? 12 : 6}
               md={detailsSidePanelOpen ? 6 : 4}
-              lg={detailsSidePanelOpen ? 6 : 3}
+              lg={detailsSidePanelOpen ? 6 : 4}
             >
               <Box
                 sx={{
@@ -306,7 +307,7 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
                     id={item.id}
                     name={item.name}
                     type={item.type}
-                    handleUseAsset={() => () => {}}
+                    handleUseAsset={() => handleUseAsset(item.id)}
                     createdDate={item.createdDate}
                     updatedDate={item.updatedDate}
                     imageVersion={imageVersion}
