@@ -7,8 +7,6 @@ import { Options } from "../common/elementOptions";
 import { chartInfo, tabList } from "./data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import DataDetail from "./dataDetail";
-import Mapping from "./mapping";
-import Filtering from "./filtering";
 import LayoutTab from "./layout";
 import Customise from "./customise";
 import Advanced from "./advanced";
@@ -23,10 +21,10 @@ import { chartTypes, datasetItems } from "../../../chart/data";
 import { ChartProperty } from "app/state/api/action-reducers/report-builder/sync";
 import ControllerTabs from "app/components/tabs";
 import { extraTabs } from "../common/tabOptions";
+import DataSettings from "./data-settings";
 
 type ChartControllerTab =
-  | "mapping"
-  | "filter"
+  | "data-settings"
   | "layout"
   | "style"
   | "advanced"
@@ -35,7 +33,7 @@ type ChartControllerTab =
 
 export default function ChartController() {
   const [isExpanded, setIsExpanded] = React.useState(true);
-  const [value, setValue] = React.useState<ChartControllerTab>("mapping");
+  const [value, setValue] = React.useState<ChartControllerTab>("data-settings");
 
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
@@ -69,10 +67,8 @@ export default function ChartController() {
 
   const renderTabPanel = () => {
     switch (value) {
-      case "mapping":
-        return <Mapping />;
-      case "filter":
-        return <Filtering />;
+      case "data-settings":
+        return <DataSettings />;
       case "layout":
         return <LayoutTab />;
       case "style":
@@ -134,7 +130,7 @@ export default function ChartController() {
 
   useEffect(() => {
     if (chartConfigured) {
-      setValue("mapping");
+      setValue("data-settings");
     }
   }, [chartConfigured, item?.data?.dataset, item?.data?.chartType]);
 

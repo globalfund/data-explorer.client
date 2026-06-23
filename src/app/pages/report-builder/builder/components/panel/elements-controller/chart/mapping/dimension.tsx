@@ -186,8 +186,7 @@ export function Dimension(props: Readonly<DimensionProps>) {
           color: props.errorText ? "#D32F2F" : "#70777E",
           fontSize: "12px",
           mt: "4px",
-          display:
-            !props.errorText && props.selectedValue.length ? "none" : "block",
+          display: props.errorText || props.helperText ? "block" : "none",
         }}
       >
         {props.errorText || props.helperText}
