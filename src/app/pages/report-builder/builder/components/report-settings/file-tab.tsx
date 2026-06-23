@@ -7,28 +7,29 @@ import { RBReportItemController } from "app/state/api/action-reducers/report-bui
 import { ComponentOptions } from "../header/data";
 import EditableDiv from "app/components/editable-div";
 import useEditReportItem from "app/pages/report-builder/hooks/useEditReportItem";
-import useDragReportComponent from "app/pages/report-builder/hooks/useDragReportComponent";
 import { useCMSData } from "app/hooks/useCMSData";
 import { getCMSDataField } from "app/utils/getCMSDataField";
+import { useSortable } from "@dnd-kit/react/sortable";
+import { DragDropProvider } from "@dnd-kit/react";
+import { move } from "@dnd-kit/helpers";
 
 const DragWrapper: React.FC<{
   children: React.ReactNode;
   id: string;
   index: number;
 }> = ({ children, id, index }) => {
-  const ref = React.useRef<HTMLDivElement>(null);
-
-  const { drag, drop, handlerId, isDragging } = useDragReportComponent({
+  const { ref, isDragging } = useSortable({
     id,
     index,
-    ref,
+    type: "report-settings-file-item",
+    accept: "report-settings-file-item",
+    group: "report-settings-file",
   });
 
-  drag(drop(ref));
   return (
     <Box
       id={`item-${id}`}
-      data-handler-id={handlerId}
+      data-dragging={isDragging}
       sx={{
         cursor: isDragging ? "grabbing" : "grab",
         display: "flex",
@@ -51,7 +52,9 @@ export const FileTabView: React.FC = () => {
   const setSelectedItem = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.setItem,
   );
-
+  const setItems = useStoreActions(
+    (actions) => actions.RBReportItemsState.setItems,
+  );
   const editItem = useEditReportItem();
 
   const handleItemClick = (item: RBReportItemController) => () => {
@@ -104,114 +107,126 @@ export const FileTabView: React.FC = () => {
           )}
         </Typography>
       </Box>
-
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          button: {
-            padding: "8px 16px",
-            fontSize: "14px",
-            fontWeight: "normal",
-            textTransform: "capitalize",
-            justifyContent: "flex-start",
-            borderRadius: 0,
-            span: {
-              marginLeft: 0,
-            },
-          },
+      <DragDropProvider
+        onDragOver={(event) => {
+          setItems(move(items, event));
         }}
       >
-        {items.map((item, itemIndex) => {
-          const typeIndex = items
-            .filter((i) => i.type === item.type)
-            .findIndex((i) => i.id === item.id);
-          const option = ComponentOptions.find(
-            (option) => option.value === item.type,
-          );
-          return (
-            <DragWrapper id={item.id} index={itemIndex} key={item.id}>
-              <Button
-                startIcon={option?.icon}
-                onClick={handleItemClick({
-                  open: true,
-                  id: item.id,
-                  type: item.type,
-                })}
-                sx={item.id === selectedItem?.id ? { bgcolor: "#d6ddfd" } : {}}
-              >
-                <EditableDiv
-                  title={
-                    item.name || item.type?.replace("_", " ") + (typeIndex + 1)
-                  }
-                  onTitleChange={(newTitle) =>
-                    handleTitleChange({ newTitle, itemId: item.id })
-                  }
-                />
-              </Button>
-
-              {item.type === "column" || item.type === "grid" ? (
-                <Box
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            button: {
+              padding: "8px 16px",
+              fontSize: "14px",
+              fontWeight: "normal",
+              textTransform: "capitalize",
+              justifyContent: "flex-start",
+              borderRadius: 0,
+              span: {
+                marginLeft: 0,
+              },
+            },
+          }}
+        >
+          {items.map((item, itemIndex) => {
+            const typeIndex = items
+              .filter((i) => i.type === item.type)
+              .findIndex((i) => i.id === item.id);
+            const option = ComponentOptions.find(
+              (option) => option.value === item.type,
+            );
+            return (
+              <DragWrapper id={item.id} index={itemIndex} key={item.id}>
+                <Button
+                  startIcon={option?.icon}
+                  onClick={handleItemClick({
+                    open: true,
+                    id: item.id,
+                    type: item.type,
+                  })}
                   sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    button: {
-                      padding: "8px 32px",
-                    },
+                    pointerEvents: "none",
+                    cursor: "inherit",
+                    bgcolor:
+                      item.id === selectedItem?.id ? "#d6ddfd" : "transparent",
                   }}
                 >
-                  {item.data.items.map((subItem) => {
-                    const subTypeIndex = item.data.items
-                      .filter((i) => i.type === subItem.type)
-                      .findIndex((i) => i.id === subItem.id);
-                    const subOption = ComponentOptions.find(
-                      (option) => option.value === subItem.type,
-                    );
+                  <EditableDiv
+                    title={
+                      item.name ||
+                      item.type?.replace("_", " ") + (typeIndex + 1)
+                    }
+                    onTitleChange={(newTitle) =>
+                      handleTitleChange({ newTitle, itemId: item.id })
+                    }
+                  />
+                </Button>
 
-                    if (!subOption) return null;
-                    return (
-                      <Button
-                        key={subItem.id}
-                        startIcon={subOption?.icon}
-                        onClick={handleItemClick({
-                          open: true,
-                          id: subItem.id,
-                          type: subItem.type,
-                          parent: {
-                            id: item.id,
-                            type: item.type,
-                            open: false,
-                          },
-                        })}
-                        sx={
-                          subItem.id === selectedItem?.id
-                            ? { bgcolor: "#d6ddfd" }
-                            : {}
-                        }
-                      >
-                        <EditableDiv
-                          title={
-                            subItem.name ||
-                            subItem.type?.replace("_", " ") + (subTypeIndex + 1)
+                {item.type === "column" || item.type === "grid" ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      button: {
+                        padding: "8px 32px",
+                      },
+                    }}
+                  >
+                    {item.data.items.map((subItem) => {
+                      const subTypeIndex = item.data.items
+                        .filter((i) => i.type === subItem.type)
+                        .findIndex((i) => i.id === subItem.id);
+                      const subOption = ComponentOptions.find(
+                        (option) => option.value === subItem.type,
+                      );
+
+                      if (!subOption) return null;
+                      return (
+                        <Button
+                          key={subItem.id}
+                          startIcon={subOption?.icon}
+                          onClick={handleItemClick({
+                            open: true,
+                            id: subItem.id,
+                            type: subItem.type,
+                            parent: {
+                              id: item.id,
+                              type: item.type,
+                              open: false,
+                            },
+                          })}
+                          sx={
+                            subItem.id === selectedItem?.id
+                              ? { bgcolor: "#d6ddfd" }
+                              : {}
                           }
-                          onTitleChange={(newTitle) =>
-                            handleTitleChange({
-                              newTitle,
-                              itemId: subItem.id,
-                              parentId: item.id,
-                            })
-                          }
-                        />
-                      </Button>
-                    );
-                  })}
-                </Box>
-              ) : null}
-            </DragWrapper>
-          );
-        })}
-      </Box>
+                        >
+                          <EditableDiv
+                            title={
+                              subItem.name ||
+                              subItem.type?.replace("_", " ") +
+                                (subTypeIndex + 1)
+                            }
+                            onTitleChange={(newTitle) =>
+                              handleTitleChange({
+                                newTitle,
+                                itemId: subItem.id,
+                                parentId: item.id,
+                              })
+                            }
+                          />
+                        </Button>
+                      );
+                    })}
+                  </Box>
+                ) : null}
+              </DragWrapper>
+            );
+          })}
+        </Box>
+      </DragDropProvider>
     </Box>
   );
 };
