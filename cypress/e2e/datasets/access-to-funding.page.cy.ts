@@ -2,7 +2,7 @@
 
 // @ts-ignore
 const interceptAllRequests = () => {
-  const apiUrl = Cypress.env("api_url");
+  const apiUrl = Cypress.expose("api_url");
   cy.intercept(`${apiUrl}/**`).as("apiData");
 };
 
