@@ -8,7 +8,7 @@
 
 // @ts-ignore
 const interceptAllRequests = () => {
-  const apiUrl = Cypress.env("api_url");
+  const apiUrl = Cypress.expose("api_url");
   cy.intercept(`${apiUrl}/**`).as("apiData");
 };
 // @ts-ignore
@@ -19,7 +19,7 @@ const waitData = (requestCount: number) => {
 };
 
 describe("Testing HomePage", () => {
-  const apiUrl = Cypress.env("api_url");
+  const apiUrl = Cypress.expose("api_url");
 
   beforeEach(() => {
     interceptAllRequests();

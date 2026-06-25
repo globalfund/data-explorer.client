@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 describe("Testing The Geography page", () => {
-  const apiUrl = Cypress.env("api_url");
+  const apiUrl = Cypress.expose("api_url");
 
   beforeEach(() => {
     cy.intercept(`${apiUrl}/geographies`).as("geographies");
