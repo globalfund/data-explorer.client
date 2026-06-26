@@ -41,6 +41,10 @@ export interface AllReportsViewProps {
       folderCount?: number;
     }[];
   };
+  checkedItems: { id: string; type: "folder" | "report" | "asset" }[];
+  setCheckedItems: React.Dispatch<
+    React.SetStateAction<{ id: string; type: "folder" | "report" | "asset" }[]>
+  >;
 }
 
 export interface ReportCardProps {
@@ -90,3 +94,30 @@ export interface AssetCardProps {
   handleItemClick: (id: string, type: "asset" | "folder") => () => void;
   handleUseAsset: (id: string) => void;
 }
+
+export const getFolderContentText = (folder: {
+  assetCount: number;
+  reportCount: number;
+  folderCount: number;
+}) => {
+  const { assetCount, reportCount, folderCount } = folder;
+  if (assetCount === 0 && reportCount === 0 && folderCount === 0) {
+    return "Empty Folder";
+  }
+  if (assetCount > 0 && reportCount === 0 && folderCount === 0) {
+    return `${assetCount} ${assetCount === 1 ? "Asset" : "Assets"} inside`;
+  }
+  if (assetCount > 0 && reportCount > 0 && folderCount === 0) {
+    return `${reportCount} ${reportCount === 1 ? "Report" : "Reports"} and ${assetCount} ${assetCount === 1 ? "Asset" : "Assets"} inside`;
+  }
+  if (assetCount > 0 && reportCount === 0 && folderCount > 0) {
+    return `${folderCount} ${folderCount === 1 ? "Folder" : "Folders"} and ${assetCount} ${assetCount === 1 ? "Asset" : "Assets"} inside`;
+  }
+  if (assetCount === 0 && reportCount > 0 && folderCount === 0) {
+    return `${reportCount} ${reportCount === 1 ? "Report" : "Reports"} inside`;
+  }
+  if (assetCount === 0 && reportCount > 0 && folderCount > 0) {
+    return `${reportCount} ${reportCount === 1 ? "Report" : "Reports"} and ${folderCount} ${folderCount === 1 ? "Folder" : "Folders"} inside`;
+  }
+  return `${reportCount} ${reportCount === 1 ? "Report" : "Reports"}, ${assetCount} ${assetCount === 1 ? "Asset" : "Assets"} and ${folderCount} ${folderCount === 1 ? "Folder" : "Folders"} inside`;
+};

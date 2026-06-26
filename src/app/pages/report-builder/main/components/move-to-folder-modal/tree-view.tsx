@@ -15,19 +15,22 @@ interface TreeNode {
 interface FolderTreeItemProps {
   level: number;
   node: TreeNode;
-  itemId: string;
+  items: {
+    id: string;
+    name: string;
+    locationPath: string;
+    type: "folder" | "report" | "asset";
+  }[];
   selectedId: string | null;
   onToggle: (id: string) => void;
   onSelect: (id: string) => void;
   expanded: Record<string, boolean>;
-  itemType: "report" | "asset" | "folder";
 }
 
 export const FolderTreeItem: React.FC<FolderTreeItemProps> = ({
   node,
+  items,
   level,
-  itemId,
-  itemType,
   expanded,
   onToggle,
   onSelect,
@@ -49,8 +52,8 @@ export const FolderTreeItem: React.FC<FolderTreeItemProps> = ({
   );
 
   const isDisabled = React.useMemo(
-    () => node.id === itemId && itemType === "folder",
-    [node.id, itemId, itemType],
+    () => items.some((item) => item.id === node.id && item.type === "folder"),
+    [node.id, items],
   );
 
   return (
@@ -110,12 +113,11 @@ export const FolderTreeItem: React.FC<FolderTreeItemProps> = ({
             <FolderTreeItem
               node={child}
               key={child.id}
-              itemId={itemId}
+              items={items}
               level={level + 1}
               expanded={expanded}
               onToggle={onToggle}
               onSelect={onSelect}
-              itemType={itemType}
               selectedId={selectedId}
             />
           ))}

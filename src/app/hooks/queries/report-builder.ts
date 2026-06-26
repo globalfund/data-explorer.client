@@ -248,6 +248,45 @@ export const useAddFolderToFolder = () => {
   });
 };
 
+export const useMultiAddItemsToFolder = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["ReportBuilderMultiAddItemsToFolder"],
+    mutationFn: (data: {
+      folderId: string;
+      items: { id: string; type: "report" | "folder" | "asset" }[];
+    }) => {
+      const addPromises = data.items.map((item) => {
+        if (item.type === "report") {
+          return axiosInstance.get(`/folder/add-report/${data.folderId}`, {
+            params: { reportId: item.id },
+          });
+        } else if (item.type === "folder") {
+          return axiosInstance.get(`/folder/add-folder/${data.folderId}`, {
+            params: { folderId: item.id },
+          });
+        } else if (item.type === "asset") {
+          return axiosInstance.get(`/folder/add-asset/${data.folderId}`, {
+            params: { assetId: item.id },
+          });
+        }
+      });
+      return Promise.all(addPromises);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["ReportBuilderGetFolders"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["ReportBuilderGetReports"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["ReportBuilderGetAssets"],
+      });
+    },
+  });
+};
+
 export const usePatchReport = (reportId: string | undefined) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -337,6 +376,26 @@ export const useDeleteReport = () => {
   return useMutation({
     mutationKey: ["ReportBuilderDeleteReport"],
     mutationFn: (id: string) => axiosInstance.delete(`/report/${id}`),
+  });
+};
+
+export const useMultiDeleteReportsFolders = () => {
+  return useMutation({
+    mutationKey: ["ReportBuilderMultiDeleteReportsFolders"],
+    mutationFn: (
+      items: { id: string; type: "report" | "folder" | "asset" }[],
+    ) => {
+      const deletePromises = items.map((item) => {
+        if (item.type === "report") {
+          return axiosInstance.delete(`/report/${item.id}`);
+        } else if (item.type === "folder") {
+          return axiosInstance.delete(`/folder/${item.id}`);
+        } else if (item.type === "asset") {
+          return axiosInstance.delete(`/asset/${item.id}`);
+        }
+      });
+      return Promise.all(deletePromises);
+    },
   });
 };
 
