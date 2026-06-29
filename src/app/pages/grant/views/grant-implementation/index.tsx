@@ -614,6 +614,7 @@ export const GrantImplementation: React.FC = () => {
         )}
         title={expendituresTotal}
         empty={!showExpendituresHeatmap}
+        dropdownWidth={200}
         dropdownSelected={chart2Dropdown}
         dropdownItems={expendituresGroupingOptions}
         handleDropdownChange={setChart2Dropdown}

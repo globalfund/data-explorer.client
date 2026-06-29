@@ -383,6 +383,7 @@ export const GrantImplementationPageBlock3: React.FC<
       <Box gap="10px" display="flex" flexDirection="row">
         {budgetsCycleDropdown}
         <Dropdown
+          width={200}
           dropdownSelected={budgetTableDataType}
           dropdownItems={dropdownItemsBudgetsTableDataTypes}
           handleDropdownChange={handleBudgetTableDataTypeChange}
@@ -749,6 +750,7 @@ export const GrantImplementationPageBlock3: React.FC<
         )}`}
         handleApplyFilters={handleApplyChartFilters}
         handleCancelFilters={handleCancelChartFilters}
+        dropdownWidth={170}
         dropdownItems={dropdownItemsBudgets}
         dropdownSelected={budgetsDropdownSelected}
         handleDropdownChange={(value) => {

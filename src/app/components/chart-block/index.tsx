@@ -160,6 +160,7 @@ export const ChartBlock: React.FC<ChartBlockProps> = (
                 props.dropdownSelected &&
                 props.handleDropdownChange && (
                   <Dropdown
+                    width={props.dropdownWidth}
                     dropdownItems={props.dropdownItems}
                     dropdownSelected={props.dropdownSelected}
                     handleDropdownChange={props.handleDropdownChange}

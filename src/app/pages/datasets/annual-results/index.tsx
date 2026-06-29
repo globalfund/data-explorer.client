@@ -575,6 +575,7 @@ export const AnnualResultsPage: React.FC = () => {
               subtitle=""
               data={exportChartData}
               loading={loadingResults}
+              dropdownWidth={170}
               dropdownItems={dropdownItems}
               latestUpdate={latestUpdateDate}
               dropdownSelected={dropdownSelected}

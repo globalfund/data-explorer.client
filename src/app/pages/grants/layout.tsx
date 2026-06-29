@@ -161,6 +161,7 @@ export const GrantsLayout: React.FC<GrantsLayoutProps> = (
           </Box>
           <Box gap="8px" display="flex" flexBasis={"auto"}>
             <Dropdown
+              width={150}
               dropdownSelected={view}
               dropdownItems={DROPDOWN_ITEMS}
               handleDropdownChange={handleViewChange}

@@ -223,6 +223,7 @@ export const DatasetChartBlock: React.FC<DatasetChartBlockProps> = (
             props.dropdownSelected &&
             props.handleDropdownChange && (
               <Dropdown
+                width={props.dropdownWidth}
                 dropdownItems={props.dropdownItems}
                 dropdownSelected={props.dropdownSelected}
                 handleDropdownChange={props.handleDropdownChange}

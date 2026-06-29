@@ -11,6 +11,7 @@ export interface DatasetChartBlockProps {
   loading?: boolean;
   exportName: string;
   latestUpdate?: string;
+  dropdownWidth?: number;
   infoType: InfoPanelType;
   appliedFilters: string[];
   children: React.ReactNode;

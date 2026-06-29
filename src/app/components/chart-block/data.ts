@@ -11,6 +11,7 @@ export interface ChartBlockProps {
   exportName: string;
   latestUpdate?: string;
   noSplitText?: boolean;
+  dropdownWidth?: number;
   showCycleAll?: boolean;
   infoType: InfoPanelType;
   children: React.ReactNode;
