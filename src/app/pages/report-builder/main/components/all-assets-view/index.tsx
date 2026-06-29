@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { CellComponent } from "tabulator-tables";
 import { useCMSData } from "app/hooks/useCMSData";
 import { renderToString } from "react-dom/server";
+import { RBItemTypes } from "app/pages/report-builder/data";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import CircularProgress from "@mui/material/CircularProgress";
 import CheckboxChecked from "app/assets/vectors/CheckboxRB_checked.svg?react";
@@ -109,10 +110,7 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
     }, 100);
   };
 
-  const handleRenameEnter = (
-    id: string,
-    type: "report" | "asset" | "folder",
-  ) => {
+  const handleRenameEnter = (id: string, type: RBItemTypes) => {
     const name = (
       document.getElementById(`rename-field-${id}`) as HTMLInputElement
     )?.value;
@@ -176,14 +174,13 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
     }
   };
 
-  const handleItemClick =
-    (id: string, type: "report" | "asset" | "folder") => () => {
-      if (type === "folder") {
-        handleFolderOpen(id);
-      } else {
-        navigate(`/report-builder/assets/${id}`);
-      }
-    };
+  const handleItemClick = (id: string, type: RBItemTypes) => () => {
+    if (type === "folder") {
+      handleFolderOpen(id);
+    } else {
+      navigate(`/report-builder/assets/${id}`);
+    }
+  };
 
   const handleTableCellClick = (_e: UIEvent, cell: CellComponent) => {
     const id = cell.getRow().getData()?.id;
@@ -276,7 +273,7 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
   const handleCheckboxChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     id: string,
-    type: "report" | "asset" | "folder",
+    type: RBItemTypes,
   ) => {
     if (event.target.checked) {
       setCheckedItems((prev) => [...prev, { id, type }]);

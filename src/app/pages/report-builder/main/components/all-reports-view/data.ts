@@ -1,3 +1,4 @@
+import { RBItemTypes } from "app/pages/report-builder/data";
 import { RBReportItemTypes } from "app/state/api/action-reducers/report-builder/sync";
 
 export interface AllReportsViewProps {
@@ -7,18 +8,14 @@ export interface AllReportsViewProps {
   handleFolderOpen: (id: string) => void;
   onDeleteReport: (id: string, name: string) => void;
   onDeleteFolder: (id: string, name: string) => void;
-  onMoveItemToFolder: (
-    id: string,
-    name: string,
-    type: "report" | "folder",
-  ) => void;
+  onMoveItemToFolder: (id: string, name: string, type: RBItemTypes) => void;
   onDetailsClick: (details: {
     id: string;
     name: string;
     description: string;
     createdDate: string;
     updatedDate: string;
-    type: "report" | "asset" | "folder";
+    type: RBItemTypes;
     content?: {
       assetCount: number;
       reportCount: number;
@@ -41,9 +38,9 @@ export interface AllReportsViewProps {
       folderCount?: number;
     }[];
   };
-  checkedItems: { id: string; type: "folder" | "report" | "asset" }[];
+  checkedItems: { id: string; type: RBItemTypes }[];
   setCheckedItems: React.Dispatch<
-    React.SetStateAction<{ id: string; type: "folder" | "report" | "asset" }[]>
+    React.SetStateAction<{ id: string; type: RBItemTypes }[]>
   >;
 }
 
@@ -73,11 +70,8 @@ export interface FolderCardProps {
   selectedItemForRenaming: string | null;
   setSelectedItemForRenaming: (id: string | null) => void;
   handleItemMenuClick: (event: React.MouseEvent<HTMLElement>) => void;
-  handleRenameEnter: (id: string, type: "report" | "asset" | "folder") => void;
-  handleItemClick: (
-    id: string,
-    type: "report" | "asset" | "folder",
-  ) => () => void;
+  handleRenameEnter: (id: string, type: RBItemTypes) => void;
+  handleItemClick: (id: string, type: RBItemTypes) => () => void;
 }
 
 export interface AssetCardProps {

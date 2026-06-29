@@ -8,6 +8,7 @@ import { CellComponent } from "tabulator-tables";
 import { useCMSData } from "app/hooks/useCMSData";
 import { renderToString } from "react-dom/server";
 import { getCMSDataField } from "app/utils/getCMSDataField";
+import { RBItemTypes } from "app/pages/report-builder/data";
 import CircularProgress from "@mui/material/CircularProgress";
 import CheckboxChecked from "app/assets/vectors/CheckboxRB_checked.svg?react";
 import CheckboxUnchecked from "app/assets/vectors/CheckboxRB_notchecked.svg?react";
@@ -107,10 +108,7 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
     }, 100);
   };
 
-  const handleRenameEnter = (
-    id: string,
-    type: "report" | "asset" | "folder",
-  ) => {
+  const handleRenameEnter = (id: string, type: RBItemTypes) => {
     const name = (
       document.getElementById(`rename-field-${id}`) as HTMLInputElement
     )?.value;
@@ -172,14 +170,13 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
     }
   };
 
-  const handleItemClick =
-    (id: string, type: "report" | "asset" | "folder") => () => {
-      if (type === "folder") {
-        handleFolderOpen(id);
-      } else {
-        navigate(`/report-builder/reports/${id}`);
-      }
-    };
+  const handleItemClick = (id: string, type: RBItemTypes) => () => {
+    if (type === "folder") {
+      handleFolderOpen(id);
+    } else {
+      navigate(`/report-builder/reports/${id}`);
+    }
+  };
 
   const handleEditClick = (id: string) => () => {
     navigate(`/report-builder/reports/${id}/edit`);
@@ -276,7 +273,7 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
   const handleCheckboxChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     id: string,
-    type: "report" | "asset" | "folder",
+    type: RBItemTypes,
   ) => {
     if (event.target.checked) {
       setCheckedItems((prev) => [...prev, { id, type }]);

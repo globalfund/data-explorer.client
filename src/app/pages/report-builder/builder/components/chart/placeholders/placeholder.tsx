@@ -23,8 +23,8 @@ const ChartPlaceholder = ({ chartType }: { chartType: string }) => {
     heatmap: <HeatmapPlaceholderImage height={"100%"} />,
   };
 
-  const getPlaceholder = (chartType: string) => {
-    return chartPlaceholders[chartType] || <>No Placeholder Available</>;
+  const getPlaceholder = (chartTypeProp: string) => {
+    return chartPlaceholders[chartTypeProp] || <>No Placeholder Available</>;
   };
 
   return (

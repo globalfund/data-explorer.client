@@ -24,7 +24,7 @@ export const SelectDatasetStep: React.FC = () => {
       }[],
   );
 
-  const useGetDatasetLatestUpdate = (id: string) => {
+  const getDatasetLatestUpdate = (id: string) => {
     let key = "";
     switch (id) {
       case "gf_results":
@@ -139,7 +139,7 @@ export const SelectDatasetStep: React.FC = () => {
             >
               <Button variant="outlined">Source</Button>
               <Typography fontSize="16px">
-                {useGetDatasetLatestUpdate(item.id)}
+                {getDatasetLatestUpdate(item.id)}
               </Typography>
             </Box>
           </Box>

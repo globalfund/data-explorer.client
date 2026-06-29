@@ -1,4 +1,6 @@
 import axiosInstance from "app/utils/axiosInstance";
+import { RBItemTypes } from "app/pages/report-builder/data";
+import { AssetViewType } from "app/pages/report-builder/main/components/all-assets-view/toolbar";
 import {
   useMutation,
   useQuery,
@@ -18,7 +20,6 @@ import {
   RBFolderModel,
   RBFolderModelResponse,
 } from "app/state/api/action-reducers/report-builder/sync";
-import { AssetViewType } from "app/pages/report-builder/main/components/all-assets-view/toolbar";
 
 export const useCreateReport = () => {
   return useMutation({
@@ -254,7 +255,7 @@ export const useMultiAddItemsToFolder = () => {
     mutationKey: ["ReportBuilderMultiAddItemsToFolder"],
     mutationFn: (data: {
       folderId: string;
-      items: { id: string; type: "report" | "folder" | "asset" }[];
+      items: { id: string; type: RBItemTypes }[];
     }) => {
       const addPromises = data.items.map((item) => {
         if (item.type === "report") {
@@ -382,9 +383,7 @@ export const useDeleteReport = () => {
 export const useMultiDeleteReportsFolders = () => {
   return useMutation({
     mutationKey: ["ReportBuilderMultiDeleteReportsFolders"],
-    mutationFn: (
-      items: { id: string; type: "report" | "folder" | "asset" }[],
-    ) => {
+    mutationFn: (items: { id: string; type: RBItemTypes }[]) => {
       const deletePromises = items.map((item) => {
         if (item.type === "report") {
           return axiosInstance.delete(`/report/${item.id}`);

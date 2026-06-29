@@ -62,7 +62,7 @@ export const ReportBuilderMoveToFolderModal: React.FC<
     clearSelectedItems();
     const folderIdToOpen = selectedId === "__root__" ? undefined : selectedId;
     if (folderIdToOpen) {
-      const items: { id: string; name: string }[] = [];
+      const itemsLocal: { id: string; name: string }[] = [];
       const fFolder = get(allFolders, "data.data", []).find(
         (f) => f.id === folderIdToOpen,
       );
@@ -77,14 +77,16 @@ export const ReportBuilderMoveToFolderModal: React.FC<
           );
           return folder ? { id: folder.id, name: folder.name } : null;
         });
-        items.push(...(pathItems.filter(Boolean) as any[]));
+        itemsLocal.push(...(pathItems.filter(Boolean) as any[]));
       } else {
-        items.push({
+        itemsLocal.push({
           id: folderIdToOpen,
           name: fFolder ? fFolder.name : "Unknown",
         });
       }
-      setOpenedFolders(items.filter(Boolean) as { id: string; name: string }[]);
+      setOpenedFolders(
+        itemsLocal.filter(Boolean) as { id: string; name: string }[],
+      );
       setTimeout(() => {
         refetchOpenedFolder();
       }, 100);

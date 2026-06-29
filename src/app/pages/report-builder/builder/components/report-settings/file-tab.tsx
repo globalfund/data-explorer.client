@@ -134,9 +134,7 @@ export const FileTabView: React.FC = () => {
             const typeIndex = items
               .filter((i) => i.type === item.type)
               .findIndex((i) => i.id === item.id);
-            const option = ComponentOptions.find(
-              (option) => option.value === item.type,
-            );
+            const option = ComponentOptions.find((o) => o.value === item.type);
             return (
               <DragWrapper id={item.id} index={itemIndex} key={item.id}>
                 <Button
@@ -179,7 +177,7 @@ export const FileTabView: React.FC = () => {
                         .filter((i) => i.type === subItem.type)
                         .findIndex((i) => i.id === subItem.id);
                       const subOption = ComponentOptions.find(
-                        (option) => option.value === subItem.type,
+                        (o) => o.value === subItem.type,
                       );
 
                       if (!subOption) return null;

@@ -5,6 +5,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { useSessionStorage, useTitle } from "react-use";
+import { RBItemTypes } from "app/pages/report-builder/data";
 import NavigateNext from "@mui/icons-material/NavigateNext";
 import { ReportBuilderSidebar } from "app/pages/report-builder/main/components/sidebar";
 import { ReportBuilderToolbar } from "app/pages/report-builder/main/components/toolbar";
@@ -57,7 +58,7 @@ export const ReportBuilder: React.FC = () => {
     {
       id: string;
       name: string;
-      type: "report" | "asset" | "folder";
+      type: RBItemTypes;
     }[]
   >([]);
   const [deleteReportModalOpen, setDeleteReportModalOpen] =
@@ -79,7 +80,7 @@ export const ReportBuilder: React.FC = () => {
     description: string;
     createdDate: string;
     updatedDate: string;
-    type: "report" | "asset" | "folder";
+    type: RBItemTypes;
     content?: {
       assetCount: number;
       reportCount: number;
@@ -101,7 +102,7 @@ export const ReportBuilder: React.FC = () => {
   const [checkedItems, setCheckedItems] = React.useState<
     {
       id: string;
-      type: "report" | "asset" | "folder";
+      type: RBItemTypes;
     }[]
   >([]);
   const [multiDeleteReportModalOpen, setMultiDeleteReportModalOpen] =
@@ -196,7 +197,7 @@ export const ReportBuilder: React.FC = () => {
   const handleItemMoveToFolder = (
     id: string,
     name: string,
-    type: "report" | "asset" | "folder",
+    type: RBItemTypes,
   ) => {
     setItemsToMove([{ id, name, type }]);
     handleMoveToFolderModalOpen();
@@ -266,7 +267,7 @@ export const ReportBuilder: React.FC = () => {
     description: string;
     createdDate: string;
     updatedDate: string;
-    type: "report" | "asset" | "folder";
+    type: RBItemTypes;
     content?: {
       assetCount: number;
       reportCount: number;

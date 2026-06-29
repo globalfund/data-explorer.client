@@ -1,3 +1,4 @@
+import { RBItemTypes } from "app/pages/report-builder/data";
 import { RBReportItemTypes } from "app/state/api/action-reducers/report-builder/sync";
 
 export interface AllAssetsViewProps {
@@ -35,7 +36,7 @@ export interface AllAssetsViewProps {
     description: string;
     createdDate: string;
     updatedDate: string;
-    type: "report" | "asset" | "folder";
+    type: RBItemTypes;
     content?: {
       assetCount: number;
       reportCount: number;

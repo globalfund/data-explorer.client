@@ -206,43 +206,37 @@ const Legend: React.FC<LegendProps> = ({
   const [treemapPath, setTreemapPath] = React.useState<string[]>([]);
 
   const getLegendItems = useCallback(
-    (chart: EChartsType | null) => {
-      if (!chart) return [];
-      const option: any = chart.getOption();
+    (chartProp: EChartsType | null) => {
+      if (!chartProp) return [];
+      const option: any = chartProp.getOption();
 
       switch (chartType) {
         case "bar":
           if (option.series?.[0]?.type === "bar") {
-            return (option.xAxis?.[0]?.data || []).map(
-              (s: any, index: number) => ({
-                name: s,
-                color:
-                  option.color?.[index % option.color?.length] || "#000000",
-                type: option.series?.[0]?.type,
-              }),
-            );
+            return (option.xAxis?.[0]?.data || []).map((s: any, i: number) => ({
+              name: s,
+              color: option.color?.[i % option.color?.length] || "#000000",
+              type: option.series?.[0]?.type,
+            }));
           }
           return [];
         case "radar":
         case "pie":
-          return (option.series?.[0]?.data || []).map(
-            (s: any, index: number) => ({
-              name: s.name,
-              color: option.color?.[index % option.color?.length] || "#000000",
-              type: option.series?.[0]?.type,
-            }),
-          );
-
+          return (option.series?.[0]?.data || []).map((s: any, i: number) => ({
+            name: s.name,
+            color: option.color?.[i % option.color?.length] || "#000000",
+            type: option.series?.[0]?.type,
+          }));
         case "line":
         case "scatter":
           return (option.series || [])
             ?.filter((s: any) => s.name)
-            .map((s: any, index: number) => ({
+            .map((s: any, i: number) => ({
               name: s.name,
               color:
                 s.lineStyle?.color ||
                 s.itemStyle?.color?.substring(0, 7) ||
-                option.color?.[index % option.color?.length],
+                option.color?.[i % option.color?.length],
               type: s.type,
             }));
         case "treemap": {
@@ -251,11 +245,11 @@ const Legend: React.FC<LegendProps> = ({
           const getItems = (nodes: any[]) =>
             nodes
               .sort((a: any, b: any) => b.value - a.value)
-              .map((n: any, index: number) => ({
+              .map((n: any, i: number) => ({
                 name: n.name,
                 color:
                   n.itemStyle?.color ||
-                  option.color?.[index % option.color?.length] ||
+                  option.color?.[i % option.color?.length] ||
                   "#000000",
                 type: "treemap",
               }));
@@ -283,12 +277,12 @@ const Legend: React.FC<LegendProps> = ({
         default:
           return (option.series || [])
             ?.filter((s: any) => s.name)
-            .map((s: any, index: number) => ({
+            .map((s: any, i: number) => ({
               name: s.name,
               color:
                 s.lineStyle?.color ||
                 s.itemStyle?.color ||
-                option.color?.[index % option.color?.length],
+                option.color?.[i % option.color?.length],
               type: s.type,
             }));
       }
