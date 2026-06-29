@@ -27,6 +27,7 @@ import { defaultAppliedFilters } from "app/state/api/action-reducers/sync/filter
 import BarChartIcon from "app/assets/vectors/Select_BarChart.svg?react";
 import { ExpandableHorizontalBar } from "app/components/charts/expandable-horizontal-bar";
 import { ExpandableHorizontalBarChartDataItem } from "app/components/charts/expandable-horizontal-bar/data";
+import Skeleton from "@mui/material/Skeleton";
 
 export const ResourceMobilizationPage: React.FC = () => {
   useTitle("The Data Explorer - Resource Mobilization");
@@ -608,9 +609,16 @@ export const ResourceMobilizationPage: React.FC = () => {
             </Box>
             <Divider /> */}
               <Box>
-                <Typography variant="h3">
-                  {formatFinancialValue(get(dataStats, "totalPledges", 0))}
-                </Typography>
+                {!loadingStats ? (
+                  <Typography variant="h3">
+                    {formatFinancialValue(get(dataStats, "totalPledges", 0))}
+                  </Typography>
+                ) : (
+                  <Skeleton
+                    variant="text"
+                    sx={{ width: "100%", fontSize: "36px" }}
+                  />
+                )}
                 <Typography fontSize="16px">
                   {getCMSDataField(
                     cmsData,
@@ -621,11 +629,18 @@ export const ResourceMobilizationPage: React.FC = () => {
               </Box>
               <Divider orientation={tabletScreen ? "vertical" : "horizontal"} />
               <Box>
-                <Typography variant="h3">
-                  {formatFinancialValue(
-                    get(dataStats, "totalContributions", 0),
-                  )}
-                </Typography>
+                {!loadingStats ? (
+                  <Typography variant="h3">
+                    {formatFinancialValue(
+                      get(dataStats, "totalContributions", 0),
+                    )}
+                  </Typography>
+                ) : (
+                  <Skeleton
+                    variant="text"
+                    sx={{ width: "100%", fontSize: "36px" }}
+                  />
+                )}
                 <Typography fontSize="14px">
                   {getCMSDataField(
                     cmsData,
@@ -676,9 +691,16 @@ export const ResourceMobilizationPage: React.FC = () => {
                     padding="5px 10px"
                     borderRadius="5px"
                   >
-                    <Typography fontSize="40px" fontWeight="700">
-                      {sumBy(get(dataStats, "donorTypesCount", []), "value")}
-                    </Typography>
+                    {!loadingStats ? (
+                      <Typography fontSize="40px" fontWeight="700">
+                        {sumBy(get(dataStats, "donorTypesCount", []), "value")}
+                      </Typography>
+                    ) : (
+                      <Skeleton
+                        variant="text"
+                        sx={{ width: "100%", fontSize: "40px" }}
+                      />
+                    )}
                     <Typography variant="body2" fontSize="14px">
                       {getCMSDataField(
                         cmsData,

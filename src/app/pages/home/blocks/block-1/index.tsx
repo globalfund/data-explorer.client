@@ -2,6 +2,7 @@ import React from "react";
 import get from "lodash/get";
 import sumBy from "lodash/sumBy";
 import Box from "@mui/material/Box";
+import Skeleton from "@mui/material/Skeleton";
 import { useCMSData } from "app/hooks/useCMSData";
 import Typography from "@mui/material/Typography";
 import { BarChart } from "app/components/charts/bar";
@@ -125,7 +126,7 @@ export const HomeBlock1: React.FC = () => {
         id="pledges-contributions"
         exportName="pledges-contributions"
         selectedCycles={chart1Cycles}
-        title={`${totalPledge}`}
+        title={totalPledge}
         latestUpdate={latestUpdateDate}
         subtitle={getCMSDataField(
           cmsData,
@@ -180,9 +181,16 @@ export const HomeBlock1: React.FC = () => {
           alignItems="center"
           flexDirection="column"
         >
-          <Typography variant="h3" fontWeight="700">
-            {totalPledge}
-          </Typography>
+          {!loadingPledgesContributionsBarChart ? (
+            <Typography variant="h3" fontWeight="700">
+              {totalPledge}
+            </Typography>
+          ) : (
+            <Skeleton
+              variant="text"
+              sx={{ width: "250px", fontSize: "36px" }}
+            />
+          )}
           <Typography variant="subtitle2">
             {getCMSDataField(
               cmsData,
@@ -197,9 +205,16 @@ export const HomeBlock1: React.FC = () => {
           alignItems="center"
           flexDirection="column"
         >
-          <Typography variant="h3" fontWeight="700">
-            {totalContribution}
-          </Typography>
+          {!loadingPledgesContributionsBarChart ? (
+            <Typography variant="h3" fontWeight="700">
+              {totalContribution}
+            </Typography>
+          ) : (
+            <Skeleton
+              variant="text"
+              sx={{ width: "250px", fontSize: "36px" }}
+            />
+          )}
           <Typography variant="subtitle2">
             {getCMSDataField(
               cmsData,
