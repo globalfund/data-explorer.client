@@ -7,6 +7,7 @@ import Container from "@mui/material/Container";
 import { HeaderMenu } from "app/components/header-menu";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { HeaderSearch } from "app/components/header-search";
+import { SkipToMainButton } from "app/components/skip-to-main-btn";
 import HeaderToolbarLogo from "app/assets/vectors/HeaderToolbarLogo.svg?react";
 
 export const Header: React.FC = () => {
@@ -16,6 +17,7 @@ export const Header: React.FC = () => {
 
   return (
     <Box sx={{ zIndex: 1000, flexGrow: 1, top: 0, position: "sticky" }}>
+      <SkipToMainButton />
       <AppBar position="static" sx={{ background: "#F8F8F8" }}>
         <Container maxWidth="lg" disableGutters sx={{ background: "#F8F8F8" }}>
           <Toolbar
