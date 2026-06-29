@@ -27,13 +27,13 @@ interface SearchLayoutProps {
   value: string;
   loading: boolean;
   category?: string;
+  onlyInput?: boolean;
   onClose?: () => void;
   withCatMenu?: boolean;
   hideClearBtn?: boolean;
   results: SearchResultsTabModel[];
   setValue: (value: string) => void;
   setCategory?: (value: string) => void;
-  setStoredValue: (value: string) => void;
 }
 
 export function SearchLayout(props: SearchLayoutProps) {
@@ -58,7 +58,6 @@ export function SearchLayout(props: SearchLayoutProps) {
 
   const onKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Escape") {
-      props.setStoredValue("");
       props.setValue("");
       setOpen(false);
       if (props.onClose) {
@@ -177,7 +176,7 @@ export function SearchLayout(props: SearchLayoutProps) {
           <SearchIcon htmlColor={appColors.COMMON.WHITE} />
         </Box>
       </Container>
-      {open && (
+      {open && !props.onlyInput && (
         <ClickAwayListener
           onClickAway={(event) => {
             console.log(event.target);

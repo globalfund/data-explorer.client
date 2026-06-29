@@ -2,8 +2,8 @@
 import React from "react";
 import get from "lodash/get";
 import Box from "@mui/material/Box";
+import { useDebounce } from "react-use";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import { useDebounce, useUpdateEffect, useSessionStorage } from "react-use";
 /* project */
 import { useCMSData } from "app/hooks/useCMSData";
 import { SearchLayout } from "app/components/search/layout";
@@ -29,11 +29,8 @@ export function Search(props: {
       ? props.forceCategory
       : get(categories, "[0].value", ""),
   );
-  const [storedValue, setStoredValue] = useSessionStorage(
-    "stored-search-string",
-    "",
-  );
-  const [value, setValue] = React.useState(storedValue);
+
+  const [value, setValue] = React.useState("");
 
   // api call & data
   const clearData = useStoreActions((store) => store.GlobalSearch.clear);
@@ -44,17 +41,9 @@ export function Search(props: {
   );
   const isLoading = useStoreState((state) => state.GlobalSearch.loading);
 
-  useUpdateEffect(() => {
-    setStoredValue(value);
-    // if (value.length === 0) {
-    //   fetchData({
-    //     filterString: `q=${value}`,
-    //   });
-    // }
-  }, [value]);
-
   const [,] = useDebounce(
     () => {
+      if (props.handleSearch) return;
       if (value.length > 0) {
         fetchData({
           filterString: `q=${value}`,
@@ -112,8 +101,8 @@ export function Search(props: {
         setValue={onValueChange}
         setCategory={setCategory}
         withCatMenu={props.withCatMenu}
-        setStoredValue={setStoredValue}
         hideClearBtn={Boolean(props.hocClose)}
+        onlyInput={Boolean(props.handleSearch)}
       />
     </Box>
   );
