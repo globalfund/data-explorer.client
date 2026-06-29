@@ -4,7 +4,7 @@ import remove from "lodash/remove";
 import Box from "@mui/material/Box";
 import { Helmet } from "react-helmet-async";
 import Divider from "@mui/material/Divider";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import { useCMSData } from "app/hooks/useCMSData";
 import { Results } from "app/pages/location/views/results";
@@ -335,6 +335,10 @@ export const Location: React.FC = () => {
     LOCATION_TABS,
   ]);
 
+  const notFound = React.useMemo(() => {
+    return !loadingOverview && dataOverview.name === "";
+  }, [loadingOverview, dataOverview]);
+
   React.useEffect(() => {
     if (paramsId) {
       fetchOverview({
@@ -490,6 +494,24 @@ export const Location: React.FC = () => {
       }}
     />
   );
+
+  if (notFound) {
+    return (
+      <Box
+        sx={{
+          gap: "2px",
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "calc(100vh - 91px - 256px - 150px)",
+        }}
+      >
+        Location page with iso3 code {paramsId} not found.
+        <Link to="/geography">Go to geography page</Link>
+      </Box>
+    );
+  }
 
   return (
     <>
