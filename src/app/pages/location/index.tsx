@@ -507,7 +507,7 @@ export const Location: React.FC = () => {
           height: "calc(100vh - 91px - 256px - 150px)",
         }}
       >
-        Location page with iso3 code {paramsId} not found.
+        Location page with iso3 code "{paramsId}" not found.
         <Link to="/geography">Go to geography page</Link>
       </Box>
     );

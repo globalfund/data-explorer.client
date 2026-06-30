@@ -1,12 +1,15 @@
 import React from "react";
+import axios from "axios";
 import get from "lodash/get";
 import remove from "lodash/remove";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
+import { Helmet } from "react-helmet-async";
 import Typography from "@mui/material/Typography";
+import { useCMSData } from "app/hooks/useCMSData";
 import { PageLoader } from "app/components/page-loader";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { GrantTargetsResults } from "./views/targets-results";
 import { GrantOverview } from "app/pages/grant/views/overview";
 import { DetailPageTabs } from "app/components/detail-page-tabs";
@@ -17,8 +20,6 @@ import { splitStringInMiddle } from "app/utils/splitStringInMiddle";
 import { SankeyChartData } from "app/components/charts/sankey/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { GrantImplementation } from "app/pages/grant/views/grant-implementation";
-import { useCMSData } from "app/hooks/useCMSData";
-import { Helmet } from "react-helmet-async";
 
 export const Grant: React.FC = () => {
   const cmsData = useCMSData({ returnData: true });
@@ -26,6 +27,7 @@ export const Grant: React.FC = () => {
     return getGrantTabs(cmsData);
   }, [cmsData]);
   const navigate = useNavigate();
+  const [notFound, setNotFound] = React.useState(false);
   const smallScreen = useMediaQuery("(max-width: 920px)");
   const params = useParams<{ id: string; ip: string; tab: string }>();
 
@@ -255,7 +257,21 @@ export const Grant: React.FC = () => {
     GRANT_TABS,
   ]);
 
+  const checkIfGrantExists = async (id: string) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API}/grant/${id}`,
+      );
+      setNotFound(get(response, "data.data[0].code", "") === "");
+    } catch {
+      setNotFound(true);
+    }
+  };
+
   React.useEffect(() => {
+    if (params.id) {
+      checkIfGrantExists(params.id);
+    }
     return () => {
       clearGrant();
       clearOverview();
@@ -278,6 +294,24 @@ export const Grant: React.FC = () => {
       }}
     />
   );
+
+  if (notFound) {
+    return (
+      <Box
+        sx={{
+          gap: "2px",
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "calc(100vh - 91px - 256px - 150px)",
+        }}
+      >
+        Grant page with code "{params.id}" not found.
+        <Link to="/grants">Go to grants page</Link>
+      </Box>
+    );
+  }
 
   return (
     <>
