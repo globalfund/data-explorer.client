@@ -355,7 +355,7 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
                     handleCheckboxChange(
                       e,
                       item.id,
-                      item.isFolder ? "folder" : "report",
+                      item.isFolder ? "folder" : "asset",
                     )
                   }
                 />
