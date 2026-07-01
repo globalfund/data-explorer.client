@@ -128,8 +128,8 @@ export const UploadTab: React.FC<{
     useDropzone({
       maxSize: 10485760,
       accept: { "image/*": [".jpeg", ".jpg", ".png", ".webp", ".svg"] },
-      onDrop: (acceptedFiles) => {
-        if (acceptedFiles.length > 0) {
+      onDrop: (acceptedFilesProp) => {
+        if (acceptedFilesProp.length > 0) {
           setApplyEnabled(true);
         }
       },

@@ -1,4 +1,6 @@
 import axiosInstance from "app/utils/axiosInstance";
+import { RBItemTypes } from "app/pages/report-builder/data";
+import { AssetViewType } from "app/pages/report-builder/main/components/all-assets-view/toolbar";
 import {
   useMutation,
   useQuery,
@@ -18,7 +20,6 @@ import {
   RBFolderModel,
   RBFolderModelResponse,
 } from "app/state/api/action-reducers/report-builder/sync";
-import { AssetViewType } from "app/pages/report-builder/main/components/all-assets-view/toolbar";
 
 export const useCreateReport = () => {
   return useMutation({
@@ -248,6 +249,45 @@ export const useAddFolderToFolder = () => {
   });
 };
 
+export const useMultiAddItemsToFolder = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["ReportBuilderMultiAddItemsToFolder"],
+    mutationFn: (data: {
+      folderId: string;
+      items: { id: string; type: RBItemTypes }[];
+    }) => {
+      const addPromises = data.items.map((item) => {
+        if (item.type === "report") {
+          return axiosInstance.get(`/folder/add-report/${data.folderId}`, {
+            params: { reportId: item.id },
+          });
+        } else if (item.type === "folder") {
+          return axiosInstance.get(`/folder/add-folder/${data.folderId}`, {
+            params: { folderId: item.id },
+          });
+        } else if (item.type === "asset") {
+          return axiosInstance.get(`/folder/add-asset/${data.folderId}`, {
+            params: { assetId: item.id },
+          });
+        }
+      });
+      return Promise.all(addPromises);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["ReportBuilderGetFolders"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["ReportBuilderGetReports"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["ReportBuilderGetAssets"],
+      });
+    },
+  });
+};
+
 export const usePatchReport = (reportId: string | undefined) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -337,6 +377,24 @@ export const useDeleteReport = () => {
   return useMutation({
     mutationKey: ["ReportBuilderDeleteReport"],
     mutationFn: (id: string) => axiosInstance.delete(`/report/${id}`),
+  });
+};
+
+export const useMultiDeleteReportsFolders = () => {
+  return useMutation({
+    mutationKey: ["ReportBuilderMultiDeleteReportsFolders"],
+    mutationFn: (items: { id: string; type: RBItemTypes }[]) => {
+      const deletePromises = items.map((item) => {
+        if (item.type === "report") {
+          return axiosInstance.delete(`/report/${item.id}`);
+        } else if (item.type === "folder") {
+          return axiosInstance.delete(`/folder/${item.id}`);
+        } else if (item.type === "asset") {
+          return axiosInstance.delete(`/asset/${item.id}`);
+        }
+      });
+      return Promise.all(deletePromises);
+    },
   });
 };
 

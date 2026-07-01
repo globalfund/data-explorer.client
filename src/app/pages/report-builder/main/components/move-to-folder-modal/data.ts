@@ -2,13 +2,17 @@ import { RBFolderModelResponse } from "app/state/api/action-reducers/report-buil
 
 export interface ReportBuilderMoveToFolderModalProps {
   open: boolean;
-  itemId: string;
-  itemName: string;
+  items: {
+    id: string;
+    name: string;
+    locationPath: string;
+    type: "folder" | "report" | "asset";
+  }[];
   refetch: () => void;
   onClose: () => void;
   itemLocation: string;
   type: "report" | "asset";
-  itemType: "report" | "asset" | "folder";
+  clearSelectedItems: () => void;
   refetchOpenedFolder: () => void;
   folderStructure: RBFolderModelResponse[];
   setOpenedFolders: React.Dispatch<

@@ -11,29 +11,27 @@ import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import { ReportBuilderMoveToFolderModalProps } from "app/pages/report-builder/main/components/move-to-folder-modal/data";
 import {
+  useGetFolders,
+  useMultiAddItemsToFolder,
+} from "app/hooks/queries/report-builder";
+import {
   buildTree,
   filterTree,
   FolderTreeItem,
 } from "app/pages/report-builder/main/components/move-to-folder-modal/tree-view";
-import {
-  useGetFolders,
-  useAddAssetToFolder,
-  useAddFolderToFolder,
-  useAddReportToFolder,
-} from "app/hooks/queries/report-builder";
 
 export const ReportBuilderMoveToFolderModal: React.FC<
   ReportBuilderMoveToFolderModalProps
 > = ({
   open,
   type,
-  itemId,
+  items,
   refetch,
   onClose,
-  itemType,
   itemLocation,
   folderStructure,
   setOpenedFolders,
+  clearSelectedItems,
   refetchOpenedFolder,
 }) => {
   const [search, setSearch] = React.useState("");
@@ -42,9 +40,7 @@ export const ReportBuilderMoveToFolderModal: React.FC<
     __root__: true,
   });
 
-  const addReportToFolder = useAddReportToFolder();
-  const addAssetToFolder = useAddAssetToFolder();
-  const addFolderToFolder = useAddFolderToFolder();
+  const addItemsToFolder = useMultiAddItemsToFolder();
   const allFolders = useGetFolders({
     type,
     search: "",
@@ -63,9 +59,10 @@ export const ReportBuilderMoveToFolderModal: React.FC<
   const onSuccess = () => {
     refetch();
     onClose();
+    clearSelectedItems();
     const folderIdToOpen = selectedId === "__root__" ? undefined : selectedId;
     if (folderIdToOpen) {
-      const items: { id: string; name: string }[] = [];
+      const itemsLocal: { id: string; name: string }[] = [];
       const fFolder = get(allFolders, "data.data", []).find(
         (f) => f.id === folderIdToOpen,
       );
@@ -80,14 +77,16 @@ export const ReportBuilderMoveToFolderModal: React.FC<
           );
           return folder ? { id: folder.id, name: folder.name } : null;
         });
-        items.push(...(pathItems.filter(Boolean) as any[]));
+        itemsLocal.push(...(pathItems.filter(Boolean) as any[]));
       } else {
-        items.push({
+        itemsLocal.push({
           id: folderIdToOpen,
           name: fFolder ? fFolder.name : "Unknown",
         });
       }
-      setOpenedFolders(items.filter(Boolean) as { id: string; name: string }[]);
+      setOpenedFolders(
+        itemsLocal.filter(Boolean) as { id: string; name: string }[],
+      );
       setTimeout(() => {
         refetchOpenedFolder();
       }, 100);
@@ -98,22 +97,7 @@ export const ReportBuilderMoveToFolderModal: React.FC<
 
   const handleSubmit = () => {
     if (!selectedId) return;
-    if (itemType === "report") {
-      addReportToFolder.mutate(
-        { reportId: itemId, folderId: selectedId },
-        { onSuccess },
-      );
-    } else if (itemType === "asset") {
-      addAssetToFolder.mutate(
-        { assetId: itemId, folderId: selectedId },
-        { onSuccess },
-      );
-    } else {
-      addFolderToFolder.mutate(
-        { folderIdToAdd: itemId, folderId: selectedId },
-        { onSuccess },
-      );
-    }
+    addItemsToFolder.mutate({ items, folderId: selectedId }, { onSuccess });
   };
 
   const tree = React.useMemo(
@@ -208,10 +192,9 @@ export const ReportBuilderMoveToFolderModal: React.FC<
             {filtered ? (
               <FolderTreeItem
                 level={0}
+                items={items}
                 node={filtered}
-                itemId={itemId}
                 expanded={expanded}
-                itemType={itemType}
                 selectedId={selectedId}
                 onToggle={handleToggle}
                 onSelect={setSelectedId}
@@ -241,7 +224,7 @@ export const ReportBuilderMoveToFolderModal: React.FC<
           <Button
             variant="contained"
             onClick={handleSubmit}
-            disabled={!itemId || !selectedId}
+            disabled={!selectedId}
             sx={{
               fontWeight: "400",
               color: "#ffffff",

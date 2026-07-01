@@ -3,14 +3,20 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import capitalize from "lodash/capitalize";
 import { Table } from "app/components/table";
+import Checkbox from "@mui/material/Checkbox";
+import { useNavigate } from "react-router-dom";
 import { CellComponent } from "tabulator-tables";
 import { useCMSData } from "app/hooks/useCMSData";
 import { renderToString } from "react-dom/server";
+import { RBItemTypes } from "app/pages/report-builder/data";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import CircularProgress from "@mui/material/CircularProgress";
+import CheckboxChecked from "app/assets/vectors/CheckboxRB_checked.svg?react";
+import CheckboxUnchecked from "app/assets/vectors/CheckboxRB_notchecked.svg?react";
 import { ReportBuilderItemMenu } from "app/pages/report-builder/main/components/item-menu";
 import { EmptyAssetsView } from "app/pages/report-builder/main/components/all-assets-view/empty";
 import { AllAssetsViewProps } from "app/pages/report-builder/main/components/all-assets-view/data";
+import { getFolderContentText } from "app/pages/report-builder/main/components/all-reports-view/data";
 import {
   AssetCard,
   FolderCard,
@@ -29,19 +35,20 @@ import {
   Details,
   Backspace,
 } from "app/pages/report-builder/builder/components/report-settings/icons";
-import { useNavigate } from "react-router-dom";
 
 export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
   assets,
   refetch,
   selectedView,
+  checkedItems,
   onDeleteAsset,
   onDetailsClick,
   onDeleteFolder,
+  handleUseAsset,
+  setCheckedItems,
   handleFolderOpen,
   onMoveItemToFolder,
   detailsSidePanelOpen,
-  handleUseAsset,
 }) => {
   const updateAsset = usePatchAsset2();
   const updateFolder = usePatchFolder2();
@@ -103,10 +110,7 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
     }, 100);
   };
 
-  const handleRenameEnter = (
-    id: string,
-    type: "report" | "asset" | "folder",
-  ) => {
+  const handleRenameEnter = (id: string, type: RBItemTypes) => {
     const name = (
       document.getElementById(`rename-field-${id}`) as HTMLInputElement
     )?.value;
@@ -170,14 +174,13 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
     }
   };
 
-  const handleItemClick =
-    (id: string, type: "report" | "asset" | "folder") => () => {
-      if (type === "folder") {
-        handleFolderOpen(id);
-      } else {
-        navigate(`/report-builder/assets/${id}`);
-      }
-    };
+  const handleItemClick = (id: string, type: RBItemTypes) => () => {
+    if (type === "folder") {
+      handleFolderOpen(id);
+    } else {
+      navigate(`/report-builder/assets/${id}`);
+    }
+  };
 
   const handleTableCellClick = (_e: UIEvent, cell: CellComponent) => {
     const id = cell.getRow().getData()?.id;
@@ -189,6 +192,21 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
 
   const handleTableClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
+    const target2 = e.target as HTMLInputElement;
+    if (target2.type === "checkbox") {
+      const id = target2.id.replace("checkbox-", "");
+      const type = assets.data.find((r) => r.id === id)?.isFolder
+        ? "folder"
+        : "asset";
+      handleCheckboxChange(
+        {
+          target: { checked: target2.checked },
+        } as React.ChangeEvent<HTMLInputElement>,
+        id,
+        type,
+      );
+      return;
+    }
     const button = target.closest(".table-action-btn") as HTMLElement | null;
     if (button && button.id) {
       setAnchorElTableId(button.id);
@@ -252,6 +270,18 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
     onMoveItemToFolder(id, name, isFolder ? "folder" : "asset");
   };
 
+  const handleCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    id: string,
+    type: RBItemTypes,
+  ) => {
+    if (event.target.checked) {
+      setCheckedItems((prev) => [...prev, { id, type }]);
+    } else {
+      setCheckedItems((prev) => prev.filter((item) => item.id !== id));
+    }
+  };
+
   React.useEffect(() => {
     setImageVersion(Date.now());
   }, []);
@@ -294,14 +324,41 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
                   display: "flex",
                   padding: "16px",
                   borderRadius: "4px",
+                  position: "relative",
                   flexDirection: "column",
                   justifyContent: "space-between",
                   border: `1px solid ${getAnchorElId() === item.id ? "#3154f4" : "#cfd4da"}`,
+                  bgcolor: checkedItems.some((i) => i.id === item.id)
+                    ? "#e7f0fe"
+                    : "#ffffff",
+                  "> .MuiCheckbox-root": {
+                    display: checkedItems.some((i) => i.id === item.id)
+                      ? "block"
+                      : "none",
+                  },
                   ":hover": {
+                    bgcolor: "#eff1fe",
                     borderColor: "#3154f4",
+                    "> .MuiCheckbox-root": {
+                      display: "block",
+                    },
                   },
                 }}
               >
+                <Checkbox
+                  id={`checkbox-${item.id}`}
+                  icon={<CheckboxUnchecked />}
+                  checkedIcon={<CheckboxChecked />}
+                  sx={{ position: "absolute", top: 14, left: 14 }}
+                  checked={checkedItems.some((i) => i.id === item.id)}
+                  onChange={(e) =>
+                    handleCheckboxChange(
+                      e,
+                      item.id,
+                      item.isFolder ? "folder" : "asset",
+                    )
+                  }
+                />
                 {!item.isFolder && (
                   <AssetCard
                     id={item.id}
@@ -407,11 +464,20 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
         data={assets.data.map((item) => {
           const cdate = new Date(item.createdDate);
           const edate = new Date(item.updatedDate);
+          const type = item.isFolder ? "Folder" : "Report";
+          let description = item.description;
+          if (type === "Folder") {
+            description = getFolderContentText({
+              reportCount: 0,
+              assetCount: item.assetCount ?? 0,
+              folderCount: item.folderCount ?? 0,
+            });
+          }
           return {
+            type,
             id: item.id,
+            description,
             name: item.name,
-            type: item.type ?? "",
-            description: item.description,
             dateCreated: `${cdate.getDate()}-${cdate.getMonth() + 1}-${cdate.getFullYear()}`,
             dateEdited: `${edate.getDate()}-${edate.getMonth() + 1}-${edate.getFullYear()}`,
           };
@@ -419,10 +485,34 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
         columns={[
           { title: "", field: "id", visible: false },
           {
+            title: "",
+            field: "selected",
+            formatter: (cell) => {
+              const id = cell.getRow().getData()?.id;
+              return renderToString(
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    id={`checkbox-${id}`}
+                    checked={checkedItems.some((i) => i.id === id)}
+                  />
+                </div>,
+              );
+            },
+          },
+          {
             title: getCMSDataField(
               cmsData,
               "pagesReportBuilderMain.reportNameColumn",
-              "Report name",
+              "Name",
             ),
             field: "name",
             width: "30%",
@@ -452,7 +542,7 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
               "Description",
             ),
             field: "description",
-            width: "30%",
+            width: "25%",
           },
           {
             title: getCMSDataField(
@@ -461,7 +551,7 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
               "Type",
             ),
             field: "type",
-            width: "10%",
+            width: "8%",
             formatter: (cell) => {
               return capitalize(cell.getValue() as string);
             },
@@ -473,7 +563,7 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
               "Date Created",
             ),
             field: "dateCreated",
-            width: "10%",
+            width: "12%",
           },
           {
             title: getCMSDataField(
@@ -482,7 +572,7 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
               "Last Edited",
             ),
             field: "dateEdited",
-            width: "10%",
+            width: "12%",
           },
           {
             title: getCMSDataField(
@@ -491,7 +581,7 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
               "Actions",
             ),
             field: "actions",
-            width: "10%",
+            width: "8%",
             formatter: (cell: CellComponent) => {
               const id = cell.getRow().getData()?.id;
               return `<div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
@@ -514,9 +604,10 @@ export const AllAssetsView: React.FC<AllAssetsViewProps> = ({
     cmsData,
     anchorEl,
     selectedView,
+    checkedItems,
+    imageVersion,
     detailsSidePanelOpen,
     selectedItemForRenaming,
-    imageVersion,
   ]);
 
   React.useEffect(() => {

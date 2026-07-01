@@ -43,17 +43,17 @@ const AxisNameArea: React.FC<AxisProps> = ({
         break;
     }
 
-    const resolvedXAxisName = customXAxisName
+    const resolvedXAxisNameTemp = customXAxisName
       ? (xAxisName ?? defaultXAxisName)
       : defaultXAxisName;
 
-    const resolvedYAxisName = customYAxisName
+    const resolvedYAxisNameTemp = customYAxisName
       ? (yAxisName ?? defaultYAxisName)
       : defaultYAxisName;
 
     return {
-      resolvedXAxisName,
-      resolvedYAxisName,
+      resolvedXAxisName: resolvedXAxisNameTemp,
+      resolvedYAxisName: resolvedYAxisNameTemp,
     };
   }, [mapping, visualOptions, chartType]);
 

@@ -1,6 +1,8 @@
 import React from "react";
+import { format } from "date-fns";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Add from "@mui/icons-material/Add";
 import capitalize from "lodash/capitalize";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -14,12 +16,11 @@ import FolderIcon from "app/assets/vectors/FolderBig.svg?react";
 import LetterTextIcon from "app/assets/vectors/Letter_Text.svg?react";
 import EmptyFolderIcon from "app/assets/vectors/EmptyFolder.svg?react";
 import {
+  AssetCardProps,
   ReportCardProps,
   FolderCardProps,
-  AssetCardProps,
+  getFolderContentText,
 } from "app/pages/report-builder/main/components/all-reports-view/data";
-import { format } from "date-fns";
-import { Add } from "@mui/icons-material";
 
 export const ReportCard: React.FC<ReportCardProps> = ({
   id,
@@ -324,25 +325,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
   setSelectedItemForRenaming,
 }) => {
   const text = React.useMemo(() => {
-    if (assetCount === 0 && reportCount === 0 && folderCount === 0) {
-      return "Empty Folder";
-    }
-    if (assetCount > 0 && reportCount === 0 && folderCount === 0) {
-      return `${assetCount} ${assetCount === 1 ? "Asset" : "Assets"} inside`;
-    }
-    if (assetCount > 0 && reportCount > 0 && folderCount === 0) {
-      return `${reportCount} ${reportCount === 1 ? "Report" : "Reports"} and ${assetCount} ${assetCount === 1 ? "Asset" : "Assets"} inside`;
-    }
-    if (assetCount > 0 && reportCount === 0 && folderCount > 0) {
-      return `${folderCount} ${folderCount === 1 ? "Folder" : "Folders"} and ${assetCount} ${assetCount === 1 ? "Asset" : "Assets"} inside`;
-    }
-    if (assetCount === 0 && reportCount > 0 && folderCount === 0) {
-      return `${reportCount} ${reportCount === 1 ? "Report" : "Reports"} inside`;
-    }
-    if (assetCount === 0 && reportCount > 0 && folderCount > 0) {
-      return `${reportCount} ${reportCount === 1 ? "Report" : "Reports"} and ${folderCount} ${folderCount === 1 ? "Folder" : "Folders"} inside`;
-    }
-    return `${reportCount} ${reportCount === 1 ? "Report" : "Reports"}, ${assetCount} ${assetCount === 1 ? "Asset" : "Assets"} and ${folderCount} ${folderCount === 1 ? "Folder" : "Folders"} inside`;
+    return getFolderContentText({ assetCount, reportCount, folderCount });
   }, [assetCount, reportCount, folderCount]);
 
   const disableClick = React.useMemo(() => {
