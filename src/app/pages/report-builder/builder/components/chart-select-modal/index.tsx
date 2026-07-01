@@ -57,9 +57,9 @@ const chartSelectItems: ChartSelectItem[] = chartTypes.map((item) => {
       modalDescription:
         "Show how values change over time - useful for cycles, periods, and year-on-year movement.",
       bestFor:
-        "Tracking progress, disbursements, commitments, or results over time where direction matters more than individual category comparison.",
+        "Showing disbursement trends across fiscal years, or comparing multiple countries' funding over time.",
       technical:
-        "Needs 1 time or ordered category column + 1 numeric column. Multi-series lines need a grouping dimension or multiple numeric columns.",
+        "Requires 1 date or ordered column + 1 numeric column. Add a category column to split into multiple lines.",
     },
     pie: {
       intent: ["part"],
@@ -67,9 +67,9 @@ const chartSelectItems: ChartSelectItem[] = chartTypes.map((item) => {
       modalDescription:
         "Show how parts make up a whole - best when you have fewer than 6 categories.",
       bestFor:
-        "Showing simple shares, such as disease split, funding source mix, or allocation proportions.",
+        "Funding share by disease component (HIV, TB, Malaria). Works well as a headline figure in a report.",
       technical:
-        "Needs 1 category column + 1 numeric column. Keep categories limited so labels remain readable.",
+        "Needs 1 category column + 1 numeric column. Avoid when categories exceed 6 — consider a Stacked Bar instead.",
     },
     scatter: {
       intent: ["compare"],
@@ -77,9 +77,9 @@ const chartSelectItems: ChartSelectItem[] = chartTypes.map((item) => {
       modalDescription:
         "Reveal relationships between two measures - does more funding lead to better outcomes?",
       bestFor:
-        "Comparing two numeric measures across countries, grants, or periods to spot clusters and outliers.",
+        "Plotting budget vs. disbursement rate by country, or funding vs. disease burden.",
       technical:
-        "Needs 2 numeric columns. Optional category or size fields can add grouping and emphasis.",
+        "Requires 2 numeric columns (X and Y axes). A third column can be used for dot size (bubble) or color grouping.",
     },
     geomap: {
       intent: ["geographic"],
@@ -87,9 +87,9 @@ const chartSelectItems: ChartSelectItem[] = chartTypes.map((item) => {
       modalDescription:
         "Map values by country or location - best for geographic distribution and regional patterns.",
       bestFor:
-        "Showing where funding, eligibility, grant activity, or result values are concentrated geographically.",
+        "Showing grant disbursement by recipient country on a world map. Highlights regional disparities at a glance.",
       technical:
-        "Needs 1 geographic column + 1 numeric column. Location names must map cleanly to supported geographies.",
+        "Requires a country name or ISO code column. A numeric column drives the color intensity or bubble size. No lat/lon needed for choropleth.",
     },
     sankey: {
       intent: ["part"],
@@ -97,9 +97,9 @@ const chartSelectItems: ChartSelectItem[] = chartTypes.map((item) => {
       modalDescription:
         "Show how values move from sources to destinations - ideal for funding allocation flows.",
       bestFor:
-        "Explaining flows between source and target fields, such as funding movement across components or grant structures.",
+        'Tracing how donor contributions flow through components to recipient countries. Excellent for "follow the money" stories.',
       technical:
-        "Needs source, target, and numeric value columns. Works best when the number of nodes is constrained.",
+        "Requires a source column, a target column, and a numeric value column. Works best with 3-12 nodes per layer to stay readable.",
     },
     treemap: {
       intent: ["part"],
@@ -107,9 +107,9 @@ const chartSelectItems: ChartSelectItem[] = chartTypes.map((item) => {
       modalDescription:
         "Show proportions within a hierarchy - size reveals scale at a glance.",
       bestFor:
-        "Comparing nested totals where hierarchy matters, such as portfolio, region, country, and disease breakdowns.",
+        "Visualising funding allocation across regions, then broken down by disease component within each region.",
       technical:
-        "Needs 1 or more hierarchy columns + 1 numeric column. Keep hierarchy depth moderate for readability.",
+        "Needs 1–2 category columns (for nesting levels) + 1 numeric column for area size. Works best with 2-level hierarchies.",
     },
     heatmap: {
       intent: ["compare"],
@@ -117,9 +117,9 @@ const chartSelectItems: ChartSelectItem[] = chartTypes.map((item) => {
       modalDescription:
         "Spot patterns across two dimensions - where are the hotspots and gaps?",
       bestFor:
-        "Comparing intensity across two categorical dimensions, such as countries by year or component by period.",
+        "Showing grant performance scores across countries and years, or disbursement rates by component and quarter.",
       technical:
-        "Needs 2 category columns + 1 numeric column. Works best with a bounded matrix size.",
+        "Requires 2 category columns (X and Y axes) + 1 numeric column for cell color intensity. Works best with 5-20 values on each axis.",
     },
     radar: {
       intent: ["compare"],
@@ -127,9 +127,9 @@ const chartSelectItems: ChartSelectItem[] = chartTypes.map((item) => {
       modalDescription:
         "Compare multiple metrics for one or more subjects on a single view.",
       bestFor:
-        "Showing profile-like comparisons across several measures for a small number of subjects.",
+        "Comparing a country's performance across 5–6 indicators (absorption rate, disbursement, targets met) in one visual.",
       technical:
-        "Needs multiple numeric measures and a small subject set. Avoid using it for many categories.",
+        "Needs 1 category column (the subject) + 3–8 numeric columns (the axes). Avoid when comparing more than 3-4 subjects — lines overlap and become unreadable.",
     },
   };
 

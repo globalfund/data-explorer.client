@@ -52,13 +52,16 @@ export const DatasetSelectModal: React.FC<{
   open: boolean;
   onClose: () => void;
   skipColumnSelection?: boolean;
-  handleSelectDataset?: (
-    selectedDataset: string,
+  handleSelectDataset?: (params: {
+    selectedDataset: string;
+    filters: Record<string, any[]>;
     previewColumns: {
       name: string;
+      id: string;
       type: string;
-    }[],
-  ) => void;
+    }[];
+    sorting: { column: string; order: "asc" | "desc" }[];
+  }) => void;
 }> = ({ open, onClose, skipColumnSelection, handleSelectDataset }) => {
   const [step, setStep] = React.useState<DatasetModalStep>("select");
   const [search, setSearch] = React.useState("");
@@ -72,6 +75,12 @@ export const DatasetSelectModal: React.FC<{
   const [previewColumns, setPreviewColumns] = React.useState<DatasetColumn[]>(
     [],
   );
+  const [previewFilters, setPreviewFilters] = React.useState<
+    Record<string, any[]>
+  >({});
+  const [previewSorting, setPreviewSorting] = React.useState<
+    { column: string; order: "asc" | "desc" }[]
+  >([]);
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
@@ -98,7 +107,6 @@ export const DatasetSelectModal: React.FC<{
       setSelectedType("all");
       setSelectedDataset(item?.data?.dataset ?? "");
       setRowsPerPage("10");
-      setPreviewColumns([]);
       setStep("select");
     }
   }, [item?.data?.dataset, open]);
@@ -107,7 +115,13 @@ export const DatasetSelectModal: React.FC<{
     if (selectedController?.extra?.table?.datasetModalStep) {
       setStep(selectedController.extra.table.datasetModalStep);
     }
-  }, [selectedController?.extra?.table?.datasetModalStep]);
+    if (selectedController?.extra?.chart?.datasetModalStep) {
+      setStep(selectedController.extra.chart.datasetModalStep);
+    }
+  }, [
+    selectedController?.extra?.table?.datasetModalStep,
+    selectedController?.extra?.chart?.datasetModalStep,
+  ]);
 
   const getDatasetLatestUpdate = React.useCallback(
     (id: string) => {
@@ -153,32 +167,54 @@ export const DatasetSelectModal: React.FC<{
     return item?.data?.columns ?? [];
   }, [item?.data?.dataset, item?.data?.columns, selectedDataset]);
 
-  const handleOpenView = () => {
-    if (!selectedDataset) return;
-
-    if (skipColumnSelection && sampledDataset) {
+  React.useEffect(() => {
+    if (sampledDataset) {
       const dataTypes = sampledDataset?.dataTypes ?? {};
       const columns =
         sampledDataset?.stats?.map((stat) => ({
           name: stat.name,
+          id: stat.name,
           type: getColumnType(dataTypes[stat.name]),
         })) ?? [];
 
-      setPreviewColumns(columns);
+      if (skipColumnSelection) {
+        setPreviewColumns(columns);
+      } else {
+        setPreviewColumns(
+          initialSelectedColumns.length
+            ? initialSelectedColumns.map((col) => ({
+                name: col.name,
+                id: col.id,
+                type: getColumnType(dataTypes[col.name]),
+              }))
+            : columns,
+        );
+      }
+    }
+  }, [initialSelectedColumns, sampledDataset, skipColumnSelection]);
+
+  const handleOpenView = () => {
+    if (!selectedDataset) return;
+
+    if (skipColumnSelection && sampledDataset) {
       setStep("preview");
       return;
     }
     setStep("view");
   };
 
-  const handlePreviewTable = (columns: DatasetColumn[]) => {
-    setPreviewColumns(columns);
+  const handlePreviewTable = () => {
     setStep("preview");
   };
 
   const handleUseDataset = () => {
     if (!item || !selectedDataset || !previewColumns.length) return;
-    handleSelectDataset?.(selectedDataset, previewColumns);
+    handleSelectDataset?.({
+      selectedDataset,
+      filters: previewFilters,
+      previewColumns,
+      sorting: previewSorting,
+    });
     onClose();
   };
 
@@ -386,7 +422,6 @@ export const DatasetSelectModal: React.FC<{
         ) : step === "view" ? (
           <DatasetSelectModalDataView
             selectedDataset={selectedDataset}
-            initialSelectedColumns={initialSelectedColumns.map((col) => col.id)}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={setRowsPerPage}
             onBack={() => setStep("select")}
@@ -394,14 +429,27 @@ export const DatasetSelectModal: React.FC<{
             onPreviewTable={handlePreviewTable}
             sampledDataset={sampledDataset}
             sampledDatasetLoading={sampledDatasetQuery.isFetching}
+            setPreviewColumns={setPreviewColumns}
+            previewColumns={previewColumns}
           />
         ) : (
           <DataPreview
             selectedDataset={selectedDataset}
-            selectedColumns={previewColumns}
+            setPreviewColumns={setPreviewColumns}
+            previewColumns={previewColumns}
+            filters={previewFilters}
+            setFilters={setPreviewFilters}
+            sorting={previewSorting}
+            setSorting={setPreviewSorting}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={setRowsPerPage}
-            onBack={() => setStep("view")}
+            onBack={() => {
+              if (skipColumnSelection) {
+                setStep("select");
+              } else {
+                setStep("view");
+              }
+            }}
             onBackToDatasets={() => setStep("select")}
             onCancel={onClose}
             onUseDataset={handleUseDataset}

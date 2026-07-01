@@ -26,8 +26,6 @@ export interface TableOptions {
   display: TableDisplay;
   rowStripping: TableRowStripping;
   colorPalette: TableColorPalette;
-  sortBy: string;
-  sortDirection: TableSortDirection;
   limitToTop: boolean;
   limitToTopValue: string;
   groupRemainderAsOther: boolean;
@@ -46,8 +44,6 @@ export const DEFAULT_TABLE_OPTIONS: TableOptions = {
   display: "table",
   rowStripping: "zebra",
   colorPalette: "default",
-  sortBy: "",
-  sortDirection: "ascending",
   limitToTop: true,
   limitToTopValue: "10",
   groupRemainderAsOther: true,

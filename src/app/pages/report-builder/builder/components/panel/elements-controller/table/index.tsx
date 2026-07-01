@@ -215,7 +215,12 @@ export default function TableController() {
       <DatasetSelectModal
         open={!!selectedController?.extra?.table?.showDatasetModal}
         onClose={handleBack}
-        handleSelectDataset={(selectedDataset, previewColumns) => {
+        handleSelectDataset={({
+          selectedDataset,
+          filters,
+          previewColumns,
+          sorting,
+        }) => {
           editItem({
             ...item,
             id: selectedController?.id || "",
@@ -225,9 +230,11 @@ export default function TableController() {
               dataset: selectedDataset,
               columns: previewColumns.map((col) => ({
                 name: col.name,
-                id: col.name,
+                id: col.id,
                 type: col.type,
               })),
+              filters: filters,
+              sorting: sorting,
             },
           });
         }}

@@ -2,6 +2,7 @@ import { DataType } from "app/state/api/action-reducers/report-builder/sync";
 
 export type DatasetColumn = {
   name: string;
+  id: string;
   type: DataType;
 };
 

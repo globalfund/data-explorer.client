@@ -57,6 +57,7 @@ export default function KPITextFormatting({ source }: KPITextFormattingProps) {
     return (
       sampledDataset?.stats?.map((stat) => ({
         name: stat.name,
+        id: stat.name,
         type: getColumnType(dataTypes[stat.name]),
       })) ?? []
     );
@@ -531,7 +532,7 @@ export default function KPITextFormatting({ source }: KPITextFormattingProps) {
       <DatasetSelectModal
         open={!!selectedItemController?.extra?.kpi_box?.showDatasetModal}
         onClose={handleBack}
-        handleSelectDataset={(selectedDataset) => {
+        handleSelectDataset={({ selectedDataset }) => {
           editItem({
             ...selectedItem,
             id: selectedItemController?.id || "",

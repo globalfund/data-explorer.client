@@ -7,14 +7,16 @@ import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import SearchIcon from "app/assets/vectors/Search_grants.svg?react";
-import SettingsIcon from "app/assets/vectors/Settings_ButtonIcon.svg?react";
+import SettingsIcon from "app/assets/vectors/Settings.svg?react";
 import SortIcon from "app/assets/vectors/RBTableSort.svg?react";
+
 import FilterIcon from "app/assets/vectors/RBTableFilter.svg?react";
 import DatasetArrowLeftIcon from "app/assets/vectors/DatasetArrowLeft.svg?react";
 import DatasetArrowRightIcon from "app/assets/vectors/DatasetArrowRight.svg?react";
 import { datasetItems } from "app/pages/report-builder/builder/components/chart/data";
 import {
-  useGFDatasetPage,
+  useDatasetFilterOptions,
+  useFilteredDatasetPage,
   useGFSampleDataset,
 } from "app/hooks/queries/report-builder";
 import { DatasetStepHeader } from "./step-header";
@@ -24,20 +26,31 @@ import {
   formatCellValue,
   formatNumber,
 } from "./utils";
+import DatasetColumnHeader from "./dataset-column-header";
+import { FilterGroupOptionModel } from "app/state/api/action-reducers/report-builder/sync";
+import SelectedFilters from "./selected-filters";
+import SelectedSorting from "./selected-sorting";
 
 interface DataPreviewProps {
   selectedDataset: string;
-  selectedColumns: DatasetColumn[];
+  setPreviewColumns: React.Dispatch<React.SetStateAction<DatasetColumn[]>>;
+  previewColumns: DatasetColumn[];
   rowsPerPage: DatasetRowsPerPage;
   onRowsPerPageChange: (rowsPerPage: DatasetRowsPerPage) => void;
   onBack: () => void;
   onBackToDatasets: () => void;
   onCancel: () => void;
   onUseDataset: () => void;
+  filters: Record<string, any[]>;
+  setFilters: React.Dispatch<React.SetStateAction<Record<string, any[]>>>;
+  sorting?: {
+    column: string;
+    order: "asc" | "desc";
+  }[];
+  setSorting?: React.Dispatch<
+    React.SetStateAction<{ column: string; order: "asc" | "desc" }[]>
+  >;
 }
-
-const headerTooltip =
-  "Hover to reveal sort and filter options, double-click to edit the header cell text.";
 
 const getVisiblePages = (currentPage: number, totalPages: number) => {
   if (totalPages <= 7) {
@@ -77,10 +90,8 @@ const tableCellSx = {
   py: "12px",
   fontSize: "14px",
   color: "#373d43",
-  overflow: "hidden",
-  whiteSpace: "nowrap",
-  textOverflow: "ellipsis",
-  border: "0.5px solid #cfd4da",
+  borderBottom: "0.5px solid #cfd4da",
+  borderRight: "0.5px solid #cfd4da",
 };
 
 const paginationButtonSx = {
@@ -110,26 +121,26 @@ const paginationButtonSx = {
 };
 
 const iconButtonSx = {
-  width: 35,
-  height: 35,
+  padding: "0",
   color: "#252c34",
   borderRadius: "4px",
   border: "0.5px solid transparent",
-  "&:hover": {
-    bgcolor: "#eff1fe",
-    borderColor: "#3154f4",
-  },
 };
 
 const DataPreview: React.FC<DataPreviewProps> = ({
   selectedDataset,
-  selectedColumns,
+  setPreviewColumns,
+  previewColumns,
   rowsPerPage,
   onRowsPerPageChange,
   onBack,
   onBackToDatasets,
   onCancel,
   onUseDataset,
+  filters,
+  setFilters,
+  sorting,
+  setSorting,
 }) => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [search, setSearch] = React.useState("");
@@ -139,10 +150,35 @@ const DataPreview: React.FC<DataPreviewProps> = ({
   );
   const sampledDatasetQuery = useGFSampleDataset(selectedDataset);
   const sampledDataset = sampledDatasetQuery?.data?.data?.data?.result;
-  const datasetQuery = useGFDatasetPage(selectedDataset, currentPage, pageSize);
-  const pageResult = datasetQuery?.data?.data?.data?.result;
+  const datasetQuery = useFilteredDatasetPage({
+    datasetId: selectedDataset,
+    filters,
+    sorting: sorting ?? [],
+    pageSize,
+    page: currentPage,
+  });
+
+  const filterOptionsQuery = useDatasetFilterOptions(selectedDataset, filters);
+  const filterOptions = filterOptionsQuery?.data?.data;
+
+  const filterOptionGroups = React.useMemo(() => {
+    return (
+      filterOptions?.reduce(
+        (acc: Record<string, FilterGroupOptionModel[]>, group: any) => {
+          if (group.options && group.options.length > 0) {
+            acc[group.name] = group.options;
+          }
+          return acc;
+        },
+        {},
+      ) || {}
+    );
+  }, [filterOptions]);
+
+  const pageResult = datasetQuery?.data?.data;
+
   const totalRows = pageResult?.count ?? sampledDataset?.count ?? 0;
-  const totalColumns = sampledDataset?.stats?.length || selectedColumns.length;
+  const totalColumns = sampledDataset?.stats?.length || previewColumns.length;
   const totalCells = totalRows ? totalRows * totalColumns : undefined;
   const totalPages = Math.max(Math.ceil(totalRows / pageSize), 1);
   const pageStart = totalRows ? (currentPage - 1) * pageSize + 1 : 0;
@@ -165,16 +201,18 @@ const DataPreview: React.FC<DataPreviewProps> = ({
     }
   }, [currentPage, totalPages]);
 
-  const pageRows = React.useMemo(() => pageResult?.data ?? [], [pageResult]);
+  const dataTypes = sampledDataset?.dataTypes ?? {};
+
+  const pageRows = React.useMemo(() => pageResult?.result ?? [], [pageResult]);
   const filteredRows = React.useMemo(() => {
     const searchTerm = search.trim().toLowerCase();
     if (!searchTerm) return pageRows;
     return pageRows.filter((row) =>
-      selectedColumns.some((column) =>
+      previewColumns.some((column) =>
         formatCellValue(row?.[column.name]).toLowerCase().includes(searchTerm),
       ),
     );
-  }, [pageRows, search, selectedColumns]);
+  }, [pageRows, search, previewColumns]);
 
   const handleRowsPerPageChange = (nextRowsPerPage: DatasetRowsPerPage) => {
     setCurrentPage(1);
@@ -211,7 +249,7 @@ const DataPreview: React.FC<DataPreviewProps> = ({
 
         <Box
           sx={{
-            gap: "12px",
+            gap: "16px",
             px: "16px",
             py: "10px",
             display: "flex",
@@ -220,7 +258,11 @@ const DataPreview: React.FC<DataPreviewProps> = ({
           }}
         >
           <Tooltip title="Table settings" arrow>
-            <IconButton aria-label="Table settings" sx={iconButtonSx}>
+            <IconButton
+              aria-label="Table settings"
+              sx={iconButtonSx}
+              disableRipple
+            >
               <SettingsIcon />
             </IconButton>
           </Tooltip>
@@ -252,14 +294,37 @@ const DataPreview: React.FC<DataPreviewProps> = ({
               },
             }}
           />
-          <Box sx={{ width: "1px", height: 35, bgcolor: "#cfd4da" }} />
-          <Typography
-            fontSize="16px"
-            color="#373d43"
-            sx={{ flex: 1, minWidth: 0 }}
-          >
-            No filters or sort active - click any column header to configure
-          </Typography>
+
+          {(sorting && sorting.length > 0) ||
+          Object.values(filters).flat().length > 0 ? null : (
+            <>
+              <Box sx={{ width: "1px", height: 35, bgcolor: "#cfd4da" }} />
+              <Typography fontSize="16px" color="#373d43">
+                No filters or sort active - click any column header to configure
+              </Typography>
+            </>
+          )}
+
+          {Object.values(filters).flat().length > 0 ? (
+            <>
+              <Box sx={{ width: "1px", height: 35, bgcolor: "#cfd4da" }} />
+              <Typography fontSize="16px" color="#3154F4">
+                {Object.values(filters).flat().length} Filter
+                {Object.values(filters).flat().length > 1 ? "s" : ""} active
+              </Typography>
+            </>
+          ) : null}
+
+          {sorting && sorting.length > 0 ? (
+            <>
+              <Box sx={{ width: "1px", height: 35, bgcolor: "#cfd4da" }} />
+              <Typography fontSize="16px" color="#3154F4">
+                {sorting.length} sort
+                {sorting.length > 1 ? "s" : ""} applied
+              </Typography>
+            </>
+          ) : null}
+          <Box sx={{ flex: 1 }} />
           <Tooltip title="Sort columns" arrow>
             <IconButton
               disableRipple
@@ -275,30 +340,31 @@ const DataPreview: React.FC<DataPreviewProps> = ({
             </IconButton>
           </Tooltip>
         </Box>
-
+        <SelectedFilters
+          filters={filters}
+          setFilters={setFilters}
+          dataTypes={dataTypes}
+        />
+        <SelectedSorting sorting={sorting} setSorting={setSorting} />
         <Box
           sx={{
             minHeight: 0,
             flex: 1,
-            p: "16px 16px 0",
-            overflow: "auto",
-            "&::-webkit-scrollbar": {
-              width: "4px",
-              height: "4px",
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: "#000",
-            },
-            "&::-webkit-scrollbar-track": {
-              backgroundColor: "#D9D9D9",
-            },
+            display: "flex",
+            p: "20px",
+            flexDirection: "column",
           }}
         >
           <Box
             sx={{
+              minHeight: 0,
               width: "100%",
-              height: "100%",
+              // position: "relative",
+              flex: 1,
               overflow: "auto",
+              pb: "20px",
+              pr: "20px",
+              scrollbarGutter: "stable",
               "&::-webkit-scrollbar": {
                 width: "4px",
                 height: "4px",
@@ -315,8 +381,8 @@ const DataPreview: React.FC<DataPreviewProps> = ({
               component="table"
               sx={{
                 width: "max-content",
-                minWidth: "100%",
-                borderCollapse: "collapse",
+                borderCollapse: "separate",
+                borderSpacing: 0,
                 tableLayout: "fixed",
                 th: {
                   ...tableCellSx,
@@ -327,7 +393,43 @@ const DataPreview: React.FC<DataPreviewProps> = ({
                 },
                 td: {
                   ...tableCellSx,
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
                   textAlign: "left",
+                },
+
+                // sticky header
+                thead: {
+                  position: "sticky",
+                  top: 0,
+                  zIndex: 2,
+                },
+
+                // sticky first column body cells
+                "tbody td:first-of-type": {
+                  position: "sticky",
+                  left: 0,
+                  zIndex: 1,
+                  borderLeft: "0.5px solid #cfd4da",
+                },
+
+                // sticky top-left corner cell
+                "thead th:first-of-type": {
+                  position: "sticky",
+                  top: 0,
+                  left: 0,
+                  borderLeft: "0.5px solid #cfd4da",
+                },
+
+                // top border of the table
+                "thead tr:first-of-type th": {
+                  borderTop: "0.5px solid #cfd4da",
+                },
+
+                // left border of the table
+                "tr > th:first-of-type, tr > td:first-of-type": {
+                  borderLeft: "0.5px solid #cfd4da",
                 },
               }}
             >
@@ -336,7 +438,7 @@ const DataPreview: React.FC<DataPreviewProps> = ({
                   <Box component="th" sx={{ width: "51px" }}>
                     #
                   </Box>
-                  {selectedColumns.map((column, index) => (
+                  {previewColumns.map((column, index) => (
                     <Box
                       key={`column-number-${column.name}`}
                       component="th"
@@ -349,55 +451,43 @@ const DataPreview: React.FC<DataPreviewProps> = ({
                 <Box component="tr">
                   <Box
                     component="th"
-                    sx={{ width: "51px", bgcolor: "#ffffff" }}
-                  >
-                    {""}
-                  </Box>
-                  {selectedColumns.map((column) => (
-                    <Box
+                    sx={{
+                      width: "51px",
+                      bgcolor: "#ffffff !important",
+                      textAlign: "center",
+                    }}
+                  ></Box>
+                  {previewColumns.map((column) => (
+                    <DatasetColumnHeader
                       key={`column-header-${column.name}`}
-                      component="th"
-                      sx={{
-                        width: "240px",
-                        color: "#101018",
-                        fontWeight: 700,
-                        textAlign: "left",
-                        bgcolor: "#ffffff",
+                      column={column}
+                      setColumn={(updatedColumn) => {
+                        setPreviewColumns((prevColumns) =>
+                          prevColumns.map((col) =>
+                            col.name === column.name ? updatedColumn : col,
+                          ),
+                        );
                       }}
-                    >
-                      <Tooltip
-                        arrow
-                        title={headerTooltip}
-                        slotProps={{
-                          arrow: {
-                            sx: { color: "#000" },
-                          },
-                          tooltip: {
-                            sx: {
-                              p: "10px",
-                              color: "#ffffff",
-                              fontSize: "14px",
-                              maxWidth: "217px",
-                              bgcolor: "#000000",
-                              boxShadow:
-                                "0px 2px 3.5px 0px rgba(0, 0, 0, 0.12)",
-                            },
-                          },
-                        }}
-                      >
-                        <Box
-                          component="span"
-                          sx={{
-                            display: "block",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            fontWeight: 700,
-                          }}
-                        >
-                          {column.name}
-                        </Box>
-                      </Tooltip>
-                    </Box>
+                      filterGroupOptions={
+                        filterOptionGroups?.[column.name] || []
+                      }
+                      setSelectedFilters={(selectedFilters: string[]) => {
+                        setFilters((prevFilters) => {
+                          if (selectedFilters.length === 0) {
+                            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                            const { [column.name]: _, ...rest } = prevFilters;
+                            return rest;
+                          }
+                          return {
+                            ...prevFilters,
+                            [column.name]: selectedFilters,
+                          };
+                        });
+                      }}
+                      selectedFilters={filters?.[column.name] || []}
+                      sorting={sorting}
+                      setSorting={setSorting}
+                    />
                   ))}
                 </Box>
               </Box>
@@ -406,7 +496,7 @@ const DataPreview: React.FC<DataPreviewProps> = ({
                   <Box component="tr">
                     <Box
                       component="td"
-                      colSpan={selectedColumns.length + 1}
+                      colSpan={previewColumns.length + 1}
                       sx={{
                         textAlign: "center",
                         bgcolor: "#f8f9fa",
@@ -431,16 +521,16 @@ const DataPreview: React.FC<DataPreviewProps> = ({
                         >
                           {rowNumber}
                         </Box>
-                        {selectedColumns.map((column) => (
+                        {previewColumns.map((column) => (
                           <Box
-                            key={`${rowIndex}-${column.name}`}
+                            key={`${rowIndex}-${column.id}`}
                             component="td"
                             sx={{
                               width: "240px",
                               bgcolor: rowBg,
                             }}
                           >
-                            {formatCellValue(row?.[column.name])}
+                            {formatCellValue(row?.[column.id])}
                           </Box>
                         ))}
                       </Box>
@@ -450,7 +540,7 @@ const DataPreview: React.FC<DataPreviewProps> = ({
                   <Box component="tr">
                     <Box
                       component="td"
-                      colSpan={selectedColumns.length + 1}
+                      colSpan={previewColumns.length + 1}
                       sx={{
                         textAlign: "center",
                         bgcolor: "#f8f9fa",
@@ -599,7 +689,7 @@ const DataPreview: React.FC<DataPreviewProps> = ({
         </Button>
         <Button
           variant="contained"
-          disabled={!selectedColumns.length}
+          disabled={!previewColumns.length}
           endIcon={<DatasetArrowRightIcon />}
           onClick={onUseDataset}
           sx={{

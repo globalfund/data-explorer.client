@@ -6,7 +6,6 @@ import ChartIcon from "app/assets/vectors/RBChart.svg?react";
 import { Options } from "../common/elementOptions";
 import { chartInfo, tabList } from "./data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import DataDetail from "./dataDetail";
 import LayoutTab from "./layout";
 import Customise from "./customise";
 import Advanced from "./advanced";
@@ -97,7 +96,10 @@ export default function ChartController() {
     });
   };
 
-  const handleApply = (selectedDataset: string) => {
+  const handleApply = (
+    selectedDataset: string,
+    filters: Record<string, any[]>,
+  ) => {
     if (!item || !selectedDataset) return;
     const datasetUnchanged = item?.data?.dataset === selectedDataset;
     editItem({
@@ -108,7 +110,8 @@ export default function ChartController() {
         ...item?.data,
         dataset: selectedDataset,
         mapping: datasetUnchanged ? item?.data?.mapping : {},
-        appliedFilters: datasetUnchanged ? item?.data?.appliedFilters : {},
+        appliedFilters:
+          filters || (datasetUnchanged ? item?.data?.appliedFilters : {}),
       },
     });
     handleBack();
@@ -143,26 +146,41 @@ export default function ChartController() {
         maxWidth: "max-content",
       }}
     >
-      {chartExtra.showDatasetTable?.open && (
-        <DataDetail datasetId={chartExtra.showDatasetTable?.datasetId ?? ""} />
-      )}
-      {!chartExtra.showDatasetTable?.open && (
+      <Box
+        sx={{
+          border: "1px solid #98A1AA",
+          borderRadius: "4px",
+          boxShadow: "0 0 10px 0 rgba(152, 161, 170, 0.60);",
+          bgcolor: "#F8F9FA",
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px",
+          width: "304px",
+        }}
+      >
         <Box
           sx={{
-            border: "1px solid #98A1AA",
-            borderRadius: "4px",
-            boxShadow: "0 0 10px 0 rgba(152, 161, 170, 0.60);",
-            bgcolor: "#F8F9FA",
-            display: "flex",
-            flexDirection: "column",
-            gap: "8px",
-            width: "304px",
+            padding: "8px",
+            borderBottom: "1px solid #CFD4DA",
           }}
         >
           <Box
             sx={{
-              padding: "8px",
-              borderBottom: "1px solid #CFD4DA",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              height: "50px",
+
+              ".MuiIconButton-root": {
+                backgroundColor: "#FFFFFF",
+                borderRadius: "4px",
+                border: "1px solid #CFD4DA",
+                width: "34px",
+                height: "34px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              },
             }}
           >
             <Box
@@ -170,90 +188,71 @@ export default function ChartController() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                height: "50px",
-
-                ".MuiIconButton-root": {
-                  backgroundColor: "#FFFFFF",
-                  borderRadius: "4px",
-                  border: "1px solid #CFD4DA",
-                  width: "34px",
-                  height: "34px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                },
+                gap: "10px",
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: "10px",
-                }}
-              >
-                <IconButton onClick={handleExpandToggle}>
-                  {isExpanded ? <MinimizeIcon /> : <MaximizeIcon />}
-                </IconButton>
-                <ChartIcon />
-                <Typography fontSize="16px" color="#000000" fontWeight={700}>
-                  Chart
-                </Typography>
-              </Box>
-
-              <Options />
+              <IconButton onClick={handleExpandToggle}>
+                {isExpanded ? <MinimizeIcon /> : <MaximizeIcon />}
+              </IconButton>
+              <ChartIcon />
+              <Typography fontSize="16px" color="#000000" fontWeight={700}>
+                Chart
+              </Typography>
             </Box>
-            {selectedController?.parent?.id ? <AssetSwitch /> : null}
+
+            <Options />
           </Box>
-          <Box sx={{ display: isExpanded ? "block" : "none" }}>
-            <Box>
+          {selectedController?.parent?.id ? <AssetSwitch /> : null}
+        </Box>
+        <Box sx={{ display: isExpanded ? "block" : "none" }}>
+          <Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "8px",
+                padding: "0 8px",
+              }}
+            >
+              {chartInfo.map((data) => (
+                <AssetSelect
+                  key={data.buttonLabel}
+                  buttonLabel={data.buttonLabel}
+                  helperText={data.helperText}
+                  icon={data.icon}
+                  selectedItem={getSelectedItem(data.type)}
+                  type={data.type as ChartProperty}
+                />
+              ))}
+            </Box>
+            <Box sx={{ borderTop: "1px solid #CFD4DA", marginTop: "8px" }}>
+              <ControllerTabs
+                tabs={[
+                  ...extraTabs(selectedController?.parent?.type),
+                  ...tabList,
+                ]}
+                value={chartConfigured ? value : null}
+                handleChange={chartConfigured ? handleChange : undefined}
+              />
+            </Box>
+
+            {chartConfigured ? (
+              renderTabPanel()
+            ) : (
               <Box
                 sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "8px",
-                  padding: "0 8px",
+                  padding: "38.5px 8px",
+                  fontSize: "14px",
+                  textAlign: "center",
                 }}
               >
-                {chartInfo.map((data) => (
-                  <AssetSelect
-                    key={data.buttonLabel}
-                    buttonLabel={data.buttonLabel}
-                    helperText={data.helperText}
-                    icon={data.icon}
-                    selectedItem={getSelectedItem(data.type)}
-                    type={data.type as ChartProperty}
-                  />
-                ))}
+                *Configure chart first to start editing.
               </Box>
-              <Box sx={{ borderTop: "1px solid #CFD4DA", marginTop: "8px" }}>
-                <ControllerTabs
-                  tabs={[
-                    ...extraTabs(selectedController?.parent?.type),
-                    ...tabList,
-                  ]}
-                  value={chartConfigured ? value : null}
-                  handleChange={chartConfigured ? handleChange : undefined}
-                />
-              </Box>
-
-              {chartConfigured ? (
-                renderTabPanel()
-              ) : (
-                <Box
-                  sx={{
-                    padding: "38.5px 8px",
-                    fontSize: "14px",
-                    textAlign: "center",
-                  }}
-                >
-                  *Configure chart first to start editing.
-                </Box>
-              )}
-            </Box>
+            )}
           </Box>
         </Box>
-      )}
+      </Box>
+
       <ChartSelectModal
         open={selectedController?.extra?.chart?.listToDisplay == "chartType"}
         onClose={handleBack}
@@ -262,7 +261,9 @@ export default function ChartController() {
         open={selectedController?.extra?.chart?.listToDisplay == "dataset"}
         onClose={handleBack}
         skipColumnSelection
-        handleSelectDataset={handleApply}
+        handleSelectDataset={({ selectedDataset, filters }) =>
+          handleApply(selectedDataset, filters)
+        }
       />
     </Box>
   );
