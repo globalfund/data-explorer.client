@@ -30,7 +30,7 @@ const DatasetColumnHeader = ({
   sorting,
   setColumn,
 }: DatasetColumnHeaderProps) => {
-  const filterActive = selectedFilters?.length ?? 0 > 0;
+  const filterActive = (selectedFilters?.length ?? 0) > 0;
   const sortActive = sorting?.some((s) => s.column === column.name) ?? false;
   const [editing, setEditing] = React.useState(false);
   const [nameInputValue, setNameInputValue] = React.useState(column.name);

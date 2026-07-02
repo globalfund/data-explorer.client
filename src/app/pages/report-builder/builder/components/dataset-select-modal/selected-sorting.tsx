@@ -92,10 +92,9 @@ const SelectedSorting: React.FC<SelectedSortingProps> = ({
                       sx={{ p: 0, color: "inherit", width: 14, height: 14 }}
                       onClick={() => {
                         setSorting?.((prevSorting) => {
-                          const rest = prevSorting.filter(
+                          return prevSorting.filter(
                             (s) => s.column !== d.column,
                           );
-                          return rest;
                         });
                       }}
                     >
