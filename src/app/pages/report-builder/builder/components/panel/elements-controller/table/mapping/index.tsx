@@ -5,7 +5,6 @@ import DatasetFieldDateIcon from "app/assets/vectors/DatasetFieldDate.svg?react"
 import DatasetFieldNumberIcon from "app/assets/vectors/DatasetFieldNumber.svg?react";
 import DatasetFieldTextIcon from "app/assets/vectors/DatasetFieldText.svg?react";
 import FilterIcon from "app/assets/vectors/RBTableFilter.svg?react";
-import SelectField from "../../components/selectfield";
 import TextField from "../../components/textfield";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
@@ -41,14 +40,6 @@ export default function Mapping() {
 
   const tableOptions = getTableOptions(selectedItem?.options);
   const columns = normalizeTableColumns(selectedItem?.data?.columns);
-  const sortOptions = [
-    { label: "Select Column", value: "" },
-    ...columns.map((column) => ({
-      label: column.name,
-      value: column.id,
-    })),
-  ];
-
   const updateOptions = (options: Partial<TableOptions>) => {
     if (!selectedItem) return;
     editItem({
@@ -105,6 +96,26 @@ export default function Mapping() {
       },
     });
   };
+
+  const handleEditFilters = () => {
+    if (!selectedController) return;
+    setSelectedController({
+      ...selectedController,
+      extra: {
+        ...selectedController.extra,
+        table: {
+          ...selectedController.extra?.table,
+          showDatasetModal: true,
+          datasetModalStep: "preview",
+        },
+      },
+    });
+  };
+
+  const filters = selectedItem?.data?.filters || {};
+  const sorting = selectedItem?.data?.sorting || [];
+  const anyFiltersOrSortingActive =
+    (sorting && sorting.length > 0) || Object.values(filters).flat().length > 0;
 
   return (
     <Box
@@ -220,7 +231,7 @@ export default function Mapping() {
         </Box>
       </ControlAccordion>
 
-      <ControlAccordion title="Filter">
+      <ControlAccordion title="Filter & Sort">
         <Box
           sx={{
             gap: "10px",
@@ -231,12 +242,35 @@ export default function Mapping() {
             alignItems: "flex-start",
           }}
         >
-          <Typography fontSize="14px" color="#373D43">
-            No filters are active.
-          </Typography>
+          <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            {anyFiltersOrSortingActive ? null : (
+              <Typography fontSize="14px" color="#373D43">
+                No filters or sort active.
+              </Typography>
+            )}
+            {Object.values(filters).flat().length > 0 ? (
+              <>
+                <Box sx={{ width: "1px", height: 20, bgcolor: "#cfd4da" }} />
+                <Typography fontSize="14px" color="#3154F4">
+                  {Object.values(filters).flat().length} Filter
+                  {Object.values(filters).flat().length > 1 ? "s" : ""} active
+                </Typography>
+              </>
+            ) : null}
+            {sorting && sorting.length > 0 ? (
+              <>
+                <Box sx={{ width: "1px", height: 20, bgcolor: "#cfd4da" }} />
+                <Typography fontSize="14px" color="#3154F4">
+                  {sorting.length} sort
+                  {sorting.length > 1 ? "s" : ""} applied
+                </Typography>
+              </>
+            ) : null}
+          </Box>
           <Button
             variant="outlined"
             startIcon={<FilterIcon />}
+            onClick={handleEditFilters}
             sx={{
               px: "12px",
               py: "9px",
@@ -257,17 +291,18 @@ export default function Mapping() {
               },
             }}
           >
-            Edit Filters
+            {anyFiltersOrSortingActive
+              ? "Edit Filters and Sort"
+              : "Add Filter and Sort"}
           </Button>
         </Box>
       </ControlAccordion>
 
-      <ControlAccordion title="Sort">
+      <ControlAccordion title="Limit the Top N">
         <Box
           sx={{
             gap: "8px",
             p: "8px",
-            pt: "2px",
             display: "flex",
             flexDirection: "column",
             ".MuiButton-root": {
@@ -277,44 +312,6 @@ export default function Mapping() {
             width: "100%",
           }}
         >
-          <Box sx={{ display: "flex", gap: "8px", alignItems: "flex-start" }}>
-            <Typography
-              component="span"
-              fontSize="14px"
-              color="#373D43"
-              sx={{ flexShrink: 0, mt: "8px" }}
-            >
-              Sort By
-            </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                gap: "8px",
-                flexDirection: "column",
-                width: "100%",
-                overflow: "hidden",
-              }}
-            >
-              <SelectField
-                value={tableOptions.sortBy}
-                options={sortOptions}
-                onChange={(value) => updateOptions({ sortBy: value })}
-                width="100%"
-              />
-
-              <SelectField
-                value={tableOptions.sortDirection}
-                disabled={!tableOptions.sortBy}
-                options={[
-                  { label: "Ascending", value: "ascending" },
-                  { label: "Descending", value: "descending" },
-                ]}
-                onChange={(value) => updateOptions({ sortDirection: value })}
-                width="100%"
-              />
-            </Box>
-          </Box>
-
           <Checkfield
             checked={tableOptions.limitToTop}
             onChange={(event) =>

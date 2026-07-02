@@ -53,13 +53,13 @@ export function Dimension(props: Readonly<DimensionProps>) {
           color: "#000",
           bgcolor: "#fff",
           width: "100%",
-          height: "35px",
+          minHeight: "35px",
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
+          alignItems: "flex-start",
           borderRadius: "4px",
           border: `0.5px solid ${props.errorText ? "#D32F2F" : "#98A1AA"}`,
-          py: "0px",
+          py: "4px",
           px: "8px",
           gap: "8px",
           ".MuiIconButton-root": {
@@ -149,7 +149,7 @@ export function Dimension(props: Readonly<DimensionProps>) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            height: "17px",
+            height: "25px",
             gap: "8px",
           }}
         >

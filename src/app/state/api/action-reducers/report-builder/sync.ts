@@ -111,6 +111,10 @@ type RBReportItemDataByType = {
       type: string;
     }[];
     filters?: Record<string, any[]>;
+    sorting?: {
+      column: string;
+      order: "asc" | "desc";
+    }[];
   };
 
   grid: {
@@ -160,10 +164,7 @@ export interface RBReportItemController {
   extra?: {
     chart?: {
       listToDisplay?: ChartProperty | null;
-      showDatasetTable?: {
-        datasetId: string;
-        open: boolean;
-      };
+      datasetModalStep?: "select" | "view" | "preview" | null;
     };
     table?: {
       showDatasetModal?: boolean;
@@ -453,6 +454,11 @@ export interface RBDatasetResponse {
       data: any[];
     };
   };
+}
+
+export interface RBFilteredDatasetResponse {
+  result: any[];
+  count: number;
 }
 
 export const RBReportItemsState: RBReportItemsModel = {

@@ -10,6 +10,7 @@ import {
 import {
   RBReportModel,
   RBDatasetResponse,
+  RBFilteredDatasetResponse,
   RBRenderedChartData,
   RBRenderChartDataRequest,
   RBSampledDatasetResponse,
@@ -19,6 +20,7 @@ import {
   RBAssetModelResponse,
   RBFolderModel,
   RBFolderModelResponse,
+  FilterGroupModel,
 } from "app/state/api/action-reducers/report-builder/sync";
 
 export const useCreateReport = () => {
@@ -471,6 +473,67 @@ export const useGFSampleDataset = (datasetId: string) => {
   });
 };
 
+export const useDatasetFilterOptions = (
+  datasetId: string,
+  appliedFilters: Record<string, any[]> = {},
+) => {
+  return useQuery({
+    queryKey: ["ReportBuilderDatasetFilterOptions", datasetId],
+    queryFn: () =>
+      axiosInstance.post<FilterGroupModel[]>(`/report/filter-options`, {
+        datasetId,
+        appliedFilters,
+      }),
+    enabled: !!datasetId,
+  });
+};
+
+export const useFilteredDataset = ({
+  datasetId,
+  filters,
+  sorting = [],
+  pageSize = 50,
+}: {
+  datasetId: string;
+  filters: Record<string, any[]>;
+  sorting: { column: string; order: "asc" | "desc" }[];
+  pageSize: number;
+}) => {
+  return useInfiniteQuery({
+    initialPageParam: 1,
+    queryKey: ["ReportBuilderFilteredDataset", datasetId, pageSize],
+    queryFn: ({ pageParam }) =>
+      axiosInstance.post<RBFilteredDatasetResponse>(
+        `/report/filter-dataset`,
+        {
+          filters,
+          datasetId,
+          sorting,
+        },
+        { params: { page: pageParam, pageSize } },
+      ),
+    getNextPageParam: (lastPage, allPages) => {
+      const loadedDataCount = allPages.reduce(
+        (acc, page) => acc + page?.data?.result?.length,
+        0,
+      );
+      if (loadedDataCount < lastPage?.data?.count) {
+        return allPages.length + 1; // next page number
+      } else {
+        return undefined; // no more pages
+      }
+    },
+    getPreviousPageParam: (_firstPage, allPages) => {
+      if (allPages.length > 1) {
+        return allPages.length - 1; // previous page number
+      } else {
+        return undefined; // no previous page
+      }
+    },
+    enabled: !!datasetId,
+  });
+};
+
 export const useGFDataset = (datasetId: string, pageSize = 50) => {
   return useInfiniteQuery({
     initialPageParam: 1,
@@ -517,6 +580,48 @@ export const useGFDatasetPage = (
     queryFn: () =>
       axiosInstance.get<RBDatasetResponse>(
         `/report-builder/gf-dataset/${datasetId}`,
+        {
+          params: {
+            page,
+            pageSize,
+          },
+        },
+      ),
+    enabled: !!datasetId,
+    placeholderData: (previousData) => previousData,
+  });
+};
+
+export const useFilteredDatasetPage = ({
+  datasetId,
+  filters,
+  pageSize = 50,
+  page,
+  sorting = [],
+}: {
+  datasetId: string;
+  filters: Record<string, any[]>;
+  sorting: { column: string; order: "asc" | "desc" }[];
+  pageSize: number;
+  page: number;
+}) => {
+  return useQuery({
+    queryKey: [
+      "ReportBuilderGFDatasetPage",
+      datasetId,
+      pageSize,
+      filters,
+      sorting,
+      page,
+    ],
+    queryFn: () =>
+      axiosInstance.post<RBFilteredDatasetResponse>(
+        `/report/filter-dataset`,
+        {
+          filters,
+          datasetId,
+          sorting,
+        },
         {
           params: {
             page,

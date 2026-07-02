@@ -29,8 +29,6 @@ const ColumnSortWrapper = (props: ColumnSortWrapperProps) => {
         },
   });
 
-  console.log(props.type, "isDragging", isDragging);
-
   React.useEffect(() => {
     if (props.setIsDragging) {
       props.setIsDragging(isDragging);

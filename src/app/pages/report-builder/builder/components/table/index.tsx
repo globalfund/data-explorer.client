@@ -1,11 +1,9 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
-import EditableDiv from "app/components/editable-div";
 import { useStoreActions } from "app/state/store/hooks";
-import { useGFDataset } from "app/hooks/queries/report-builder";
+import { useFilteredDataset } from "app/hooks/queries/report-builder";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
 import {
@@ -19,8 +17,8 @@ import {
   tablePaletteOptions,
   TableColumn,
 } from "./options";
+import ColumnHeader from "./column-header";
 
-const headerTooltip = "Click on headers to edit the text.";
 const otherRowLabel = "Other";
 
 const buildOtherRow = (columns: TableColumn[]) => {
@@ -67,20 +65,19 @@ export const ReportBuilderPageTable: React.FC<{
   const columns = normalizeTableColumns(selectedItem?.data?.columns);
   const scrollContainerRef = React.useRef<HTMLDivElement | null>(null);
   const loadMoreRef = React.useRef<HTMLDivElement | null>(null);
-  const datasetQuery = useGFDataset(
-    selectedItem?.data?.dataset || "",
+  const datasetQuery = useFilteredDataset({
+    datasetId: selectedItem?.data?.dataset || "",
+    filters: selectedItem?.data?.filters || {},
+    sorting: selectedItem?.data?.sorting || [],
     pageSize,
-  );
+  });
   const datasetRows = React.useMemo(
     () =>
-      datasetQuery.data?.pages.flatMap(
-        (page) => page.data?.data?.result?.data ?? [],
-      ) ?? [],
+      datasetQuery.data?.pages.flatMap((page) => page.data?.result ?? []) ?? [],
     [datasetQuery.data],
   );
   const totalRowCount =
-    datasetQuery.data?.pages[0]?.data?.data?.result?.count ??
-    datasetRows.length;
+    datasetQuery.data?.pages[0]?.data?.count ?? datasetRows.length;
 
   useClickOutsideEditor({
     editorId: "table-render",
@@ -156,27 +153,6 @@ export const ReportBuilderPageTable: React.FC<{
 
   const visibleRows = React.useMemo(() => {
     const rows = [...datasetRows];
-    if (tableOptions.sortBy) {
-      rows.sort((a, b) => {
-        const column = columns.find((item) => item.id === tableOptions.sortBy);
-        if (!column) return 0;
-        const aValue = getRowValue(a, column);
-        const bValue = getRowValue(b, column);
-        const aNumber = Number(aValue);
-        const bNumber = Number(bValue);
-        const bothNumbers =
-          Number.isFinite(aNumber) && Number.isFinite(bNumber);
-        const result = bothNumbers
-          ? aNumber - bNumber
-          : formatTableCellValue(aValue).localeCompare(
-              formatTableCellValue(bValue),
-              undefined,
-              { numeric: true, sensitivity: "base" },
-            );
-
-        return tableOptions.sortDirection === "descending" ? -result : result;
-      });
-    }
 
     if (!tableOptions.limitToTop) return rows;
 
@@ -193,8 +169,6 @@ export const ReportBuilderPageTable: React.FC<{
     datasetRows,
     tableOptions.groupRemainderAsOther,
     tableOptions.limitToTop,
-    tableOptions.sortBy,
-    tableOptions.sortDirection,
     tableRowLimit,
     totalRowCount,
   ]);
@@ -221,14 +195,16 @@ export const ReportBuilderPageTable: React.FC<{
     height: cellSizing.height,
     fontSize: "14px",
     lineHeight: "normal",
-    border: bodyCellBorder,
+    borderBottom: bodyCellBorder,
+    borderRight: bodyCellBorder,
     overflow: "hidden",
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
   };
   const tableHeaderCellSx = {
     ...tableCellSx,
-    border: headerCellBorder,
+    borderBottom: headerCellBorder,
+    borderRight: headerCellBorder,
   };
   const rowHeight = Number.parseInt(cellSizing.height, 10) || 31;
   const viewportBodyRowCount = tableOptions.limitToTop
@@ -307,8 +283,6 @@ export const ReportBuilderPageTable: React.FC<{
               width: "100%",
               maxHeight: `${tableViewportHeight}px`,
               overflow: "auto",
-              scrollbarWidth: "thin",
-              scrollbarColor: "#000 #D9D9D9",
               "&::-webkit-scrollbar": {
                 width: "4px",
                 height: "4px",
@@ -326,8 +300,30 @@ export const ReportBuilderPageTable: React.FC<{
               sx={{
                 width: "100%",
                 minWidth: `${minTableWidth}px`,
-                borderCollapse: "collapse",
+                borderCollapse: "separate",
+                borderSpacing: 0,
                 tableLayout: "fixed",
+                "tbody td:first-of-type": {
+                  borderLeft: bodyCellBorder,
+                },
+
+                // sticky top-left corner cell
+                "thead th:first-of-type": {
+                  borderLeft: headerCellBorder,
+                },
+
+                // top border of the table
+                "thead tr:first-of-type th": {
+                  borderTop: headerCellBorder,
+                },
+
+                // left border of the table
+                "tr > th:first-of-type": {
+                  borderLeft: headerCellBorder,
+                },
+                "tr > td:first-of-type": {
+                  borderLeft: bodyCellBorder,
+                },
               }}
             >
               <Box component="thead">
@@ -352,58 +348,17 @@ export const ReportBuilderPageTable: React.FC<{
                     </Box>
                   ) : null}
                   {columns.map((column, index) => (
-                    <Box
+                    <ColumnHeader
                       key={`${column.id}-${index}`}
-                      component="th"
-                      sx={{
-                        ...tableHeaderCellSx,
-                        top: 0,
-                        zIndex: 2,
-                        position: "sticky",
-                        color: palette.headerText,
-                        fontWeight: 700,
-                        textAlign: "left",
-                        bgcolor: palette.headerBg,
-                        ...(!tableOptions.showRowNumbers && index === 0
-                          ? { borderTopLeftRadius: "4px" }
-                          : {}),
-                        ...(index === columns.length - 1
-                          ? { borderTopRightRadius: "4px" }
-                          : {}),
-                      }}
-                    >
-                      <Tooltip title={headerTooltip} arrow>
-                        <Box
-                          sx={{
-                            minWidth: 0,
-                            ".MuiBox-root > div": {
-                              width: "100%",
-                            },
-                          }}
-                        >
-                          <EditableDiv
-                            disabled={viewMode}
-                            title={column.name}
-                            onTitleChange={(nextName) =>
-                              handleColumnNameChange(column, index, nextName)
-                            }
-                            sx={{
-                              width: "100%",
-                              p: 0,
-                              color: "inherit",
-                              display: "block",
-                              minWidth: 0,
-                              fontSize: "14px",
-                              fontWeight: 700,
-                              overflow: "hidden",
-                              whiteSpace: "nowrap",
-                              textOverflow: "ellipsis",
-                              backgroundColor: "transparent",
-                            }}
-                          />
-                        </Box>
-                      </Tooltip>
-                    </Box>
+                      column={column}
+                      index={index}
+                      columns={columns}
+                      palette={palette}
+                      tableOptions={tableOptions}
+                      viewMode={!!viewMode}
+                      handleColumnNameChange={handleColumnNameChange}
+                      sx={tableHeaderCellSx}
+                    />
                   ))}
                 </Box>
               </Box>

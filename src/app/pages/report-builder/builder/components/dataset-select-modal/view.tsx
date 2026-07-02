@@ -25,21 +25,22 @@ import ColumnSortWrapper from "./sort-wrapper";
 import DropArea from "./drop-area";
 import { DragDropProvider } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers";
-import uniq from "lodash/uniq";
+import { uniqBy } from "lodash";
 
 interface DataViewProps {
   selectedDataset: string;
-  initialSelectedColumns?: string[];
   rowsPerPage: DatasetRowsPerPage;
   onRowsPerPageChange: (rowsPerPage: DatasetRowsPerPage) => void;
   onBack: () => void;
   onCancel: () => void;
-  onPreviewTable: (columns: DatasetColumn[]) => void;
+  onPreviewTable: () => void;
   sampledDataset?: RBSampledDatasetResponse["data"]["result"];
   sampledDatasetLoading?: boolean;
+  setPreviewColumns?: React.Dispatch<React.SetStateAction<DatasetColumn[]>>;
+  previewColumns?: DatasetColumn[];
 }
 
-const getFieldIcon = (type: DataType) => {
+export const getFieldIcon = (type: DataType) => {
   if (type === "number") return DatasetFieldNumberIcon;
   if (type === "date" || type === "date-time") return DatasetFieldDateIcon;
   return DatasetFieldTextIcon;
@@ -64,7 +65,6 @@ const fieldChipSx = {
 
 const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
   selectedDataset,
-  initialSelectedColumns = [],
   rowsPerPage,
   onRowsPerPageChange,
   onBack,
@@ -72,10 +72,12 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
   onPreviewTable,
   sampledDataset,
   sampledDatasetLoading,
+  setPreviewColumns,
+  previewColumns,
 }) => {
-  const [selectedColumnNames, setSelectedColumnNames] = React.useState<
-    string[]
-  >([]);
+  const [selectedColumns, setSelectedColumns] = React.useState<DatasetColumn[]>(
+    [],
+  );
 
   const selectedDatasetItem = datasetItems.find(
     (dataset) => dataset.id === selectedDataset,
@@ -87,34 +89,19 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
   const isDraggingColumn = isDraggingColumn1 || isDraggingColumn2;
 
   React.useEffect(() => {
-    setSelectedColumnNames(initialSelectedColumns);
-  }, [initialSelectedColumns, selectedDataset]);
+    setSelectedColumns(previewColumns ?? []);
+  }, [previewColumns, selectedDataset]);
 
   const columns = React.useMemo<DatasetColumn[]>(() => {
     const dataTypes = sampledDataset?.dataTypes ?? {};
     return (
       sampledDataset?.stats?.map((stat) => ({
         name: stat.name,
+        id: stat.name,
         type: getColumnType(dataTypes[stat.name]),
       })) ?? []
     );
   }, [sampledDataset?.dataTypes, sampledDataset?.stats]);
-
-  const columnsByName = React.useMemo(() => {
-    return new Map(columns.map((column) => [column.name, column]));
-  }, [columns]);
-
-  const selectedColumns = React.useMemo(
-    () =>
-      selectedColumnNames.map(
-        (name) =>
-          columnsByName.get(name) ?? {
-            name,
-            type: "string" as DataType,
-          },
-      ),
-    [columnsByName, selectedColumnNames],
-  );
 
   const previewRows = React.useMemo(
     () => (sampledDataset?.sample ?? []).slice(0, 5),
@@ -131,32 +118,32 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
         cellCount,
       )} cells) have been successfully parsed, now you can choose table columns!`;
 
-  const handleRemoveColumn = (columnName: string) => {
-    setSelectedColumnNames((current) =>
-      current.filter((name) => name !== columnName),
+  const handleRemoveColumn = (columnId: string) => {
+    setSelectedColumns((current) =>
+      current.filter((column) => column.id !== columnId),
     );
   };
 
   const handlePreviewTable = () => {
     if (!selectedColumns.length) return;
-    onPreviewTable(selectedColumns);
+    setPreviewColumns?.(selectedColumns);
+    onPreviewTable();
   };
 
   return (
     <DragDropProvider
       onDragOver={(event) => {
-        setSelectedColumnNames((current) => {
+        setSelectedColumns((current) => {
           const newOrder = move(
             {
-              SELECT_AREA: columns
-                .filter((column) => !current.includes(column.name))
-                .map((c) => c.name),
+              SELECT_AREA: columns.filter(
+                (column) => !current.map((c) => c.id).includes(column.id),
+              ),
               DROP_AREA: current,
             },
             event,
           ).DROP_AREA;
-          console.log("newOrder", newOrder);
-          return uniq(newOrder);
+          return uniqBy(newOrder, "id");
         });
       }}
     >
@@ -218,13 +205,15 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                 </Typography>
               ) : columns.length ? (
                 columns.map((column, index) => {
-                  const selected = selectedColumnNames.includes(column.name);
+                  const selected = selectedColumns
+                    .map((c) => c.id)
+                    .includes(column.id);
                   const FieldIcon = getFieldIcon(column.type);
                   return (
                     <ColumnSortWrapper
-                      id={column.name}
+                      id={column.id}
                       index={index}
-                      key={column.name}
+                      key={column.id}
                       disabled={selected}
                       type="AVAILABLE_COLUMN"
                       sx={{
@@ -242,7 +231,7 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                         lineHeight="normal"
                         color="inherit"
                       >
-                        {column.name}
+                        {column.id}
                       </Typography>
                     </ColumnSortWrapper>
                   );
@@ -290,11 +279,11 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                       {selectedColumns.map((column, index) => {
                         const FieldIcon = getFieldIcon(column.type);
                         return (
-                          <React.Fragment key={column.name}>
+                          <React.Fragment key={column.id}>
                             <ColumnSortWrapper
                               index={index}
-                              id={column.name}
-                              key={column.name}
+                              id={column.id}
+                              key={column.id}
                               type="SELECTED_COLUMN"
                               sx={{
                                 gap: "6px",
@@ -323,13 +312,13 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                                 lineHeight="normal"
                                 color="inherit"
                               >
-                                {column.name}
+                                {column.id}
                               </Typography>
                               <Box
                                 component="button"
                                 type="button"
-                                aria-label={`Remove ${column.name}`}
-                                onClick={() => handleRemoveColumn(column.name)}
+                                aria-label={`Remove ${column.id}`}
+                                onClick={() => handleRemoveColumn(column.id)}
                                 sx={{
                                   p: 0,
                                   m: 0,
@@ -456,11 +445,11 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                       <Box component="tr">
                         {selectedColumns.map((column) => (
                           <Box
-                            key={column.name}
+                            key={column.id}
                             component="th"
                             sx={{ width: "220px" }}
                           >
-                            {column.name}
+                            {column.id}
                           </Box>
                         ))}
                       </Box>
@@ -473,10 +462,10 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                         >
                           {selectedColumns.map((column) => (
                             <Box
-                              key={`${rowIndex.toString()}-${column.name}`}
+                              key={`${rowIndex.toString()}-${column.id}`}
                               component="td"
                             >
-                              {formatCellValue(row?.[column.name])}
+                              {formatCellValue(row?.[column.id])}
                             </Box>
                           ))}
                         </Box>
