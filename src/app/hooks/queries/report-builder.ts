@@ -599,6 +599,7 @@ export const useGFSampleDataset = (datasetId: string) => {
         },
       ),
     enabled: !!datasetId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 };
 
