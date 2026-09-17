@@ -13,7 +13,8 @@ export type InfoPanelType =
   | "expenditures"
   | "budgets"
   | "pledges_contributions"
-  | "financials";
+  | "financials"
+  | "opex";
 
 export interface ChartBlockButtonToolbarProps {
   hashId: string;
@@ -46,6 +47,9 @@ export const NOTES_PLEDGES_CONTRIBUTIONS =
 
 export const NOTES_FINANCIALS =
   "The geographical designations employed by the Global Fund do not represent or imply any opinion or judgment on the legal status of any country, territory, city or area on its governmental or state authorities, or on the delimitation of its frontiers or boundaries.<br/><br/>Financial amounts in currencies other than USD from 2014 onward were converted to USD using fixed Replenishment exchange rate, also referred to as the Reference Rate. Financial amounts before 2014 were converted using spot exchange rates.<br /><br />The RSSH category correspond to financial amounts for stand-alone RSSH grants and is not reflective of the full RSSH investment.";
+
+export const NOTES_OPEX =
+  "Operating expenses (OPEX) include all costs associated with the day-to-day functioning of the organization, excluding capital expenditures. This encompasses personnel costs, administrative expenses, and other recurring operational costs.<br /><br />The RSSH category correspond to financial amounts for stand-alone RSSH grants and is not reflective of the full RSSH investment.";
 
 export const DownloadPanel: React.FC<ChartBlockButtonToolbarProps> = (
   props: ChartBlockButtonToolbarProps,
@@ -185,6 +189,8 @@ export const InfoPanel: React.FC<InfoPanelProps> = (props: InfoPanelProps) => {
         return [NOTES_GLOBAL, NOTES_PLEDGES_CONTRIBUTIONS].join("<br/><br/>");
       case "financials":
         return [NOTES_GLOBAL, NOTES_EXPENDITURES].join("<br/><br/>");
+      case "opex":
+        return [NOTES_GLOBAL, NOTES_OPEX].join("<br/><br/>");
       default:
         return NOTES_GLOBAL;
     }

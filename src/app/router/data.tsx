@@ -19,6 +19,7 @@ import { GlossaryPage } from "app/pages/glossary";
 import { ChangelogPage } from "app/pages/changelog";
 import Button from "@mui/material/Button";
 import { NotFoundPage } from "app/pages/not-found";
+import { OpexPage } from "app/pages/datasets/opex";
 
 const DetailPageRedirect: React.FC<{
   type: "location" | "partner" | "grant";
@@ -88,6 +89,7 @@ const COMPONENT_MAP: Record<string, React.ComponentType> = {
   AnnualResultsPage,
   GlossaryPage,
   ChangelogPage,
+  OpexPage,
   Debug,
 };
 

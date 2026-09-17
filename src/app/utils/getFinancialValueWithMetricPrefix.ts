@@ -3,19 +3,19 @@ import get from "lodash/get";
 const ranges = [
   {
     divider: 1e9,
-    suffix: "Bn",
+    suffix: "B",
     abbr_en: " bln",
     full: "Billion",
   },
   {
     divider: 1e6,
-    suffix: "MM",
+    suffix: "M",
     abbr_en: " mln",
     full: "Million",
   },
   {
     divider: 1e3,
-    suffix: "k",
+    suffix: "K",
     abbr_en: " K",
     full: "thousand",
   },
@@ -58,24 +58,28 @@ export function getRange(
       index: 0,
       abbr: get(ranges[0], `abbr_${lang}`, ranges[0].abbr_en),
       full: get(ranges[0], `full_${lang}`, ranges[0].full),
+      suffix: get(ranges[0], `suffix`, ranges[0].suffix),
     };
   if (rangesCount[1] > rangesCount[2])
     return {
       index: 1,
       abbr: get(ranges[1], `abbr_${lang}`, ranges[1].abbr_en),
       full: get(ranges[1], `full_${lang}`, ranges[1].full),
+      suffix: get(ranges[1], `suffix`, ranges[1].suffix),
     };
   if (rangesCount[2] > 0) {
     return {
       index: 2,
       abbr: get(ranges[2], `abbr_${lang}`, ranges[2].abbr_en),
       full: get(ranges[2], `full_${lang}`, ranges[2].full),
+      suffix: get(ranges[2], `suffix`, ranges[2].suffix),
     };
   }
   return {
     index: 3,
     abbr: get(ranges[3], `abbr_${lang}`, ranges[3].abbr_en),
     full: get(ranges[3], `full_${lang}`, ranges[3].full),
+    suffix: get(ranges[3], `suffix`, ranges[3].suffix),
   };
 }
 

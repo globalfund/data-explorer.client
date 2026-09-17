@@ -1,4 +1,5 @@
 import React from "react";
+import get from "lodash/get";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import { appColors } from "app/theme";
@@ -33,7 +34,9 @@ export const FilterPanel: React.FC<FilterPanelProps> = (
     setCollapseAll(!collapseAll);
   };
   const [shownOptions, setShownOptions] = React.useState<FilterModel[]>([]);
-  const [tabValue, setTabValue] = React.useState(props.filterGroups[0].id);
+  const [tabValue, setTabValue] = React.useState(
+    get(props.filterGroups, "[0].id", ""),
+  );
 
   const appliedFiltersContent = React.useMemo(() => {
     if (props.appliedFilters.length === 0) {

@@ -913,6 +913,7 @@ export const appColors = {
       "#D9D9D9",
       "#C3EDFD",
     ],
+    CUMULATIVE_LINE_COLOR: "#013E77",
   },
   RADIAL_CHART: {
     ITEM_COLORS: ["#0A2840", "#013E77", "#00B5AE", "#C3EDFD", "#F3F5F4"],
