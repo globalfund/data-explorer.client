@@ -131,7 +131,7 @@ export const OpexPageBlock1: React.FC = () => {
       0,
     );
     return result;
-  }, [dataStats]);
+  }, [dataStats, startYear, endYear]);
 
   React.useEffect(() => {
     fetchStats({});

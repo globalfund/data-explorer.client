@@ -39,7 +39,7 @@ export const OpexPage = () => {
         </Typography>
       </Box>
     );
-  }, []);
+  }, [endYear]);
 
   return (
     <>

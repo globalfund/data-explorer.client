@@ -37,7 +37,7 @@ export const OpexPageBlock2: React.FC = () => {
     });
     data[0].data = data[0].data.slice(0, xAxisKeys.length - 1);
     return data;
-  }, [dataOperatingCosts]);
+  }, [dataOperatingCosts, endYear]);
 
   const barChartData = React.useMemo(() => {
     const data: number[][] = [];
