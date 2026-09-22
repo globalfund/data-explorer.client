@@ -2,6 +2,7 @@ import React from "react";
 import get from "lodash/get";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import {
@@ -54,7 +55,11 @@ const ItemBox = ({ item }: { item: GridItem }) => (
   </Box>
 );
 
-const ContainerBox = ({ children }: { children: React.ReactNode[] }) => (
+const ContainerBox = ({
+  children,
+}: {
+  children: React.ReactNode | React.ReactNode[];
+}) => (
   <Box
     sx={{
       width: "100%",
@@ -77,10 +82,12 @@ const ContainerBox = ({ children }: { children: React.ReactNode[] }) => (
 
 export const OpexPageBlock1: React.FC = () => {
   const years = useStoreState((state) => state.OpexYears.data);
+  const yearsLoading = useStoreState((state) => state.OpexYears.loading);
   const startYear = get(years, "startYear", 0);
   const endYear = get(years, "endYear", 0);
   const dataStats = useStoreState((state) => state.OpexStats.data);
   const fetchStats = useStoreActions((actions) => actions.OpexStats.fetch);
+  const statsLoading = useStoreState((state) => state.OpexStats.loading);
 
   const items = React.useMemo(() => {
     const result = [...gridItems];
@@ -140,15 +147,27 @@ export const OpexPageBlock1: React.FC = () => {
   return (
     <React.Fragment>
       <ContainerBox>
-        {items.slice(0, 4).map((item) => (
-          <ItemBox key={item.id} item={item} />
-        ))}
+        {yearsLoading || statsLoading ? (
+          <Skeleton variant="rectangular" width="100%" height={100} />
+        ) : (
+          <React.Fragment>
+            {items.slice(0, 4).map((item) => (
+              <ItemBox key={item.id} item={item} />
+            ))}
+          </React.Fragment>
+        )}
       </ContainerBox>
       <Divider sx={{ margin: "24px 0" }} />
       <ContainerBox>
-        {items.slice(4).map((item) => (
-          <ItemBox key={item.id} item={item} />
-        ))}
+        {yearsLoading || statsLoading ? (
+          <Skeleton variant="rectangular" width="100%" height={100} />
+        ) : (
+          <React.Fragment>
+            {items.slice(4).map((item) => (
+              <ItemBox key={item.id} item={item} />
+            ))}
+          </React.Fragment>
+        )}
       </ContainerBox>
     </React.Fragment>
   );

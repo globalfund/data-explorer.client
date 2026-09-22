@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import { useTitle } from "react-use";
 import Divider from "@mui/material/Divider";
 import { Helmet } from "react-helmet-async";
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import { useCMSData } from "app/hooks/useCMSData";
 import { useStoreState } from "app/state/store/hooks";
@@ -23,6 +24,7 @@ export const OpexPage = () => {
   const cmsData = useCMSData({ returnData: true });
 
   const years = useStoreState((state) => state.OpexYears.data);
+  const yearsLoading = useStoreState((state) => state.OpexYears.loading);
   const startYear = get(years, "startYear", 0);
   const endYear = get(years, "endYear", 0);
 
@@ -32,14 +34,23 @@ export const OpexPage = () => {
 
   const toolbarRightContent = React.useMemo(() => {
     return (
-      <Box display="flex" alignItems="center">
-        <Typography fontSize="14px">
-          {endYear} actuals to <b>30 June {endYear}</b> · forecast thereafter ·
-          updated <b>1 July {endYear}</b>
-        </Typography>
+      <Box
+        width="100%"
+        display="flex"
+        alignItems="center"
+        justifyContent="flex-end"
+      >
+        {yearsLoading ? (
+          <Skeleton variant="rectangular" width="100%" height={24} />
+        ) : (
+          <Typography fontSize="14px">
+            {endYear} actuals to <b>30 June {endYear}</b> · forecast thereafter
+            · updated <b>1 July {endYear}</b>
+          </Typography>
+        )}
       </Box>
     );
-  }, [endYear]);
+  }, [endYear, yearsLoading]);
 
   return (
     <>
