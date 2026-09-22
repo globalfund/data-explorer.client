@@ -13,7 +13,6 @@ import { Results } from "app/pages/location/views/results";
 import CircularProgress from "@mui/material/CircularProgress";
 import { DetailPageTabs } from "app/components/detail-page-tabs";
 import { LocationOverview } from "app/pages/location/views/overview";
-import { RESULT_YEARS } from "app/pages/location/views/results/data";
 import { getLocationTabs } from "app/components/detail-page-tabs/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { AccessToFunding } from "app/pages/location/views/access-to-funding";

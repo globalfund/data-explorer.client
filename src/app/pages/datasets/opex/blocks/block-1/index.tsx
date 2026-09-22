@@ -141,13 +141,13 @@ export const OpexPageBlock1: React.FC = () => {
     <React.Fragment>
       <ContainerBox>
         {items.slice(0, 4).map((item) => (
-          <ItemBox key={item.subtitle} item={item} />
+          <ItemBox key={item.id} item={item} />
         ))}
       </ContainerBox>
       <Divider sx={{ margin: "24px 0" }} />
       <ContainerBox>
         {items.slice(4).map((item) => (
-          <ItemBox key={item.subtitle} item={item} />
+          <ItemBox key={item.id} item={item} />
         ))}
       </ContainerBox>
     </React.Fragment>

@@ -66,7 +66,7 @@ export const OpexPageBlock8: React.FC = () => {
         },
       })),
     ];
-  }, [selectedView]);
+  }, [selectedView, years]);
 
   const exportData = React.useMemo(() => {
     const data: (number | string)[][] = [];
