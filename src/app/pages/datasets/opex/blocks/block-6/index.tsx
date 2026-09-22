@@ -3,38 +3,81 @@ import get from "lodash/get";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { xAxisKeys } from "app/pages/datasets/opex/charts/line/data";
+import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { OpexPageChartBlock } from "app/pages/datasets/opex/blocks/common";
 import { SmallLineChart } from "app/pages/datasets/opex/charts/small-line";
 import {
   VIEWS,
   simpleFormatter,
-  keyCostsOverTimeData,
 } from "app/pages/datasets/opex/blocks/block-6/data";
 
 export const OpexPageBlock6: React.FC = () => {
   const [selectedView, setSelectedView] = React.useState(VIEWS[0]);
 
+  const dataKeyCosts = useStoreState((state) => state.OpexKeyCosts.data);
+  const fetchKeyCosts = useStoreActions(
+    (actions) => actions.OpexKeyCosts.fetch,
+  );
+  const loadingKeyCosts = useStoreState((state) => state.OpexKeyCosts.loading);
+
+  const items = get(dataKeyCosts, "items", []) as {
+    name: string;
+    values: number[];
+    endYearBudget: number;
+    growthPercentage: number;
+    endYearBudgetPercentage: number;
+    actualPercentageValues: number[];
+    startYearBudgetPercentage: number;
+  }[];
+  const xAxisKeys = get(dataKeyCosts, "years", []);
+
+  const exportData = React.useMemo(() => {
+    const data: (number | string)[][] = [];
+    items.forEach((item) => {
+      xAxisKeys.forEach((year, yearIndex) => {
+        data.push([
+          item.name,
+          year,
+          selectedView === VIEWS[0]
+            ? item.values[yearIndex]
+            : item.actualPercentageValues[yearIndex],
+        ]);
+      });
+    });
+    return {
+      data,
+      headers: [
+        "Category",
+        "Year",
+        selectedView === VIEWS[0] ? "Value" : "Share (%)",
+      ],
+    };
+  }, [items, selectedView]);
+
+  React.useEffect(() => {
+    fetchKeyCosts({});
+  }, []);
+
   return (
     <OpexPageChartBlock
-      data={null}
       views={VIEWS}
       empty={false}
-      loading={false}
+      data={exportData}
+      loading={loadingKeyCosts}
       infoType="opex"
       id="key-costs"
-      title="Key costs over time, 2017-2026"
+      title={`Key costs over time, ${get(xAxisKeys, "[0]", "")}-${get(xAxisKeys, `[${xAxisKeys.length - 1}]`, "")}`}
       viewSelected={selectedView}
       subtitle=""
       exportName="key-costs"
       onViewChange={setSelectedView}
-      text="Sparkline shows the path 2017-2026; 2026 is budget. Figure shown is the 2026 budget."
+      text={`Sparkline shows the path ${get(xAxisKeys, "[0]", "")} → ${get(xAxisKeys, `[${xAxisKeys.length - 1}]`, "")}; ${get(xAxisKeys, `[${xAxisKeys.length - 1}]`, "")} is budget. Figure shown is the  ${get(xAxisKeys, `[${xAxisKeys.length - 1}]`, "")} budget.`}
     >
       <Grid
         container
         sx={{ borderTop: 1, borderLeft: 1, borderColor: "divider" }}
       >
-        {keyCostsOverTimeData.map((item) => (
+        {items.map((item) => (
           <Grid
             item
             key={item.name}

@@ -16,6 +16,7 @@ export interface LineChartProps {
   height?: string;
   xAxisKeys: string[];
   showLegend?: boolean;
+  boundaryGap?: boolean;
   yAxisValues?: number[];
   data: LineChartDataItem[];
   cumulativeLineValue?: number;

@@ -146,6 +146,17 @@ import { formattedCollections } from "app/state/api/action-reducers/cms/formatte
 import componentHeader from "app/state/api/action-reducers/cms/componentsHeader";
 import componentFooter from "app/state/api/action-reducers/cms/componentsFooter";
 import { AnnualResultsGroupedByComponent } from "app/state/api/action-reducers/annual-results/grouped-by-component";
+import {
+  OpexCostComposition,
+  OpexEfficiency,
+  OpexIndexedTrends,
+  OpexKeyCosts,
+  OpexOperatingCosts,
+  OpexStats,
+  OpexTable,
+  OpexYears,
+  OpexYearStats,
+} from "../api/action-reducers/opex";
 
 const storeContent: StoreModel = {
   // homepage
@@ -217,6 +228,16 @@ const storeContent: StoreModel = {
   AnnualResultsTable: persist(AnnualResultsTable),
   AnnualResultsGroupedByComponent: persist(AnnualResultsGroupedByComponent),
   AnnualResultsDocumentsTable: persist(ResultsDocuments),
+  // opex
+  OpexYears: persist(OpexYears),
+  OpexStats: persist(OpexStats),
+  OpexOperatingCosts: persist(OpexOperatingCosts),
+  OpexEfficiency: persist(OpexEfficiency),
+  OpexYearStats: persist(OpexYearStats),
+  OpexCostComposition: persist(OpexCostComposition),
+  OpexKeyCosts: persist(OpexKeyCosts),
+  OpexIndexedTrends: persist(OpexIndexedTrends),
+  OpexTable: persist(OpexTable),
   // grants
   GrantList: persist(GrantList),
   // location

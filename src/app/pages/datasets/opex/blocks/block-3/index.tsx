@@ -1,46 +1,146 @@
 import React from "react";
+import get from "lodash/get";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import { LineChart } from "app/pages/datasets/opex/charts";
+import { useStoreState, useStoreActions } from "app/state/store/hooks";
 import { OpexPageChartBlock } from "app/pages/datasets/opex/blocks/common";
 import {
   VIEWS,
+  calculateYAxisTicks,
   simpleFormatter,
 } from "app/pages/datasets/opex/blocks/block-3/data";
 
-export const OpexPageBlock3 = () => {
+export const OpexPageBlock3: React.FC = () => {
   const [selectedView, setSelectedView] = React.useState(VIEWS[0]);
 
-  const efficiencyValue = 6.7;
-  const opexValue = 2850000000;
-  const pledgeValue = 4260000000;
-  const remainingValue = 100 - efficiencyValue;
-  const cumulativeValue = 6.7;
-  const lineChartData = [{ name: "OPEX efficiency", data: [6.9, 6.6, 6.5] }];
-  const xAxisKeys = ["GC5 · 2017-19", "GC6 · 2020-22", "GC7 · 2023-25"];
-  const yAxisValues = [6.0, 6.5, 7.0];
-  const xAxisSubLabels = [
-    "of $12.9B pledged",
-    "of $14.02B pledged",
-    "of $15.7B pledged",
-  ];
-  const rateImprovement = 0.4;
+  const dataEfficiency = useStoreState((state) => state.OpexEfficiency.data);
+  const fetchEfficiency = useStoreActions(
+    (actions) => actions.OpexEfficiency.fetch,
+  );
+  const loadingEfficiency = useStoreState(
+    (state) => state.OpexEfficiency.loading,
+  );
+
+  const items = get(dataEfficiency, "items", []) as {
+    name: string;
+    actual: number;
+    pledge: number;
+    gcNumber: string;
+    efficiency: number;
+    disbursement: number;
+  }[];
+
+  let efficiencyValue: number = get(dataEfficiency, "cumulativeEfficiency", 0);
+  const opexValue = get(dataEfficiency, "cumulativeActual", 0);
+  const pledgeOrDisbursementValue = get(
+    dataEfficiency,
+    `cumulative${selectedView === VIEWS[0] ? "Pledge" : "Disbursement"}`,
+    0,
+  );
+  const remainingValue = (100 - efficiencyValue).toFixed(2);
+  efficiencyValue = parseFloat(efficiencyValue.toFixed(2));
+
+  const lineChartData = React.useMemo(() => {
+    return [
+      {
+        name: "OPEX efficiency",
+        data: items.map((item) => parseFloat(item.efficiency.toFixed(2))),
+      },
+    ];
+  }, [items]);
+
+  const xAxisKeys = React.useMemo(() => {
+    return items.map((item) => item.name);
+  }, [items]);
+
+  const xAxisSubLabels = React.useMemo(() => {
+    if (selectedView === VIEWS[0]) {
+      return items.map((item) => `of ${simpleFormatter(item.pledge)} pledged`);
+    }
+    return [];
+  }, [items, selectedView]);
+
+  const rateImprovement = React.useMemo(() => {
+    return items.length > 1
+      ? items[items.length - 1].efficiency - items[0].efficiency
+      : 0;
+  }, [items, selectedView]);
+
+  const yAxisValues = React.useMemo(() => {
+    return calculateYAxisTicks(lineChartData[0].data);
+  }, [lineChartData]);
+
+  const datasetText = React.useMemo(() => {
+    if (selectedView === VIEWS[0] && items.length > 0) {
+      return `Operating costs as a share of funds pledged at replenishment, by cycle. Every $1 pledged for GC${get(items[items.length - 1], "gcNumber")} carried ${items[items.length - 1].efficiency.toFixed(2)}¢ of Secretariat operating cost, ${rateImprovement > 0 ? "up" : "down"} from ${items[0].efficiency.toFixed(2)}¢ in GC${get(items[0], "gcNumber")}. Pledges is money raised.`;
+    } else if (selectedView === VIEWS[1] && items.length > 0) {
+      return `Operating costs as a share of funds disbursed at replenishment, by cycle. Every $1 disbursed for ${items[items.length - 1].name} carried ${items[items.length - 1].efficiency.toFixed(2)}¢ of Secretariat operating cost, ${rateImprovement > 0 ? "up" : "down"} from ${items[0].efficiency.toFixed(2)}¢ in ${items[0].name}. Disbursement is money moved to grants.`;
+    }
+    return "";
+  }, [selectedView, items, rateImprovement]);
+
+  const cumulativeText = React.useMemo(() => {
+    if (selectedView === VIEWS[0] && items.length > 0) {
+      return `Cumulative across ${items[0].name.split("-")[0]}-${items[items.length - 1].name.split("-")[1]}`;
+    } else if (selectedView === VIEWS[1] && items.length > 0) {
+      return `Cumulative across ${items[0].name}-${items[items.length - 1].name}`;
+    }
+    return "";
+  }, [items, selectedView]);
+
+  const rateImprovementText = React.useMemo(() => {
+    if (items.length > 1) {
+      return `Rate ${rateImprovement < 0 ? "improved" : "declined"} ${Math.abs(rateImprovement).toFixed(2)}¢ from ${items[0].name} to ${items[items.length - 1].name}. Cumulative ${efficiencyValue}¢ is ${selectedView === VIEWS[0] ? "pledge" : "disbursement"}-weighted (total opex ÷ total ${selectedView === VIEWS[0] ? "pledged" : "disbursed"}), not an average of cycle rates.`;
+    }
+    return "";
+  }, [rateImprovement, items, efficiencyValue, selectedView]);
+
+  const exportData = React.useMemo(() => {
+    if (selectedView === VIEWS[0]) {
+      return {
+        data: items.map((item) => [
+          item.gcNumber,
+          item.name,
+          item.efficiency,
+          item.pledge,
+        ]),
+        headers: ["GC Number", "Period", "Efficiency", "Pledge"],
+      };
+    }
+    return {
+      data: items.map((item) => [
+        item.name,
+        item.efficiency,
+        item.disbursement,
+      ]),
+      headers: ["Year", "Efficiency", "Disbursement"],
+    };
+  }, [items, selectedView]);
+
+  React.useEffect(() => {
+    fetchEfficiency({
+      routeParams: {
+        type: selectedView === VIEWS[0] ? "pledge" : "disbursement",
+      },
+    });
+  }, [selectedView]);
 
   return (
     <OpexPageChartBlock
-      data={null}
+      data={exportData}
       views={VIEWS}
       empty={false}
-      loading={false}
+      loading={loadingEfficiency}
       infoType="opex"
       id="opex-efficiency"
       title="OPEX efficiency"
       viewSelected={selectedView}
       subtitle=""
-      exportName="operating-costs"
+      exportName="opex-efficiency"
       onViewChange={setSelectedView}
-      text="Operating costs as a share of funds pledged at replenishment, by cycle. Every $1 pledged for GC7 carried 6.5¢ of Secretariat operating cost, down from 6.9¢ in GC5. Disbursement is money moved to grants; pledges is money raised."
+      text={datasetText}
     >
       <Box marginBottom="40px">
         <Box>
@@ -61,8 +161,9 @@ export const OpexPageBlock3 = () => {
                 of every $1 pledged went to operating costs
               </Typography>
               <Typography fontSize="16px" color="#5B6470">
-                Cumulative across GC5-7, 2017-25 · ${simpleFormatter(opexValue)}{" "}
-                opex ÷ ${simpleFormatter(pledgeValue)}B pledged
+                {cumulativeText} · {simpleFormatter(opexValue)} opex ÷{" "}
+                {simpleFormatter(pledgeOrDisbursementValue)}{" "}
+                {selectedView === VIEWS[0] ? "pledged" : "disbursed"}
               </Typography>
             </Box>
           </Box>
@@ -135,20 +236,20 @@ export const OpexPageBlock3 = () => {
           OPEX cents per $1 pledged, by grant cycle
         </Typography>
         <Typography fontSize="16px" color="#373D43">
-          Scale zoomed to 6-7¢
+          Scale zoomed to {yAxisValues[0]}-{yAxisValues[yAxisValues.length - 1]}
+          ¢
         </Typography>
         <LineChart
+          boundaryGap
           height="280px"
           data={lineChartData}
           xAxisKeys={xAxisKeys}
           yAxisValues={yAxisValues}
           xAxisSubLabels={xAxisSubLabels}
-          cumulativeLineValue={cumulativeValue}
+          cumulativeLineValue={efficiencyValue}
         />
         <Typography fontSize="14px" color="#373D43" marginTop="18px">
-          Rate improved {rateImprovement}¢ from GC5 to GC7. Cumulative{" "}
-          {cumulativeValue}¢ is pledge-weighted (total opex ÷ total pledged),
-          not an average of cycle rates.
+          {rateImprovementText}
         </Typography>
       </Box>
     </OpexPageChartBlock>

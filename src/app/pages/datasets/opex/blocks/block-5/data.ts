@@ -80,7 +80,7 @@ export const costCompositionOverTimeCategories = [
   "Workforce",
 ];
 
-export const costCompositionOverTimeMainCategories = [
+export const costCompositionOverTimeMainCategories: string[] = [
   "CCM Funding",
   "LFA Fees",
   "Office Infrastructure",

@@ -29,6 +29,7 @@ export const useInitialLoad = () => {
   const fetchFinancialMetricsCycles = useStoreActions(
     (actions) => actions.FinancialMetricsCycles.fetch,
   );
+  const fetchOpexYears = useStoreActions((actions) => actions.OpexYears.fetch);
   const fetchDonorFilterOptions = useStoreActions(
     (actions) => actions.DonorFilterOptions.fetch,
   );
@@ -61,6 +62,7 @@ export const useInitialLoad = () => {
     fetchFundingRequestsCycles({});
     fetchBudgetsCycles({});
     fetchFinancialMetricsCycles({});
+    fetchOpexYears({});
     fetchDonorFilterOptions({});
     fetchReplenishmentPeriodFilterOptions({});
     fetchLocationFilterOptions({

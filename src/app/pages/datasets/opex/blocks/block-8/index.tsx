@@ -1,18 +1,25 @@
 import React from "react";
+import get from "lodash/get";
+import { TableProps } from "app/components/table/data";
 import { TableContainer } from "app/components/table-container";
 import { ColumnDefinition, CellComponent } from "tabulator-tables";
+import { useStoreState, useStoreActions } from "app/state/store/hooks";
 import { OpexPageChartBlock } from "app/pages/datasets/opex/blocks/common";
 import {
   VIEWS,
-  years,
-  tableData,
   simpleFormatter,
 } from "app/pages/datasets/opex/blocks/block-8/data";
-import get from "lodash/get";
 
 export const OpexPageBlock8: React.FC = () => {
   const [tableSearch, setTableSearch] = React.useState("");
   const [selectedView, setSelectedView] = React.useState(VIEWS[0]);
+
+  const dataTable = useStoreState((state) => state.OpexTable.data);
+  const fetchTable = useStoreActions((actions) => actions.OpexTable.fetch);
+  const loadingTable = useStoreState((state) => state.OpexTable.loading);
+
+  const items = get(dataTable, "data", []) as TableProps["data"];
+  const years = get(dataTable, "years", []);
 
   const onSearchChange = (search: string) => {
     setTableSearch(search);
@@ -20,8 +27,8 @@ export const OpexPageBlock8: React.FC = () => {
   };
 
   const numberOfAllRows = React.useMemo(() => {
-    let count = tableData.length;
-    tableData.forEach((row) => {
+    let count = items.length;
+    items.forEach((row) => {
       if (row._children && Array.isArray(row._children)) {
         count += get(row, "_children.length", 0) as number;
         row._children.forEach((subRow) => {
@@ -32,17 +39,17 @@ export const OpexPageBlock8: React.FC = () => {
       }
     });
     return count;
-  }, [tableData]);
+  }, [items]);
 
   const columns: ColumnDefinition[] = React.useMemo(() => {
     return [
       {
         title: "Line item ($M)",
         field: "name",
-        width: "28%",
+        width: "20%",
         headerSort: false,
       },
-      ...years.map((year) => ({
+      ...years.reverse().map((year) => ({
         title: year,
         field: `${year}.${selectedView.toLowerCase()}`,
         width: "8%",
@@ -61,12 +68,35 @@ export const OpexPageBlock8: React.FC = () => {
     ];
   }, [selectedView]);
 
+  const exportData = React.useMemo(() => {
+    const data: (number | string)[][] = [];
+    items.forEach((item) => {
+      data.push([
+        item.name,
+        ...years.map((year) =>
+          get(item, `[${year}].[${selectedView.toLowerCase()}]`),
+        ),
+      ]);
+    });
+    return {
+      data,
+      headers: [
+        "Line item ($M)",
+        ...years.map((year) => `${year} ${selectedView}`),
+      ],
+    };
+  }, [items, years, selectedView]);
+
+  React.useEffect(() => {
+    fetchTable({});
+  }, []);
+
   return (
     <OpexPageChartBlock
-      data={null}
       views={VIEWS}
       empty={false}
-      loading={false}
+      data={exportData}
+      loading={loadingTable}
       infoType="opex"
       id="cost-breakdown"
       viewSelected={selectedView}
@@ -78,7 +108,7 @@ export const OpexPageBlock8: React.FC = () => {
     >
       <TableContainer
         dataTree
-        data={tableData}
+        data={items}
         columns={columns}
         search={tableSearch}
         dataTreeStartExpanded

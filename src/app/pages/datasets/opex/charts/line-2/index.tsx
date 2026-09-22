@@ -144,6 +144,69 @@ export const LineChart2: React.FC<LineChart2Props> = (
         renderer: "svg",
       });
 
+      const seriesList: (LineSeriesOption & { isDashedOverlay?: boolean })[] =
+        props.data.flatMap((line, i) => {
+          const color = line.itemStyle?.color ?? colors[i % colors.length];
+          const lastIndex = line.data.length - 1;
+
+          const mainData = line.data.map((value, idx) =>
+            idx === lastIndex ? null : value,
+          );
+          const lastSegmentData = line.data.map((value, idx) =>
+            idx >= lastIndex - 1 ? value : null,
+          );
+
+          return [
+            {
+              type: "line",
+              name: line.name,
+              data: mainData,
+              showSymbol: true,
+              smooth: true,
+              color,
+              endLabel: {
+                show: false,
+              },
+              lineStyle: {
+                width: 2.5,
+                color,
+                type: line.itemStyle?.borderType,
+              },
+              symbol: "circle",
+              symbolSize: 8,
+              emphasis: {
+                disabled: true,
+              },
+              itemStyle: line.itemStyle,
+            },
+            {
+              type: "line",
+              name: line.name,
+              data: lastSegmentData,
+              showSymbol: true,
+              smooth: true,
+              color,
+              endLabel: {
+                show: false,
+              },
+              lineStyle: {
+                width: 2.5,
+                color,
+                type: "dashed",
+              },
+              symbol: "circle",
+              symbolSize: 8,
+              emphasis: {
+                disabled: true,
+              },
+              itemStyle: line.itemStyle,
+              isDashedOverlay: true,
+            },
+          ];
+        });
+
+      const lastXAxisKey = props.xAxisKeys[props.xAxisKeys.length - 1];
+
       const option: echarts.ComposeOption<
         | LineSeriesOption
         | GridComponentOption
@@ -203,30 +266,7 @@ export const LineChart2: React.FC<LineChart2Props> = (
             },
           },
         },
-        series: props.data.map((line, i) => ({
-          type: "line",
-          name: line.name,
-          data: line.data,
-          showSymbol: true,
-          smooth: true,
-          color: line.itemStyle?.color ?? colors[i % colors.length],
-          endLabel: {
-            show: false,
-          },
-          lineStyle: {
-            width: 2.5,
-            color: line.itemStyle?.color ?? colors[i % colors.length],
-            type:
-              line.itemStyle?.borderType ??
-              (line.name === "Workforce" ? "solid" : "dashed"),
-          },
-          symbol: "circle",
-          symbolSize: 8,
-          emphasis: {
-            disabled: true,
-          },
-          itemStyle: line.itemStyle,
-        })),
+        series: seriesList,
         tooltip: {
           show: true,
           ...chartTooltipCommonConfig(isTouch),
@@ -236,23 +276,27 @@ export const LineChart2: React.FC<LineChart2Props> = (
             const items: {
               name: string;
               value: string;
-            }[] = filter(lines, (line: any) => line.value !== undefined).map(
-              (line: any) => {
-                return {
-                  name: line.seriesName,
-                  value: line.value,
-                  color:
-                    line.itemStyle?.color ??
-                    colors[lines.indexOf(line) % colors.length],
-                };
-              },
-            );
+            }[] = filter(lines, (line: any) => {
+              if (line.value === undefined) return false;
+              const isDashedOverlay =
+                seriesList[line.seriesIndex]?.isDashedOverlay;
+              return !isDashedOverlay || xAxisValue === lastXAxisKey;
+            }).map((line: any) => {
+              return {
+                name: line.seriesName,
+                value: line.value,
+                color:
+                  line.itemStyle?.color ??
+                  colors[lines.indexOf(line) % colors.length],
+              };
+            });
             return ReactDOMServer.renderToString(
               <Tooltip name={xAxisValue} items={items} />,
             );
           },
         },
         legend: {
+          data: props.data.map((line) => line.name),
           right: 0,
           itemGap: 20,
           itemWidth: 12,

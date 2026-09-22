@@ -190,6 +190,16 @@ export interface StoreModel {
   AnnualResultsTable: ApiCallModel;
   AnnualResultsGroupedByComponent: ApiCallModel;
   AnnualResultsDocumentsTable: ApiCallModel;
+  // opex
+  OpexYears: ApiCallModel;
+  OpexStats: ApiCallModel;
+  OpexOperatingCosts: ApiCallModel;
+  OpexEfficiency: ApiCallModel;
+  OpexYearStats: ApiCallModel;
+  OpexCostComposition: ApiCallModel;
+  OpexKeyCosts: ApiCallModel;
+  OpexIndexedTrends: ApiCallModel;
+  OpexTable: ApiCallModel;
   // grants
   GrantList: ApiCallModel;
   // location

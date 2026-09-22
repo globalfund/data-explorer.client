@@ -1,8 +1,10 @@
 import React from "react";
 import get from "lodash/get";
 import Box from "@mui/material/Box";
-import { useTitle, useUnmount } from "react-use";
+import isEqual from "lodash/isEqual";
+import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
+import { useTitle, useUnmount } from "react-use";
 import { useCMSData } from "app/hooks/useCMSData";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import { DatasetPage } from "app/pages/datasets/common/page";
@@ -15,8 +17,6 @@ import { AccessToFundingBlock3 } from "app/pages/datasets/access-to-funding/bloc
 import { AccessToFundingBlock4 } from "app/pages/datasets/access-to-funding/blocks/block-4";
 import { AccessToFundingBlock5 } from "app/pages/datasets/access-to-funding/blocks/block-5";
 import { AccessToFundingBlock6 } from "app/pages/datasets/access-to-funding/blocks/block-6";
-import isEqual from "lodash/isEqual";
-import { Helmet } from "react-helmet-async";
 
 export const AccessToFundingPage: React.FC = () => {
   const cmsData = useCMSData({ returnData: true });

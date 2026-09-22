@@ -7,6 +7,7 @@ import { FilterGroupModel } from "app/components/filters/list/data";
 export interface DatasetPageProps {
   title: string;
   subtitle: string;
+  hideFilters?: boolean;
   appliedFilters: string[];
   children: React.ReactNode;
   handleResetFilters: () => void;

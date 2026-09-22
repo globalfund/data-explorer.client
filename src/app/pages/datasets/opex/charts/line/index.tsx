@@ -192,7 +192,7 @@ export const LineChart: React.FC<LineChartProps> = (props: LineChartProps) => {
         xAxis: {
           type: "category",
           data: props.xAxisKeys,
-          boundaryGap: false,
+          boundaryGap: props.boundaryGap ?? false,
           axisTick: {
             show: false,
           },
