@@ -1,0 +1,16 @@
+{
+  "country": "NRU",
+  "locale": "en",
+  "metadata": {
+    "snapshot_id": "snapshot-nru",
+    "revision_id": "revision-nru",
+    "model": "fixture-model",
+    "prompt_version": "fixture-prompt",
+    "style_version": "fixture-style",
+    "generated_at": "2026-09-22T00:00:00Z"
+  },
+  "sources": [],
+  "calculations": [],
+  "sections": [],
+  "overview": null
+}

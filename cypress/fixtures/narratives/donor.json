@@ -1,0 +1,47 @@
+{
+  "country": "USA",
+  "locale": "en",
+  "metadata": {
+    "snapshot_id": "snapshot-usa",
+    "revision_id": "revision-usa",
+    "model": "fixture-model",
+    "prompt_version": "fixture-prompt",
+    "style_version": "fixture-style",
+    "generated_at": "2026-09-22T00:00:00Z"
+  },
+  "sources": [
+    {
+      "id": "donor.pledges",
+      "kind": "structured_data",
+      "source_url": "https://example.org/pledges-contributions?geographies=USA",
+      "document_locator": null,
+      "content_hash": "donor-pledges-hash",
+      "retrieved_at": "2026-09-22T00:00:00Z",
+      "value": "1000000",
+      "excerpt": null,
+      "scope": {
+        "country": "USA",
+        "periods": [{ "label": "2023-2025" }],
+        "unit": "amount",
+        "currency": "USD",
+        "source_dates": ["2026-09-22"]
+      }
+    }
+  ],
+  "calculations": [],
+  "sections": [
+    {
+      "id": "resource_mobilization.pledges_contributions",
+      "tab": "resource-mobilization",
+      "title": "Pledges and contributions",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "The United States recorded a contribution in the saved default view.",
+          "evidence_ids": ["donor.pledges"]
+        }
+      ]
+    }
+  ],
+  "overview": null
+}

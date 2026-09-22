@@ -7,6 +7,8 @@ import { useParams } from "react-router-dom";
 import { useCMSData } from "app/hooks/useCMSData";
 import { ChartBlock } from "app/components/chart-block";
 import { getCMSDataField } from "app/utils/getCMSDataField";
+import { NarrativePanel } from "app/components/narrative-section";
+import { useCountryNarratives } from "app/hooks/useCountryNarratives";
 import { TableContainer } from "app/components/table-container";
 import { ResultsProps } from "app/pages/location/views/results/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
@@ -26,6 +28,7 @@ export const Results: React.FC<ResultsProps> = (props: ResultsProps) => {
 
   const params = useParams<{ id: string; tab: string }>();
   const paramsId = params.id as string;
+  const narratives = useCountryNarratives();
 
   const locationName = useStoreState((state) =>
     get(state.GeographyOverview, "data.data[0].name", params.id),
@@ -151,6 +154,7 @@ export const Results: React.FC<ResultsProps> = (props: ResultsProps) => {
           columns={TABLE_VARIATION_7_COLUMNS}
         />
       </ChartBlock>
+      <NarrativePanel state={narratives} sectionId="results.annual_results" />
       {showResults && fullWidthDivider}
       <ChartBlock
         id="documents"
@@ -178,6 +182,10 @@ export const Results: React.FC<ResultsProps> = (props: ResultsProps) => {
           columns={TABLE_VARIATION_6_COLUMNS}
         />
       </ChartBlock>
+      <NarrativePanel
+        state={narratives}
+        sectionId="results.profile_documents"
+      />
     </Box>
   );
 };

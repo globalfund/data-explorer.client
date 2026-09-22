@@ -11,6 +11,8 @@ import { useCMSData } from "app/hooks/useCMSData";
 // import { Link as RouteLink } from "react-router-dom";
 import { useStoreState } from "app/state/store/hooks";
 import { getCMSDataField } from "app/utils/getCMSDataField";
+import { NarrativePanel } from "app/components/narrative-section";
+import { useCountryNarratives } from "app/hooks/useCountryNarratives";
 
 export const LocationOverview: React.FC = () => {
   const cmsData = useCMSData({ returnData: true });
@@ -28,11 +30,13 @@ export const LocationOverview: React.FC = () => {
   const dataCCMContacts = useStoreState((state) =>
     get(state.GeographyOverviewCoordinatingMechanismsContacts, "data.data", []),
   );
+  const narratives = useCountryNarratives();
 
   useTitle(`The Data Explorer - ${dataOverview.name}`);
 
   return (
     <Box gap="24px" display="flex" flexDirection="column">
+      <NarrativePanel state={narratives} overview />
       {/* <Box>
         <Typography fontSize="18px" fontWeight="700">
           {getCMSDataField(

@@ -1,0 +1,50 @@
+{
+  "country": "TLS",
+  "locale": "en",
+  "metadata": {
+    "snapshot_id": "snapshot-tls",
+    "revision_id": "revision-tls",
+    "model": "fixture-model",
+    "prompt_version": "fixture-prompt",
+    "style_version": "fixture-style",
+    "generated_at": "2026-09-22T00:00:00Z"
+  },
+  "sources": [
+    {
+      "id": "document.results-profile",
+      "kind": "document",
+      "source_url": "https://example.org/documents/tls-results-profile.pdf",
+      "document_locator": {
+        "title": "Timor-Leste results profile",
+        "location": "page 2"
+      },
+      "content_hash": "tls-results-profile-hash",
+      "retrieved_at": "2026-09-22T00:00:00Z",
+      "value": null,
+      "excerpt": "The profile summarizes country results.",
+      "scope": {
+        "country": "TLS",
+        "periods": [{ "label": "2025" }],
+        "unit": null,
+        "currency": null,
+        "source_dates": ["2026-09-22"]
+      }
+    }
+  ],
+  "calculations": [],
+  "sections": [
+    {
+      "id": "results.profile_documents",
+      "tab": "results",
+      "title": "Results context",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "A saved results profile provides supporting context.",
+          "evidence_ids": ["document.results-profile"]
+        }
+      ]
+    }
+  ],
+  "overview": null
+}

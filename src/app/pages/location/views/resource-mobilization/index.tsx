@@ -10,6 +10,8 @@ import { useCMSData } from "app/hooks/useCMSData";
 import { BarChart } from "app/components/charts/bar";
 import { ChartBlock } from "app/components/chart-block";
 import { getCMSDataField } from "app/utils/getCMSDataField";
+import { NarrativePanel } from "app/components/narrative-section";
+import { useCountryNarratives } from "app/hooks/useCountryNarratives";
 import useUpdateEffect from "react-use/lib/useUpdateEffect";
 import { BarChartDataItem } from "app/components/charts/bar/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
@@ -26,6 +28,7 @@ export const ResourceMobilization: React.FC = () => {
   });
   const params = useParams<{ id: string; tab: string }>();
   const paramsId = params.id?.replace("|", "%2F");
+  const narratives = useCountryNarratives();
 
   const locationName = useStoreState((state) =>
     get(state.GeographyOverview, "data.data[0].name", params.id),
@@ -138,6 +141,10 @@ export const ResourceMobilization: React.FC = () => {
           }}
         />
       </ChartBlock>
+      <NarrativePanel
+        state={narratives}
+        sectionId="resource_mobilization.pledges_contributions"
+      />
       <Box
         width="100%"
         display="flex"

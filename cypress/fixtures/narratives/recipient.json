@@ -1,0 +1,57 @@
+{
+  "country": "KEN",
+  "locale": "en",
+  "metadata": {
+    "snapshot_id": "snapshot-ken",
+    "revision_id": "revision-ken",
+    "model": "fixture-model",
+    "prompt_version": "fixture-prompt",
+    "style_version": "fixture-style",
+    "generated_at": "2026-09-22T00:00:00Z"
+  },
+  "sources": [
+    {
+      "id": "document.application",
+      "kind": "document",
+      "source_url": "https://example.org/documents/ken-application.pdf",
+      "document_locator": {
+        "title": "Kenya funding application",
+        "location": "page 4"
+      },
+      "content_hash": "ken-application-hash",
+      "retrieved_at": "2026-09-22T00:00:00Z",
+      "value": null,
+      "excerpt": "The application describes the requested program.",
+      "scope": {
+        "country": "KEN",
+        "periods": [{ "label": "2023-2025" }],
+        "unit": null,
+        "currency": null,
+        "source_dates": ["2026-09-22"]
+      }
+    }
+  ],
+  "calculations": [],
+  "sections": [
+    {
+      "id": "access_to_funding.allocations",
+      "tab": "access-to-funding",
+      "title": "Allocations",
+      "status": "insufficient_evidence",
+      "claims": []
+    },
+    {
+      "id": "access_to_funding.application_documents",
+      "tab": "access-to-funding",
+      "title": "Application context",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "The saved application supplies additional funding context.",
+          "evidence_ids": ["document.application"]
+        }
+      ]
+    }
+  ],
+  "overview": null
+}
