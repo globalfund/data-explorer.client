@@ -17,6 +17,7 @@ import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { AccessToFunding } from "app/pages/location/views/access-to-funding";
 import { GrantImplementation } from "app/pages/location/views/grant-implementation";
 import { ResourceMobilization } from "app/pages/location/views/resource-mobilization";
+import { CountryNarrativesProvider } from "app/hooks/useCountryNarratives";
 
 export const Location: React.FC = () => {
   const params = useParams<{ id: string; tab: string }>();
@@ -547,7 +548,9 @@ export const Location: React.FC = () => {
             },
           }}
         >
-          {view}
+          <CountryNarrativesProvider country={routeParamsId}>
+            {view}
+          </CountryNarrativesProvider>
         </Box>
       </Box>
     </>

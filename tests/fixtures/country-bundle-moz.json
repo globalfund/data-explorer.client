@@ -1,0 +1,1091 @@
+{
+  "country": "MOZ",
+  "locale": "en",
+  "metadata": {
+    "snapshot_id": "0f38a559d9e5f4fdfcce18c8f9650a086eea76f66f54f0a771d5b5b82056bb1b",
+    "revision_id": "3fc71d40-ad78-4e62-b861-c214554a3aaf",
+    "model": "openai/test",
+    "prompt_version": "v1-de0b137cd793342e9c1e9ee10d78fd9155364b54ee2334ba8024c6edb662cf3f",
+    "style_version": "v1-17e528cff028f69cd58d638e8e81415cc9feafddcf8f4c9cf87942bac586c69b",
+    "generated_at": "2026-09-22T08:00:44.493827Z"
+  },
+  "sources": [
+    {
+      "id": "structured.b2b342af82ad3e1ed781654c",
+      "kind": "structured_data",
+      "source_url": "https://example.org/allocations/radial/MOZ?periods=2026-2028",
+      "document_locator": null,
+      "content_hash": "41a2ca22d33102a234f6662788aa5d2e6d85fc9b803b8709888d9035a8f375b4",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "446058953",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": "2026-01-01",
+            "end": "2028-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ]
+      }
+    },
+    {
+      "id": "structured.76b5c59107784acfc40805bb",
+      "kind": "structured_data",
+      "source_url": "https://example.org/allocations/radial/MOZ?periods=2026-2028",
+      "document_locator": null,
+      "content_hash": "41a2ca22d33102a234f6662788aa5d2e6d85fc9b803b8709888d9035a8f375b4",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "0",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": "2026-01-01",
+            "end": "2028-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ]
+      }
+    },
+    {
+      "id": "structured.d2ed61fbc8f9f9cb76471354",
+      "kind": "structured_data",
+      "source_url": "https://example.org/funding-requests/MOZ?periods=2023",
+      "document_locator": null,
+      "content_hash": "a000f7e450b4c92688ea65a2013f9c6c22f079ba041de2156c589422b6f9b8b6",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "Grant Making",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "2023 - 2025",
+            "start": "2023-01-01",
+            "end": "2025-12-31"
+          }
+        ],
+        "unit": "status",
+        "currency": null,
+        "source_dates": [
+          "2025-04-15"
+        ]
+      }
+    },
+    {
+      "id": "structured.12bfc7451f7354cd79da1b68",
+      "kind": "structured_data",
+      "source_url": "https://example.org/funding-requests/MOZ?periods=2023",
+      "document_locator": null,
+      "content_hash": "a000f7e450b4c92688ea65a2013f9c6c22f079ba041de2156c589422b6f9b8b6",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "MOZ-S-MOH",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "2023 - 2025",
+            "start": "2023-01-01",
+            "end": "2025-12-31"
+          }
+        ],
+        "unit": "grant record",
+        "currency": null,
+        "source_dates": [
+          "2025-04-15"
+        ]
+      }
+    },
+    {
+      "id": "structured.6095a1bd63d69749216d671d",
+      "kind": "structured_data",
+      "source_url": "https://example.org/funding-requests/MOZ?periods=2023",
+      "document_locator": null,
+      "content_hash": "a000f7e450b4c92688ea65a2013f9c6c22f079ba041de2156c589422b6f9b8b6",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "1",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "2023 - 2025",
+            "start": "2023-01-01",
+            "end": "2025-12-31"
+          }
+        ],
+        "unit": "count",
+        "currency": null,
+        "source_dates": [
+          "2025-04-15"
+        ]
+      }
+    },
+    {
+      "id": "structured.942836a35f9ec11d535bb177",
+      "kind": "structured_data",
+      "source_url": "https://example.org/funding-requests/MOZ?periods=2023",
+      "document_locator": null,
+      "content_hash": "a000f7e450b4c92688ea65a2013f9c6c22f079ba041de2156c589422b6f9b8b6",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "1",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "2023 - 2025",
+            "start": "2023-01-01",
+            "end": "2025-12-31"
+          }
+        ],
+        "unit": "count",
+        "currency": null,
+        "source_dates": [
+          "2025-04-15"
+        ]
+      }
+    },
+    {
+      "id": "structured.7f81dc9f7e96fac415b2de16",
+      "kind": "structured_data",
+      "source_url": "https://example.org/eligibility/table?geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "71c18e5917d636c7bf1a3bf196b13deafe188b86068af5f40ffcc15906027eb2",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "High",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "2026",
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          }
+        ],
+        "unit": "category",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ]
+      }
+    },
+    {
+      "id": "structured.ff19309d00dd0eafd928c01f",
+      "kind": "structured_data",
+      "source_url": "https://example.org/eligibility/table?geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "71c18e5917d636c7bf1a3bf196b13deafe188b86068af5f40ffcc15906027eb2",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "High",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "2025",
+            "start": "2025-01-01",
+            "end": "2025-12-31"
+          }
+        ],
+        "unit": "category",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ]
+      }
+    },
+    {
+      "id": "structured.30446a3ade5d78e5e624ba3f",
+      "kind": "structured_data",
+      "source_url": "https://example.org/eligibility/table?geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "71c18e5917d636c7bf1a3bf196b13deafe188b86068af5f40ffcc15906027eb2",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "Eligible",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "2026",
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          }
+        ],
+        "unit": "category",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ]
+      }
+    },
+    {
+      "id": "structured.fd7c4cbc1b1c6d8a019c9c57",
+      "kind": "structured_data",
+      "source_url": "https://example.org/eligibility/table?geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "71c18e5917d636c7bf1a3bf196b13deafe188b86068af5f40ffcc15906027eb2",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "Eligible",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "2025",
+            "start": "2025-01-01",
+            "end": "2025-12-31"
+          }
+        ],
+        "unit": "category",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ]
+      }
+    },
+    {
+      "id": "structured.ef99a6bab8dc2882f06bd00a",
+      "kind": "structured_data",
+      "source_url": "https://example.org/documents?types=Application&geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "e2f39f4f6f29dd64caab3eac69f942a5cf4baa59ea292a2e137564a15829d34b",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "https://example.test/application.zip",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "period not stated by source",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "document link",
+        "currency": null,
+        "source_dates": []
+      }
+    },
+    {
+      "id": "structured.67af2264bc08e56eb662168c",
+      "kind": "structured_data",
+      "source_url": "https://example.org/disbursements/line-chart/activityAreaGroup/Standard%20View?geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "8988890cef44888d722bd13a8477109cf3f5df2f6802d32ca163af180a8843db",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "100",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "2024",
+            "start": "2024-01-01",
+            "end": "2024-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-09-19"
+        ]
+      }
+    },
+    {
+      "id": "structured.96b6d02dd3eb4491d7bde781",
+      "kind": "structured_data",
+      "source_url": "https://example.org/disbursements/line-chart/activityAreaGroup/Standard%20View?geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "8988890cef44888d722bd13a8477109cf3f5df2f6802d32ca163af180a8843db",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "0",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "2025",
+            "start": "2025-01-01",
+            "end": "2025-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-09-19"
+        ]
+      }
+    },
+    {
+      "id": "structured.08bea6e1029b222b1e5c80b7",
+      "kind": "structured_data",
+      "source_url": "https://example.org/disbursements/line-chart/activityAreaGroup/Standard%20View?geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "8988890cef44888d722bd13a8477109cf3f5df2f6802d32ca163af180a8843db",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "25",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "2025",
+            "start": "2025-01-01",
+            "end": "2025-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-09-19"
+        ]
+      }
+    },
+    {
+      "id": "structured.dba564d4f898e594635160af",
+      "kind": "structured_data",
+      "source_url": "https://example.org/budgets/sankey/activityAreaGroup/Standard%20View?geographies=MOZ&cycleNames=Grant+Cycle+7",
+      "document_locator": null,
+      "content_hash": "5aeecdc4117c18da4044c825756991ea07f34c1472067f7da2f3460b3d3a7dcc",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "100",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "Grant Cycle 7",
+            "start": "2023-01-01",
+            "end": "2025-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-10"
+        ]
+      }
+    },
+    {
+      "id": "structured.51db5bab50342b2cd81bf1a7",
+      "kind": "structured_data",
+      "source_url": "https://example.org/expenditures/heatmap/principalRecipientType,principalRecipientSubType,principalRecipient/component/activityAreaGroup/Standard%20View?geographies=MOZ&cycleNames=Grant+Cycle+7",
+      "document_locator": null,
+      "content_hash": "d5c56fa6b7cd2fb7cddab704d9615e4580390641d2c41e327c298bf34ba8b085",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "100",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "Grant Cycle 7",
+            "start": "2023-01-01",
+            "end": "2025-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-10"
+        ]
+      }
+    },
+    {
+      "id": "structured.c62672346ef94f29e8209a9f",
+      "kind": "structured_data",
+      "source_url": "https://example.org/expenditures/heatmap/principalRecipientType,principalRecipientSubType,principalRecipient/component/activityAreaGroup/Standard%20View?geographies=MOZ&cycleNames=Grant+Cycle+7",
+      "document_locator": null,
+      "content_hash": "d5c56fa6b7cd2fb7cddab704d9615e4580390641d2c41e327c298bf34ba8b085",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "50",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "Grant Cycle 7",
+            "start": "2023-01-01",
+            "end": "2025-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-10"
+        ]
+      }
+    },
+    {
+      "id": "structured.f76b9b07f7e7ed49ec902ca7",
+      "kind": "structured_data",
+      "source_url": "https://example.org/expenditures/heatmap/principalRecipientType,principalRecipientSubType,principalRecipient/component/activityAreaGroup/Standard%20View?geographies=MOZ&cycleNames=Grant+Cycle+7",
+      "document_locator": null,
+      "content_hash": "d5c56fa6b7cd2fb7cddab704d9615e4580390641d2c41e327c298bf34ba8b085",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "0",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "Grant Cycle 7",
+            "start": "2023-01-01",
+            "end": "2025-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-10"
+        ]
+      }
+    },
+    {
+      "id": "structured.a8750ac832d77227e4211582",
+      "kind": "structured_data",
+      "source_url": "https://example.org/expenditures/heatmap/principalRecipientType,principalRecipientSubType,principalRecipient/component/activityAreaGroup/Standard%20View?geographies=MOZ&cycleNames=Grant+Cycle+7",
+      "document_locator": null,
+      "content_hash": "d5c56fa6b7cd2fb7cddab704d9615e4580390641d2c41e327c298bf34ba8b085",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "0",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "Grant Cycle 7",
+            "start": "2023-01-01",
+            "end": "2025-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-10"
+        ]
+      }
+    },
+    {
+      "id": "structured.51dced2a813c704445c25895",
+      "kind": "structured_data",
+      "source_url": "https://example.org/grants/1/2?geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "622de0881c1cb49bf1d6b9e7f6db6c2970f38d81c721a27e45d6805beb6288b6",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "100",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "MOZ-H-ONE",
+            "start": "2024-01-01",
+            "end": "2026-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-04"
+        ]
+      }
+    },
+    {
+      "id": "structured.c082660cfe6671b2967aaaa7",
+      "kind": "structured_data",
+      "source_url": "https://example.org/grants/1/2?geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "622de0881c1cb49bf1d6b9e7f6db6c2970f38d81c721a27e45d6805beb6288b6",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "50",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "MOZ-H-ONE",
+            "start": "2024-01-01",
+            "end": "2026-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-04"
+        ]
+      }
+    },
+    {
+      "id": "structured.b5e42550a23fc3b13a1738af",
+      "kind": "structured_data",
+      "source_url": "https://example.org/grants/1/2?geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "622de0881c1cb49bf1d6b9e7f6db6c2970f38d81c721a27e45d6805beb6288b6",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "80",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "MOZ-H-ONE",
+            "start": "2024-01-01",
+            "end": "2026-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-04"
+        ]
+      }
+    },
+    {
+      "id": "structured.39a58a56c4bb9a2ee2166d11",
+      "kind": "structured_data",
+      "source_url": "https://example.org/grants/1/2?geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "622de0881c1cb49bf1d6b9e7f6db6c2970f38d81c721a27e45d6805beb6288b6",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "0",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "MOZ-M-TWO",
+            "start": "2024-01-01",
+            "end": "2026-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-04"
+        ]
+      }
+    },
+    {
+      "id": "structured.569821c385259a258631f78b",
+      "kind": "structured_data",
+      "source_url": "https://example.org/grants/1/2?geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "622de0881c1cb49bf1d6b9e7f6db6c2970f38d81c721a27e45d6805beb6288b6",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "0",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "MOZ-M-TWO",
+            "start": "2024-01-01",
+            "end": "2026-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-04"
+        ]
+      }
+    },
+    {
+      "id": "structured.76ebe880dd14a4bdecf4debc",
+      "kind": "structured_data",
+      "source_url": "https://example.org/grants/1/2?geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "622de0881c1cb49bf1d6b9e7f6db6c2970f38d81c721a27e45d6805beb6288b6",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "0",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "MOZ-M-TWO",
+            "start": "2024-01-01",
+            "end": "2026-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-04"
+        ]
+      }
+    },
+    {
+      "id": "structured.1057483227007a724c34a4e2",
+      "kind": "structured_data",
+      "source_url": "https://example.org/grants/2/2?geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "1b24a2cc76d84dfd01d0168001118662f47dc51bca89b86253ac3d1116142aa0",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "20",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "MOZ-T-THREE",
+            "start": "2021-01-01",
+            "end": "2023-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-04"
+        ]
+      }
+    },
+    {
+      "id": "structured.358a1314112b92de1bee4e5c",
+      "kind": "structured_data",
+      "source_url": "https://example.org/grants/2/2?geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "1b24a2cc76d84dfd01d0168001118662f47dc51bca89b86253ac3d1116142aa0",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "20",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "MOZ-T-THREE",
+            "start": "2021-01-01",
+            "end": "2023-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-04"
+        ]
+      }
+    },
+    {
+      "id": "structured.7a9ed95f25d6e7459f723106",
+      "kind": "structured_data",
+      "source_url": "https://example.org/grants/2/2?geographies=MOZ",
+      "document_locator": null,
+      "content_hash": "1b24a2cc76d84dfd01d0168001118662f47dc51bca89b86253ac3d1116142aa0",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "20",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "MOZ-T-THREE",
+            "start": "2021-01-01",
+            "end": "2023-12-31"
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-04"
+        ]
+      }
+    },
+    {
+      "id": "structured.780ff55016929da6eae7b7d3",
+      "kind": "structured_data",
+      "source_url": "https://example.org/location/MOZ/grants/pie-charts",
+      "document_locator": null,
+      "content_hash": "1ab19ef0f5f7064a19569a78cc43dd568e92c00d12a3e42ea0c7abe0e6c89e1a",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "70",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "all returned grants; period not stated by source",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-04"
+        ]
+      }
+    },
+    {
+      "id": "structured.838f1d4bf8a328cba42f8368",
+      "kind": "structured_data",
+      "source_url": "https://example.org/location/MOZ/grants/pie-charts",
+      "document_locator": null,
+      "content_hash": "1ab19ef0f5f7064a19569a78cc43dd568e92c00d12a3e42ea0c7abe0e6c89e1a",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "70",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "all returned grants; period not stated by source",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-04"
+        ]
+      }
+    },
+    {
+      "id": "structured.e0b667b0648ef1504d81c0fd",
+      "kind": "structured_data",
+      "source_url": "https://example.org/location/MOZ/grants/pie-charts",
+      "document_locator": null,
+      "content_hash": "1ab19ef0f5f7064a19569a78cc43dd568e92c00d12a3e42ea0c7abe0e6c89e1a",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "70",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "all returned grants; period not stated by source",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-04"
+        ]
+      }
+    },
+    {
+      "id": "structured.4cb90b1e52b88f86a67f122b",
+      "kind": "structured_data",
+      "source_url": "https://example.org/location/MOZ/grants/pie-charts",
+      "document_locator": null,
+      "content_hash": "1ab19ef0f5f7064a19569a78cc43dd568e92c00d12a3e42ea0c7abe0e6c89e1a",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "100",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "all returned grants; period not stated by source",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "reference-rate amount",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-04"
+        ]
+      }
+    },
+    {
+      "id": "structured.f6745779b7cc9e06d3f612be",
+      "kind": "structured_data",
+      "source_url": "https://example.org/results/stats?geographies=MOZ&cycle=2025",
+      "document_locator": null,
+      "content_hash": "a46e57374d231a215dbd68d52d273da54df400325a434e190504303e3710a5ea",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "2070974",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "2025",
+            "start": "2025-01-01",
+            "end": "2025-12-31"
+          }
+        ],
+        "unit": "indicator: People on antiretroviral therapy for HIV",
+        "currency": null,
+        "source_dates": [
+          "2026-09-16"
+        ]
+      }
+    },
+    {
+      "id": "structured.c8194a96d528e979c020e160",
+      "kind": "structured_data",
+      "source_url": "https://example.org/results/table/MOZ/2025",
+      "document_locator": null,
+      "content_hash": "c899fb7f62b8610fb83667d65b71accd3e4ac3cc4f1a30253e74bce8a4248ab3",
+      "retrieved_at": "2026-09-21T09:36:14Z",
+      "value": "12730499",
+      "excerpt": null,
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "2025",
+            "start": "2025-01-01",
+            "end": "2025-12-31"
+          }
+        ],
+        "unit": "indicator: Cases of malaria treated",
+        "currency": null,
+        "source_dates": [
+          "2026-09-16"
+        ]
+      }
+    }
+  ],
+  "calculations": [
+    {
+      "id": "calculation.expenditure.0.utilization",
+      "source_ids": [
+        "structured.c62672346ef94f29e8209a9f",
+        "structured.51db5bab50342b2cd81bf1a7"
+      ],
+      "formula": "actual / budget * 100",
+      "result": "50.00",
+      "unit": "percent",
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "Grant Cycle 7",
+            "start": "2023-01-01",
+            "end": "2025-12-31"
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-10"
+        ]
+      }
+    },
+    {
+      "id": "calculation.grant.moz-h-one.disbursement",
+      "source_ids": [
+        "structured.c082660cfe6671b2967aaaa7",
+        "structured.51dced2a813c704445c25895"
+      ],
+      "formula": "disbursed / signed * 100",
+      "result": "50.00",
+      "unit": "percent",
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "MOZ-H-ONE",
+            "start": "2024-01-01",
+            "end": "2026-12-31"
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-04"
+        ]
+      }
+    },
+    {
+      "id": "calculation.grant.moz-t-three.disbursement",
+      "source_ids": [
+        "structured.358a1314112b92de1bee4e5c",
+        "structured.1057483227007a724c34a4e2"
+      ],
+      "formula": "disbursed / signed * 100",
+      "result": "100.00",
+      "unit": "percent",
+      "scope": {
+        "country": "MOZ",
+        "periods": [
+          {
+            "label": "MOZ-T-THREE",
+            "start": "2021-01-01",
+            "end": "2023-12-31"
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-07-04"
+        ]
+      }
+    }
+  ],
+  "sections": [
+    {
+      "id": "resource_mobilization.pledges_contributions",
+      "tab": "resource-mobilization",
+      "title": "Pledges and contributions",
+      "status": "not_applicable",
+      "claims": []
+    },
+    {
+      "id": "access_to_funding.allocations",
+      "tab": "access-to-funding",
+      "title": "Allocations",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "In MOZ, allocation (amount; country allocation for 2026-2028; component: HIV) was US$446.058953 million for 2026-2028.",
+          "evidence_ids": [
+            "structured.b2b342af82ad3e1ed781654c"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "access_to_funding.funding_requests",
+      "tab": "access-to-funding",
+      "title": "Funding requests",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "In MOZ, funding request (status; country funding requests for 2023 - 2025; components: Malaria,RSSH, submission_date: 30 May 2023, approach: Full Review, trp_window: Window 2, portfolio_category: High-Impact) was Grant Making for 2023 - 2025.",
+          "evidence_ids": [
+            "structured.d2ed61fbc8f9f9cb76471354"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "access_to_funding.eligibility",
+      "tab": "access-to-funding",
+      "title": "Eligibility",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "In MOZ, eligibility (disease-burden; eligibility category for 2026; component: HIV) was High for 2026.",
+          "evidence_ids": [
+            "structured.7f81dc9f7e96fac415b2de16"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "access_to_funding.application_documents",
+      "tab": "access-to-funding",
+      "title": "Application context",
+      "status": "insufficient_evidence",
+      "claims": []
+    },
+    {
+      "id": "financial_insights.disbursements",
+      "tab": "financial-insights",
+      "title": "Disbursements",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "In MOZ, disbursement (actual; country disbursements for HIV; component: HIV) was US$100 for 2024.",
+          "evidence_ids": [
+            "structured.67af2264bc08e56eb662168c"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "financial_insights.budgets",
+      "tab": "financial-insights",
+      "title": "Budgets",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "In MOZ, budget (planned; country budget for Grant Cycle 7; category: Program management) was US$100 for Grant Cycle 7.",
+          "evidence_ids": [
+            "structured.dba564d4f898e594635160af"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "financial_insights.expenditures",
+      "tab": "financial-insights",
+      "title": "Expenditure",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "In MOZ, expenditure (budget; Governmental Organization and HIV for Grant Cycle 7; principal_recipient_type: Governmental Organization, component: HIV) was US$100 for Grant Cycle 7.",
+          "evidence_ids": [
+            "structured.51db5bab50342b2cd81bf1a7"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "financial_insights.grants",
+      "tab": "financial-insights",
+      "title": "Grants",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "In MOZ, grant finance (signed; grant MOZ-H-ONE; grant: MOZ-H-ONE, component: HIV, principal_recipient: Ministry of Health, status: Active) was US$100 for MOZ-H-ONE.",
+          "evidence_ids": [
+            "structured.51dced2a813c704445c25895"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "results.annual_results",
+      "tab": "results",
+      "title": "Annual results",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "In MOZ, headline result (result; country results for 2025; indicator: People on antiretroviral therapy for HIV) was 2.070974 million for 2025.",
+          "evidence_ids": [
+            "structured.f6745779b7cc9e06d3f612be"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "results.profile_documents",
+      "tab": "results",
+      "title": "Results context",
+      "status": "insufficient_evidence",
+      "claims": []
+    }
+  ],
+  "overview": {
+    "id": "overview.summary",
+    "tab": "overview",
+    "title": "Country overview",
+    "status": "ready",
+    "claims": [
+      {
+        "text": "In MOZ, allocation (amount; country allocation for 2026-2028; component: HIV) was US$446.058953 million for 2026-2028.",
+        "evidence_ids": [
+          "structured.b2b342af82ad3e1ed781654c"
+        ]
+      }
+    ],
+    "contributing_section_ids": [
+      "access_to_funding.allocations"
+    ]
+  }
+}
