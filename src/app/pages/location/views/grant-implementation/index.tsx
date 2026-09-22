@@ -12,9 +12,12 @@ import { LocationGrantImplementationBlock1 } from "app/pages/location/views/gran
 import { LocationGrantImplementationBlock2 } from "app/pages/location/views/grant-implementation/blocks/block-2";
 import { LocationGrantImplementationBlock3 } from "app/pages/location/views/grant-implementation/blocks/block-3";
 import { LocationGrantImplementationBlock4 } from "app/pages/location/views/grant-implementation/blocks/block-4";
+import { NarrativePanel } from "app/components/narrative-section";
+import { useCountryNarratives } from "app/hooks/useCountryNarratives";
 
 export const GrantImplementation = () => {
   const params = useParams<{ id: string; tab: string }>();
+  const narratives = useCountryNarratives();
 
   const locationName = useStoreState((state) =>
     get(state.GeographyOverview, "data.data[0].name", params.id),
@@ -74,12 +77,28 @@ export const GrantImplementation = () => {
   return (
     <Box gap="24px" display="flex" flexDirection="column">
       <LocationGrantImplementationBlock1 />
+      <NarrativePanel
+        state={narratives}
+        sectionId="financial_insights.disbursements"
+      />
       {showDisbursementsLineChart && fullWidthDivider}
       <LocationGrantImplementationBlock2 />
+      <NarrativePanel
+        state={narratives}
+        sectionId="financial_insights.budgets"
+      />
       {showBudgetSankeyChart && fullWidthDivider}
       <LocationGrantImplementationBlock3 />
+      <NarrativePanel
+        state={narratives}
+        sectionId="financial_insights.expenditures"
+      />
       {showExpendituresHeatmap && fullWidthDivider}
       <LocationGrantImplementationBlock4 />
+      <NarrativePanel
+        state={narratives}
+        sectionId="financial_insights.grants"
+      />
     </Box>
   );
 };

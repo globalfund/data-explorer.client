@@ -15,6 +15,8 @@ import Typography from "@mui/material/Typography";
 import { ChartBlock } from "app/components/chart-block";
 import { RadialChart } from "app/components/charts/radial";
 import { getCMSDataField } from "app/utils/getCMSDataField";
+import { NarrativePanel } from "app/components/narrative-section";
+import { useCountryNarratives } from "app/hooks/useCountryNarratives";
 import useUpdateEffect from "react-use/lib/useUpdateEffect";
 import { RaceBarChart } from "app/components/charts/race-bar";
 import { TableContainer } from "app/components/table-container";
@@ -36,6 +38,7 @@ export const AccessToFunding: React.FC = () => {
   const params = useParams<{ id: string; tab: string }>();
   const routeParamsId = params.id as string;
   const paramsId = params.id?.replace("|", "%2F") as string;
+  const narratives = useCountryNarratives();
 
   const latestUpdateDateChart1 = useGetDatasetLatestUpdate({
     dataset: "allocations",
@@ -404,6 +407,10 @@ export const AccessToFunding: React.FC = () => {
           </Box>
         </Box>
       </ChartBlock>
+      <NarrativePanel
+        state={narratives}
+        sectionId="access_to_funding.allocations"
+      />
       {showAllocationRadialChart && fullWidthDivider}
       <ChartBlock
         noSplitText
@@ -450,6 +457,10 @@ export const AccessToFunding: React.FC = () => {
         <Box height="64px" />
         <RaceBarChart noValuesFormat data={raceBarData} />
       </ChartBlock>
+      <NarrativePanel
+        state={narratives}
+        sectionId="access_to_funding.funding_requests"
+      />
       {showFundingRequestsTable && fullWidthDivider}
       <ChartBlock
         noSplitText
@@ -667,6 +678,10 @@ export const AccessToFunding: React.FC = () => {
           columns={ELIGIBILITY_TABLE_COLUMNS}
         />
       </ChartBlock>
+      <NarrativePanel
+        state={narratives}
+        sectionId="access_to_funding.eligibility"
+      />
       {showEligibilityHeatmap && fullWidthDivider}
       <ChartBlock
         id="documents"
@@ -700,6 +715,10 @@ export const AccessToFunding: React.FC = () => {
           columns={TABLE_VARIATION_6_COLUMNS}
         />
       </ChartBlock>
+      <NarrativePanel
+        state={narratives}
+        sectionId="access_to_funding.application_documents"
+      />
     </Box>
   );
 };
