@@ -25,8 +25,8 @@ export const OpexPage = () => {
 
   const years = useStoreState((state) => state.OpexYears.data);
   const yearsLoading = useStoreState((state) => state.OpexYears.loading);
-  const startYear = get(years, "startYear", 0);
-  const endYear = get(years, "endYear", 0);
+  const startYear = get(years, "startYear", "");
+  const endYear = get(years, "endYear", "");
 
   const handleResetFilters = () => {};
   const handleCancelFilters = () => {};
