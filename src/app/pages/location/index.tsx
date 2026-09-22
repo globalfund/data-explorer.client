@@ -391,11 +391,6 @@ export const Location: React.FC = () => {
           code: routeParamsId,
         },
       });
-      fetchResultStats({
-        filterString: `geographies=${paramsId}&cycle=${
-          RESULT_YEARS[RESULT_YEARS.length - 1].value
-        }`,
-      });
       fetchDocumentsTable({
         filterString: `types=Application&geographies=${paramsId}`,
       });
@@ -446,6 +441,9 @@ export const Location: React.FC = () => {
 
   React.useEffect(() => {
     if (paramsId) {
+      fetchResultStats({
+        filterString: `geographies=${paramsId}&cycle=${resultsYear.value}`,
+      });
       fetchResultsTable({
         routeParams: {
           code: routeParamsId,
