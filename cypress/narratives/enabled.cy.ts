@@ -157,6 +157,10 @@ describe("country narratives with the rollout flag enabled", () => {
       .should("be.visible")
       .and("contain", "Available topics: Allocations")
       .and("contain", "default view");
+    cy.get('[data-cy="narrative-section"] ol').should("not.exist");
+    cy.get('[data-cy="narrative-section"] p')
+      .filter(":has(a)")
+      .should("have.length.at.least", 1);
   });
 
   it("renders mapped narratives across every applicable country tab", () => {

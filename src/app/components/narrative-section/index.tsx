@@ -124,14 +124,18 @@ export const NarrativeSection: React.FC<NarrativeSectionProps> = ({
             .join(", ")}
         </Typography>
       )}
-      <Box component="ol" sx={{ pl: 3, m: 0 }}>
+      <Box>
         {section.claims.map((claim, index) => {
           const citations = expandNarrativeCitations(
             bundle,
             claim.evidence_ids,
           );
           return (
-            <Box component="li" key={`${section.id}-${index}`} sx={{ mb: 1 }}>
+            <Box
+              component="p"
+              key={`${section.id}-${index}`}
+              sx={{ mt: 0, mb: 2 }}
+            >
               <Typography component="span" variant="body1">
                 {claim.text}
               </Typography>
