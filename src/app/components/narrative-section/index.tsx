@@ -132,15 +132,24 @@ export const NarrativeSection: React.FC<NarrativeSectionProps> = ({
           );
           return (
             <Box
-              component="p"
+              component="div"
               key={`${section.id}-${index}`}
               sx={{ mt: 0, mb: 2 }}
+              data-cy="narrative-claim"
             >
-              <Typography component="span" variant="body1">
+              <Typography component="p" variant="body1" sx={{ m: 0 }}>
                 {claim.text}
               </Typography>
               {citations.length > 0 && (
-                <Box component="span" sx={{ ml: 1 }} aria-label="Sources">
+                <Box
+                  component="div"
+                  sx={{ mt: 0.5 }}
+                  aria-label="Sources"
+                  data-cy="narrative-sources"
+                >
+                  <Typography component="span" variant="caption">
+                    Sources:{" "}
+                  </Typography>
                   {citations.map((citation, citationIndex) =>
                     citation.url ? (
                       <Link
@@ -148,7 +157,7 @@ export const NarrativeSection: React.FC<NarrativeSectionProps> = ({
                         href={citation.url}
                         target="_blank"
                         rel="noreferrer"
-                        sx={{ mr: 0.5 }}
+                        sx={{ mr: 1 }}
                         aria-label={`Source ${citationIndex + 1}: ${citation.label}`}
                       >
                         [{citationIndex + 1}] {citation.label}
@@ -159,7 +168,7 @@ export const NarrativeSection: React.FC<NarrativeSectionProps> = ({
                         key={citation.id}
                         component="span"
                         variant="caption"
-                        sx={{ mr: 0.5 }}
+                        sx={{ mr: 1 }}
                         aria-label={`Source ${citationIndex + 1}: ${citation.label}`}
                       >
                         [{citationIndex + 1}] {citation.label}

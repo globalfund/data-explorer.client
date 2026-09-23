@@ -158,9 +158,16 @@ describe("country narratives with the rollout flag enabled", () => {
       .and("contain", "Available topics: Allocations")
       .and("contain", "default view");
     cy.get('[data-cy="narrative-section"] ol').should("not.exist");
-    cy.get('[data-cy="narrative-section"] p')
-      .filter(":has(a)")
-      .should("have.length.at.least", 1);
+    cy.get('[data-cy="narrative-claim"] > p')
+      .should("have.length.at.least", 1)
+      .each(($paragraph) => {
+        cy.wrap($paragraph).find("a").should("not.exist");
+        cy.wrap($paragraph)
+          .parent()
+          .find('[data-cy="narrative-sources"]')
+          .should("exist")
+          .and("contain", "Sources:");
+      });
   });
 
   it("renders mapped narratives across every applicable country tab", () => {
@@ -296,7 +303,7 @@ describe("country narratives with the rollout flag enabled", () => {
       '<img src=x onerror="document.body.dataset.unsafe=1"> Saved claim',
     )
       .should("be.visible")
-      .and("have.prop", "tagName", "SPAN");
+      .and("have.prop", "tagName", "P");
     cy.get("body").should("not.have.attr", "data-unsafe");
     cy.get('[aria-label^="Source 1:"]')
       .should("have.attr", "href")
