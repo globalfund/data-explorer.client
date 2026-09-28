@@ -166,8 +166,64 @@ describe("country narratives with the rollout flag enabled", () => {
           .parent()
           .find('[data-cy="narrative-sources"]')
           .should("exist")
-          .and("contain", "Sources:");
+          .within(() => {
+            cy.get("a").each(($link, index) => {
+              expect($link.text()).to.equal(`Source ${index + 1}`);
+            });
+            cy.contains("Sources:").should("not.exist");
+          });
       });
+  });
+
+  it("renders one semantic heading per contiguous paragraph heading group", () => {
+    cy.readFile(realMozambiqueBundle).then((bundle) => {
+      const sourceClaim = bundle.overview.claims[0];
+      bundle.overview.claims = [
+        { ...sourceClaim, heading: "Progress" },
+        { ...sourceClaim, heading: "Progress" },
+        { ...sourceClaim, heading: null },
+        { ...sourceClaim, heading: "Challenges" },
+        { ...sourceClaim, heading: "Challenges" },
+      ];
+      const allocation = bundle.sections.find(
+        (section) => section.id === "access_to_funding.allocations",
+      );
+      if (!allocation) throw new Error("MOZ allocation narrative is missing");
+      allocation.claims[0].heading = "Progress";
+      cy.intercept(
+        "GET",
+        `${apiUrl}/location/MOZ/narratives?locale=en`,
+        bundle,
+      ).as("headedNarrativeMOZ");
+    });
+    visitCountry("MOZ", "overview");
+    cy.wait("@headedNarrativeMOZ");
+    cy.get('[data-cy="narrative-heading"]').should("have.length", 2);
+    cy.get('[data-cy="narrative-heading"]')
+      .first()
+      .should("have.prop", "tagName", "H3")
+      .and("have.text", "Progress");
+    cy.get('[data-cy="narrative-heading"]')
+      .last()
+      .should("have.prop", "tagName", "H3")
+      .and("have.text", "Challenges");
+    cy.get('[data-cy="narrative-claim"] > p').should("have.length", 5);
+    cy.get('[data-cy="narrative-claim"]').each(($claim) => {
+      cy.wrap($claim).find('[data-cy="narrative-sources"]').should("exist");
+    });
+
+    visitCountry("MOZ", "access-to-funding");
+    cy.wait("@headedNarrativeMOZ");
+    cy.get('[data-cy="narrative-heading"]').should("not.exist");
+    cy.contains('[data-cy="narrative-section"]', "Allocations").should(
+      "be.visible",
+    );
+    cy.get('[data-cy="narrative-claim"] > p').should("have.length.at.least", 1);
+    cy.get('[data-cy="narrative-claim"] [data-cy="narrative-sources"]')
+      .should("exist")
+      .find("a")
+      .first()
+      .should("contain.text", "Source 1");
   });
 
   it("renders mapped narratives across every applicable country tab", () => {
@@ -306,12 +362,62 @@ describe("country narratives with the rollout flag enabled", () => {
       .and("have.prop", "tagName", "P");
     cy.get("body").should("not.have.attr", "data-unsafe");
     cy.get('[aria-label^="Source 1:"]')
+      .should("have.text", "Source 1")
       .should("have.attr", "href")
       .and("match", /^https:\/\//);
     cy.get('[aria-label^="Source 1:"]')
       .focus()
       .should("have.focus")
       .and("have.attr", "rel", "noreferrer");
+  });
+
+  it("numbers only linkable citations and keeps source location available on the link", () => {
+    cy.readFile(realMozambiqueBundle).then((bundle) => {
+      const linked = bundle.sources[0];
+      linked.document_locator = {
+        title: "Linked source title",
+        location: "Paragraph 4",
+      };
+      const unlinked = {
+        ...linked,
+        id: "document.unlinked-test-source",
+        kind: "document",
+        source_url: null,
+        document_locator: {
+          title: "Unlinked source title",
+          location: "Paragraph 2",
+        },
+        content_hash: "a".repeat(64),
+        excerpt: "A supporting document excerpt.",
+      };
+      bundle.sources.push(unlinked);
+      const allocations = bundle.sections.find(
+        (section) => section.id === "access_to_funding.allocations",
+      );
+      if (!allocations) throw new Error("MOZ allocations narrative is missing");
+      allocations.claims[0].evidence_ids = [unlinked.id, linked.id];
+      cy.intercept(
+        "GET",
+        `${apiUrl}/location/MOZ/narratives?locale=en`,
+        bundle,
+      ).as("filteredCitations");
+    });
+    visitCountry("MOZ", "access-to-funding");
+    cy.wait("@filteredCitations");
+    cy.get('[data-cy="narrative-claim"]')
+      .first()
+      .within(() => {
+        cy.get('[data-cy="narrative-sources"] a')
+          .should("have.length", 1)
+          .each(($link, index) => {
+            expect($link.text()).to.equal(`Source ${index + 1}`);
+          });
+        cy.get('[data-cy="narrative-sources"] a')
+          .first()
+          .should("have.text", "Source 1")
+          .and("have.attr", "title", "Linked source title - Paragraph 4");
+        cy.contains("Calculation:").should("not.exist");
+      });
   });
 
   it("preserves country tab rules for recipients, donors, sparse countries, and document-only Results", () => {
