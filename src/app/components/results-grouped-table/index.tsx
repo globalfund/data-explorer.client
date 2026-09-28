@@ -133,7 +133,7 @@ export const GroupedByComponentTable: React.FC<GroupedByComponentTableProps> = (
                   textAlign="right"
                 >
                   <Typography fontSize="14px" fontWeight={700} color="#70777E">
-                    2024
+                    {props.yearSelected ?? "2024"}
                   </Typography>
                 </Box>
                 <Box
