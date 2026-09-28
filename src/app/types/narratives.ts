@@ -57,6 +57,12 @@ export interface NarrativeCalculation {
 export interface NarrativeClaim {
   text: string;
   evidence_ids: string[];
+  heading?:
+    | "Introduction"
+    | "Progress"
+    | "Challenges"
+    | "Global Fund investments"
+    | null;
 }
 
 export interface NarrativeSection {
@@ -163,6 +169,14 @@ const isClaim = (value: unknown): value is NarrativeClaim => {
   if (!isRecord(value)) return false;
   return (
     isNonEmptyString(value.text) &&
+    (value.heading === undefined ||
+      value.heading === null ||
+      [
+        "Introduction",
+        "Progress",
+        "Challenges",
+        "Global Fund investments",
+      ].includes(value.heading as string)) &&
     isArray(value.evidence_ids) &&
     value.evidence_ids.length > 0 &&
     value.evidence_ids.every(isNonEmptyString)

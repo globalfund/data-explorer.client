@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import type { NarrativeClaim } from "../src/app/types/narratives";
 import {
   expandNarrativeCitations,
   parseCountryNarrativeBundle,
@@ -15,6 +16,19 @@ assert.ok(bundle, "the Python-generated CountryBundle should validate");
 assert.equal(bundle.country, "MOZ");
 assert.ok(bundle.sources.length > 0);
 assert.ok(bundle.calculations.length > 0);
+
+const headingCases = structuredClone(bundle);
+const headedClaim = headingCases.sections.find(
+  (section) => section.status === "ready",
+)!.claims[0];
+headedClaim.heading = "Progress";
+assert.ok(parseCountryNarrativeBundle(headingCases));
+headedClaim.heading = null;
+assert.ok(parseCountryNarrativeBundle(headingCases));
+delete headedClaim.heading;
+assert.ok(parseCountryNarrativeBundle(headingCases));
+headedClaim.heading = "<h3>Progress</h3>" as NarrativeClaim["heading"];
+assert.equal(parseCountryNarrativeBundle(headingCases), null);
 
 const scientific = structuredClone(bundle);
 scientific.calculations[0].result = "1E+2";
