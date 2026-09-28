@@ -1,117 +1,128 @@
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Checkbox,
-  FormControlLabel,
-} from "@mui/material";
-import CheckboxIcon from "app/assets/vectors/Checkbox_notchecked.svg?react";
-import CheckboxCheckedIcon from "app/assets/vectors/Checkbox_checked.svg?react";
-import { FilterGroupModel } from "app/state/api/action-reducers/report-builder/sync";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { get } from "lodash";
 import React from "react";
+import { Box, Checkbox, FormControlLabel, IconButton } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { FilterGroupModel } from "app/state/api/action-reducers/report-builder/sync";
+import CheckboxIcon from "app/assets/vectors/CheckboxRB_notchecked.svg?react";
+import CheckboxCheckedIcon from "app/assets/vectors/CheckboxRB_checked.svg?react";
 
 interface ExpandedFilterGroupProps extends FilterGroupModel {
   selectedFilters: string[];
   setSelectedFilters: (filters: string[]) => void;
+  expandSearchResults?: boolean;
 }
 
-const ExpandedFilterGroup = (props: ExpandedFilterGroupProps) => {
-  const [expandedNames, setExpandedNames] = React.useState<string[]>([]);
-
-  const onCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-
-    if (checked) {
-      props.setSelectedFilters?.([...props.selectedFilters!, name]);
-    } else {
-      props.setSelectedFilters?.(
-        props.selectedFilters!.filter((filter) => filter !== name),
-      );
-    }
-  };
+const ExpandedFilterGroup = ({
+  name,
+  options,
+  selectedFilters,
+  setSelectedFilters,
+  expandSearchResults = false,
+}: ExpandedFilterGroupProps) => {
+  const [expandedValues, setExpandedValues] = React.useState<
+    Record<string, boolean>
+  >({});
+  const id = React.useId();
 
   return (
-    // TODO: Paginate options if too many
-    <Box width="100%" position="relative" marginBottom="5px">
-      <Box paddingLeft="20px">
-        {props.options.map((option) => (
-          <Accordion
-            key={option.label}
-            expanded={expandedNames.includes(option.label)}
-            onChange={(e: React.SyntheticEvent, isExpanded: boolean) => {
-              setExpandedNames((prev) => {
-                if (isExpanded) {
-                  return [...prev, option.label];
-                } else {
-                  return prev.filter((name) => name !== option.label);
-                }
-              });
-            }}
+    <Box role="group" aria-label={name}>
+      {options.map((option, index) => {
+        const hasChildren = Boolean(option.subOptions?.length);
+        const expanded =
+          hasChildren && (expandedValues[option.value] ?? expandSearchResults);
+        const childrenId = `${id}-${index}`;
+
+        return (
+          <Box
+            key={option.value}
             sx={{
-              borderStyle: "none",
-              paddingBottom: "0px !important",
-              background: "transparent",
+              borderBottom:
+                index < options.length - 1 ? "0.5px solid #DFE3E5" : "none",
             }}
           >
-            <AccordionSummary
-              expandIcon={
-                get(option, "subOptions.length", 0) > 0 ? (
-                  <ExpandMoreIcon />
-                ) : undefined
-              }
+            <Box
               sx={{
-                minHeight: "20px",
-                position: "relative",
-                justifyContent: "flex-start",
-                "&.Mui-expanded": {
-                  minHeight: "20px",
-                },
-                "> .MuiAccordionSummary-content": {
-                  flexGrow: 0,
-                },
+                display: "flex",
+                alignItems: "center",
+                minHeight: "32px",
+                borderBottom: expanded ? "0.5px solid #DFE3E5" : "none",
               }}
             >
               <FormControlLabel
+                label={option.label}
                 control={
                   <Checkbox
-                    size="small"
-                    name={option.label}
-                    icon={<CheckboxIcon />}
-                    onChange={onCheckboxChange}
-                    checkedIcon={<CheckboxCheckedIcon />}
-                    checked={props.selectedFilters.indexOf(option.label) > -1}
+                    checked={selectedFilters.includes(option.value)}
+                    icon={<CheckboxIcon width={16} height={16} />}
+                    checkedIcon={<CheckboxCheckedIcon width={16} height={16} />}
+                    onChange={(_event, checked) => {
+                      setSelectedFilters(
+                        checked
+                          ? Array.from(
+                              new Set([...selectedFilters, option.value]),
+                            )
+                          : selectedFilters.filter(
+                              (value) => value !== option.value,
+                            ),
+                      );
+                    }}
+                    sx={{
+                      p: 0,
+                      mr: "8px",
+                      "& svg path": { fill: "#373D43" },
+                      "&.Mui-checked svg path": { fill: "#3154F4" },
+                    }}
                   />
                 }
-                label={option.label}
-                checked={props.selectedFilters.indexOf(option.label) > -1}
                 sx={{
-                  marginLeft: "0px",
-                  marginRight: "0px",
-                  alignItems: "center",
+                  m: 0,
+                  flex: 1,
+                  minWidth: 0,
+                  py: "6px",
                   "& .MuiFormControlLabel-label": {
-                    zIndex: option.subOptions ? -1 : 0,
                     fontSize: "14px",
-                    marginLeft: "5px",
+                    lineHeight: "20px",
+                    color: "#000",
+                    overflowWrap: "anywhere",
                   },
                 }}
               />
-            </AccordionSummary>
-            {(option.subOptions?.length ?? 0) > 0 && (
-              <AccordionDetails>
+              {hasChildren && (
+                <IconButton
+                  size="small"
+                  aria-label={`${expanded ? "Collapse" : "Expand"} ${option.label}`}
+                  aria-expanded={expanded}
+                  aria-controls={expanded ? childrenId : undefined}
+                  onClick={() =>
+                    setExpandedValues((previous) => ({
+                      ...previous,
+                      [option.value]: !expanded,
+                    }))
+                  }
+                  sx={{ p: "2px", ml: "4px", color: "#373D43" }}
+                >
+                  <ExpandMoreIcon
+                    sx={{
+                      fontSize: "16px",
+                      transform: expanded ? "rotate(180deg)" : undefined,
+                    }}
+                  />
+                </IconButton>
+              )}
+            </Box>
+            {expanded && (
+              <Box id={childrenId} sx={{ pl: "16px" }}>
                 <ExpandedFilterGroup
                   name={option.label}
-                  options={option.subOptions || []}
-                  selectedFilters={props.selectedFilters}
-                  setSelectedFilters={props.setSelectedFilters}
+                  options={option.subOptions ?? []}
+                  selectedFilters={selectedFilters}
+                  setSelectedFilters={setSelectedFilters}
+                  expandSearchResults={expandSearchResults}
                 />
-              </AccordionDetails>
+              </Box>
             )}
-          </Accordion>
-        ))}
-      </Box>
+          </Box>
+        );
+      })}
     </Box>
   );
 };
