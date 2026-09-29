@@ -27,7 +27,7 @@ export const Location: React.FC = () => {
   const cmsData = useCMSData({ returnData: true });
   const cyclesResultsTable = useStoreState(
     (state) =>
-      get(state.AnnualResultsCycles, "data.data", []).map(
+      get(state.GeographyAnnualResultsCycles, "data.data", []).map(
         (c: { name: number; value: number }) => ({
           name: c.name.toString(),
           value: c.value.toString(),
@@ -38,8 +38,24 @@ export const Location: React.FC = () => {
       }[],
   );
   const [resultsYear, setResultsYear] = React.useState(
-    cyclesResultsTable[0] ?? new Date().getFullYear().toString(),
+    cyclesResultsTable[0] ?? {
+      name: new Date().getFullYear().toString(),
+      value: new Date().getFullYear().toString(),
+    },
   );
+
+  React.useEffect(() => {
+    if (
+      cyclesResultsTable.length > 0 &&
+      !cyclesResultsTable.some((cycle) => cycle.value === resultsYear.value)
+    ) {
+      setResultsYear(
+        cyclesResultsTable.reduce((latest, cycle) =>
+          Number(cycle.value) > Number(latest.value) ? cycle : latest,
+        ),
+      );
+    }
+  }, [cyclesResultsTable]);
 
   const dataOverview = useStoreState((state) =>
     get(state.GeographyOverview, "data.data[0]", {

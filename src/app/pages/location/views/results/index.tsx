@@ -47,7 +47,7 @@ export const Results: React.FC<ResultsProps> = (props: ResultsProps) => {
   );
   const cyclesResultsTable = useStoreState(
     (state) =>
-      get(state.AnnualResultsCycles, "data.data", []).map(
+      get(state.GeographyAnnualResultsCycles, "data.data", []).map(
         (c: { name: number; value: number }) => ({
           name: c.name.toString(),
           value: c.value.toString(),
