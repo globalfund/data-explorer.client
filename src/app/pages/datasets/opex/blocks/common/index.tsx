@@ -56,7 +56,16 @@ export const OpexPageChartBlock: React.FC<OpexPageChartBlockData> = (props) => {
       <Typography variant="h2" lineHeight={1.2} mb="8px">
         {props.title}
       </Typography>
-      <Typography variant="h3" fontSize="36px" mb="8px">
+      <Typography
+        variant="h3"
+        fontSize="36px"
+        mb="8px"
+        sx={{
+          "@media (max-width: 767px)": {
+            fontSize: "24px",
+          },
+        }}
+      >
         {props.subtitle}
       </Typography>
       <Box
@@ -67,6 +76,11 @@ export const OpexPageChartBlock: React.FC<OpexPageChartBlockData> = (props) => {
           flexDirection: "row",
           alignItems: "flex-end",
           justifyContent: "space-between",
+          "@media (max-width: 767px)": {
+            gap: "16px",
+            flexDirection: "column",
+            alignItems: "flex-start",
+          },
         }}
       >
         {!props.loading ? (
@@ -97,6 +111,13 @@ export const OpexPageChartBlock: React.FC<OpexPageChartBlockData> = (props) => {
                 borderRadius: "4px",
                 bgcolor: "transparent",
                 border: "1px solid transparent",
+              },
+              "@media (max-width: 767px)": {
+                maxWidth: "100%",
+                overflowX: "auto",
+                "> button": {
+                  padding: "8px 12px",
+                },
               },
             }}
           >

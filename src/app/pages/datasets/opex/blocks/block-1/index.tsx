@@ -74,6 +74,21 @@ const ContainerBox = ({
       "> div:nth-of-type(4n)": {
         borderRight: "none",
       },
+      "@media (max-width: 920px)": {
+        rowGap: "24px",
+        "> div": {
+          flex: "1 1 50%",
+        },
+        "> div:nth-of-type(2n)": {
+          borderRight: "none",
+        },
+      },
+      "@media (max-width: 767px)": {
+        "> div": {
+          flex: "1 1 100%",
+          borderRight: "none",
+        },
+      },
     }}
   >
     {children}

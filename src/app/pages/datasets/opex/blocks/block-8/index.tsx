@@ -47,12 +47,14 @@ export const OpexPageBlock8: React.FC = () => {
         title: "Line item ($M)",
         field: "name",
         width: "20%",
+        minWidth: 150,
         headerSort: false,
       },
       ...years.reverse().map((year) => ({
         title: year,
         field: `${year}.${selectedView.toLowerCase()}`,
         width: "8%",
+        minWidth: 70,
         headerSort: false,
         formatter: (v: CellComponent) => {
           const value = simpleFormatter(v.getValue());

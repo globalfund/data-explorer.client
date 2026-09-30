@@ -153,7 +153,14 @@ export const OpexPageBlock3: React.FC = () => {
       // text={datasetText}
       text={tempDatasetText}
     >
-      <Box marginBottom="40px">
+      <Box
+        marginBottom="40px"
+        sx={{
+          "@media (max-width: 767px)": {
+            marginBottom: "80px",
+          },
+        }}
+      >
         <Box>
           <Box
             sx={{
@@ -162,6 +169,11 @@ export const OpexPageBlock3: React.FC = () => {
               marginBottom: "24px",
               flexDirection: "row",
               alignItems: "flex-end",
+              "@media (max-width: 767px)": {
+                gap: "8px",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              },
             }}
           >
             <Typography fontSize="44px" fontWeight="700">
@@ -235,7 +247,19 @@ export const OpexPageBlock3: React.FC = () => {
                 {efficiencyValue}¢ operating costs
               </Typography>
             </Box>
-            <Typography fontSize="14px" color="#373D43" paddingRight="16px">
+            <Typography
+              fontSize="14px"
+              color="#373D43"
+              paddingRight="16px"
+              sx={{
+                "@media (max-width: 767px)": {
+                  left: 0,
+                  padding: 0,
+                  position: "absolute",
+                  top: "calc(100% + 8px)",
+                },
+              }}
+            >
               {remainingValue}¢ of every pledged dollar remains for grants &
               programmes
             </Typography>

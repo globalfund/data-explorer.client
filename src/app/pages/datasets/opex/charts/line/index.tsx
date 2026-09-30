@@ -140,7 +140,7 @@ export const LineChart: React.FC<LineChartProps> = (props: LineChartProps) => {
         | TooltipComponentOption
       > = {
         grid: {
-          top: 40,
+          top: mobile && props.showLegend ? 70 : 40,
           left: 60,
           right: 70,
           bottom: props.xAxisSubLabels ? 55 : 40,
@@ -324,6 +324,7 @@ export const LineChart: React.FC<LineChartProps> = (props: LineChartProps) => {
     props.xAxisSubLabels,
     props.cumulativeLineValue,
     containerRef.current,
+    mobile,
   ]);
 
   return (
