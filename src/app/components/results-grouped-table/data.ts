@@ -10,6 +10,7 @@ export interface GroupedByComponentTableProps {
   }[];
   expanded: string[];
   setExpanded: React.Dispatch<React.SetStateAction<string[]>>;
+  yearSelected: string | null;
 }
 
 export interface ToolbarComponentProps {
