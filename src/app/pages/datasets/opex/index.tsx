@@ -67,11 +67,12 @@ export const OpexPage = () => {
         filterGroups={[]}
         appliedFilters={[]}
         handleResetFilters={handleResetFilters}
-        subtitle={getCMSDataField(
-          cmsData,
-          "pagesDatasetsOpex.subtitle",
-          "Nine years of operating cost actuals against budget across all cost lines: LFA fees, CCM funding, Secretariat and OIG, and non-recurring items. All figures in USD millions.",
-        )}
+        // subtitle={getCMSDataField(
+        //   cmsData,
+        //   "pagesDatasetsOpex.subtitle",
+        //   "Nine years of operating cost actuals against budget across all cost lines: LFA fees, CCM funding, Secretariat and OIG, and non-recurring items. All figures in USD millions.",
+        // )}
+        subtitle="Overview of actual operating cost  against budget across all cost categories: Local Fund Agent (LFA) fees, Country Coordinating Mechanism (CCM) funding, Secretariat and Office of the Inspector General (OIG). All figures in US$ millions."
         toolbarRightContent={toolbarRightContent}
         handleApplyFilters={handleApplyFilters}
         handleCancelFilters={handleCancelFilters}

@@ -104,7 +104,7 @@ export const OpexPageBlock8: React.FC = () => {
       title="Detailed Cost Breakdown"
       subtitle=""
       exportName="cost-breakdown"
-      text="All amounts are in millions (USD). When viewing the 'Variance' tab, blue shows savings (under budget) and red shows overspending (over budget)."
+      text="All amounts  in millions (USD). Figures for 2026 is Forecast (Actuals to June). Variance tab shows savings in blue (under budget) and overspend in red (over budget)."
     >
       <TableContainer
         dataTree

@@ -13,7 +13,8 @@ import {
 } from "app/pages/datasets/opex/blocks/block-3/data";
 
 export const OpexPageBlock3: React.FC = () => {
-  const [selectedView, setSelectedView] = React.useState(VIEWS[0]);
+  // const [selectedView, setSelectedView] = React.useState(VIEWS[0]);
+  const selectedView = VIEWS[1];
 
   const dataEfficiency = useStoreState((state) => state.OpexEfficiency.data);
   const fetchEfficiency = useStoreActions(
@@ -72,14 +73,23 @@ export const OpexPageBlock3: React.FC = () => {
     return calculateYAxisTicks(lineChartData[0].data);
   }, [lineChartData]);
 
-  const datasetText = React.useMemo(() => {
+  const tempDatasetText = React.useMemo(() => {
     if (selectedView === VIEWS[0] && items.length > 0) {
-      return `Operating costs as a share of funds pledged at replenishment, by cycle. Every $1 pledged for GC${get(items[items.length - 1], "gcNumber")} carried ${items[items.length - 1].efficiency.toFixed(2)}¢ of Secretariat operating cost, ${rateImprovement > 0 ? "up" : "down"} from ${items[0].efficiency.toFixed(2)}¢ in GC${get(items[0], "gcNumber")}. Pledges is money raised.`;
+      return `Secretariat operating costs relative to replenishment pledges for each grant cycle, shown as operating cost per US dollar pledged.`;
     } else if (selectedView === VIEWS[1] && items.length > 0) {
-      return `Operating costs as a share of funds disbursed at replenishment, by cycle. Every $1 disbursed for ${items[items.length - 1].name} carried ${items[items.length - 1].efficiency.toFixed(2)}¢ of Secretariat operating cost, ${rateImprovement > 0 ? "up" : "down"} from ${items[0].efficiency.toFixed(2)}¢ in ${items[0].name}. Disbursement is money moved to grants.`;
+      return `Secretariat operating costs relative to grant disbursements by year, shown as operating cost per US dollar disbursed or forecast to be disbursed.`;
     }
     return "";
-  }, [selectedView, items, rateImprovement]);
+  }, [selectedView]);
+
+  // const datasetText = React.useMemo(() => {
+  //   if (selectedView === VIEWS[0] && items.length > 0) {
+  //     return `Operating costs as a share of funds pledged at replenishment, by cycle. Every $1 pledged for GC${get(items[items.length - 1], "gcNumber")} carried ${items[items.length - 1].efficiency.toFixed(2)}¢ of Secretariat operating cost, ${rateImprovement > 0 ? "up" : "down"} from ${items[0].efficiency.toFixed(2)}¢ in GC${get(items[0], "gcNumber")}. Pledges is money raised.`;
+  //   } else if (selectedView === VIEWS[1] && items.length > 0) {
+  //     return `Operating costs as a share of funds disbursed at replenishment, by cycle. Every $1 disbursed for ${items[items.length - 1].name} carried ${items[items.length - 1].efficiency.toFixed(2)}¢ of Secretariat operating cost, ${rateImprovement > 0 ? "up" : "down"} from ${items[0].efficiency.toFixed(2)}¢ in ${items[0].name}. Disbursement is money moved to grants.`;
+  //   }
+  //   return "";
+  // }, [selectedView, items, rateImprovement]);
 
   const cumulativeText = React.useMemo(() => {
     if (selectedView === VIEWS[0] && items.length > 0) {
@@ -130,7 +140,7 @@ export const OpexPageBlock3: React.FC = () => {
   return (
     <OpexPageChartBlock
       data={exportData}
-      views={VIEWS}
+      // views={VIEWS}
       empty={false}
       loading={loadingEfficiency}
       infoType="opex"
@@ -139,8 +149,9 @@ export const OpexPageBlock3: React.FC = () => {
       viewSelected={selectedView}
       subtitle=""
       exportName="opex-efficiency"
-      onViewChange={setSelectedView}
-      text={datasetText}
+      // onViewChange={setSelectedView}
+      // text={datasetText}
+      text={tempDatasetText}
     >
       <Box marginBottom="40px">
         <Box>

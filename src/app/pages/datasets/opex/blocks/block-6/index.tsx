@@ -54,6 +54,17 @@ export const OpexPageBlock6: React.FC = () => {
     };
   }, [items, selectedView]);
 
+  const textToDisplay = React.useMemo(() => {
+    switch (selectedView) {
+      case VIEWS[0]:
+        return `Path 2017-2026 by nature of cost; Figures shows for 2026 is budget.`;
+      case VIEWS[1]:
+        return `Path 2017-2026 Percentage share of total OPEX. `;
+      default:
+        return "";
+    }
+  }, [selectedView]);
+
   React.useEffect(() => {
     fetchKeyCosts({});
   }, []);
@@ -66,12 +77,14 @@ export const OpexPageBlock6: React.FC = () => {
       loading={loadingKeyCosts}
       infoType="opex"
       id="key-costs"
-      title={`Key costs over time, ${get(xAxisKeys, "[0]", "")}-${get(xAxisKeys, `[${xAxisKeys.length - 1}]`, "")}`}
+      // title={`Key costs over time, ${get(xAxisKeys, "[0]", "")}-${get(xAxisKeys, `[${xAxisKeys.length - 1}]`, "")}`}
+      title="Key costs over time, 2017-2026" // Just ensuring everything is static
       viewSelected={selectedView}
       subtitle=""
       exportName="key-costs"
       onViewChange={setSelectedView}
-      text={`Sparkline shows the path ${get(xAxisKeys, "[0]", "")} → ${get(xAxisKeys, `[${xAxisKeys.length - 1}]`, "")}; ${get(xAxisKeys, `[${xAxisKeys.length - 1}]`, "")} is budget. Figure shown is the  ${get(xAxisKeys, `[${xAxisKeys.length - 1}]`, "")} budget.`}
+      // text={`Sparkline shows the path ${get(xAxisKeys, "[0]", "")} → ${get(xAxisKeys, `[${xAxisKeys.length - 1}]`, "")}; ${get(xAxisKeys, `[${xAxisKeys.length - 1}]`, "")} is budget. Figure shown is the  ${get(xAxisKeys, `[${xAxisKeys.length - 1}]`, "")} budget.`}
+      text={textToDisplay}
     >
       <Grid
         container
@@ -122,11 +135,7 @@ export const OpexPageBlock6: React.FC = () => {
                   : item.endYearBudgetPercentage.toFixed(2).replace(".00", "") +
                     "%"}
               </Typography>
-              <Typography
-                fontSize="12px"
-                fontWeight="700"
-                color={item.growthPercentage >= 0 ? "#013E77" : "#108E09"}
-              >
+              <Typography fontSize="12px" fontWeight="700" color={"#013E77"}>
                 {selectedView === VIEWS[0] ? (
                   <>
                     {item.growthPercentage >= 0 ? "+" : ""}
@@ -160,10 +169,10 @@ export const OpexPageBlock6: React.FC = () => {
                         : item.actualPercentageValues,
                     areaStyle: {
                       opacity: 0.1,
-                      color: item.growthPercentage >= 0 ? "#013E77" : "#108E09",
+                      color: "#013E77",
                     },
                     itemStyle: {
-                      color: item.growthPercentage >= 0 ? "#013E77" : "#108E09",
+                      color: "#013E77",
                     },
                   },
                 ]}

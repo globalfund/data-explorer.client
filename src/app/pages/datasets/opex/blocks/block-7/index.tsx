@@ -45,10 +45,11 @@ export const OpexPageBlock7: React.FC = () => {
       loading={loadingIndexedTrends}
       infoType="opex"
       id="indexed-trends"
-      title="Indexed Trends"
+      title="Indexed trends (2017 = 100)" // Modified
       subtitle=""
       exportName="indexed-trends"
-      text={`Actuals indexed to ${get(xAxisKeys, "[0]", "")}, so fast movers are comparable against large slow movers. Click legend chips to show or hide`}
+      // text={`Actuals indexed to ${get(xAxisKeys, "[0]", "")}, so fast movers are comparable against large slow movers. Click legend chips to show or hide`}
+      text="Actuals indexed to 2017, to enable relative comparison across cost categories. Click legend chips to show or hide lines."
     >
       <LineChart2 xAxisKeys={xAxisKeys} data={items} />
     </OpexPageChartBlock>

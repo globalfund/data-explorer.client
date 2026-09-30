@@ -104,12 +104,13 @@ export const OpexPageBlock5: React.FC = () => {
       loading={loadingCostComposition}
       infoType="opex"
       id="cost-composition"
-      title="Cost composition over time"
+      title="Cost breakdown over time" // Modified
       viewSelected={selectedView}
       subtitle=""
       exportName="cost-composition"
       onViewChange={setSelectedView}
-      text="Workforce is the dominant and growing block. Travel collapses in 2020-21, partially recovers, then falls again in 2025. LFA fees and office infrastructure decline steadily in both absolute and share terms."
+      // text="Workforce is the dominant and growing block. Travel collapses in 2020-21, partially recovers, then falls again in 2025. LFA fees and office infrastructure decline steadily in both absolute and share terms."
+      text="Evolution of the cost breakdown over time"
     >
       <BarChart
         stack

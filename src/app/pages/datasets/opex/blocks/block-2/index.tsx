@@ -7,7 +7,7 @@ import {
   VIEWS,
   operatingCostsData,
 } from "app/pages/datasets/opex/blocks/block-2/data";
-import { simpleFormatter } from "../block-1/data";
+// import { simpleFormatter } from "../block-1/data";
 
 export const OpexPageBlock2: React.FC = () => {
   const [selectedView, setSelectedView] = React.useState(VIEWS[0]);
@@ -77,6 +77,19 @@ export const OpexPageBlock2: React.FC = () => {
     fetchOperatingCosts({ routeParams: { category } });
   }, [selectedView]);
 
+  const textToDisplay = React.useMemo(() => {
+    switch (selectedView) {
+      case VIEWS[0]:
+        return `Total operating costs. The solid line shows actual expenditure to date; the dotted line shows the forecast for the rest of the year.`;
+      case VIEWS[1]:
+        return `Costs for staff, individual consultants and temporary consultants. The solid line shows actual expenditure to date; the dotted line shows the forecast for the rest of the year.`;
+      case VIEWS[2]:
+        return `All operating costs outside workforce. The solid line shows actual expenditure to date; the dotted line shows the forecast for the rest of the year.`;
+      default:
+        return "";
+    }
+  }, [selectedView]);
+
   return (
     <OpexPageChartBlock
       views={VIEWS}
@@ -90,7 +103,8 @@ export const OpexPageBlock2: React.FC = () => {
       subtitle="Actual vs budget"
       exportName="operating-costs"
       onViewChange={setSelectedView}
-      text={`Total operating costs, including non-recurring and extraordinary items. Under budget in 7 of 9 completed years. For ${endYear} the line is solid over the actuals period (to 30 June, ${simpleFormatter(get(dataOperatingCosts, "actualsLineYValues[0]", 0))} booked) and dotted over the forecast remainder, landing at the full-year ${simpleFormatter(get(dataFormatted, `[2].data[${xAxisKeys.length - 1}]`, 0))}.`}
+      text={textToDisplay}
+      // text={`Total operating costs, including non-recurring and extraordinary items. Under budget in 7 of 9 completed years. For ${endYear} the line is solid over the actuals period (to 30 June, ${simpleFormatter(get(dataOperatingCosts, "actualsLineYValues[0]", 0))} booked) and dotted over the forecast remainder, landing at the full-year ${simpleFormatter(get(dataFormatted, `[2].data[${xAxisKeys.length - 1}]`, 0))}.`}
     >
       <LineChart showLegend xAxisKeys={xAxisKeys} data={dataFormatted} />
       <BarChart

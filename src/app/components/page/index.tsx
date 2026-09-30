@@ -1,4 +1,6 @@
 import React from "react";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Outlet } from "react-router-dom";
 import { Header } from "app/components/header";
@@ -10,9 +12,8 @@ import { useScrollToAnchor } from "app/hooks/useScrollToAnchor";
 
 export const Page: React.FC = () => {
   useUrlFilters();
-  useRouteListener();
+  const currentPath = useRouteListener();
   useScrollToAnchor();
-
   return (
     <React.Fragment>
       <Header />
@@ -30,6 +31,30 @@ export const Page: React.FC = () => {
           <Outlet />
         </Box>
       </Container>
+      {currentPath === "/opex" && (
+        <>
+          <Divider sx={{ width: "100vw" }} />
+          <Container
+            maxWidth="lg"
+            disableGutters
+            sx={{
+              "@media (max-width: 1200px)": {
+                padding: "0 16px",
+              },
+            }}
+          >
+            <Typography
+              fontSize="14px"
+              fontWeight="400"
+              color="#373D43"
+              padding="20px 0"
+            >
+              Operating expenditure, 2017-2026 · The Global Fund Data Explorer ·
+              demonstration built with forecast 2026 data
+            </Typography>
+          </Container>
+        </>
+      )}
       <Footer />
     </React.Fragment>
   );

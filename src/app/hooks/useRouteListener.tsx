@@ -17,5 +17,5 @@ export const useRouteListener = () => {
     }
   }, [location.pathname]);
 
-  return null;
+  return location.pathname;
 };
