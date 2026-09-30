@@ -475,6 +475,7 @@ export const AnnualResultsPage: React.FC = () => {
             data={groupedByComponentData}
             expanded={groupedByComponentExpanded}
             setExpanded={setGroupedByComponentExpanded}
+            yearSelected={yearSelected}
           />
         );
       case dropdownItems[1].value:
