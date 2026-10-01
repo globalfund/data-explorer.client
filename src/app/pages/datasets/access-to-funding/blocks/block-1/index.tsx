@@ -182,11 +182,10 @@ export const AccessToFundingBlock1: React.FC<AccessToFundingBlock1Props> = (
             {!loadingStats ? (
               <Typography fontSize="14px" color="#373D43">
                 {item.incomeLevelCounts
-                  .map((incomeLevelCount) => (
-                    <React.Fragment key={incomeLevelCount.incomeLevel}>
-                      {incomeLevelCount.count} {incomeLevelCount.incomeLevel}
-                    </React.Fragment>
-                  ))
+                  .map(
+                    (incomeLevelCount) =>
+                      `${incomeLevelCount.count} ${incomeLevelCount.incomeLevel}`,
+                  )
                   .join(" · ")}
               </Typography>
             ) : (
