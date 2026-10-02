@@ -145,7 +145,7 @@ export const OpexPageBlock3: React.FC = () => {
       loading={loadingEfficiency}
       infoType="opex"
       id="opex-efficiency"
-      title="OPEX efficiency"
+      title="OPEX vs. Grant Disbursement"
       viewSelected={selectedView}
       subtitle=""
       exportName="opex-efficiency"

@@ -50,7 +50,7 @@ export const OpexPageBlock8: React.FC = () => {
         minWidth: 150,
         headerSort: false,
       },
-      ...years.reverse().map((year) => ({
+      ...years.map((year) => ({
         title: year,
         field: `${year}.${selectedView.toLowerCase()}`,
         width: "8%",
@@ -61,7 +61,7 @@ export const OpexPageBlock8: React.FC = () => {
           if (selectedView !== VIEWS[2]) {
             return value;
           }
-          const color = v.getValue() < 0 ? "#EA1541" : "#013E77";
+          const color = v.getValue() < 0 ? "#013E77" : "#108E09";
           return `<span style="color: ${color}">
               ${v.getValue() > 0 ? "+" : ""}${value}
             </span>`;

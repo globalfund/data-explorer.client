@@ -44,8 +44,9 @@ export const OpexPage = () => {
           <Skeleton variant="rectangular" width="100%" height={24} />
         ) : (
           <Typography fontSize="14px">
-            {endYear} actuals to <b>30 June {endYear}</b> · forecast thereafter
-            · updated <b>1 July {endYear}</b>
+            {/* {endYear} actuals to <b>30 June {endYear}</b> · forecast thereafter
+            · updated <b>1 July {endYear}</b> */}
+            2026 Actuals to June 2026, Updated Q3 2026.
           </Typography>
         )}
       </Box>
@@ -62,7 +63,7 @@ export const OpexPage = () => {
         title={getCMSDataField(
           cmsData,
           "pagesDatasetsOpex.title",
-          "Operating expenditure, {years}",
+          "Operating Expenditure, {years}",
         ).replace("{years}", `${startYear}-${endYear}`)}
         filterGroups={[]}
         appliedFilters={[]}
@@ -72,7 +73,7 @@ export const OpexPage = () => {
         //   "pagesDatasetsOpex.subtitle",
         //   "Nine years of operating cost actuals against budget across all cost lines: LFA fees, CCM funding, Secretariat and OIG, and non-recurring items. All figures in USD millions.",
         // )}
-        subtitle="Overview of actual operating cost  against budget across all cost categories: Local Fund Agent (LFA) fees, Country Coordinating Mechanism (CCM) funding, Secretariat and Office of the Inspector General (OIG). All figures in US$ millions."
+        subtitle="Overview of actual operating expenditure against budget across key categories. All figures in US$ Millions"
         toolbarRightContent={toolbarRightContent}
         handleApplyFilters={handleApplyFilters}
         handleCancelFilters={handleCancelFilters}

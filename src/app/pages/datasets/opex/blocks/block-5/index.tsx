@@ -21,12 +21,20 @@ export const OpexPageBlock5: React.FC = () => {
     (state) => state.OpexCostComposition.loading,
   );
 
+  console.log(dataCostComposition, "dataCostComposition");
+
   const xAxisKeys = get(dataCostComposition, "years", []);
   const allCategories = get(dataCostComposition, "categories", []);
   const values = get(dataCostComposition, "values", []) as number[][];
 
+  const mainCategories = React.useMemo(() => {
+    return allCategories.filter((category) =>
+      costCompositionOverTimeMainCategories.includes(category),
+    );
+  }, [allCategories, costCompositionOverTimeMainCategories]);
+
   const transformedData = React.useMemo(() => {
-    const mainCatInexes = allCategories
+    const mainCatIndexes = allCategories
       .map((category, index) =>
         costCompositionOverTimeMainCategories.includes(category) ? index : -1,
       )
@@ -38,9 +46,12 @@ export const OpexPageBlock5: React.FC = () => {
       .filter((index) => index !== -1);
 
     const transformed = values.map((item) => {
-      const mainCategories = mainCatInexes.map((index) => item[index]);
-      const otherCategories = otherCatIndexes.map((index) => item[index]);
-      return [...mainCategories, otherCategories.reduce((a, b) => a + b, 0)];
+      const mainCategoryValues = mainCatIndexes.map((index) => item[index]);
+      const otherCategoryValues = otherCatIndexes.map((index) => item[index]);
+      return [
+        ...mainCategoryValues,
+        otherCategoryValues.reduce((a, b) => a + b, 0),
+      ];
     });
 
     if (selectedView === VIEWS[0]) {
@@ -96,6 +107,8 @@ export const OpexPageBlock5: React.FC = () => {
     fetchCostComposition({});
   }, []);
 
+  console.log(transformedData, "transformedData");
+
   return (
     <OpexPageChartBlock
       views={VIEWS}
@@ -127,17 +140,14 @@ export const OpexPageBlock5: React.FC = () => {
             ? undefined
             : (value) => `${value.toFixed(1).replace(".0", "")}%`
         }
-        categories={[
-          ...costCompositionOverTimeMainCategories,
-          "Other (incl. non-recurring)",
-        ]}
+        categories={[...mainCategories, "Other (incl. non-recurring)"]}
         colors={[
-          "#D9D9D9",
+          "#0A2840",
           "#00B5AE",
-          "#108E09",
           "#007B50",
           "#C3EDFD",
-          "#0A2840",
+          "#108E09",
+          "#D9D9D9",
           "#144BC0",
         ]}
       />

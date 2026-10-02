@@ -54,17 +54,6 @@ export const OpexPageBlock6: React.FC = () => {
     };
   }, [items, selectedView]);
 
-  const textToDisplay = React.useMemo(() => {
-    switch (selectedView) {
-      case VIEWS[0]:
-        return `Path 2017-2026 by nature of cost; Figures shows for 2026 is budget.`;
-      case VIEWS[1]:
-        return `Path 2017-2026 Percentage share of total OPEX. `;
-      default:
-        return "";
-    }
-  }, [selectedView]);
-
   React.useEffect(() => {
     fetchKeyCosts({});
   }, []);
@@ -84,7 +73,7 @@ export const OpexPageBlock6: React.FC = () => {
       exportName="key-costs"
       onViewChange={setSelectedView}
       // text={`Sparkline shows the path ${get(xAxisKeys, "[0]", "")} → ${get(xAxisKeys, `[${xAxisKeys.length - 1}]`, "")}; ${get(xAxisKeys, `[${xAxisKeys.length - 1}]`, "")} is budget. Figure shown is the  ${get(xAxisKeys, `[${xAxisKeys.length - 1}]`, "")} budget.`}
-      text={textToDisplay}
+      text=""
     >
       <Grid
         container

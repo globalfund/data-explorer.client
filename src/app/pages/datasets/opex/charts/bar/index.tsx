@@ -234,7 +234,7 @@ export const BarChart: React.FC<BarChartProps> = (props: BarChartProps) => {
             : {
                 borderRadius: 8,
                 color: (params: any) =>
-                  params.value < 0 ? "#013E77" : "#EA1541",
+                  params.value < 0 ? "#007B50" : "#144BC0",
               },
         })),
         tooltip: {
@@ -348,7 +348,7 @@ export const BarChart: React.FC<BarChartProps> = (props: BarChartProps) => {
             : {
                 borderRadius: 8,
                 color: (params: any) =>
-                  params.value < 0 ? "#013E77" : "#EA1541",
+                  params.value < 0 ? "#007B50" : "#144BC0",
               },
         })),
         tooltip: {
@@ -409,13 +409,13 @@ export const BarChart: React.FC<BarChartProps> = (props: BarChartProps) => {
           }}
         >
           <Box>
-            <Box bgcolor="#013E77" />
+            <Box bgcolor="#007B50" />
             <Typography fontSize="14px" color="#6B7280">
               Under budget
             </Typography>
           </Box>
           <Box>
-            <Box bgcolor="#EA1541" />
+            <Box bgcolor="#144BC0" />
             <Typography fontSize="14px" color="#6B7280">
               Over budget
             </Typography>

@@ -98,7 +98,7 @@ export const OpexPageBlock2: React.FC = () => {
       infoType="opex"
       data={exportData}
       id="operating-costs"
-      title="Operating Costs"
+      title="Operating Expenditures"
       viewSelected={selectedView}
       subtitle="Actual vs budget"
       exportName="operating-costs"
@@ -112,7 +112,7 @@ export const OpexPageBlock2: React.FC = () => {
         categories={[""]}
         data={barChartData}
         xAxisKeys={xAxisKeys}
-        colors={["#013E77", "#EA1541"]}
+        colors={["#007B50", "#144BC0"]}
       />
     </OpexPageChartBlock>
   );
