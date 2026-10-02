@@ -234,3 +234,53 @@ rejects(
 console.log(
   `Page narrative contract checks passed for ${bundle.page.page_type}/${bundle.page.page_id}`,
 );
+
+const accessFixture = JSON.parse(
+  fs.readFileSync("tests/fixtures/page-bundle-access-to-funding.json", "utf8"),
+);
+const accessRef = { ...ref, page_type: "access-to-funding" };
+const accessBundle = parse(accessFixture, accessRef);
+assert.ok(accessBundle, "actual B35 serializer bundle must parse");
+assert.equal(accessBundle.summary, null);
+assert.equal(accessBundle.sources.length, 69);
+assert.equal(accessBundle.calculations.length, 46);
+assert.deepEqual(
+  accessBundle.sections.map((item) => item.id),
+  [
+    "access_to_funding.eligibility",
+    "access_to_funding.allocation",
+    "access_to_funding.allocation_cycles",
+    "access_to_funding.funding_requests",
+  ],
+);
+assert.ok(
+  accessBundle.sections.every(
+    (item) => item.status === "ready" && item.claims.length > 0,
+  ),
+);
+for (const item of accessBundle.sections) {
+  for (const claim of item.claims)
+    assert.ok(
+      contracts.expandNarrativeCitations(accessBundle, claim.evidence_ids)
+        .length > 0,
+    );
+}
+assert.equal(parse(accessFixture, ref), null, "page type mismatch");
+const invalidAccess = structuredClone(accessFixture);
+invalidAccess.sections[0].claims[0].evidence_ids = ["missing"];
+assert.equal(
+  parse(invalidAccess, accessRef),
+  null,
+  "access fixture dangling citation",
+);
+console.log("Access to Funding serializer contract passed");
+const accessUiFixture = JSON.parse(
+  fs.readFileSync(
+    "cypress/fixtures/narratives/access-to-funding-page.json",
+    "utf8",
+  ),
+);
+assert.ok(
+  parse(accessUiFixture, accessRef),
+  "synthetic Access to Funding UI fixture must parse",
+);

@@ -1,0 +1,259 @@
+{
+  "schema_version": 2,
+  "page": {
+    "page_type": "access-to-funding",
+    "page_id": "global",
+    "locale": "en",
+    "scope_key": "default"
+  },
+  "metadata": {
+    "snapshot_id": "44baa2bce2fc65f03bbe59faaedce585a630a1e50ba87f922aa4fef4fed88fc9",
+    "revision_id": "af-synthetic-ui",
+    "model": "offline/synthetic",
+    "prompt_version": "synthetic-ui-v1",
+    "style_version": "synthetic-ui-v1",
+    "generated_at": "2026-10-02T08:34:35Z",
+    "profile_fingerprint": "synthetic-ui-v1"
+  },
+  "presentation": {
+    "page_type": "access-to-funding",
+    "groups": [
+      {
+        "id": "access-to-funding",
+        "title": "Access to Funding"
+      }
+    ],
+    "sections": [
+      {
+        "id": "access_to_funding.eligibility",
+        "group": "access-to-funding",
+        "title": "Test eligibility",
+        "allowed_headings": []
+      },
+      {
+        "id": "access_to_funding.allocation",
+        "group": "access-to-funding",
+        "title": "Test allocation",
+        "allowed_headings": []
+      },
+      {
+        "id": "access_to_funding.allocation_cycles",
+        "group": "access-to-funding",
+        "title": "Test allocation_cycles",
+        "allowed_headings": []
+      },
+      {
+        "id": "access_to_funding.funding_requests",
+        "group": "access-to-funding",
+        "title": "Test funding_requests",
+        "allowed_headings": []
+      }
+    ],
+    "summary": null
+  },
+  "sources": [
+    {
+      "id": "af.test.eligibility",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/stats/2026",
+      "document_locator": null,
+      "content_hash": "533cbfe95669c4380a5e671d25fd9ae9699eda36f6c29c3d3be349cb2f3b778e",
+      "retrieved_at": "2026-10-02T08:34:35Z",
+      "value": 1,
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "count",
+        "currency": null,
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "metric",
+            "value": "synthetic eligibility"
+          }
+        ]
+      }
+    },
+    {
+      "id": "af.test.allocation",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "165f0f8e557c430929784035df7eeacf7a3ff795f10d76c8707409bba31cb617",
+      "retrieved_at": "2026-10-02T08:34:35Z",
+      "value": 100,
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "metric",
+            "value": "synthetic allocation"
+          }
+        ]
+      }
+    },
+    {
+      "id": "af.test.allocation_cycles",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "c0b93be7b246c0a9474393564c57fc378b19b04f49f76ee29d98a4b0c2ac2626",
+      "retrieved_at": "2026-10-02T08:34:35Z",
+      "value": 100,
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "metric",
+            "value": "synthetic allocation_cycles"
+          }
+        ]
+      }
+    },
+    {
+      "id": "af.test.funding_requests",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/funding-requests",
+      "document_locator": null,
+      "content_hash": "9870cfdddcc44f5e70e79ae1667af47c0ca31d699ec111bf61c689359db0f6f2",
+      "retrieved_at": "2026-10-02T08:34:35Z",
+      "value": 1,
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "Window 7",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "count",
+        "currency": null,
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "metric",
+            "value": "synthetic funding_requests"
+          }
+        ]
+      }
+    }
+  ],
+  "calculations": [],
+  "sections": [
+    {
+      "id": "access_to_funding.eligibility",
+      "group": "access-to-funding",
+      "title": "Test eligibility",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "Synthetic eligibility fixture prose.",
+          "evidence_ids": [
+            "af.test.eligibility"
+          ],
+          "heading": null
+        }
+      ]
+    },
+    {
+      "id": "access_to_funding.allocation",
+      "group": "access-to-funding",
+      "title": "Test allocation",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "Synthetic allocation fixture prose.",
+          "evidence_ids": [
+            "af.test.allocation"
+          ],
+          "heading": null
+        }
+      ]
+    },
+    {
+      "id": "access_to_funding.allocation_cycles",
+      "group": "access-to-funding",
+      "title": "Test allocation_cycles",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "Synthetic allocation_cycles fixture prose.",
+          "evidence_ids": [
+            "af.test.allocation_cycles"
+          ],
+          "heading": null
+        }
+      ]
+    },
+    {
+      "id": "access_to_funding.funding_requests",
+      "group": "access-to-funding",
+      "title": "Test funding_requests",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "Synthetic funding_requests fixture prose.",
+          "evidence_ids": [
+            "af.test.funding_requests"
+          ],
+          "heading": null
+        }
+      ]
+    }
+  ],
+  "summary": null
+}

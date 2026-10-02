@@ -1,0 +1,5656 @@
+{
+  "schema_version": 2,
+  "page": {
+    "page_type": "access-to-funding",
+    "page_id": "global",
+    "locale": "en",
+    "scope_key": "default"
+  },
+  "metadata": {
+    "snapshot_id": "54c84fb3c739cbfa05fe8a5e3b6b7a53207d154e4d620953492ae7d7086762e7",
+    "revision_id": "8cf6cd21-9996-4646-8ac5-32f5b6a0686e",
+    "model": "offline-mock",
+    "prompt_version": "page-v1-5191318fc4dda1d0ee32f42ca12be0645a3ffe1c4486b7a693060707a80caf34",
+    "style_version": "page-v1-9c2ec2e8a2e53e4ff7cd5510d38fc40a96445fe683b5554972f38503e306def2",
+    "generated_at": "2026-10-02T11:26:32.854945Z",
+    "profile_fingerprint": "profile-v1-026353b31f747ca5f02cc49e0fba171b4a492d3a6b83004de8d8ca592b63f651"
+  },
+  "presentation": {
+    "page_type": "access-to-funding",
+    "groups": [
+      {
+        "id": "access-to-funding",
+        "title": "Access to Funding"
+      }
+    ],
+    "sections": [
+      {
+        "id": "access_to_funding.eligibility",
+        "group": "access-to-funding",
+        "title": "Eligibility",
+        "allowed_headings": []
+      },
+      {
+        "id": "access_to_funding.allocation",
+        "group": "access-to-funding",
+        "title": "Allocation",
+        "allowed_headings": []
+      },
+      {
+        "id": "access_to_funding.allocation_cycles",
+        "group": "access-to-funding",
+        "title": "Allocation cycles",
+        "allowed_headings": []
+      },
+      {
+        "id": "access_to_funding.funding_requests",
+        "group": "access-to-funding",
+        "title": "Funding requests",
+        "allowed_headings": []
+      }
+    ],
+    "summary": null
+  },
+  "sources": [
+    {
+      "id": "atf.9d38b1da6a01d0c1a2f9",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/stats/2026",
+      "document_locator": null,
+      "content_hash": "cabab2b2f8f14cb85d95bc6c39b4d69f801b98dff6472ede75ec39f4b2525e5a",
+      "retrieved_at": "2026-10-02T08:34:34.646506Z",
+      "value": "118",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "eligible countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV"
+          },
+          {
+            "name": "measure",
+            "value": "eligible_count"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "display_value",
+            "value": "118"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.70ed8f8715bb26e51d89",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/stats/2026",
+      "document_locator": null,
+      "content_hash": "cabab2b2f8f14cb85d95bc6c39b4d69f801b98dff6472ede75ec39f4b2525e5a",
+      "retrieved_at": "2026-10-02T08:34:34.646506Z",
+      "value": "26",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "eligible countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV: Low income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "income_level",
+            "value": "Low income"
+          },
+          {
+            "name": "display_value",
+            "value": "26"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.42a253b447af42899be4",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/stats/2026",
+      "document_locator": null,
+      "content_hash": "cabab2b2f8f14cb85d95bc6c39b4d69f801b98dff6472ede75ec39f4b2525e5a",
+      "retrieved_at": "2026-10-02T08:34:34.646506Z",
+      "value": "32",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "eligible countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV: Lower-Lower middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "income_level",
+            "value": "Lower-Lower middle income"
+          },
+          {
+            "name": "display_value",
+            "value": "32"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.29aa8de6e1fdd56e887d",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/stats/2026",
+      "document_locator": null,
+      "content_hash": "cabab2b2f8f14cb85d95bc6c39b4d69f801b98dff6472ede75ec39f4b2525e5a",
+      "retrieved_at": "2026-10-02T08:34:34.646506Z",
+      "value": "38",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "eligible countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV: Upper middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "income_level",
+            "value": "Upper middle income"
+          },
+          {
+            "name": "display_value",
+            "value": "38"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.6a217395d5d9c50b3b14",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/stats/2026",
+      "document_locator": null,
+      "content_hash": "cabab2b2f8f14cb85d95bc6c39b4d69f801b98dff6472ede75ec39f4b2525e5a",
+      "retrieved_at": "2026-10-02T08:34:34.646506Z",
+      "value": "22",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "eligible countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV: Upper-Lower middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "income_level",
+            "value": "Upper-Lower middle income"
+          },
+          {
+            "name": "display_value",
+            "value": "22"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.dde6c6a1869c0f93b640",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/stats/2026",
+      "document_locator": null,
+      "content_hash": "cabab2b2f8f14cb85d95bc6c39b4d69f801b98dff6472ede75ec39f4b2525e5a",
+      "retrieved_at": "2026-10-02T08:34:34.646506Z",
+      "value": "65",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "eligible countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria"
+          },
+          {
+            "name": "measure",
+            "value": "eligible_count"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "display_value",
+            "value": "65"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.304b56285b7b132b061a",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/stats/2026",
+      "document_locator": null,
+      "content_hash": "cabab2b2f8f14cb85d95bc6c39b4d69f801b98dff6472ede75ec39f4b2525e5a",
+      "retrieved_at": "2026-10-02T08:34:34.646506Z",
+      "value": "25",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "eligible countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria: Low income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "income_level",
+            "value": "Low income"
+          },
+          {
+            "name": "display_value",
+            "value": "25"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.06f368420cde20634619",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/stats/2026",
+      "document_locator": null,
+      "content_hash": "cabab2b2f8f14cb85d95bc6c39b4d69f801b98dff6472ede75ec39f4b2525e5a",
+      "retrieved_at": "2026-10-02T08:34:34.646506Z",
+      "value": "27",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "eligible countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria: Lower-Lower middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "income_level",
+            "value": "Lower-Lower middle income"
+          },
+          {
+            "name": "display_value",
+            "value": "27"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.18942d2c59e8cd43498a",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/stats/2026",
+      "document_locator": null,
+      "content_hash": "cabab2b2f8f14cb85d95bc6c39b4d69f801b98dff6472ede75ec39f4b2525e5a",
+      "retrieved_at": "2026-10-02T08:34:34.646506Z",
+      "value": "3",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "eligible countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria: Upper middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "income_level",
+            "value": "Upper middle income"
+          },
+          {
+            "name": "display_value",
+            "value": "3"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.6baf98d97b3e8e0b8e64",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/stats/2026",
+      "document_locator": null,
+      "content_hash": "cabab2b2f8f14cb85d95bc6c39b4d69f801b98dff6472ede75ec39f4b2525e5a",
+      "retrieved_at": "2026-10-02T08:34:34.646506Z",
+      "value": "10",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "eligible countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria: Upper-Lower middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "income_level",
+            "value": "Upper-Lower middle income"
+          },
+          {
+            "name": "display_value",
+            "value": "10"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.1bad1c19433c4b28b3cc",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/stats/2026",
+      "document_locator": null,
+      "content_hash": "cabab2b2f8f14cb85d95bc6c39b4d69f801b98dff6472ede75ec39f4b2525e5a",
+      "retrieved_at": "2026-10-02T08:34:34.646506Z",
+      "value": "109",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "eligible countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "measure",
+            "value": "eligible_count"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "display_value",
+            "value": "109"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.fc4d5ea4f831ddb0ced4",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/stats/2026",
+      "document_locator": null,
+      "content_hash": "cabab2b2f8f14cb85d95bc6c39b4d69f801b98dff6472ede75ec39f4b2525e5a",
+      "retrieved_at": "2026-10-02T08:34:34.646506Z",
+      "value": "26",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "eligible countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis: Low income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "income_level",
+            "value": "Low income"
+          },
+          {
+            "name": "display_value",
+            "value": "26"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.1a035729bbbe447e13b6",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/stats/2026",
+      "document_locator": null,
+      "content_hash": "cabab2b2f8f14cb85d95bc6c39b4d69f801b98dff6472ede75ec39f4b2525e5a",
+      "retrieved_at": "2026-10-02T08:34:34.646506Z",
+      "value": "32",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "eligible countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis: Lower-Lower middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "income_level",
+            "value": "Lower-Lower middle income"
+          },
+          {
+            "name": "display_value",
+            "value": "32"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.4aa3c04494b2a794abd4",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/stats/2026",
+      "document_locator": null,
+      "content_hash": "cabab2b2f8f14cb85d95bc6c39b4d69f801b98dff6472ede75ec39f4b2525e5a",
+      "retrieved_at": "2026-10-02T08:34:34.646506Z",
+      "value": "31",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "eligible countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis: Upper middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "income_level",
+            "value": "Upper middle income"
+          },
+          {
+            "name": "display_value",
+            "value": "31"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.171f6f7a584e6156e575",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/stats/2026",
+      "document_locator": null,
+      "content_hash": "cabab2b2f8f14cb85d95bc6c39b4d69f801b98dff6472ede75ec39f4b2525e5a",
+      "retrieved_at": "2026-10-02T08:34:34.646506Z",
+      "value": "20",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "eligible countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis: Upper-Lower middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "income_level",
+            "value": "Upper-Lower middle income"
+          },
+          {
+            "name": "display_value",
+            "value": "20"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.01aa0c56fadb5b8172d5",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/table",
+      "document_locator": null,
+      "content_hash": "de8488e11697f080edabc925d1e9fadeddddfe37a8275e1b2f1bc10422797bdc",
+      "retrieved_at": "2026-10-02T08:34:34.995949Z",
+      "value": "93",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV: High"
+          },
+          {
+            "name": "measure",
+            "value": "burden_count"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "category",
+            "value": "High"
+          },
+          {
+            "name": "display_value",
+            "value": "93"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.98c147bc5688959444d3",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/table",
+      "document_locator": null,
+      "content_hash": "de8488e11697f080edabc925d1e9fadeddddfe37a8275e1b2f1bc10422797bdc",
+      "retrieved_at": "2026-10-02T08:34:34.995949Z",
+      "value": "34",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV: Not High"
+          },
+          {
+            "name": "measure",
+            "value": "burden_count"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "category",
+            "value": "Not High"
+          },
+          {
+            "name": "display_value",
+            "value": "34"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.85668cd888e4ba1794f8",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/table",
+      "document_locator": null,
+      "content_hash": "de8488e11697f080edabc925d1e9fadeddddfe37a8275e1b2f1bc10422797bdc",
+      "retrieved_at": "2026-10-02T08:34:34.995949Z",
+      "value": "118",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV: Eligible"
+          },
+          {
+            "name": "measure",
+            "value": "eligibility_status_count"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "category",
+            "value": "Eligible"
+          },
+          {
+            "name": "display_value",
+            "value": "118"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.1b3862bf57dbbd9eeef8",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/table",
+      "document_locator": null,
+      "content_hash": "de8488e11697f080edabc925d1e9fadeddddfe37a8275e1b2f1bc10422797bdc",
+      "retrieved_at": "2026-10-02T08:34:34.995949Z",
+      "value": "9",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV: Not Eligible"
+          },
+          {
+            "name": "measure",
+            "value": "eligibility_status_count"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "category",
+            "value": "Not Eligible"
+          },
+          {
+            "name": "display_value",
+            "value": "9"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.2932bc86313b8f36b1d3",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/table",
+      "document_locator": null,
+      "content_hash": "de8488e11697f080edabc925d1e9fadeddddfe37a8275e1b2f1bc10422797bdc",
+      "retrieved_at": "2026-10-02T08:34:34.995949Z",
+      "value": "53",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria: High"
+          },
+          {
+            "name": "measure",
+            "value": "burden_count"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "category",
+            "value": "High"
+          },
+          {
+            "name": "display_value",
+            "value": "53"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.ae78030c5f3302cb16e7",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/table",
+      "document_locator": null,
+      "content_hash": "de8488e11697f080edabc925d1e9fadeddddfe37a8275e1b2f1bc10422797bdc",
+      "retrieved_at": "2026-10-02T08:34:34.995949Z",
+      "value": "74",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria: Not High"
+          },
+          {
+            "name": "measure",
+            "value": "burden_count"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "category",
+            "value": "Not High"
+          },
+          {
+            "name": "display_value",
+            "value": "74"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.7c63b97e8eed26232aaa",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/table",
+      "document_locator": null,
+      "content_hash": "de8488e11697f080edabc925d1e9fadeddddfe37a8275e1b2f1bc10422797bdc",
+      "retrieved_at": "2026-10-02T08:34:34.995949Z",
+      "value": "65",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria: Eligible"
+          },
+          {
+            "name": "measure",
+            "value": "eligibility_status_count"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "category",
+            "value": "Eligible"
+          },
+          {
+            "name": "display_value",
+            "value": "65"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.8ae0a656058d51185ab2",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/table",
+      "document_locator": null,
+      "content_hash": "de8488e11697f080edabc925d1e9fadeddddfe37a8275e1b2f1bc10422797bdc",
+      "retrieved_at": "2026-10-02T08:34:34.995949Z",
+      "value": "62",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria: Not Eligible"
+          },
+          {
+            "name": "measure",
+            "value": "eligibility_status_count"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "category",
+            "value": "Not Eligible"
+          },
+          {
+            "name": "display_value",
+            "value": "62"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.bc018ebd3d134a5ca20b",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/table",
+      "document_locator": null,
+      "content_hash": "de8488e11697f080edabc925d1e9fadeddddfe37a8275e1b2f1bc10422797bdc",
+      "retrieved_at": "2026-10-02T08:34:34.995949Z",
+      "value": "92",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis: High"
+          },
+          {
+            "name": "measure",
+            "value": "burden_count"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "category",
+            "value": "High"
+          },
+          {
+            "name": "display_value",
+            "value": "92"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.0a037ac75cc0a061b9f3",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/table",
+      "document_locator": null,
+      "content_hash": "de8488e11697f080edabc925d1e9fadeddddfe37a8275e1b2f1bc10422797bdc",
+      "retrieved_at": "2026-10-02T08:34:34.995949Z",
+      "value": "35",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis: Not High"
+          },
+          {
+            "name": "measure",
+            "value": "burden_count"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "category",
+            "value": "Not High"
+          },
+          {
+            "name": "display_value",
+            "value": "35"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.7faab3d287d5e134d6c9",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/table",
+      "document_locator": null,
+      "content_hash": "de8488e11697f080edabc925d1e9fadeddddfe37a8275e1b2f1bc10422797bdc",
+      "retrieved_at": "2026-10-02T08:34:34.995949Z",
+      "value": "109",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis: Eligible"
+          },
+          {
+            "name": "measure",
+            "value": "eligibility_status_count"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "category",
+            "value": "Eligible"
+          },
+          {
+            "name": "display_value",
+            "value": "109"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.81325bb772f3d903bd0b",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/eligibility/table",
+      "document_locator": null,
+      "content_hash": "de8488e11697f080edabc925d1e9fadeddddfe37a8275e1b2f1bc10422797bdc",
+      "retrieved_at": "2026-10-02T08:34:34.995949Z",
+      "value": "18",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "countries",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis: Not Eligible"
+          },
+          {
+            "name": "measure",
+            "value": "eligibility_status_count"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "category",
+            "value": "Not Eligible"
+          },
+          {
+            "name": "display_value",
+            "value": "18"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.e97cb7ee3509079efb69",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "141804496",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Caribbean"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$141.8 million"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.0e6da4ed125daab3bf04",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "48024794",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Central America"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$48.02 million"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.2d8a2366de430fb53052",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "85984512",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Central Asia"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$85.98 million"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.eea555cf7f0036099693",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "4228507881",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Eastern Africa"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$4.23 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.2e283edc50d8d0b1fe6b",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "8752879",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Eastern Asia"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$8.75 million"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.50901cef2ec19ad09993",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "168465662",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Eastern Europe"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$168.47 million"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.d6e5772241a9b328b362",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "76880240",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Melanesia"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$76.88 million"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.2762bc113f3ffcb8eab1",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "1282876609",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Middle Africa"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$1.28 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.4fe0ab9c89400e306d18",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "167206906",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Northern Africa"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$167.21 million"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.b2e3a38c59f26cb96842",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "10773065",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Oceania"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$10.77 million"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.ebe824821d6383af17b9",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "74939303",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "South America"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$74.94 million"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.acbb716febb3292faf79",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "477025335",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "South-Eastern Asia"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$477.03 million"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.ab60049eed357bcf50c4",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "525309089",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Southern Africa"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$525.31 million"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.c41abca2fdc15f966e18",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "797600378",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Southern Asia"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$797.6 million"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.1f3de1a413b5bd1ec6f6",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "1536758",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Southern Europe"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$1.54 million"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.579c7730cbbb9daf4c42",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "2346442602",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Western Africa"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$2.35 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.cb3eb26bb1e67dc77015",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "22616051",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Western Asia"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          },
+          {
+            "name": "display_value",
+            "value": "US$22.62 million"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.9c338100b4a2e07e4c5a",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "3406aefcb747351754cf6fe7be97e21b400cae83d894b0413ca653e2f7c1a51e",
+      "retrieved_at": "2026-10-02T08:34:35.106101Z",
+      "value": "46969200",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "World"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "global/multicountry"
+          },
+          {
+            "name": "display_value",
+            "value": "US$46.97 million"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.4cc72ffc34f6c9b728e2",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/treemap?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "4adf4cc554252ba3cce93e1040de726f48060ef31a204978d9d0c8e4bafd1fdb",
+      "retrieved_at": "2026-10-02T08:34:35.199451Z",
+      "value": "5169164132",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV"
+          },
+          {
+            "name": "measure",
+            "value": "component_allocation"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "display_value",
+            "value": "US$5.17 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.c6a6f15be604cb3e21b5",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/treemap?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "4adf4cc554252ba3cce93e1040de726f48060ef31a204978d9d0c8e4bafd1fdb",
+      "retrieved_at": "2026-10-02T08:34:35.199451Z",
+      "value": "3470979408",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria"
+          },
+          {
+            "name": "measure",
+            "value": "component_allocation"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "display_value",
+            "value": "US$3.47 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.cefd08d70c475e67cbb1",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/treemap?cycles=2026-2028",
+      "document_locator": null,
+      "content_hash": "4adf4cc554252ba3cce93e1040de726f48060ef31a204978d9d0c8e4bafd1fdb",
+      "retrieved_at": "2026-10-02T08:34:35.199451Z",
+      "value": "1871572220",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "measure",
+            "value": "component_allocation"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "display_value",
+            "value": "US$1.87 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.0d5fab02075f8475dac7",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "4b277653d5e9a5dd65cde1237476076c11edcfcc2e0a7396578d8389037c0058",
+      "retrieved_at": "2026-10-02T08:34:35.420243Z",
+      "value": "10300000011.59",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Total Allocation"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Total Allocation"
+          },
+          {
+            "name": "display_value",
+            "value": "US$10.3 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.ac84d20dc3d957f3c21a",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "4b277653d5e9a5dd65cde1237476076c11edcfcc2e0a7396578d8389037c0058",
+      "retrieved_at": "2026-10-02T08:34:35.420243Z",
+      "value": "12659254480.960001",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Total Allocation"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Total Allocation"
+          },
+          {
+            "name": "display_value",
+            "value": "US$12.66 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.8769be31dded18991f9b",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "4b277653d5e9a5dd65cde1237476076c11edcfcc2e0a7396578d8389037c0058",
+      "retrieved_at": "2026-10-02T08:34:35.420243Z",
+      "value": "13074598442.130001",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Total Allocation"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Total Allocation"
+          },
+          {
+            "name": "display_value",
+            "value": "US$13.07 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.821a208bebfe7acc1d30",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "4b277653d5e9a5dd65cde1237476076c11edcfcc2e0a7396578d8389037c0058",
+      "retrieved_at": "2026-10-02T08:34:35.420243Z",
+      "value": "10511715760",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Total Allocation"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Total Allocation"
+          },
+          {
+            "name": "display_value",
+            "value": "US$10.51 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.0b1820b96ad0e78290ff",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "4b277653d5e9a5dd65cde1237476076c11edcfcc2e0a7396578d8389037c0058",
+      "retrieved_at": "2026-10-02T08:34:35.420243Z",
+      "value": "5150000003.7",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "display_value",
+            "value": "US$5.15 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.939344645d014c366adf",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "4b277653d5e9a5dd65cde1237476076c11edcfcc2e0a7396578d8389037c0058",
+      "retrieved_at": "2026-10-02T08:34:35.420243Z",
+      "value": "6354999999.27",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "display_value",
+            "value": "US$6.35 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.996e623635bd93286ccd",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "4b277653d5e9a5dd65cde1237476076c11edcfcc2e0a7396578d8389037c0058",
+      "retrieved_at": "2026-10-02T08:34:35.420243Z",
+      "value": "6487600015.67",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "display_value",
+            "value": "US$6.49 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.0c1347b832da208ee169",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "4b277653d5e9a5dd65cde1237476076c11edcfcc2e0a7396578d8389037c0058",
+      "retrieved_at": "2026-10-02T08:34:35.420243Z",
+      "value": "5169164132",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "display_value",
+            "value": "US$5.17 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.82ea3beb615eb62e57d1",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "4b277653d5e9a5dd65cde1237476076c11edcfcc2e0a7396578d8389037c0058",
+      "retrieved_at": "2026-10-02T08:34:35.420243Z",
+      "value": "3296000003",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "display_value",
+            "value": "US$3.3 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.61d6b128b609ed77b6d0",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "4b277653d5e9a5dd65cde1237476076c11edcfcc2e0a7396578d8389037c0058",
+      "retrieved_at": "2026-10-02T08:34:35.420243Z",
+      "value": "4061486740.5",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "display_value",
+            "value": "US$4.06 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.5a0296dd4133d7209fa6",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "4b277653d5e9a5dd65cde1237476076c11edcfcc2e0a7396578d8389037c0058",
+      "retrieved_at": "2026-10-02T08:34:35.420243Z",
+      "value": "4176981876.76",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "display_value",
+            "value": "US$4.18 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.37222a34803460c9fa6d",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "4b277653d5e9a5dd65cde1237476076c11edcfcc2e0a7396578d8389037c0058",
+      "retrieved_at": "2026-10-02T08:34:35.420243Z",
+      "value": "3470979408",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "display_value",
+            "value": "US$3.47 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.c791572a6b203959b087",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "4b277653d5e9a5dd65cde1237476076c11edcfcc2e0a7396578d8389037c0058",
+      "retrieved_at": "2026-10-02T08:34:35.420243Z",
+      "value": "1854000004.89",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "display_value",
+            "value": "US$1.85 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.d17d03ace75950b76dfc",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "4b277653d5e9a5dd65cde1237476076c11edcfcc2e0a7396578d8389037c0058",
+      "retrieved_at": "2026-10-02T08:34:35.420243Z",
+      "value": "2242767741.19",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "display_value",
+            "value": "US$2.24 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.29dd7d5bb398210ed041",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "4b277653d5e9a5dd65cde1237476076c11edcfcc2e0a7396578d8389037c0058",
+      "retrieved_at": "2026-10-02T08:34:35.420243Z",
+      "value": "2410016549.7",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "display_value",
+            "value": "US$2.41 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.a65bc226735a4c4c294f",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
+      "document_locator": null,
+      "content_hash": "4b277653d5e9a5dd65cde1237476076c11edcfcc2e0a7396578d8389037c0058",
+      "retrieved_at": "2026-10-02T08:34:35.420243Z",
+      "value": "1871572220",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "display_value",
+            "value": "US$1.87 billion"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.1654d7ad0cbbfd381e2c",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/funding-requests",
+      "document_locator": null,
+      "content_hash": "467f2903684765ab3d8d74eed47ec43f802bc8948bde5cd5330b1ee2d5d89048",
+      "retrieved_at": "2026-10-02T08:34:35.742472Z",
+      "value": "14",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2025 Window 7",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "funding requests",
+        "currency": null,
+        "source_dates": [
+          "2025-04-15"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Funding requests"
+          },
+          {
+            "name": "measure",
+            "value": "application_count"
+          },
+          {
+            "name": "submission_year",
+            "value": "2025"
+          },
+          {
+            "name": "window",
+            "value": "Window 7"
+          },
+          {
+            "name": "submission_date",
+            "value": "2025-02-17"
+          },
+          {
+            "name": "display_value",
+            "value": "14"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.b27ed0f2f04336c593c1",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/funding-requests",
+      "document_locator": null,
+      "content_hash": "467f2903684765ab3d8d74eed47ec43f802bc8948bde5cd5330b1ee2d5d89048",
+      "retrieved_at": "2026-10-02T08:34:35.742472Z",
+      "value": "1",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2025 Window 7",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "funding requests",
+        "currency": null,
+        "source_dates": [
+          "2025-04-15"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Full Review"
+          },
+          {
+            "name": "measure",
+            "value": "approach_count"
+          },
+          {
+            "name": "submission_year",
+            "value": "2025"
+          },
+          {
+            "name": "window",
+            "value": "Window 7"
+          },
+          {
+            "name": "submission_date",
+            "value": "2025-02-17"
+          },
+          {
+            "name": "display_value",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.aef7475b49d5907e937e",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/funding-requests",
+      "document_locator": null,
+      "content_hash": "467f2903684765ab3d8d74eed47ec43f802bc8948bde5cd5330b1ee2d5d89048",
+      "retrieved_at": "2026-10-02T08:34:35.742472Z",
+      "value": "12",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2025 Window 7",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "funding requests",
+        "currency": null,
+        "source_dates": [
+          "2025-04-15"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tailored for Focused Portfolios"
+          },
+          {
+            "name": "measure",
+            "value": "approach_count"
+          },
+          {
+            "name": "submission_year",
+            "value": "2025"
+          },
+          {
+            "name": "window",
+            "value": "Window 7"
+          },
+          {
+            "name": "submission_date",
+            "value": "2025-02-17"
+          },
+          {
+            "name": "display_value",
+            "value": "12"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.1db007aa9d80bb84f106",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/funding-requests",
+      "document_locator": null,
+      "content_hash": "467f2903684765ab3d8d74eed47ec43f802bc8948bde5cd5330b1ee2d5d89048",
+      "retrieved_at": "2026-10-02T08:34:35.742472Z",
+      "value": "1",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2025 Window 7",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "funding requests",
+        "currency": null,
+        "source_dates": [
+          "2025-04-15"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tailored for Transition"
+          },
+          {
+            "name": "measure",
+            "value": "approach_count"
+          },
+          {
+            "name": "submission_year",
+            "value": "2025"
+          },
+          {
+            "name": "window",
+            "value": "Window 7"
+          },
+          {
+            "name": "submission_date",
+            "value": "2025-02-17"
+          },
+          {
+            "name": "display_value",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.33d582273e80b673176b",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/funding-requests",
+      "document_locator": null,
+      "content_hash": "467f2903684765ab3d8d74eed47ec43f802bc8948bde5cd5330b1ee2d5d89048",
+      "retrieved_at": "2026-10-02T08:34:35.742472Z",
+      "value": "14",
+      "excerpt": null,
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2025 Window 7",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "funding requests",
+        "currency": null,
+        "source_dates": [
+          "2025-04-15"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Grant Making"
+          },
+          {
+            "name": "measure",
+            "value": "outcome_count"
+          },
+          {
+            "name": "submission_year",
+            "value": "2025"
+          },
+          {
+            "name": "window",
+            "value": "Window 7"
+          },
+          {
+            "name": "submission_date",
+            "value": "2025-02-17"
+          },
+          {
+            "name": "display_value",
+            "value": "14"
+          }
+        ]
+      }
+    }
+  ],
+  "calculations": [
+    {
+      "id": "atf.70ed8f8715bb26e51d89.share",
+      "source_ids": [
+        "atf.70ed8f8715bb26e51d89",
+        "atf.9d38b1da6a01d0c1a2f9"
+      ],
+      "formula": "category / total * 100",
+      "result": "22.03",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV: Low income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "income_level",
+            "value": "Low income"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.42a253b447af42899be4.share",
+      "source_ids": [
+        "atf.42a253b447af42899be4",
+        "atf.9d38b1da6a01d0c1a2f9"
+      ],
+      "formula": "category / total * 100",
+      "result": "27.12",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV: Lower-Lower middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "income_level",
+            "value": "Lower-Lower middle income"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.29aa8de6e1fdd56e887d.share",
+      "source_ids": [
+        "atf.29aa8de6e1fdd56e887d",
+        "atf.9d38b1da6a01d0c1a2f9"
+      ],
+      "formula": "category / total * 100",
+      "result": "32.20",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV: Upper middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "income_level",
+            "value": "Upper middle income"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.6a217395d5d9c50b3b14.share",
+      "source_ids": [
+        "atf.6a217395d5d9c50b3b14",
+        "atf.9d38b1da6a01d0c1a2f9"
+      ],
+      "formula": "category / total * 100",
+      "result": "18.64",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV: Upper-Lower middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          },
+          {
+            "name": "income_level",
+            "value": "Upper-Lower middle income"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.304b56285b7b132b061a.share",
+      "source_ids": [
+        "atf.304b56285b7b132b061a",
+        "atf.dde6c6a1869c0f93b640"
+      ],
+      "formula": "category / total * 100",
+      "result": "38.46",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria: Low income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "income_level",
+            "value": "Low income"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.06f368420cde20634619.share",
+      "source_ids": [
+        "atf.06f368420cde20634619",
+        "atf.dde6c6a1869c0f93b640"
+      ],
+      "formula": "category / total * 100",
+      "result": "41.54",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria: Lower-Lower middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "income_level",
+            "value": "Lower-Lower middle income"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.18942d2c59e8cd43498a.share",
+      "source_ids": [
+        "atf.18942d2c59e8cd43498a",
+        "atf.dde6c6a1869c0f93b640"
+      ],
+      "formula": "category / total * 100",
+      "result": "4.62",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria: Upper middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "income_level",
+            "value": "Upper middle income"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.6baf98d97b3e8e0b8e64.share",
+      "source_ids": [
+        "atf.6baf98d97b3e8e0b8e64",
+        "atf.dde6c6a1869c0f93b640"
+      ],
+      "formula": "category / total * 100",
+      "result": "15.38",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria: Upper-Lower middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          },
+          {
+            "name": "income_level",
+            "value": "Upper-Lower middle income"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.fc4d5ea4f831ddb0ced4.share",
+      "source_ids": [
+        "atf.fc4d5ea4f831ddb0ced4",
+        "atf.1bad1c19433c4b28b3cc"
+      ],
+      "formula": "category / total * 100",
+      "result": "23.85",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis: Low income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "income_level",
+            "value": "Low income"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.1a035729bbbe447e13b6.share",
+      "source_ids": [
+        "atf.1a035729bbbe447e13b6",
+        "atf.1bad1c19433c4b28b3cc"
+      ],
+      "formula": "category / total * 100",
+      "result": "29.36",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis: Lower-Lower middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "income_level",
+            "value": "Lower-Lower middle income"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.4aa3c04494b2a794abd4.share",
+      "source_ids": [
+        "atf.4aa3c04494b2a794abd4",
+        "atf.1bad1c19433c4b28b3cc"
+      ],
+      "formula": "category / total * 100",
+      "result": "28.44",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis: Upper middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "income_level",
+            "value": "Upper middle income"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.171f6f7a584e6156e575.share",
+      "source_ids": [
+        "atf.171f6f7a584e6156e575",
+        "atf.1bad1c19433c4b28b3cc"
+      ],
+      "formula": "category / total * 100",
+      "result": "18.35",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": null,
+        "source_dates": [
+          "2026-02-06"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis: Upper-Lower middle income"
+          },
+          {
+            "name": "measure",
+            "value": "income_count"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "income_level",
+            "value": "Upper-Lower middle income"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.ac84d20dc3d957f3c21a.change",
+      "source_ids": [
+        "atf.ac84d20dc3d957f3c21a",
+        "atf.0d5fab02075f8475dac7"
+      ],
+      "formula": "(current - predecessor) / predecessor * 100",
+      "result": "22.91",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Total Allocation"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Total Allocation"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.8769be31dded18991f9b.change",
+      "source_ids": [
+        "atf.8769be31dded18991f9b",
+        "atf.ac84d20dc3d957f3c21a"
+      ],
+      "formula": "(current - predecessor) / predecessor * 100",
+      "result": "3.28",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Total Allocation"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Total Allocation"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.821a208bebfe7acc1d30.change",
+      "source_ids": [
+        "atf.821a208bebfe7acc1d30",
+        "atf.8769be31dded18991f9b"
+      ],
+      "formula": "(current - predecessor) / predecessor * 100",
+      "result": "-19.60",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Total Allocation"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Total Allocation"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.939344645d014c366adf.change",
+      "source_ids": [
+        "atf.939344645d014c366adf",
+        "atf.0b1820b96ad0e78290ff"
+      ],
+      "formula": "(current - predecessor) / predecessor * 100",
+      "result": "23.40",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.996e623635bd93286ccd.change",
+      "source_ids": [
+        "atf.996e623635bd93286ccd",
+        "atf.939344645d014c366adf"
+      ],
+      "formula": "(current - predecessor) / predecessor * 100",
+      "result": "2.09",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.0c1347b832da208ee169.change",
+      "source_ids": [
+        "atf.0c1347b832da208ee169",
+        "atf.996e623635bd93286ccd"
+      ],
+      "formula": "(current - predecessor) / predecessor * 100",
+      "result": "-20.32",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.61d6b128b609ed77b6d0.change",
+      "source_ids": [
+        "atf.61d6b128b609ed77b6d0",
+        "atf.82ea3beb615eb62e57d1"
+      ],
+      "formula": "(current - predecessor) / predecessor * 100",
+      "result": "23.22",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.5a0296dd4133d7209fa6.change",
+      "source_ids": [
+        "atf.5a0296dd4133d7209fa6",
+        "atf.61d6b128b609ed77b6d0"
+      ],
+      "formula": "(current - predecessor) / predecessor * 100",
+      "result": "2.84",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.37222a34803460c9fa6d.change",
+      "source_ids": [
+        "atf.37222a34803460c9fa6d",
+        "atf.5a0296dd4133d7209fa6"
+      ],
+      "formula": "(current - predecessor) / predecessor * 100",
+      "result": "-16.90",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.d17d03ace75950b76dfc.change",
+      "source_ids": [
+        "atf.d17d03ace75950b76dfc",
+        "atf.c791572a6b203959b087"
+      ],
+      "formula": "(current - predecessor) / predecessor * 100",
+      "result": "20.97",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.29dd7d5bb398210ed041.change",
+      "source_ids": [
+        "atf.29dd7d5bb398210ed041",
+        "atf.d17d03ace75950b76dfc"
+      ],
+      "formula": "(current - predecessor) / predecessor * 100",
+      "result": "7.46",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.a65bc226735a4c4c294f.change",
+      "source_ids": [
+        "atf.a65bc226735a4c4c294f",
+        "atf.29dd7d5bb398210ed041"
+      ],
+      "formula": "(current - predecessor) / predecessor * 100",
+      "result": "-22.34",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "measure",
+            "value": "allocation"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.4cc72ffc34f6c9b728e2.share",
+      "source_ids": [
+        "atf.4cc72ffc34f6c9b728e2",
+        "atf.c6a6f15be604cb3e21b5",
+        "atf.cefd08d70c475e67cbb1"
+      ],
+      "formula": "component allocation / sum(component amounts) * 100",
+      "result": "49.18",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "HIV"
+          },
+          {
+            "name": "measure",
+            "value": "component_allocation"
+          },
+          {
+            "name": "component",
+            "value": "HIV"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.c6a6f15be604cb3e21b5.share",
+      "source_ids": [
+        "atf.c6a6f15be604cb3e21b5",
+        "atf.4cc72ffc34f6c9b728e2",
+        "atf.cefd08d70c475e67cbb1"
+      ],
+      "formula": "component allocation / sum(component amounts) * 100",
+      "result": "33.02",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Malaria"
+          },
+          {
+            "name": "measure",
+            "value": "component_allocation"
+          },
+          {
+            "name": "component",
+            "value": "Malaria"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.cefd08d70c475e67cbb1.share",
+      "source_ids": [
+        "atf.cefd08d70c475e67cbb1",
+        "atf.4cc72ffc34f6c9b728e2",
+        "atf.c6a6f15be604cb3e21b5"
+      ],
+      "formula": "component allocation / sum(component amounts) * 100",
+      "result": "17.80",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Tuberculosis"
+          },
+          {
+            "name": "measure",
+            "value": "component_allocation"
+          },
+          {
+            "name": "component",
+            "value": "Tuberculosis"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.global_allocation",
+      "source_ids": [
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "sum(allocation geography group amounts)",
+      "result": "10511715760",
+      "unit": "USD reference rate",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Global"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.e97cb7ee3509079efb69.share",
+      "source_ids": [
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "1.35",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Caribbean"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.0e6da4ed125daab3bf04.share",
+      "source_ids": [
+        "atf.0e6da4ed125daab3bf04",
+        "atf.e97cb7ee3509079efb69",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "0.46",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Central America"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.2d8a2366de430fb53052.share",
+      "source_ids": [
+        "atf.2d8a2366de430fb53052",
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "0.82",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Central Asia"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.eea555cf7f0036099693.share",
+      "source_ids": [
+        "atf.eea555cf7f0036099693",
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "40.23",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Eastern Africa"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.2e283edc50d8d0b1fe6b.share",
+      "source_ids": [
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "0.08",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Eastern Asia"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.50901cef2ec19ad09993.share",
+      "source_ids": [
+        "atf.50901cef2ec19ad09993",
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "1.60",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Eastern Europe"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.d6e5772241a9b328b362.share",
+      "source_ids": [
+        "atf.d6e5772241a9b328b362",
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "0.73",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Melanesia"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.2762bc113f3ffcb8eab1.share",
+      "source_ids": [
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "12.20",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Middle Africa"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.4fe0ab9c89400e306d18.share",
+      "source_ids": [
+        "atf.4fe0ab9c89400e306d18",
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "1.59",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Northern Africa"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.b2e3a38c59f26cb96842.share",
+      "source_ids": [
+        "atf.b2e3a38c59f26cb96842",
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "0.10",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Oceania"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.ebe824821d6383af17b9.share",
+      "source_ids": [
+        "atf.ebe824821d6383af17b9",
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "0.71",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "South America"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.acbb716febb3292faf79.share",
+      "source_ids": [
+        "atf.acbb716febb3292faf79",
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "4.54",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "South-Eastern Asia"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.ab60049eed357bcf50c4.share",
+      "source_ids": [
+        "atf.ab60049eed357bcf50c4",
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "5.00",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Southern Africa"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.c41abca2fdc15f966e18.share",
+      "source_ids": [
+        "atf.c41abca2fdc15f966e18",
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "7.59",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Southern Asia"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.1f3de1a413b5bd1ec6f6.share",
+      "source_ids": [
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "0.01",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Southern Europe"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.579c7730cbbb9daf4c42.share",
+      "source_ids": [
+        "atf.579c7730cbbb9daf4c42",
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "22.32",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Western Africa"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.cb3eb26bb1e67dc77015.share",
+      "source_ids": [
+        "atf.cb3eb26bb1e67dc77015",
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.9c338100b4a2e07e4c5a"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "0.22",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Western Asia"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "region"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.9c338100b4a2e07e4c5a.share",
+      "source_ids": [
+        "atf.9c338100b4a2e07e4c5a",
+        "atf.e97cb7ee3509079efb69",
+        "atf.0e6da4ed125daab3bf04",
+        "atf.2d8a2366de430fb53052",
+        "atf.eea555cf7f0036099693",
+        "atf.2e283edc50d8d0b1fe6b",
+        "atf.50901cef2ec19ad09993",
+        "atf.d6e5772241a9b328b362",
+        "atf.2762bc113f3ffcb8eab1",
+        "atf.4fe0ab9c89400e306d18",
+        "atf.b2e3a38c59f26cb96842",
+        "atf.ebe824821d6383af17b9",
+        "atf.acbb716febb3292faf79",
+        "atf.ab60049eed357bcf50c4",
+        "atf.c41abca2fdc15f966e18",
+        "atf.1f3de1a413b5bd1ec6f6",
+        "atf.579c7730cbbb9daf4c42",
+        "atf.cb3eb26bb1e67dc77015"
+      ],
+      "formula": "allocation geography group / sum(allocation geography group amounts) * 100",
+      "result": "0.45",
+      "unit": "percent",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [
+          "2026-06-09"
+        ],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "World"
+          },
+          {
+            "name": "measure",
+            "value": "regional_allocation"
+          },
+          {
+            "name": "geography_level",
+            "value": "global/multicountry"
+          }
+        ]
+      }
+    }
+  ],
+  "sections": [
+    {
+      "id": "access_to_funding.eligibility",
+      "group": "access-to-funding",
+      "title": "Eligibility",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "In 2026, Upper middle income countries account for 32.20% of countries eligible for HIV funding.",
+          "evidence_ids": [
+            "atf.29aa8de6e1fdd56e887d.share"
+          ],
+          "heading": null
+        }
+      ]
+    },
+    {
+      "id": "access_to_funding.allocation",
+      "group": "access-to-funding",
+      "title": "Allocation",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "For 2026-2028, global allocations were US$10.51 billion.",
+          "evidence_ids": [
+            "atf.global_allocation"
+          ],
+          "heading": null
+        }
+      ]
+    },
+    {
+      "id": "access_to_funding.allocation_cycles",
+      "group": "access-to-funding",
+      "title": "Allocation cycles",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "Total allocations decreased by 19.60% from 2023-2025 to 2026-2028.",
+          "evidence_ids": [
+            "atf.821a208bebfe7acc1d30.change"
+          ],
+          "heading": null
+        }
+      ]
+    },
+    {
+      "id": "access_to_funding.funding_requests",
+      "group": "access-to-funding",
+      "title": "Funding requests",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "Of the Window 7 funding requests submitted on 17 February 2025, 12 of 14 used Tailored for Focused Portfolios.",
+          "evidence_ids": [
+            "atf.aef7475b49d5907e937e",
+            "atf.1654d7ad0cbbfd381e2c"
+          ],
+          "heading": null
+        }
+      ]
+    }
+  ],
+  "summary": null
+}
