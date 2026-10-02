@@ -5,6 +5,9 @@ export default defineConfig({
   ...baseConfig,
   e2e: {
     ...baseConfig.e2e,
-    specPattern: "cypress/narratives/enabled.cy.ts",
+    specPattern: [
+      "cypress/narratives/enabled.cy.ts",
+      "cypress/narratives/page-narratives.cy.ts",
+    ],
   },
 });

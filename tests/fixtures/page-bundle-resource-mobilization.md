@@ -1,0 +1,3 @@
+# Resource Mobilization PageBundle fixture
+
+Both `tests/fixtures/page-bundle-resource-mobilization.json` and `cypress/fixtures/narratives/resource-mobilization-page.json` are exact, unpruned copies of Narrative Engine `data/evaluation/phase7/milestone-b/B28-offline-bundle.json`, captured on 2026-10-01 after B28 coordinator verification. They retain the actual PageBundle v2 serializer shape, complete raw sources, typed scopes/dimensions and separate calculations. The paragraphs are synthetic offline pipeline output, including calculation citations. They test contract/loading/rendering behavior and do not establish live editorial quality. Browser data and CMS responses are intercepted separately.

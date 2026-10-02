@@ -1,0 +1,2434 @@
+{
+  "schema_version": 2,
+  "page": {
+    "page_type": "resource-mobilization",
+    "page_id": "global",
+    "locale": "en",
+    "scope_key": "default"
+  },
+  "metadata": {
+    "snapshot_id": "94f8b2f7861e1d7ae4fdf2d990cad85cfd5421b6d0a382eadb24fd3cf4b26f76",
+    "revision_id": "d1a7b496-9014-4e9e-ba51-d8a63bc8e8ed",
+    "model": "offline/synthetic",
+    "prompt_version": "page-v1-5191318fc4dda1d0ee32f42ca12be0645a3ffe1c4486b7a693060707a80caf34",
+    "style_version": "page-v1-5de96afe51405084f7edbcd13db5a54b0d7ec1d087ba52ca6bb05ffa179b0dfd",
+    "generated_at": "2026-10-01T13:40:06.085302Z",
+    "profile_fingerprint": "profile-v1-987c3304183de9f8db88cced49a1deede0bc26051fe2f8cff8941384c813b47d"
+  },
+  "presentation": {
+    "page_type": "resource-mobilization",
+    "groups": [
+      {
+        "id": "resource-mobilization",
+        "title": "Resource Mobilization"
+      }
+    ],
+    "sections": [
+      {
+        "id": "resource_mobilization.funding_summary",
+        "group": "resource-mobilization",
+        "title": "Funding summary",
+        "allowed_headings": []
+      },
+      {
+        "id": "resource_mobilization.donor_composition",
+        "group": "resource-mobilization",
+        "title": "Donor composition",
+        "allowed_headings": []
+      }
+    ],
+    "summary": null
+  },
+  "sources": [
+    {
+      "id": "rm.13da425c03adc98573ee",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/stats",
+      "document_locator": null,
+      "content_hash": "e477f185338d645714d7a2b3c85dc6ff4a53e5473352a319ea391763dab96c78",
+      "retrieved_at": "2026-10-01T13:36:30.636068Z",
+      "value": "101867174077.09",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "global"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.f410f036a970576950b5",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/stats",
+      "document_locator": null,
+      "content_hash": "e477f185338d645714d7a2b3c85dc6ff4a53e5473352a319ea391763dab96c78",
+      "retrieved_at": "2026-10-01T13:36:30.636068Z",
+      "value": "85024050415.6",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "global"
+          },
+          {
+            "name": "measure",
+            "value": "contribution"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.6c13bad27fd5bb8d05cd",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "4855441149.37",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2001-2005"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.023e415010c955049ace",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "4855441149.37",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2001-2005"
+          },
+          {
+            "name": "measure",
+            "value": "contribution"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.ab3844fac460c51b4153",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "4750213147.01",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2006-2007"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.95922c81e6659d0755ea",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "4803345663.48",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2006-2007"
+          },
+          {
+            "name": "measure",
+            "value": "contribution"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.d7dcfd1705a0bfda3ef4",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "10039407985.8",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2008-2010"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.690ef3f3f3c4c88b0017",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "9643861786.47",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2008-2010"
+          },
+          {
+            "name": "measure",
+            "value": "contribution"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.4d2f8d73574fef5b7fd3",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "10319663014.31",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2011-2013"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.7cac8f8a8f588cdef4e7",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "10303883940.18",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2011-2013"
+          },
+          {
+            "name": "measure",
+            "value": "contribution"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.817f91318f25d58b5be6",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "12452204788.7",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2014-2016"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.47fc990e4139152a41f5",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "11713105695.64",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2014-2016"
+          },
+          {
+            "name": "measure",
+            "value": "contribution"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.1c8815452ec07823a043",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "12242861296.28",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2017-2019"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.1a66cc5f71bcc0ad1347",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "11451821417.3",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2017-2019"
+          },
+          {
+            "name": "measure",
+            "value": "contribution"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.e49f079c6e96790a5de2",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "18630982818.2",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2020-2022"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.9c5c956e09f82dc669a8",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "17660830977.65",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2020-2022"
+          },
+          {
+            "name": "measure",
+            "value": "contribution"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.7d4c2ee1e7a700e134b4",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "15893991017.19",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2023-2025"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.1353ad24ea11d28cabea",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "12041730139.44",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2023-2025"
+          },
+          {
+            "name": "measure",
+            "value": "contribution"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.532f3fee59e22f54f3f5",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "12682408860.23",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2026-2028"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.cb7dbe602377be6e361a",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/bar",
+      "document_locator": null,
+      "content_hash": "d90aa3efb843fadf21c029ed2097681bb89a450c423979f6e9e75e41fa7ba567",
+      "retrieved_at": "2026-10-01T13:36:32.519235Z",
+      "value": "2550029646.07",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "2026-2028"
+          },
+          {
+            "name": "measure",
+            "value": "contribution"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.25f3e9a6a3aeea1cbeb3",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/expandable-bar",
+      "document_locator": null,
+      "content_hash": "0df636b244d93711aa98724feedc8a4529242556cd7fc18ad12257a70ea886d1",
+      "retrieved_at": "2026-10-01T13:36:32.589232Z",
+      "value": "537458185.43",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Affordable Medicines Facility - malaria (AMFm)"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.38212255a2e8565d9d16",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/expandable-bar",
+      "document_locator": null,
+      "content_hash": "0df636b244d93711aa98724feedc8a4529242556cd7fc18ad12257a70ea886d1",
+      "retrieved_at": "2026-10-01T13:36:32.589232Z",
+      "value": "537458185.43",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Affordable Medicines Facility - malaria (AMFm)"
+          },
+          {
+            "name": "measure",
+            "value": "contribution"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.2ce2ce4dcb6a7c44b693",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/expandable-bar",
+      "document_locator": null,
+      "content_hash": "0df636b244d93711aa98724feedc8a4529242556cd7fc18ad12257a70ea886d1",
+      "retrieved_at": "2026-10-01T13:36:32.589232Z",
+      "value": "335552488.63",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Debt2Health"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.25874c79e6c3aab7ba95",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/expandable-bar",
+      "document_locator": null,
+      "content_hash": "0df636b244d93711aa98724feedc8a4529242556cd7fc18ad12257a70ea886d1",
+      "retrieved_at": "2026-10-01T13:36:32.589232Z",
+      "value": "282829052.1",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Debt2Health"
+          },
+          {
+            "name": "measure",
+            "value": "contribution"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.2694f25b95f7d8964364",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/expandable-bar",
+      "document_locator": null,
+      "content_hash": "0df636b244d93711aa98724feedc8a4529242556cd7fc18ad12257a70ea886d1",
+      "retrieved_at": "2026-10-01T13:36:32.589232Z",
+      "value": "6708146429.68",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Private Sector & Nongovernment"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.5aad980dec28dc3a6d49",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/expandable-bar",
+      "document_locator": null,
+      "content_hash": "0df636b244d93711aa98724feedc8a4529242556cd7fc18ad12257a70ea886d1",
+      "retrieved_at": "2026-10-01T13:36:32.589232Z",
+      "value": "5131913638.599999",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Private Sector & Nongovernment"
+          },
+          {
+            "name": "measure",
+            "value": "contribution"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.3395706d404a775b4d39",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/expandable-bar",
+      "document_locator": null,
+      "content_hash": "0df636b244d93711aa98724feedc8a4529242556cd7fc18ad12257a70ea886d1",
+      "retrieved_at": "2026-10-01T13:36:32.589232Z",
+      "value": "94286016973.34999",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Public Sector"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.d9bb174e2b136cbd9f94",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/expandable-bar",
+      "document_locator": null,
+      "content_hash": "0df636b244d93711aa98724feedc8a4529242556cd7fc18ad12257a70ea886d1",
+      "retrieved_at": "2026-10-01T13:36:32.589232Z",
+      "value": "79071849539.46999",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "USD reference rate",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Public Sector"
+          },
+          {
+            "name": "measure",
+            "value": "contribution"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.eab7ecdbacab169dd9d0",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/stats",
+      "document_locator": null,
+      "content_hash": "e477f185338d645714d7a2b3c85dc6ff4a53e5473352a319ea391763dab96c78",
+      "retrieved_at": "2026-10-01T13:36:30.636068Z",
+      "value": "4",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "donors by type",
+        "currency": null,
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Affordable Medicines Facility - malaria (AMFm)"
+          },
+          {
+            "name": "measure",
+            "value": "donor_count"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.0bfa8348d8db4dbaef83",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/stats",
+      "document_locator": null,
+      "content_hash": "e477f185338d645714d7a2b3c85dc6ff4a53e5473352a319ea391763dab96c78",
+      "retrieved_at": "2026-10-01T13:36:30.636068Z",
+      "value": "19",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "donors by type",
+        "currency": null,
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Corporation"
+          },
+          {
+            "name": "measure",
+            "value": "donor_count"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.9665c7f08141148619c0",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/stats",
+      "document_locator": null,
+      "content_hash": "e477f185338d645714d7a2b3c85dc6ff4a53e5473352a319ea391763dab96c78",
+      "retrieved_at": "2026-10-01T13:36:30.636068Z",
+      "value": "12",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "donors by type",
+        "currency": null,
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Debt2Health"
+          },
+          {
+            "name": "measure",
+            "value": "donor_count"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.1335b2793d599a272c61",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/stats",
+      "document_locator": null,
+      "content_hash": "e477f185338d645714d7a2b3c85dc6ff4a53e5473352a319ea391763dab96c78",
+      "retrieved_at": "2026-10-01T13:36:30.636068Z",
+      "value": "2",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "donors by type",
+        "currency": null,
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Faith-Based Organization"
+          },
+          {
+            "name": "measure",
+            "value": "donor_count"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.2607df1a2cafeb83cfa2",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/stats",
+      "document_locator": null,
+      "content_hash": "e477f185338d645714d7a2b3c85dc6ff4a53e5473352a319ea391763dab96c78",
+      "retrieved_at": "2026-10-01T13:36:30.636068Z",
+      "value": "20",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "donors by type",
+        "currency": null,
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Foundation"
+          },
+          {
+            "name": "measure",
+            "value": "donor_count"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.e2ff46466f5bcfe69607",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/stats",
+      "document_locator": null,
+      "content_hash": "e477f185338d645714d7a2b3c85dc6ff4a53e5473352a319ea391763dab96c78",
+      "retrieved_at": "2026-10-01T13:36:30.636068Z",
+      "value": "1",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "donors by type",
+        "currency": null,
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Individual"
+          },
+          {
+            "name": "measure",
+            "value": "donor_count"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.382538101dca759e3bd0",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/stats",
+      "document_locator": null,
+      "content_hash": "e477f185338d645714d7a2b3c85dc6ff4a53e5473352a319ea391763dab96c78",
+      "retrieved_at": "2026-10-01T13:36:30.636068Z",
+      "value": "11",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "donors by type",
+        "currency": null,
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Private Sector & Nongovernment"
+          },
+          {
+            "name": "measure",
+            "value": "donor_count"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.e4db07375f36c9e6e080",
+      "kind": "structured_data",
+      "source_url": "https://data.api.theglobalfund.org/pledges-contributions/stats",
+      "document_locator": null,
+      "content_hash": "e477f185338d645714d7a2b3c85dc6ff4a53e5473352a319ea391763dab96c78",
+      "retrieved_at": "2026-10-01T13:36:30.636068Z",
+      "value": "89",
+      "excerpt": null,
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "donors by type",
+        "currency": null,
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "Public Sector"
+          },
+          {
+            "name": "measure",
+            "value": "donor_count"
+          }
+        ]
+      }
+    }
+  ],
+  "calculations": [
+    {
+      "id": "rm.contribution_to_pledge",
+      "source_ids": [
+        "rm.13da425c03adc98573ee",
+        "rm.f410f036a970576950b5"
+      ],
+      "formula": "contribution / pledge * 100",
+      "result": "83.47",
+      "unit": "percent",
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "global"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.25f3e9a6a3aeea1cbeb3.share",
+      "source_ids": [
+        "rm.25f3e9a6a3aeea1cbeb3",
+        "rm.13da425c03adc98573ee"
+      ],
+      "formula": "donor type pledge / global pledge * 100",
+      "result": "0.53",
+      "unit": "percent",
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "global"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.2ce2ce4dcb6a7c44b693.share",
+      "source_ids": [
+        "rm.2ce2ce4dcb6a7c44b693",
+        "rm.13da425c03adc98573ee"
+      ],
+      "formula": "donor type pledge / global pledge * 100",
+      "result": "0.33",
+      "unit": "percent",
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "global"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.2694f25b95f7d8964364.share",
+      "source_ids": [
+        "rm.2694f25b95f7d8964364",
+        "rm.13da425c03adc98573ee"
+      ],
+      "formula": "donor type pledge / global pledge * 100",
+      "result": "6.59",
+      "unit": "percent",
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "global"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rm.3395706d404a775b4d39.share",
+      "source_ids": [
+        "rm.3395706d404a775b4d39",
+        "rm.13da425c03adc98573ee"
+      ],
+      "formula": "donor type pledge / global pledge * 100",
+      "result": "92.56",
+      "unit": "percent",
+      "scope": {
+        "page_type": "resource-mobilization",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2001-2005",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2006-2007",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2008-2010",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2011-2013",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2014-2016",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2017-2019",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2020-2022",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2023-2025",
+            "start": null,
+            "end": null
+          },
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": "percent",
+        "currency": "USD",
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "subject",
+            "value": "global"
+          },
+          {
+            "name": "measure",
+            "value": "pledge"
+          }
+        ]
+      }
+    }
+  ],
+  "sections": [
+    {
+      "id": "resource_mobilization.funding_summary",
+      "group": "resource-mobilization",
+      "title": "Funding summary",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "Across the returned replenishment periods from 2001-2005 through 2026-2028, contributions were 83.47 percent of pledges.",
+          "evidence_ids": [
+            "rm.contribution_to_pledge"
+          ],
+          "heading": null
+        }
+      ]
+    },
+    {
+      "id": "resource_mobilization.donor_composition",
+      "group": "resource-mobilization",
+      "title": "Donor composition",
+      "status": "ready",
+      "claims": [
+        {
+          "text": "Across the returned replenishment periods from 2001-2005 through 2026-2028, Affordable Medicines Facility - malaria (AMFm) represented 0.53 percent of global pledges.",
+          "evidence_ids": [
+            "rm.25f3e9a6a3aeea1cbeb3.share"
+          ],
+          "heading": null
+        }
+      ]
+    }
+  ],
+  "summary": null
+}

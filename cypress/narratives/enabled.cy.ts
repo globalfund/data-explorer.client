@@ -461,7 +461,9 @@ describe("country narratives with the rollout flag enabled", () => {
       "be.visible",
     );
     cy.get('[aria-label^="Source 1:"]').should("be.visible");
-    cy.screenshot("narrative-overview-mobile");
+    cy.get('[data-cy="narrative-section"]').screenshot(
+      "narrative-overview-mobile",
+    );
   });
 
   it("keeps funding and financial filters functional and labels narratives as default-view content", () => {

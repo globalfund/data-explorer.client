@@ -33,3 +33,86 @@ describe("country narratives with the rollout flag disabled", () => {
     cy.then(() => expect(narrativeRequests).to.equal(0));
   });
 });
+
+describe("page narratives with the rollout flag disabled", () => {
+  it("preserves the global page and makes no saved page request", () => {
+    let requests = 0;
+    cy.intercept("GET", "http://cms.test/**", { body: { data: [] } });
+    cy.intercept("GET", "http://api.test/**", (request) => {
+      if (request.url.includes("/narratives")) requests += 1;
+      if (request.url.includes("/pledges-contributions/stats")) {
+        request.reply({
+          data: {
+            totalPledges: 100,
+            totalContributions: 80,
+            donorTypesCount: [],
+          },
+        });
+        return;
+      }
+      request.reply({ count: 0, data: [] });
+    });
+    cy.visit("/resource-mobilization");
+    cy.contains("h1", "Resource Mobilization").should("be.visible");
+    cy.contains("Total Pledged").should("be.visible");
+    cy.contains("Pledges & Contributions").should("be.visible");
+    cy.get('[data-cy^="narrative-"]').should("not.exist");
+    cy.then(() => expect(requests).to.equal(0));
+  });
+  it("suppresses both implicit and explicit page compatibility requests", () => {
+    let requests = 0;
+    cy.intercept("GET", "http://api.test/**", (request) => {
+      requests += 1;
+      request.reply({ statusCode: 503 });
+    });
+    cy.visit("/cypress/narratives/provider-harness.html");
+    cy.get('[data-cy="explicit-page"]').should(
+      "have.attr",
+      "data-status",
+      "disabled",
+    );
+    cy.get('[data-cy="implicit-page"]').should(
+      "have.attr",
+      "data-status",
+      "disabled",
+    );
+    cy.then(() => expect(requests).to.equal(0));
+  });
+  for (const [code, name, isDonor] of [
+    ["KEN", "Kenya", false],
+    ["USA", "United States", true],
+    ["NRU", "Nauru", false],
+  ] as const) {
+    it(`preserves ${name} country behavior with no narrative requests`, () => {
+      let requests = 0;
+      cy.intercept("GET", "http://cms.test/**", { body: { data: [] } });
+      cy.intercept("GET", "http://api.test/**", (request) => {
+        if (request.url.includes("/narratives")) requests += 1;
+        request.reply(
+          request.url.includes(`/location/${code}/info`)
+            ? {
+                data: [
+                  {
+                    name,
+                    region: "Test region",
+                    description: "Existing country content",
+                    isDonor,
+                    currentPrincipalRecipients: [],
+                    formerPrincipalRecipients: [],
+                  },
+                ],
+              }
+            : { count: 0, data: [], stats: [] },
+        );
+      });
+      cy.visit(`/location/${code}/overview`);
+      cy.contains("h1", name).should("be.visible");
+      cy.get('[data-cy^="narrative-"]').should("not.exist");
+      cy.contains(
+        '[data-cy="page-tab-button"]',
+        "Resource Mobilization",
+      ).should(isDonor ? "exist" : "not.exist");
+      cy.then(() => expect(requests).to.equal(0));
+    });
+  }
+});

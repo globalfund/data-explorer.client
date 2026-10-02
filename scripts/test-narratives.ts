@@ -103,4 +103,18 @@ assert.ok(emptyReadySection);
 emptyReadySection.claims = [];
 assert.equal(parseCountryNarrativeBundle(emptyReadyClaims), null);
 
+for (const sourceUrl of [
+  "https://example.org\\host",
+  "https://example.org/ bad",
+  "https://example.org/\nsecret",
+]) {
+  const invalid = structuredClone(bundle);
+  invalid.sources[0].source_url = sourceUrl;
+  assert.equal(
+    parseCountryNarrativeBundle(invalid),
+    null,
+    "unsafe URL normalization cannot create a Source link",
+  );
+}
+
 console.log(`Narrative contract checks passed for ${bundle.country}`);

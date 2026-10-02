@@ -40,11 +40,13 @@ REACT_APP_CMS_TOKEN=<strapi cms api token>
 
 `REACT_APP_CMS_TOKEN`: is the API token retrieved from the Strapi CMS interface.
 
-### Saved country narratives
+### Saved country and page narratives
 
 Narratives are disabled unless `VITE_ENABLE_NARRATIVES=true` is set at build time. When enabled, the client reads saved bundles through the configured middleware base URL in `VITE_API`, using `/location/{ISO3}/narratives?locale=en`. Narrative-service credentials remain server-side and must not be placed in browser environment variables or returned in bundles.
 
-Run `yarn tsx scripts/test-narratives.ts` for runtime contract checks and `yarn build` for the production build. `tests/fixtures/country-bundle-moz.json` was serialized by the Python Narrative Engine using synthetic source data and an offline provider. Cypress country fixtures test presentation and do not represent reviewed live-model prose.
+The shared provider also reads v2 page bundles through `/narratives/pages/{page_type}/{page_id}?locale=en&scope_key=default`. The Resource Mobilization pilot uses `resource-mobilization/global/en/default`. Its funding summary appears below the statistics only for the default effective page filters; donor composition appears below the chart/table only when the page and chart filters are default and table search is empty. Changing filters hides incompatible saved content, and resetting restores it without another narrative request. Bar/table switching retains the saved identity.
+
+Run `yarn tsx scripts/test-narratives.ts` and `yarn tsx scripts/test-page-narratives.ts` for runtime contract checks and `yarn build` for the production build. `tests/fixtures/country-bundle-moz.json` was serialized by the Python Narrative Engine using synthetic source data and an offline provider. The Resource Mobilization v2 fixture retains the real B28 serializer output, raw sources and calculation citations, with synthetic offline prose; provenance is documented in `tests/fixtures/page-bundle-resource-mobilization.md`. Cypress fixtures test presentation and do not represent reviewed live-model prose.
 
 With Node 22, start the fixture-based browser environment in one terminal:
 
@@ -66,7 +68,7 @@ BROWSER=none VITE_ENABLE_NARRATIVES=false VITE_API=http://api.test VITE_CMS_API=
 VITE_BASE_URL=http://127.0.0.1:4175 yarn cypress run --config-file cypress.narratives-off.config.ts --browser electron
 ```
 
-The narrative specs live in `cypress/narratives/`, outside default `cypress/e2e/` discovery. The existing `yarn e2e` command and its tests remain unchanged. Each dedicated configuration selects exactly one narrative suite. These specs intercept data and CMS requests, so neither a real CMS nor an API key is needed.
+The narrative specs live in `cypress/narratives/`, outside default `cypress/e2e/` discovery. The existing `yarn e2e` command and its tests remain unchanged. The enabled configuration selects the country and page suites; the disabled configuration selects the no-fetch suite. These specs intercept data and CMS requests, so neither a real CMS nor an API key is needed. The Vite-only `provider-harness.html` exercises real provider hooks with implicit and explicit identities, scope/page transitions and stale responses, without a production test route.
 
 ---
 

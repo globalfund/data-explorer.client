@@ -6,12 +6,18 @@ import {
   CountryNarrativeBundle,
   NarrativeOverview,
   NarrativeSection as NarrativeSectionModel,
+  SavedNarrativeBundle,
+  SavedNarrativeSection,
   expandNarrativeCitations,
 } from "app/types/narratives";
 import {
   CountryNarrativesState,
   useCountryNarratives,
 } from "app/hooks/useCountryNarratives";
+import {
+  NarrativesState,
+  usePageNarratives,
+} from "app/hooks/usePageNarratives";
 
 const formatDate = (value: string) => {
   const date = new Date(value);
@@ -21,21 +27,17 @@ const formatDate = (value: string) => {
 };
 
 const periodLabel = (
-  bundle: CountryNarrativeBundle,
-  section: NarrativeSectionModel | NarrativeOverview,
+  bundle: SavedNarrativeBundle,
+  section: SavedNarrativeSection,
 ) => {
-  const sourceIds = new Set<string>();
-  const calculations = new Map(
-    bundle.calculations.map((calculation) => [calculation.id, calculation]),
+  const sourceIds = new Set(
+    expandNarrativeCitations(
+      bundle,
+      section.claims.flatMap((claim) => claim.evidence_ids),
+    )
+      .filter((citation) => citation.kind !== "calculation")
+      .map((citation) => citation.id),
   );
-  const visit = (id: string) => {
-    if (sourceIds.has(id)) return;
-    const calculation = calculations.get(id);
-    if (calculation)
-      calculation.source_ids.forEach((sourceId) => sourceIds.add(sourceId));
-    else sourceIds.add(id);
-  };
-  section.claims.flatMap((claim) => claim.evidence_ids).forEach(visit);
   const periods = bundle.sources
     .filter((source) => sourceIds.has(source.id))
     .flatMap((source) =>
@@ -49,40 +51,41 @@ const periodLabel = (
   return Array.from(new Set(periods)).join(", ");
 };
 
-export interface NarrativeSectionProps {
-  section?: NarrativeSectionModel | NarrativeOverview;
-  bundle?: CountryNarrativeBundle;
-  sectionId?: string;
-  overview?: boolean;
-  state?: CountryNarrativesState;
-  defaultViewNotice?: string;
-}
-
-export const NarrativeSection: React.FC<NarrativeSectionProps> = ({
-  section,
-  bundle,
-  sectionId,
-  overview = false,
-  state,
-  defaultViewNotice = "This saved narrative describes the country's default view.",
-}) => {
-  const contextState = useCountryNarratives();
-  const activeState = state || contextState;
-  const activeBundle =
-    bundle || (activeState.status === "success" ? activeState.bundle : null);
-  const activeSection =
-    section ||
-    (activeBundle
-      ? overview
-        ? activeBundle.overview
-        : activeBundle.sections.find((item) => item.id === sectionId)
-      : null);
-  if (!activeSection || !activeBundle)
-    return <CountryNarrativesNotice state={activeState} />;
-  section = activeSection;
-  bundle = activeBundle;
+const SavedNarrativeText: React.FC<{
+  bundle: SavedNarrativeBundle;
+  section: SavedNarrativeSection;
+  defaultViewNotice: string;
+}> = ({ bundle, section, defaultViewNotice }) => {
   if (section.status !== "ready")
-    return <NarrativeUnavailable status={section.status} />;
+    return (
+      <NarrativeUnavailable
+        status={section.status}
+        country={"country" in bundle}
+      />
+    );
+  const configured =
+    "presentation" in bundle
+      ? bundle.presentation.sections.find((item) => item.id === section.id) ||
+        bundle.presentation.summary
+      : null;
+  const periods = periodLabel(bundle, section);
+  const citedIds = new Set(
+    expandNarrativeCitations(
+      bundle,
+      section.claims.flatMap((claim) => claim.evidence_ids),
+    ).map((citation) => citation.id),
+  );
+  const units =
+    "presentation" in bundle
+      ? Array.from(
+          new Set(
+            [...bundle.sources, ...bundle.calculations]
+              .filter((item) => citedIds.has(item.id))
+              .map((item) => item.scope.unit)
+              .filter(Boolean),
+          ),
+        ).join(", ")
+      : "";
   let previousHeading: string | null = null;
   return (
     <Box
@@ -90,6 +93,8 @@ export const NarrativeSection: React.FC<NarrativeSectionProps> = ({
       aria-labelledby={`narrative-${section.id}`}
       sx={{ my: 3, p: 2, border: "1px solid #DFE3E5", borderRadius: 1 }}
       data-cy="narrative-section"
+      data-narrative-id={section.id}
+      data-narrative-group={"group" in section ? section.group : undefined}
     >
       <Typography
         id={`narrative-${section.id}`}
@@ -109,9 +114,8 @@ export const NarrativeSection: React.FC<NarrativeSectionProps> = ({
         sx={{ mb: 2 }}
       >
         Generated {formatDate(bundle.metadata.generated_at)}
-        {periodLabel(bundle, section)
-          ? ` · Data periods: ${periodLabel(bundle, section)}`
-          : ""}
+        {periods ? ` · Data periods: ${periods}` : ""}
+        {units ? ` · Units: ${units}` : ""}
       </Typography>
       {"contributing_section_ids" in section && (
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
@@ -129,9 +133,11 @@ export const NarrativeSection: React.FC<NarrativeSectionProps> = ({
         {section.claims.map((claim, index) => {
           const heading = claim.heading || null;
           const showHeading =
-            section.id === "overview.summary" &&
             heading !== null &&
-            heading !== previousHeading;
+            heading !== previousHeading &&
+            (configured
+              ? (configured.allowed_headings ?? []).includes(heading)
+              : "tab" in section && section.tab === "overview");
           previousHeading = heading;
           const citations = expandNarrativeCitations(
             bundle,
@@ -193,9 +199,95 @@ export const NarrativeSection: React.FC<NarrativeSectionProps> = ({
   );
 };
 
+export interface SavedNarrativeSectionViewProps {
+  bundle: SavedNarrativeBundle;
+  sectionId: string;
+  scopeMatches: boolean;
+  defaultViewNotice?: string;
+}
+
+export const SavedNarrativeSectionView: React.FC<
+  SavedNarrativeSectionViewProps
+> = ({
+  bundle,
+  sectionId,
+  scopeMatches,
+  defaultViewNotice = "This saved narrative describes the default global view.",
+}) => {
+  if (!scopeMatches) return null;
+  const summary = "presentation" in bundle ? bundle.summary : bundle.overview;
+  const section =
+    bundle.sections.find((item) => item.id === sectionId) ||
+    (summary?.id === sectionId ? summary : null);
+  return section ? (
+    <SavedNarrativeText
+      section={section}
+      bundle={bundle}
+      defaultViewNotice={defaultViewNotice}
+    />
+  ) : null;
+};
+
+export const PageNarrativePanel: React.FC<{
+  sectionId: string;
+  scopeMatches: boolean;
+}> = ({ sectionId, scopeMatches }) => {
+  const state = usePageNarratives();
+  if (!scopeMatches) return null;
+  return state.status === "success" ? (
+    <SavedNarrativeSectionView
+      bundle={state.bundle}
+      sectionId={sectionId}
+      scopeMatches={scopeMatches}
+    />
+  ) : (
+    <NarrativesNotice state={state} />
+  );
+};
+
+export interface NarrativeSectionProps {
+  section?: NarrativeSectionModel | NarrativeOverview;
+  bundle?: CountryNarrativeBundle;
+  sectionId?: string;
+  overview?: boolean;
+  state?: CountryNarrativesState;
+  defaultViewNotice?: string;
+}
+
+export const NarrativeSection: React.FC<NarrativeSectionProps> = ({
+  section,
+  bundle,
+  sectionId,
+  overview = false,
+  state,
+  defaultViewNotice = "This saved narrative describes the country's default view.",
+}) => {
+  const contextState = useCountryNarratives();
+  const activeState = state || contextState;
+  const activeBundle =
+    bundle || (activeState.status === "success" ? activeState.bundle : null);
+  const activeSection =
+    section ||
+    (activeBundle
+      ? overview
+        ? activeBundle.overview
+        : activeBundle.sections.find((item) => item.id === sectionId)
+      : null);
+  return activeSection && activeBundle ? (
+    <SavedNarrativeText
+      section={activeSection}
+      bundle={activeBundle}
+      defaultViewNotice={defaultViewNotice}
+    />
+  ) : (
+    <CountryNarrativesNotice state={activeState} />
+  );
+};
+
 export const NarrativeUnavailable: React.FC<{
   status: "insufficient_evidence" | "not_applicable";
-}> = ({ status }) => (
+  country?: boolean;
+}> = ({ status, country = true }) => (
   <Typography
     variant="body2"
     color="text.secondary"
@@ -204,13 +296,14 @@ export const NarrativeUnavailable: React.FC<{
   >
     {status === "insufficient_evidence"
       ? "Narrative unavailable because there is not enough supporting evidence."
-      : "Narrative not applicable for this country."}
+      : `Narrative not applicable for this ${country ? "country" : "page"}.`}
   </Typography>
 );
 
-export const CountryNarrativesNotice: React.FC<{
-  state: CountryNarrativesState;
-}> = ({ state }) => {
+export const NarrativesNotice: React.FC<{
+  state: NarrativesState;
+  country?: boolean;
+}> = ({ state, country = false }) => {
   if (
     state.status === "disabled" ||
     state.status === "idle" ||
@@ -221,7 +314,7 @@ export const CountryNarrativesNotice: React.FC<{
     state.status === "loading"
       ? "Loading saved narrative…"
       : state.status === "not_found"
-        ? "No saved narrative is available for this country."
+        ? `No saved narrative is available for this ${country ? "country" : "page"}.`
         : state.error;
   return (
     <Typography
@@ -236,18 +329,27 @@ export const CountryNarrativesNotice: React.FC<{
   );
 };
 
+export const CountryNarrativesNotice: React.FC<{
+  state: CountryNarrativesState;
+}> = ({ state }) => <NarrativesNotice state={state} country />;
+
 export const NarrativePanel: React.FC<{
   state: CountryNarrativesState;
   sectionId?: string;
   overview?: boolean;
 }> = ({ state, sectionId, overview = false }) => {
-  if (state.status !== "success" || !state.bundle)
+  if (state.status !== "success")
     return <CountryNarrativesNotice state={state} />;
   const section = overview
     ? state.bundle.overview
     : state.bundle.sections.find((item) => item.id === sectionId);
-  if (!section) return null;
-  return <NarrativeSection section={section} bundle={state.bundle} />;
+  return section ? (
+    <SavedNarrativeText
+      section={section}
+      bundle={state.bundle}
+      defaultViewNotice="This saved narrative describes the country's default view."
+    />
+  ) : null;
 };
 
 export default NarrativeSection;
