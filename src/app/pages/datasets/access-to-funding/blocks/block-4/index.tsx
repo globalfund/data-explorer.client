@@ -1,4 +1,7 @@
 import React from "react";
+import isEqual from "lodash/isEqual";
+import { ACCESS_TO_FUNDING_DEFAULT_CYCLES } from "app/pages/datasets/access-to-funding/data";
+import { PageNarrativePanel } from "app/components/narrative-section";
 import get from "lodash/get";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -140,6 +143,15 @@ export const AccessToFundingBlock4: React.FC<AccessToFundingBlock4Props> = (
       <Typography variant="overline" fontSize="14px">
         Latest Update: <b>{latestUpdateDate}</b>
       </Typography>
+
+      <PageNarrativePanel
+        sectionId="access_to_funding.allocation_cycles"
+        scopeMatches={
+          props.filterString.length === 0 &&
+          !loadingAllocationsBarSeries &&
+          isEqual(keysAllocationsBarSeries, ACCESS_TO_FUNDING_DEFAULT_CYCLES)
+        }
+      />
     </Box>
   );
 };

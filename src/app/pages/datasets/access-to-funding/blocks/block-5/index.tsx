@@ -1,4 +1,5 @@
 import React from "react";
+import { PageNarrativePanel } from "app/components/narrative-section";
 import get from "lodash/get";
 import uniq from "lodash/uniq";
 import Box from "@mui/material/Box";
@@ -16,6 +17,7 @@ import isEqual from "lodash/isEqual";
 
 interface AccessToFundingBlock5Props {
   filterGroups: FilterGroupModel[];
+  defaultScopeMatches: boolean;
 }
 
 export const AccessToFundingBlock5: React.FC<AccessToFundingBlock5Props> = (
@@ -297,6 +299,15 @@ export const AccessToFundingBlock5: React.FC<AccessToFundingBlock5Props> = (
           dataTreeStartExpandedFn={(row) => row.getData().top}
         />
       </DatasetChartBlock>
+
+      <PageNarrativePanel
+        sectionId="access_to_funding.funding_requests"
+        scopeMatches={
+          props.defaultScopeMatches &&
+          chart3FilterString.length === 0 &&
+          tableSearch.length === 0
+        }
+      />
     </Box>
   );
 };

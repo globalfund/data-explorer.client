@@ -54,3 +54,12 @@ export const BOXES = [
     image: "/static/images/ImagePlaceholder.png",
   },
 ];
+
+export const ACCESS_TO_FUNDING_DEFAULT_YEAR = "2026";
+export const ACCESS_TO_FUNDING_DEFAULT_CYCLE = "2026-2028";
+export const ACCESS_TO_FUNDING_DEFAULT_CYCLES = [
+  "2017-2019",
+  "2020-2022",
+  "2023-2025",
+  "2026-2028",
+];

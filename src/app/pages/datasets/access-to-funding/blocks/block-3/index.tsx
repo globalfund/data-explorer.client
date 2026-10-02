@@ -1,4 +1,6 @@
 import React from "react";
+import { ACCESS_TO_FUNDING_DEFAULT_CYCLE } from "app/pages/datasets/access-to-funding/data";
+import { PageNarrativePanel } from "app/components/narrative-section";
 import get from "lodash/get";
 import uniq from "lodash/uniq";
 import Box from "@mui/material/Box";
@@ -488,6 +490,16 @@ export const AccessToFundingBlock3: React.FC<AccessToFundingBlock3Props> = (
       >
         {chartContent}
       </DatasetChartBlock>
+
+      <PageNarrativePanel
+        sectionId="access_to_funding.allocation"
+        scopeMatches={
+          chart2FilterString ===
+            `cycles=${encodeURIComponent(ACCESS_TO_FUNDING_DEFAULT_CYCLE)}` &&
+          tableSearch.length === 0 &&
+          (dropdownSelected !== dropdownItems[0].value || selectedItem === null)
+        }
+      />
     </Box>
   );
 };

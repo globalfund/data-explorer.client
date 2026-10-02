@@ -1,4 +1,6 @@
 import React from "react";
+import { PageNarrativesProvider } from "app/hooks/usePageNarratives";
+import type { PageNarrativeRef } from "app/types/narratives";
 import get from "lodash/get";
 import Box from "@mui/material/Box";
 import { useTitle, useUnmount } from "react-use";
@@ -8,7 +10,10 @@ import { getCMSDataField } from "app/utils/getCMSDataField";
 import { DatasetPage } from "app/pages/datasets/common/page";
 import { FilterGroupModel } from "app/components/filters/list/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import { FullWidthDivider } from "app/pages/datasets/access-to-funding/data";
+import {
+  FullWidthDivider,
+  ACCESS_TO_FUNDING_DEFAULT_YEAR,
+} from "app/pages/datasets/access-to-funding/data";
 import { AccessToFundingBlock1 } from "app/pages/datasets/access-to-funding/blocks/block-1";
 import { AccessToFundingBlock2 } from "app/pages/datasets/access-to-funding/blocks/block-2";
 import { AccessToFundingBlock3 } from "app/pages/datasets/access-to-funding/blocks/block-3";
@@ -18,7 +23,20 @@ import { AccessToFundingBlock6 } from "app/pages/datasets/access-to-funding/bloc
 import isEqual from "lodash/isEqual";
 import { Helmet } from "react-helmet-async";
 
-export const AccessToFundingPage: React.FC = () => {
+const narrativeRef: PageNarrativeRef = {
+  page_type: "access-to-funding",
+  page_id: "global",
+  locale: "en",
+  scope_key: "default",
+};
+
+export const AccessToFundingPage: React.FC = () => (
+  <PageNarrativesProvider pageRef={narrativeRef}>
+    <AccessToFundingContent />
+  </PageNarrativesProvider>
+);
+
+const AccessToFundingContent: React.FC = () => {
   const cmsData = useCMSData({ returnData: true });
   useTitle("The Data Explorer - Access to Funding");
   const location = useLocation();
@@ -63,8 +81,8 @@ export const AccessToFundingPage: React.FC = () => {
   const eligibilityYears = useStoreState(
     (state) =>
       get(state.EligibilityCycles, "data.data", []).map((item) => ({
-        label: item,
-        value: item,
+        label: String(item),
+        value: String(item),
       })) as { label: string; value: string }[],
   );
 
@@ -183,7 +201,13 @@ export const AccessToFundingPage: React.FC = () => {
           />
           <FullWidthDivider />
           {/* Eligibility */}
-          <AccessToFundingBlock2 filterGroups={filterGroups} />
+          <AccessToFundingBlock2
+            filterGroups={filterGroups}
+            defaultScopeMatches={
+              filterString.length === 0 &&
+              eligibilityYear === ACCESS_TO_FUNDING_DEFAULT_YEAR
+            }
+          />
           <FullWidthDivider />
           {/* Allocation */}
           <AccessToFundingBlock3 filterGroups={filterGroups} />
@@ -192,7 +216,10 @@ export const AccessToFundingPage: React.FC = () => {
           <AccessToFundingBlock4 filterString={filterString} />
           <FullWidthDivider />
           {/* Funding Requests */}
-          <AccessToFundingBlock5 filterGroups={filterGroups} />
+          <AccessToFundingBlock5
+            filterGroups={filterGroups}
+            defaultScopeMatches={filterString.length === 0}
+          />
           <FullWidthDivider />
           {/* Documents */}
           <AccessToFundingBlock6 filterString={filterString} />
