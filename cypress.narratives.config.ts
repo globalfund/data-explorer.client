@@ -8,6 +8,7 @@ export default defineConfig({
     specPattern: [
       "cypress/narratives/enabled.cy.ts",
       "cypress/narratives/page-narratives.cy.ts",
+      "cypress/narratives/access-to-funding.cy.ts",
     ],
   },
 });

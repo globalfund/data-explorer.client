@@ -116,3 +116,24 @@ describe("page narratives with the rollout flag disabled", () => {
     });
   }
 });
+
+describe("Access to Funding with narratives disabled", () => {
+  it("preserves all blocks without requesting saved narratives", () => {
+    let requests = 0;
+    cy.intercept("GET", "http://cms.test/**", { body: { data: [] } });
+    cy.intercept("GET", "http://api.test/**", (req) => {
+      if (req.url.includes("/narratives")) requests += 1;
+      req.reply({ count: 0, data: [], stats: [], keys: [] });
+    });
+    cy.visit("/access-to-funding");
+    cy.contains("h1", "Access to Funding").should("be.visible");
+    cy.contains("Eligible Countries by Numbers").should("exist");
+    cy.get("#eligibility, #allocation, #funding-requests").should(
+      "have.length",
+      3,
+    );
+    cy.get('[data-cy="allocation-block-2"]').should("exist");
+    cy.get('[data-cy^="narrative-"]').should("not.exist");
+    cy.then(() => expect(requests).to.equal(0));
+  });
+});
