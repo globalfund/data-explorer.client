@@ -609,11 +609,12 @@ export const RBReportItemsState: RBReportItemsModel = {
 
         const prevData = debug(state.items[gridIndex].data);
 
-        prevData.items.splice(itemIndex + 1, 0, newItem as RBReportItem);
+        const nextItems = [...prevData.items];
+        nextItems.splice(itemIndex + 1, 0, newItem as RBReportItem);
         state.items[gridIndex].data = {
           ...prevData,
           columns,
-          items: prevData.items.map((i) => ({
+          items: nextItems.map((i) => ({
             ...i,
             options: {
               ...i?.options,
