@@ -7,13 +7,13 @@
     "scope_key": "default"
   },
   "metadata": {
-    "snapshot_id": "54c84fb3c739cbfa05fe8a5e3b6b7a53207d154e4d620953492ae7d7086762e7",
-    "revision_id": "8cf6cd21-9996-4646-8ac5-32f5b6a0686e",
+    "snapshot_id": "89c864feb7d26d64cea3946221d8b7ec02b7500abbef90dfdf701018a5c315af",
+    "revision_id": "7e008cae-f24e-42c4-97ca-b3ac9f3c0c96",
     "model": "offline-mock",
     "prompt_version": "page-v1-5191318fc4dda1d0ee32f42ca12be0645a3ffe1c4486b7a693060707a80caf34",
-    "style_version": "page-v1-9c2ec2e8a2e53e4ff7cd5510d38fc40a96445fe683b5554972f38503e306def2",
-    "generated_at": "2026-10-02T11:26:32.854945Z",
-    "profile_fingerprint": "profile-v1-026353b31f747ca5f02cc49e0fba171b4a492d3a6b83004de8d8ca592b63f651"
+    "style_version": "page-v1-d1f7790648c1072d5ad3be3a72bfcd4d7d142915cb76cf0745f479e6c004ed0e",
+    "generated_at": "2026-10-06T11:52:21.689996Z",
+    "profile_fingerprint": "profile-v1-ddb63e80efa86fb79d46f4765d5270e01ba797754254646655280fcf461447e0"
   },
   "presentation": {
     "page_type": "access-to-funding",
@@ -1364,6 +1364,118 @@
       }
     },
     {
+      "id": "atf.doc.47c36a6502a5e3a9b31b7608",
+      "kind": "document",
+      "source_url": "https://archive.theglobalfund.org/media/axqf0p1r/archive_eligible-countries-2026_list_en.pdf",
+      "document_locator": {
+        "title": "Eligibility List 2026",
+        "location": "page 12, segment 1"
+      },
+      "content_hash": "cd96794cfe380a4413ba0011687c1c4a5380d8160bb4cd80cca267972f7656b6",
+      "retrieved_at": "2026-10-02T13:29:23.618828Z",
+      "value": null,
+      "excerpt": "All low and lower -middle income countries are eligible for funding, regardless of disease burden. The disease burden classifications used by the Global Fund are ‘High’ and ‘ Not High’. Disease burden criteria apply only to UMIs to determine their eligibility:",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": null,
+        "currency": null,
+        "source_dates": [
+          "2026-01-22"
+        ],
+        "dimensions": [
+          {
+            "name": "funding_context",
+            "value": "2026 eligibility"
+          },
+          {
+            "name": "document_period",
+            "value": "2026 eligibility determinations for the 2026-2028 allocation period (Grant Cycle 8)"
+          },
+          {
+            "name": "period_mapping_basis",
+            "value": "Eligibility List 2026, PDF page 1: the 2026 Eligibility List identifies the country components eligible to receive an allocation for the 2026-2028 allocation period (Grant Cycle 8); the Explorer eligibility year is 2026"
+          },
+          {
+            "name": "publication_date_text",
+            "value": "Published 8 January 2026; updated 22 January 2026"
+          },
+          {
+            "name": "publication_date_basis",
+            "value": "PDF page 1 states Date Published: 8 January 2026 and Date Updated: 22 January 2026; the captured file is the updated version, so the update date is its version date"
+          },
+          {
+            "name": "context_window",
+            "value": "ff617cd5acb9ad41330d604fcd0b47fb074dcbac9dd77bb78b6b3416c05b7336"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.doc.605059f1d58157aba22fbcea",
+      "kind": "document",
+      "source_url": "https://archive.theglobalfund.org/media/axqf0p1r/archive_eligible-countries-2026_list_en.pdf",
+      "document_locator": {
+        "title": "Eligibility List 2026",
+        "location": "page 12, segment 2"
+      },
+      "content_hash": "cd96794cfe380a4413ba0011687c1c4a5380d8160bb4cd80cca267972f7656b6",
+      "retrieved_at": "2026-10-02T13:29:23.618828Z",
+      "value": null,
+      "excerpt": "The Global Fund uses malaria data from earlier years (average of 2000-2004), as recommended by WHO, to determine eligibility.",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": null,
+        "currency": null,
+        "source_dates": [
+          "2026-01-22"
+        ],
+        "dimensions": [
+          {
+            "name": "funding_context",
+            "value": "2026 eligibility"
+          },
+          {
+            "name": "document_period",
+            "value": "2026 eligibility determinations for the 2026-2028 allocation period (Grant Cycle 8)"
+          },
+          {
+            "name": "period_mapping_basis",
+            "value": "Eligibility List 2026, PDF page 1: the 2026 Eligibility List identifies the country components eligible to receive an allocation for the 2026-2028 allocation period (Grant Cycle 8); the Explorer eligibility year is 2026"
+          },
+          {
+            "name": "publication_date_text",
+            "value": "Published 8 January 2026; updated 22 January 2026"
+          },
+          {
+            "name": "publication_date_basis",
+            "value": "PDF page 1 states Date Published: 8 January 2026 and Date Updated: 22 January 2026; the captured file is the updated version, so the update date is its version date"
+          },
+          {
+            "name": "context_window",
+            "value": "967f37b3d56f4fcaedf303b51dd871090b7dac72fe36283a1f938244673983c9"
+          }
+        ]
+      }
+    },
+    {
       "id": "atf.e97cb7ee3509079efb69",
       "kind": "structured_data",
       "source_url": "https://data.api.theglobalfund.org/allocations/sunburst?cycles=2026-2028",
@@ -2309,6 +2421,116 @@
       }
     },
     {
+      "id": "atf.doc.7c541ae2e8a21ee2c0b45257",
+      "kind": "document",
+      "source_url": "https://www.theglobalfund.org/en/news/2026/2026-02-18-global-fund-board-welcomes-final-eighth-replenishment-outcome/",
+      "document_locator": {
+        "title": "Global Fund Board Welcomes Final Eighth Replenishment Outcome of US$12.64 Billion, Backs Strategic Shifts to Advance Countries’ Path to Self-Reliance",
+        "location": "paragraph 1 under heading 2 \"Strategic Shifts\""
+      },
+      "content_hash": "0045204b5d6efbf6a70a1bdc38d251903d6ca2b41c8833ef980089916767bf1a",
+      "retrieved_at": "2026-10-02T13:29:24.451408Z",
+      "value": null,
+      "excerpt": "Given the resource-constrained environment and significant changes in global health financing, the Board agreed that grant funding will be allocated in accordance with the key strategic shifts introduced by the Global Fund at the end of 2025 to focus resources toward the poorest countries with the heaviest disease burdens and support countries in accelerating on their path to self-reliance as they work toward ending the three diseases.",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": null,
+        "currency": null,
+        "source_dates": [
+          "2026-02-18"
+        ],
+        "dimensions": [
+          {
+            "name": "funding_context",
+            "value": "2026-2028 allocation period"
+          },
+          {
+            "name": "document_period",
+            "value": "2026-2028 implementation period as stated in this release"
+          },
+          {
+            "name": "period_mapping_basis",
+            "value": "Release paragraph 4 under heading 1: the Board approved US$10.78 billion in allocations to countries for the 2026-2028 implementation period"
+          },
+          {
+            "name": "publication_date_text",
+            "value": "18 February 2026"
+          },
+          {
+            "name": "publication_date_basis",
+            "value": "News release dateline"
+          },
+          {
+            "name": "context_window",
+            "value": "2ce59e76518102e9bdd29d5803b097e4e2abdac77962f05fdaf00291157def63"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.doc.80ed108c1b4a951dbcb3a07e",
+      "kind": "document",
+      "source_url": "https://archive.theglobalfund.org/media/15310/archive_bm52-08b-allocation-methodology-gc8_report_en.pdf",
+      "document_locator": {
+        "title": "Allocation Methodology for Grant Cycle 8, GF/B52/08B",
+        "location": "page 19"
+      },
+      "content_hash": "dc103cfee74b5dae43971ded691a7596726c74d84120c86722688cc83fbf411f",
+      "retrieved_at": "2026-10-02T13:29:23.978211Z",
+      "value": null,
+      "excerpt": "In line with the intent and sustainability considerations supported by the Board and SC, the SC approved a revision to the CEC curve to further shift funds to lower income countries. Specifically, the revised curve increases the aggregate allocation share of LIs and lower -LMIs by reducing the allocation share for higher income countries, namely upper-LMIs and upper-middle income countries (UMIs).",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": null,
+        "currency": null,
+        "source_dates": [],
+        "dimensions": [
+          {
+            "name": "funding_context",
+            "value": "2026-2028 allocation period"
+          },
+          {
+            "name": "document_period",
+            "value": "2026-2028 allocation period (Grant Cycle 8); methodology and funding scenarios proposed for Board decision before the Eighth Replenishment outcome"
+          },
+          {
+            "name": "period_mapping_basis",
+            "value": "PDF page 2, proposed decision point (GF/B52/DPXX, for Board decision): Allocation Methodology for the 2026-2028 allocation period (Grant Cycle 8), superseding the 2023-2025 allocation methodology; this paper is the proposal, not the recorded Board decision"
+          },
+          {
+            "name": "publication_date_text",
+            "value": "20-22 November 2024 Board meeting"
+          },
+          {
+            "name": "publication_date_basis",
+            "value": "Cover records the 52nd Board Meeting dates in Lilongwe; meeting dates are not an exact publication day"
+          },
+          {
+            "name": "context_window",
+            "value": "f9a822683d1b11eb53c4fc6e7d623863464e9dee3b1102fca7cc61a91511d08f"
+          }
+        ]
+      }
+    },
+    {
       "id": "atf.0d5fab02075f8475dac7",
       "kind": "structured_data",
       "source_url": "https://data.api.theglobalfund.org/allocations/cumulative-by-cycles",
@@ -3029,6 +3251,118 @@
       }
     },
     {
+      "id": "atf.doc.e948a24c45a9c5abaae060df",
+      "kind": "document",
+      "source_url": "https://www.theglobalfund.org/en/news/2026/2026-02-18-global-fund-board-welcomes-final-eighth-replenishment-outcome/",
+      "document_locator": {
+        "title": "Global Fund Board Welcomes Final Eighth Replenishment Outcome of US$12.64 Billion, Backs Strategic Shifts to Advance Countries’ Path to Self-Reliance",
+        "location": "paragraph 1 under heading 1 \"Global Fund Board Welcomes Final Eighth Replenishment Outcome of US$12.64 Billion, Backs Strategic Shifts to Advance Countries’ Path to Self-Reliance\""
+      },
+      "content_hash": "0045204b5d6efbf6a70a1bdc38d251903d6ca2b41c8833ef980089916767bf1a",
+      "retrieved_at": "2026-10-02T13:29:24.451408Z",
+      "value": null,
+      "excerpt": "The Board of the Global Fund to Fight AIDS, Tuberculosis and Malaria (the Global Fund) welcomed the final outcome of the partnership’s Eighth Replenishment – US$12.64 billion – at its 54th meeting on 12-13 February.",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": null,
+        "currency": null,
+        "source_dates": [
+          "2026-02-18"
+        ],
+        "dimensions": [
+          {
+            "name": "funding_context",
+            "value": "2026-2028 allocation period"
+          },
+          {
+            "name": "document_period",
+            "value": "2026-2028 implementation period as stated in this release"
+          },
+          {
+            "name": "period_mapping_basis",
+            "value": "Release paragraph 4 under heading 1: the Board approved US$10.78 billion in allocations to countries for the 2026-2028 implementation period"
+          },
+          {
+            "name": "publication_date_text",
+            "value": "18 February 2026"
+          },
+          {
+            "name": "publication_date_basis",
+            "value": "News release dateline"
+          },
+          {
+            "name": "context_window",
+            "value": "59a22ac480ed54a8a6e77d0df59b97df80698a59a06ff502461baf476aad741d"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.doc.af0f18da215882371f0a5b00",
+      "kind": "document",
+      "source_url": "https://www.theglobalfund.org/en/news/2026/2026-02-18-global-fund-board-welcomes-final-eighth-replenishment-outcome/",
+      "document_locator": {
+        "title": "Global Fund Board Welcomes Final Eighth Replenishment Outcome of US$12.64 Billion, Backs Strategic Shifts to Advance Countries’ Path to Self-Reliance",
+        "location": "paragraph 3 under heading 1 \"Global Fund Board Welcomes Final Eighth Replenishment Outcome of US$12.64 Billion, Backs Strategic Shifts to Advance Countries’ Path to Self-Reliance\""
+      },
+      "content_hash": "0045204b5d6efbf6a70a1bdc38d251903d6ca2b41c8833ef980089916767bf1a",
+      "retrieved_at": "2026-10-02T13:29:24.451408Z",
+      "value": null,
+      "excerpt": "At the same time, the Board underscored that funding gaps threaten progress toward ending the three diseases and noted that efforts to mobilize additional resources will continue.",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2026-2028",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": null,
+        "currency": null,
+        "source_dates": [
+          "2026-02-18"
+        ],
+        "dimensions": [
+          {
+            "name": "funding_context",
+            "value": "2026-2028 allocation period"
+          },
+          {
+            "name": "document_period",
+            "value": "2026-2028 implementation period as stated in this release"
+          },
+          {
+            "name": "period_mapping_basis",
+            "value": "Release paragraph 4 under heading 1: the Board approved US$10.78 billion in allocations to countries for the 2026-2028 implementation period"
+          },
+          {
+            "name": "publication_date_text",
+            "value": "18 February 2026"
+          },
+          {
+            "name": "publication_date_basis",
+            "value": "News release dateline"
+          },
+          {
+            "name": "context_window",
+            "value": "043777ea94349fb5837891a58525c6b0329695d49270ffa9a6df1f21e6921be4"
+          }
+        ]
+      }
+    },
+    {
       "id": "atf.1654d7ad0cbbfd381e2c",
       "kind": "structured_data",
       "source_url": "https://data.api.theglobalfund.org/funding-requests",
@@ -3289,6 +3623,174 @@
           {
             "name": "display_value",
             "value": "14"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.doc.916ffec1dd8aa158704abe92",
+      "kind": "document",
+      "source_url": "https://www.theglobalfund.org/media/15332/iep_gf-elo-2024-04_report_en.pdf",
+      "document_locator": {
+        "title": "Evaluation of the Global Fund Funding Request and Grant-making Stages of the Funding Cycle, Final Report GF/ELO/2024/04/01",
+        "location": "page 16, segment 2"
+      },
+      "content_hash": "df4d80b6b3b03936d1a06f0d28989d699ccfcc323bc00f7e8b2e7d8ab75a0a47",
+      "retrieved_at": "2026-10-02T13:45:30.692288Z",
+      "value": null,
+      "excerpt": "Applicants are required to submit their FRs for the 2023-2025 allocation period during \"windows\" within the three-year time frame which extend from March 2023 (Window 1) through to Quarter 1 2025 (Window 7). These windows are scheduled to enable the TRP to meet and assess the FRs.",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2025 Window 7",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": null,
+        "currency": null,
+        "source_dates": [
+          "2024-12-19"
+        ],
+        "dimensions": [
+          {
+            "name": "funding_context",
+            "value": "Grant Cycle 7 funding requests"
+          },
+          {
+            "name": "document_period",
+            "value": "2023-2025 allocation period (Grant Cycle 7) funding request and grant-making stages, evaluated from 2023 to April 2024; submission windows from March 2023 (Window 1) to Quarter 1 2025 (Window 7)"
+          },
+          {
+            "name": "period_mapping_basis",
+            "value": "PDF page 16, footnote 9 (parser locator page 16, segment 2): funding requests for the 2023-2025 allocation period are submitted during windows from March 2023 (Window 1) through to Quarter 1 2025 (Window 7), so Window 7 is the last 2023-2025 submission window; the Explorer cohort was submitted on 17 February 2025, in Quarter 1 2025. The evaluation reports no Window 7 outcomes"
+          },
+          {
+            "name": "publication_date_text",
+            "value": "19 December 2024"
+          },
+          {
+            "name": "publication_date_basis",
+            "value": "Cover states Final Report GF/ELO/2024/04/01, 19 December 2024 (PDF creation date 2024-12-19); PDF page 3 records the evaluators' report as submitted 23 September 2024"
+          },
+          {
+            "name": "context_window",
+            "value": "7ce4eb16d5077a09877512455fa6cfc9f6a9640484ef552eb428bd5be852f281"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.doc.a1951fd3185be8fad86ecc18",
+      "kind": "document",
+      "source_url": "https://www.theglobalfund.org/media/15332/iep_gf-elo-2024-04_report_en.pdf",
+      "document_locator": {
+        "title": "Evaluation of the Global Fund Funding Request and Grant-making Stages of the Funding Cycle, Final Report GF/ELO/2024/04/01",
+        "location": "page 17, segment 1"
+      },
+      "content_hash": "df4d80b6b3b03936d1a06f0d28989d699ccfcc323bc00f7e8b2e7d8ab75a0a47",
+      "retrieved_at": "2026-10-02T13:45:30.692288Z",
+      "value": null,
+      "excerpt": "For GC7, the Global Fund advises applicants to use one of five differentiated FR approaches in the country Allocation Letter: Program Continuation, Full Review, Tailored for NSPs (Tailored for NSP), Tailored for Focused Portfolios, and Tailored for Transition. Each approach is differentiated from each other, requiring different application forms, application questions and annexes with varying levels of detail.",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2025 Window 7",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": null,
+        "currency": null,
+        "source_dates": [
+          "2024-12-19"
+        ],
+        "dimensions": [
+          {
+            "name": "funding_context",
+            "value": "Grant Cycle 7 funding requests"
+          },
+          {
+            "name": "document_period",
+            "value": "2023-2025 allocation period (Grant Cycle 7) funding request and grant-making stages, evaluated from 2023 to April 2024; submission windows from March 2023 (Window 1) to Quarter 1 2025 (Window 7)"
+          },
+          {
+            "name": "period_mapping_basis",
+            "value": "PDF page 16, footnote 9 (parser locator page 16, segment 2): funding requests for the 2023-2025 allocation period are submitted during windows from March 2023 (Window 1) through to Quarter 1 2025 (Window 7), so Window 7 is the last 2023-2025 submission window; the Explorer cohort was submitted on 17 February 2025, in Quarter 1 2025. The evaluation reports no Window 7 outcomes"
+          },
+          {
+            "name": "publication_date_text",
+            "value": "19 December 2024"
+          },
+          {
+            "name": "publication_date_basis",
+            "value": "Cover states Final Report GF/ELO/2024/04/01, 19 December 2024 (PDF creation date 2024-12-19); PDF page 3 records the evaluators' report as submitted 23 September 2024"
+          },
+          {
+            "name": "context_window",
+            "value": "77339d38630a481710d162c55bbd69bbcfe9cc9e4321eb97e4ed19634d7ecb36"
+          }
+        ]
+      }
+    },
+    {
+      "id": "atf.doc.26a7e7d78189f9dafb99446e",
+      "kind": "document",
+      "source_url": "https://www.theglobalfund.org/media/15332/iep_gf-elo-2024-04_report_en.pdf",
+      "document_locator": {
+        "title": "Evaluation of the Global Fund Funding Request and Grant-making Stages of the Funding Cycle, Final Report GF/ELO/2024/04/01",
+        "location": "page 16, segment 1"
+      },
+      "content_hash": "df4d80b6b3b03936d1a06f0d28989d699ccfcc323bc00f7e8b2e7d8ab75a0a47",
+      "retrieved_at": "2026-10-02T13:45:30.692288Z",
+      "value": null,
+      "excerpt": "For countries to access their Global Fund allocation, two main stages are involved: (1) developing a Funding Request (FR) by the Country Coordination Mechanism (CCM) with wider country stakeholders, reviewed by the independent Technical Review Panel (TRP), and (2) creating grants through the Grant-making (GM) process which involves negotiating grant design and budgets and reviewing final grants through Grant Approvals Committee (GAC) processes for Global Fund Board approval.",
+      "scope": {
+        "page_type": "access-to-funding",
+        "page_id": "global",
+        "scope_key": "default",
+        "periods": [
+          {
+            "label": "2025 Window 7",
+            "start": null,
+            "end": null
+          }
+        ],
+        "unit": null,
+        "currency": null,
+        "source_dates": [
+          "2024-12-19"
+        ],
+        "dimensions": [
+          {
+            "name": "funding_context",
+            "value": "Grant Cycle 7 funding requests"
+          },
+          {
+            "name": "document_period",
+            "value": "2023-2025 allocation period (Grant Cycle 7) funding request and grant-making stages, evaluated from 2023 to April 2024; submission windows from March 2023 (Window 1) to Quarter 1 2025 (Window 7)"
+          },
+          {
+            "name": "period_mapping_basis",
+            "value": "PDF page 16, footnote 9 (parser locator page 16, segment 2): funding requests for the 2023-2025 allocation period are submitted during windows from March 2023 (Window 1) through to Quarter 1 2025 (Window 7), so Window 7 is the last 2023-2025 submission window; the Explorer cohort was submitted on 17 February 2025, in Quarter 1 2025. The evaluation reports no Window 7 outcomes"
+          },
+          {
+            "name": "publication_date_text",
+            "value": "19 December 2024"
+          },
+          {
+            "name": "publication_date_basis",
+            "value": "Cover states Final Report GF/ELO/2024/04/01, 19 December 2024 (PDF creation date 2024-12-19); PDF page 3 records the evaluators' report as submitted 23 September 2024"
+          },
+          {
+            "name": "context_window",
+            "value": "ccc8ebffa3e1774a1f40d92af869c0e07518e6ec3df9c187386ac16fe9da3b29"
           }
         ]
       }
@@ -5597,9 +6099,17 @@
       "status": "ready",
       "claims": [
         {
-          "text": "In 2026, Upper middle income countries account for 32.20% of countries eligible for HIV funding.",
+          "text": "In 2026, Upper middle income is the largest income group among the 118 countries eligible for HIV funding, at 32.20%.",
           "evidence_ids": [
-            "atf.29aa8de6e1fdd56e887d.share"
+            "atf.29aa8de6e1fdd56e887d.share",
+            "atf.9d38b1da6a01d0c1a2f9"
+          ],
+          "heading": null
+        },
+        {
+          "text": "All low and lower -middle income countries are eligible for funding, regardless of disease burden.",
+          "evidence_ids": [
+            "atf.doc.47c36a6502a5e3a9b31b7608"
           ],
           "heading": null
         }
@@ -5617,6 +6127,13 @@
             "atf.global_allocation"
           ],
           "heading": null
+        },
+        {
+          "text": "Given the resource-constrained environment and significant changes in global health financing, the Board agreed that grant funding will be allocated in accordance with the key strategic shifts introduced by the Global Fund at the end of 2025 to focus resources toward the poorest countries with the heaviest disease burdens and support countries in accelerating on their path to self-reliance as they work toward ending the three diseases.",
+          "evidence_ids": [
+            "atf.doc.7c541ae2e8a21ee2c0b45257"
+          ],
+          "heading": null
         }
       ]
     },
@@ -5630,6 +6147,13 @@
           "text": "Total allocations decreased by 19.60% from 2023-2025 to 2026-2028.",
           "evidence_ids": [
             "atf.821a208bebfe7acc1d30.change"
+          ],
+          "heading": null
+        },
+        {
+          "text": "The Board of the Global Fund to Fight AIDS, Tuberculosis and Malaria (the Global Fund) welcomed the final outcome of the partnership’s Eighth Replenishment – US$12.64 billion – at its 54th meeting on 12-13 February.",
+          "evidence_ids": [
+            "atf.doc.e948a24c45a9c5abaae060df"
           ],
           "heading": null
         }
@@ -5646,6 +6170,13 @@
           "evidence_ids": [
             "atf.aef7475b49d5907e937e",
             "atf.1654d7ad0cbbfd381e2c"
+          ],
+          "heading": null
+        },
+        {
+          "text": "Applicants are required to submit their FRs for the 2023-2025 allocation period during \"windows\" within the three-year time frame which extend from March 2023 (Window 1) through to Quarter 1 2025 (Window 7).",
+          "evidence_ids": [
+            "atf.doc.916ffec1dd8aa158704abe92"
           ],
           "heading": null
         }

@@ -240,10 +240,19 @@ const accessFixture = JSON.parse(
 );
 const accessRef = { ...ref, page_type: "access-to-funding" };
 const accessBundle = parse(accessFixture, accessRef);
-assert.ok(accessBundle, "actual B35 serializer bundle must parse");
+assert.ok(accessBundle, "actual B39 serializer bundle must parse");
 assert.equal(accessBundle.summary, null);
-assert.equal(accessBundle.sources.length, 69);
+assert.equal(accessBundle.sources.length, 78);
 assert.equal(accessBundle.calculations.length, 46);
+const accessDocuments = accessBundle.sources.filter(
+  (item) => item.kind === "document",
+);
+assert.equal(accessDocuments.length, 9);
+assert.ok(
+  accessDocuments.every(
+    (item) => item.excerpt && item.document_locator?.location,
+  ),
+);
 assert.deepEqual(
   accessBundle.sections.map((item) => item.id),
   [
@@ -264,6 +273,19 @@ for (const item of accessBundle.sections) {
       contracts.expandNarrativeCitations(accessBundle, claim.evidence_ids)
         .length > 0,
     );
+  const documentCitations = contracts.expandNarrativeCitations(
+    accessBundle,
+    item.claims[1].evidence_ids,
+  );
+  assert.ok(
+    documentCitations.every(
+      (citation) =>
+        citation.kind === "document" &&
+        citation.location &&
+        citation.url?.startsWith("https://"),
+    ),
+    "document paragraph citations keep their locator and official URL",
+  );
 }
 assert.equal(parse(accessFixture, ref), null, "page type mismatch");
 const invalidAccess = structuredClone(accessFixture);
