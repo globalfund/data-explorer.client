@@ -17,6 +17,10 @@ export const OpexEfficiency: ApiCallModel = {
   ...APIModel(`${import.meta.env.VITE_API}/opex/efficiency/{type}`),
 };
 
+export const OpexEfficiency2: ApiCallModel = {
+  ...APIModel(`${import.meta.env.VITE_API}/opex/efficiency/{type}`),
+};
+
 export const OpexYearStats: ApiCallModel = {
   ...APIModel(`${import.meta.env.VITE_API}/opex/year-stats`),
 };

@@ -167,6 +167,9 @@ export const LineChart: React.FC<LineChartProps> = (props: LineChartProps) => {
             fontFamily: "Inter, sans-serif",
             color: appColors.LINE_CHART.CHART_TEXT_COLOR,
             formatter: (value: number) => {
+              if (props.yAxisLabelFormatter) {
+                return props.yAxisLabelFormatter(value);
+              }
               if (value === 0) {
                 return "";
               }

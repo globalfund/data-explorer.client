@@ -27,6 +27,7 @@ import {
   LegendComponentOption,
   TooltipComponentOption,
 } from "echarts";
+import orderBy from "lodash/orderBy";
 
 echarts.use([
   EChartsLine,
@@ -296,7 +297,11 @@ export const LineChart2: React.FC<LineChart2Props> = (
           },
         },
         legend: {
-          data: props.data.map((line) => line.name),
+          data: orderBy(
+            props.data,
+            (v) => v.data[v.data.length - 1],
+            "desc",
+          ).map((line) => line.name),
           right: 0,
           itemGap: 20,
           itemWidth: 12,

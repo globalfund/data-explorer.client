@@ -35,6 +35,65 @@ export const SmallLineChart: React.FC<LineChartProps> = (
         renderer: "svg",
       });
 
+      const seriesList: (LineSeriesOption & { isDashedOverlay?: boolean })[] =
+        props.data.flatMap((line) => {
+          const color = line.itemStyle?.color;
+          const lastIndex = line.data.length - 1;
+
+          const mainData = line.data.map((value, idx) =>
+            idx === lastIndex ? null : value,
+          );
+          const lastSegmentData = line.data.map((value, idx) =>
+            idx >= lastIndex - 1 ? value : null,
+          );
+
+          return [
+            {
+              ...line,
+              type: "line",
+              name: line.name,
+              data: mainData,
+              showSymbol: false,
+              smooth: true,
+              color,
+              endLabel: {
+                show: false,
+              },
+              lineStyle: {
+                width: 1.5,
+                color,
+                type: line.itemStyle?.borderType,
+              },
+              emphasis: {
+                disabled: true,
+              },
+              itemStyle: line.itemStyle,
+            },
+            {
+              ...line,
+              type: "line",
+              name: line.name,
+              data: lastSegmentData,
+              showSymbol: false,
+              smooth: true,
+              color,
+              endLabel: {
+                show: false,
+              },
+              lineStyle: {
+                width: 1.5,
+                color,
+                type: "dashed",
+              },
+              emphasis: {
+                disabled: true,
+              },
+              itemStyle: line.itemStyle,
+              isDashedOverlay: true,
+            },
+          ];
+        });
+
       const option: echarts.ComposeOption<
         | LineSeriesOption
         | GridComponentOption
@@ -80,29 +139,7 @@ export const SmallLineChart: React.FC<LineChartProps> = (
             show: false,
           },
         },
-        series: props.data.map((line) => ({
-          type: "line",
-          name: line.name,
-          data: line.data.map((value, index) => ({
-            value,
-            symbolSize: index === line.data.length - 1 ? 8 : 0,
-          })),
-          showSymbol: true,
-          color: line.itemStyle?.color,
-          lineStyle: {
-            width: 1.5,
-            color: line.itemStyle?.color,
-          },
-          symbol: line.symbol ?? "circle",
-          areaStyle: {
-            color: line.areaStyle?.color,
-            opacity: line.areaStyle?.opacity ?? 0,
-          },
-          emphasis: {
-            disabled: true,
-          },
-          itemStyle: line.itemStyle,
-        })),
+        series: seriesList,
       };
 
       chart.setOption(option);

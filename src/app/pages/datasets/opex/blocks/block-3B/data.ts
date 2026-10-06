@@ -1,3 +1,5 @@
+export const VIEWS = ["OPEX / pledges per cycle", "OPEX / $ disbursed"];
+
 export const simpleFormatter = (value: number) => {
   const isNegative = value < 0;
   value = Math.abs(value);

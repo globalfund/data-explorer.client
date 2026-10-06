@@ -149,6 +149,7 @@ import { AnnualResultsGroupedByComponent } from "app/state/api/action-reducers/a
 import {
   OpexCostComposition,
   OpexEfficiency,
+  OpexEfficiency2,
   OpexIndexedTrends,
   OpexKeyCosts,
   OpexOperatingCosts,
@@ -233,6 +234,7 @@ const storeContent: StoreModel = {
   OpexStats: persist(OpexStats),
   OpexOperatingCosts: persist(OpexOperatingCosts),
   OpexEfficiency: persist(OpexEfficiency),
+  OpexEfficiencyB: persist(OpexEfficiency2),
   OpexYearStats: persist(OpexYearStats),
   OpexCostComposition: persist(OpexCostComposition),
   OpexKeyCosts: persist(OpexKeyCosts),

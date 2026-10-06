@@ -195,6 +195,7 @@ export interface StoreModel {
   OpexStats: ApiCallModel;
   OpexOperatingCosts: ApiCallModel;
   OpexEfficiency: ApiCallModel;
+  OpexEfficiencyB: ApiCallModel;
   OpexYearStats: ApiCallModel;
   OpexCostComposition: ApiCallModel;
   OpexKeyCosts: ApiCallModel;

@@ -21,6 +21,7 @@ export interface LineChartProps {
   data: LineChartDataItem[];
   cumulativeLineValue?: number;
   xAxisSubLabels?: string[];
+  yAxisLabelFormatter?: (value: number) => string;
 }
 
 export const xAxisKeys = Array.from(

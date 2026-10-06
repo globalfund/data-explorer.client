@@ -13,6 +13,7 @@ import { DatasetPage } from "app/pages/datasets/common/page";
 import { OpexPageBlock1 } from "app/pages/datasets/opex/blocks/block-1";
 import { OpexPageBlock2 } from "app/pages/datasets/opex/blocks/block-2";
 import { OpexPageBlock3 } from "app/pages/datasets/opex/blocks/block-3";
+import { OpexPageBlock3B } from "app/pages/datasets/opex/blocks/block-3B";
 // import { OpexPageBlock4 } from "app/pages/datasets/opex/blocks/block-4";
 import { OpexPageBlock5 } from "app/pages/datasets/opex/blocks/block-5";
 import { OpexPageBlock6 } from "app/pages/datasets/opex/blocks/block-6";
@@ -88,6 +89,8 @@ export const OpexPage = () => {
           <OpexPageBlock2 />
           <Divider />
           <OpexPageBlock3 />
+          <Divider />
+          <OpexPageBlock3B />
           <Divider />
           {/* <OpexPageBlock4 />
           <Divider /> */}

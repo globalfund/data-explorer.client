@@ -21,8 +21,6 @@ export const OpexPageBlock5: React.FC = () => {
     (state) => state.OpexCostComposition.loading,
   );
 
-  console.log(dataCostComposition, "dataCostComposition");
-
   const xAxisKeys = get(dataCostComposition, "years", []);
   const allCategories = get(dataCostComposition, "categories", []);
   const values = get(dataCostComposition, "values", []) as number[][];
@@ -106,8 +104,6 @@ export const OpexPageBlock5: React.FC = () => {
   React.useEffect(() => {
     fetchCostComposition({});
   }, []);
-
-  console.log(transformedData, "transformedData");
 
   return (
     <OpexPageChartBlock
