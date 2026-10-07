@@ -4,12 +4,9 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import AccessTimeOutlined from "@mui/icons-material/AccessTimeOutlined";
 import TouchAppOutlined from "@mui/icons-material/TouchAppOutlined";
 import TextFieldsOutlined from "@mui/icons-material/TextFieldsOutlined";
-import DatabaseIcon from "app/assets/vectors/DatasetSelectDatabase.svg?react";
 import UploadIcon from "app/assets/vectors/Upload.svg?react";
-import CheckCircleIcon from "app/assets/vectors/CheckCircle.svg?react";
 import BuildingIcon from "app/assets/vectors/Building.svg?react";
 import GlobeIcon from "app/assets/vectors/Globe.svg?react";
 import GridIcon from "app/assets/vectors/Grid.svg?react";
@@ -24,6 +21,7 @@ import {
   getColumnType,
   getDatasetLatestUpdateKey,
 } from "./utils";
+import DatasetCard from "./dataset-card";
 
 const datasetSourceOptions = [
   {
@@ -31,9 +29,16 @@ const datasetSourceOptions = [
     label: "Global Fund",
     count: 24,
     icon: BuildingIcon,
+    disabled: false,
   },
-  { id: "who", label: "WHO", count: 112, icon: BuildingIcon },
-  { id: "kaggle", label: "Kaggle", count: 2360, icon: GlobeIcon },
+  { id: "who", label: "WHO", count: 112, icon: BuildingIcon, disabled: true },
+  {
+    id: "kaggle",
+    label: "Kaggle",
+    count: 2360,
+    icon: GlobeIcon,
+    disabled: true,
+  },
 ];
 
 export const DatasetSelect: React.FC<{
@@ -170,6 +175,7 @@ export const DatasetSelect: React.FC<{
                         marginRight: 0,
                       },
                     }}
+                    disabled={source.disabled}
                   >
                     {source.label} ({source.count})
                   </Button>
@@ -278,124 +284,13 @@ export const DatasetSelect: React.FC<{
             {filteredDatasets.map((dataset) => {
               const active = dataset.id === selectedDataset;
               return (
-                <Box
+                <DatasetCard
                   key={dataset.id}
-                  component="button"
-                  type="button"
-                  onClick={() => setSelectedDataset(dataset.id)}
-                  sx={{
-                    m: 0,
-                    gap: "12px",
-                    height: "160px",
-                    p: "16px",
-                    display: "flex",
-                    textAlign: "left",
-                    cursor: "pointer",
-                    borderRadius: "4px",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    bgcolor: active ? "#f8f9ff" : "#ffffff",
-                    border: active
-                      ? "0.5px solid #3154f4"
-                      : "0.5px solid #98A1AA",
-                    boxShadow: active
-                      ? "0 0 10px 0 rgba(152, 161, 170, 0.60)"
-                      : "none",
-                    font: "inherit",
-                  }}
-                >
-                  <Box sx={{ display: "flex", gap: "8px" }}>
-                    <Box sx={{ minWidth: 0, flex: 1 }}>
-                      <Typography
-                        fontSize="14px"
-                        fontWeight={700}
-                        color="#000"
-                        lineHeight="normal"
-                        sx={{
-                          display: "-webkit-box",
-                          overflow: "hidden",
-                          WebkitBoxOrient: "vertical",
-                          WebkitLineClamp: 1,
-                        }}
-                      >
-                        {dataset.name}
-                      </Typography>
-                      <Typography
-                        fontSize="14px"
-                        color="#373d43"
-                        lineHeight="normal"
-                        sx={{
-                          mt: "4px",
-                          display: "-webkit-box",
-                          overflow: "hidden",
-                          WebkitBoxOrient: "vertical",
-                          WebkitLineClamp: 2,
-                        }}
-                      >
-                        {dataset.description}
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        width: 18,
-                        height: 18,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {active ? (
-                        <CheckCircleIcon />
-                      ) : (
-                        <Box
-                          sx={{
-                            width: 18,
-                            height: 18,
-                            color: "#ADB5BD",
-                            border: "1.25px solid #ADB5BD",
-                            borderRadius: "50%",
-                          }}
-                        />
-                      )}
-                    </Box>
-                  </Box>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "4px",
-                    }}
-                  >
-                    <Box sx={{ display: "flex", gap: "8px" }}>
-                      <DatabaseIcon width={16} height={16} />
-                      <Typography
-                        fontSize="14px"
-                        color="#373d43"
-                        lineHeight="normal"
-                      >
-                        12,480 rows • 8 cols
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        gap: "8px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <AccessTimeOutlined
-                        sx={{ width: 16, height: 16, color: "#98a1aa" }}
-                      />
-                      <Typography
-                        fontSize="14px"
-                        color="#373d43"
-                        lineHeight="normal"
-                      >
-                        Updated on {getDatasetLatestUpdate(dataset.id)}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Box>
+                  dataset={dataset}
+                  active={active}
+                  setSelectedDataset={setSelectedDataset}
+                  getDatasetLatestUpdate={getDatasetLatestUpdate}
+                />
               );
             })}
           </Box>
