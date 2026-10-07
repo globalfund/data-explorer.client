@@ -1,6 +1,5 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 
 import IconButton from "@mui/material/IconButton";
@@ -22,29 +21,17 @@ import LinkIcon from "app/assets/vectors/RBLink.svg?react";
 import { Editor, useEditorState } from "@tiptap/react";
 import {
   FormatAlignLeft,
-  KeyboardArrowUp,
   FormatAlignRight,
   FormatAlignCenter,
-  KeyboardArrowDown,
 } from "@mui/icons-material";
 import { ColorPicker } from "app/components/color-picker/example";
 import { ColorService } from "app/components/color-picker/utils/color";
-import StyledMenu from "../../common/menu-popup";
 import AlignButtons from "./align-buttons";
 import TextField from "../../components/textfield";
 import { appendPx, removePx } from "app/utils/formatPx";
+import SelectField from "../../components/selectfield";
 
 export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
-  const [fontFamilyAnchorEl, setFontFamilyAnchorEl] =
-    React.useState<null | HTMLElement>(null);
-  const [fontWeightAnchorEl, setFontWeightAnchorEl] =
-    React.useState<null | HTMLElement>(null);
-  const [fontSizeAnchorEl, setFontSizeAnchorEl] =
-    React.useState<null | HTMLElement>(null);
-
-  const isFontFamilyMenuActive = Boolean(fontFamilyAnchorEl);
-  const isFontWeightMenuActive = Boolean(fontWeightAnchorEl);
-  const isFontSizeMenuActive = Boolean(fontSizeAnchorEl);
   const editorState = useEditorState({
     editor,
     selector: (ctx) => {
@@ -54,7 +41,8 @@ export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
         isUnderlined: ctx.editor.isActive("underline"),
         color: ctx.editor.getAttributes("textStyle").color ?? "#000000",
         bgColor:
-          ctx.editor.getAttributes("textStyle").backgroundColor ?? "#ffffff",
+          ctx.editor.getAttributes("textStyle").backgroundColor ??
+          "transparent",
         fontSize: ctx.editor.getAttributes("textStyle").fontSize ?? "16px",
         isNormalText: ctx.editor.isActive("paragraph"),
         isTitle: ctx.editor.isActive("heading", { level: 10 }),
@@ -91,36 +79,6 @@ export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
       };
     },
   });
-  const handleClick = (
-    event: React.MouseEvent<HTMLElement>,
-    menuType: string,
-  ) => {
-    switch (menuType) {
-      case "fontFamily":
-        setFontFamilyAnchorEl(event.currentTarget);
-        break;
-      case "fontWeight":
-        setFontWeightAnchorEl(event.currentTarget);
-        break;
-      case "fontSize":
-        setFontSizeAnchorEl(event.currentTarget);
-        break;
-    }
-  };
-
-  const handleClose = (menuType: string) => {
-    switch (menuType) {
-      case "fontFamily":
-        setFontFamilyAnchorEl(null);
-        break;
-      case "fontWeight":
-        setFontWeightAnchorEl(null);
-        break;
-      case "fontSize":
-        setFontSizeAnchorEl(null);
-        break;
-    }
-  };
 
   const onWeightChange = (value: string) => {
     const weight = weightOptions.find((option) => option.value === value);
@@ -181,17 +139,11 @@ export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
     );
     return selected ? selected.value : "";
   }, [editorState.fontWeight]);
-  const fontWeightLabel = weightOptions.find(
-    (option) => option.value === fontWeightValue,
-  )?.label;
 
-  const fontFamilyValue = React.useMemo(() => {
-    return (
-      fontFamilyOptions.find(
-        (option) => option.value === editorState.fontFamily,
-      )?.value ?? "Inter"
-    );
-  }, [editorState.fontFamily]);
+  const makeHighlightVisible = (hex: string) =>
+    hex.length === 9 && hex.toLowerCase().endsWith("00")
+      ? hex.slice(0, 7)
+      : hex;
 
   return (
     <Box
@@ -227,42 +179,13 @@ export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
         },
       }}
     >
-      <Box>
-        <Typography
-          sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
-        >
-          Font
-        </Typography>
-        {/* Font family */}
-        <Button
-          variant="text"
-          onClick={(event) => handleClick(event, "fontFamily")}
-          endIcon={
-            isFontWeightMenuActive ? <KeyboardArrowUp /> : <KeyboardArrowDown />
-          }
-          sx={{
-            fontWeight: "400",
-            textTransform: "none",
-            color: "#000",
-            bgcolor: "#fff",
-            width: "100%",
-            justifyContent: "space-between",
-            borderRadius: "4px",
-            border: "0.5px solid #98A1AA",
-          }}
-        >
-          {fontFamilyValue}
-        </Button>
-
-        <StyledMenu
-          open={isFontFamilyMenuActive}
-          anchorEl={fontFamilyAnchorEl}
-          onClose={() => handleClose("fontFamily")}
-          options={fontFamilyOptions}
-          activeValue={fontFamilyValue}
-          onSelect={onFontFamilyChange}
-        />
-      </Box>
+      <SelectField
+        label="Font"
+        value={removePx(editorState.fontFamily)}
+        onChange={(value) => onFontFamilyChange(appendPx(value))}
+        options={fontFamilyOptions}
+        width="100%"
+      />
 
       <Box
         sx={{
@@ -271,92 +194,21 @@ export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
           justifyContent: "space-between",
         }}
       >
-        <Box>
-          {/* Paragraph / Headings */}
-          <Typography
-            sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
-          >
-            Weight
-          </Typography>
-          <Button
-            variant="text"
-            onClick={(event) => handleClick(event, "fontWeight")}
-            endIcon={
-              isFontWeightMenuActive ? (
-                <KeyboardArrowUp />
-              ) : (
-                <KeyboardArrowDown />
-              )
-            }
-            sx={{
-              fontWeight: "400",
-              textTransform: "none",
-              color: "#000",
-              bgcolor: "#fff",
-              width: "134px",
-              justifyContent: "space-between",
-              borderRadius: "4px",
-              border: "0.5px solid #98A1AA",
-            }}
-          >
-            <Typography
-              title={fontWeightLabel}
-              sx={{
-                maxWidth: "calc(100% - 24px)",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {fontWeightLabel}
-            </Typography>
-          </Button>
+        <SelectField
+          label="Weight"
+          value={fontWeightValue}
+          onChange={onWeightChange}
+          options={weightOptions}
+          width="134px"
+        />
 
-          <StyledMenu
-            open={isFontWeightMenuActive}
-            anchorEl={fontWeightAnchorEl}
-            onClose={() => handleClose("fontWeight")}
-            options={weightOptions}
-            activeValue={fontWeightValue}
-            onSelect={onWeightChange}
-          />
-        </Box>
-
-        <Box>
-          <Typography
-            sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
-          >
-            Size
-          </Typography>
-          <Button
-            variant="text"
-            onClick={(event) => handleClick(event, "fontSize")}
-            endIcon={
-              isFontSizeMenuActive ? <KeyboardArrowUp /> : <KeyboardArrowDown />
-            }
-            sx={{
-              fontWeight: "400",
-              textTransform: "none",
-              color: "#000",
-              bgcolor: "#fff",
-              width: "134px",
-              justifyContent: "space-between",
-              borderRadius: "4px",
-              border: "0.5px solid #98A1AA",
-            }}
-          >
-            {editorState.fontSize}
-          </Button>
-
-          <StyledMenu
-            open={isFontSizeMenuActive}
-            anchorEl={fontSizeAnchorEl}
-            onClose={() => handleClose("fontSize")}
-            options={fontSizeOptions}
-            activeValue={editorState.fontSize.replace("px", "")}
-            onSelect={onFontSizeChange}
-          />
-        </Box>
+        <SelectField
+          label="Size"
+          value={removePx(editorState.fontSize)}
+          onChange={(value) => onFontSizeChange(appendPx(value))}
+          options={fontSizeOptions}
+          width="134px"
+        />
       </Box>
 
       <Box
@@ -444,13 +296,20 @@ export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
           </Typography>
 
           <ColorPicker
-            color={ColorService.convert("hex", editorState.bgColor)}
+            color={
+              editorState.bgColor === "transparent"
+                ? null
+                : ColorService.convert("hex", editorState.bgColor)
+            }
             onChange={(color) => {
-              editor.chain().setBackgroundColor(color.hex).run();
+              editor
+                .chain()
+                .setBackgroundColor(makeHighlightVisible(color.hex))
+                .run();
             }}
             disabled={false}
             onResetColor={() => {
-              editor.chain().setBackgroundColor("#ffffff").run();
+              editor.chain().setBackgroundColor("transparent").run();
             }}
             onChangeComplete={() => {}}
           />

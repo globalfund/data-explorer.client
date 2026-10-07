@@ -54,6 +54,7 @@ const itemFactories: Record<CreatableReportItemType, ItemFactory> = {
       height: "100%",
       display: "flex",
       flexDirection: "column",
+      backgroundColor: "transparent",
       ...options,
     },
   }),
@@ -182,7 +183,7 @@ const itemFactories: Record<CreatableReportItemType, ItemFactory> = {
     options: {
       ...commonContainerOptions,
       borderWidth: "0.5px",
-      height: context === "grid" ? "100%" : "141px",
+      height: context === "grid" ? "100%" : "162px",
       justifyContent: "start",
       alignItems: "center",
       alignVertical: "middle",

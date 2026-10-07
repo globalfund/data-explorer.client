@@ -1,6 +1,6 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import { useStoreActions } from "app/state/store/hooks";
+import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { extensions } from "app/components/rich-text-editor/extensions";
 import { useEditor, EditorContent } from "@tiptap/react";
 import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
@@ -24,9 +24,13 @@ export const RichEditor: React.FC<{
   editItem,
   selectedItem,
   hasParent,
+  itemId,
 }) => {
   const setActiveRTE = useStoreActions(
     (actions) => actions.RBReportRTEState.setActiveRTE,
+  );
+  const selectedController = useStoreState(
+    (state) => state.RBReportItemsControllerState.item,
   );
 
   const editor = useEditor({
@@ -59,9 +63,12 @@ export const RichEditor: React.FC<{
       clearSelectedController();
     },
   });
-  const setEditorStateAndController = () => {
-    setActiveRTE(editor);
-  };
+
+  React.useEffect(() => {
+    if (editor && selectedController?.id === itemId) {
+      setActiveRTE(editor);
+    }
+  }, [editor, selectedController?.id, itemId, setActiveRTE]);
 
   return (
     <Box
@@ -77,8 +84,6 @@ export const RichEditor: React.FC<{
             }
           : {}),
       }}
-      onFocus={() => setEditorStateAndController()}
-      onClick={() => setEditorStateAndController()}
     >
       <EditorContent editor={editor} width="100%" style={{ width: "100%" }} />
     </Box>

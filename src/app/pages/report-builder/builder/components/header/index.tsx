@@ -181,9 +181,14 @@ export const ReportBuilderPageHeader: React.FC = () => {
     nameInputRef.current?.focus();
   };
 
-  const handleNameOnInputEvent = (e: React.FormEvent<HTMLInputElement>) => {
-    e.currentTarget.size = e.currentTarget.value.length ?? 1;
-  };
+  React.useLayoutEffect(() => {
+    const input = nameInputRef.current;
+
+    if (!input) return;
+
+    input.style.width = "1px";
+    input.style.width = `${input.scrollWidth}px`;
+  }, [reportState.name]);
 
   const handleNameOnChangeEvent = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.currentTarget.value);
@@ -238,6 +243,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                     fontWeight: "700",
                     borderStyle: "none",
                     bgcolor: "transparent",
+                    minWidth: "1ch",
                   },
                 }}
               >
@@ -254,8 +260,6 @@ export const ReportBuilderPageHeader: React.FC = () => {
                   value={reportState.name}
                   ref={nameInputRef}
                   disabled={previewMode}
-                  size={reportState.name.length ?? 1}
-                  onInput={handleNameOnInputEvent}
                   onChange={handleNameOnChangeEvent}
                 />
                 {!previewMode && (
@@ -632,8 +636,6 @@ export const ReportBuilderPageHeader: React.FC = () => {
                   value={reportState.name}
                   ref={nameInputRef}
                   disabled={previewMode}
-                  size={reportState.name.length ?? 1}
-                  onInput={handleNameOnInputEvent}
                   onChange={handleNameOnChangeEvent}
                 />
                 {!previewMode && (

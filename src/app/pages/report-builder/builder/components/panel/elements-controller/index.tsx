@@ -8,8 +8,10 @@ import SectionDividerController from "./section-divider";
 import GridController from "./grid";
 import ColumnController from "./column";
 import TableController from "./table";
+import Draggable from "react-draggable";
 
 export default function ElementsController() {
+  const nodeRef = React.useRef(null);
   const selectedItemController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
@@ -42,5 +44,10 @@ export default function ElementsController() {
     }
   };
 
-  return selectedItemController?.open ? renderItem() : null;
+  return selectedItemController?.open ? (
+    // @ts-expect-error  missing attributes
+    <Draggable nodeRef={nodeRef} handle=".panel-drag-handle">
+      <div ref={nodeRef}>{renderItem()}</div>
+    </Draggable>
+  ) : null;
 }

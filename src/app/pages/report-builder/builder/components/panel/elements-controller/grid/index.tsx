@@ -1,12 +1,9 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
-import MinimizeIcon from "app/assets/vectors/Minimize.svg?react";
-import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
 import GridIcon from "app/assets/vectors/RBGrid.svg?react";
-import { Options } from "../common/elementOptions";
-
 import { useStoreState } from "app/state/store/hooks";
 import GridElementsList from "./elementsList";
+import PanelHeader from "../../panel-header";
 
 export default function GridController() {
   const [isExpanded, setIsExpanded] = React.useState(true);
@@ -40,44 +37,16 @@ export default function GridController() {
           width: "304px",
         }}
       >
-        <Box
+        <PanelHeader
+          isExpanded={isExpanded}
+          handleExpandToggle={handleExpandToggle}
+          name="Grid"
+          icon={<GridIcon />}
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            height: "50px",
             padding: "8px",
             borderBottom: "1px solid #CFD4DA",
-            ".MuiIconButton-root": {
-              backgroundColor: "#FFFFFF",
-              borderRadius: "4px",
-              border: "1px solid #CFD4DA",
-              width: "34px",
-              height: "34px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            },
           }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: "10px",
-            }}
-          >
-            <IconButton onClick={handleExpandToggle}>
-              {isExpanded ? <MinimizeIcon /> : <MaximizeIcon />}
-            </IconButton>
-            <GridIcon />
-            <Typography fontSize="16px" color="#000000" fontWeight={700}>
-              Grid
-            </Typography>
-          </Box>
-          <Options />
-        </Box>
+        />
         <Box sx={{ display: isExpanded ? "block" : "none" }}>
           <GridElementsList type="grid" />
         </Box>

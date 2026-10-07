@@ -387,3 +387,7 @@ input[type="text"] {
   padding: 0;
   position: relative;
 }
+
+.panel-drag-handle {
+  cursor: move;
+}

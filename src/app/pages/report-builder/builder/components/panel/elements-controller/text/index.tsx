@@ -1,7 +1,5 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
-import MinimizeIcon from "app/assets/vectors/Minimize.svg?react";
-import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
 import LetterTextIcon from "app/assets/vectors/Letter_Text.svg?react";
 import TypeIcon from "app/assets/vectors/Type.svg?react";
 import PaintBucketIcon from "app/assets/vectors/Paint_Bucket.svg?react";
@@ -9,13 +7,13 @@ import LayoutTemplateIcon from "app/assets/vectors/Layout_Template.svg?react";
 import { useStoreState } from "app/state/store/hooks";
 import StyleTab from "./border-fill-tab";
 import LayoutTab from "./padding-size-tab";
-import { Options } from "../common/elementOptions";
 import { RTEToolbar } from "./font-style-tab";
 import { AssetSwitch } from "../grid/switchAsset";
 import { GridLayoutTab } from "../grid/gridTab";
 import { ColumnLayoutTab } from "../column/columnTab";
 import { extraTabs } from "../common/tabOptions";
 import ControllerTabs from "app/components/tabs";
+import PanelHeader from "../../panel-header";
 
 type TextControllerTab = "font" | "style" | "layout" | "grid" | "column";
 export default function TextController() {
@@ -41,7 +39,13 @@ export default function TextController() {
   const renderTabPanel = () => {
     switch (value) {
       case "font":
-        return <Box>{<RTEToolbar editor={activeRTE!} />}</Box>;
+        return (
+          <Box>
+            {activeRTE && (
+              <RTEToolbar key={activeRTE.instanceId} editor={activeRTE} />
+            )}
+          </Box>
+        );
       case "style":
         return <StyleTab />;
       case "layout":
@@ -78,43 +82,12 @@ export default function TextController() {
       }}
     >
       <Box sx={{ padding: "8px", borderBottom: "1px solid #CFD4DA" }}>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            height: "50px",
-
-            ".MuiIconButton-root": {
-              backgroundColor: "#FFFFFF",
-              borderRadius: "4px",
-              border: "1px solid #CFD4DA",
-              width: "34px",
-              height: "34px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            },
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: "10px",
-            }}
-          >
-            <IconButton onClick={handleExpandToggle}>
-              {isExpanded ? <MinimizeIcon /> : <MaximizeIcon />}
-            </IconButton>
-            <LetterTextIcon />
-            <Typography fontSize="16px" color="#000000" fontWeight={700}>
-              Text
-            </Typography>
-          </Box>
-          <Options />
-        </Box>
+        <PanelHeader
+          isExpanded={isExpanded}
+          handleExpandToggle={handleExpandToggle}
+          name="Text"
+          icon={<LetterTextIcon />}
+        />
         {selectedController?.parent?.id ? <AssetSwitch /> : null}
       </Box>
       <Box sx={{ display: isExpanded ? "block" : "none" }}>
