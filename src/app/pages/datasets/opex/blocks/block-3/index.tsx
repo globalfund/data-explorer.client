@@ -8,6 +8,7 @@ import { useStoreState, useStoreActions } from "app/state/store/hooks";
 import { OpexPageChartBlock } from "app/pages/datasets/opex/blocks/common";
 import {
   simpleFormatter,
+  tooltipFormatter,
   calculateYAxisTicks,
 } from "app/pages/datasets/opex/blocks/block-3/data";
 
@@ -229,6 +230,7 @@ export const OpexPageBlock3: React.FC = () => {
           data={lineChartData}
           xAxisKeys={xAxisKeys}
           yAxisValues={yAxisValues}
+          tooltipFormatter={tooltipFormatter}
           cumulativeLineValue={efficiencyValue}
           yAxisLabelFormatter={(value: number) => `${value}¢`}
         />

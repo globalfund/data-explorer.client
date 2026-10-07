@@ -1,3 +1,6 @@
+import Divider from "@mui/material/Divider";
+import ReactDOMServer from "react-dom/server";
+
 export const VIEWS = ["USD millions", "% share"];
 
 export const xAxisKeys = [
@@ -88,3 +91,55 @@ export const costCompositionOverTimeMainCategories: string[] = [
   "Travel",
   "Workforce",
 ];
+
+export const tooltipFormatterBar = (
+  params: any,
+  tooltipValueFormatter?: (value: number) => string,
+) => {
+  return ReactDOMServer.renderToString(
+    <div
+      className="chart-tooltip"
+      style={{
+        gap: "10px",
+        width: "300px",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <div className="chart-tooltip-title">{params[0].name}</div>
+      <Divider
+        style={{ width: "100%", borderColor: "#DFE3E5", margin: "5px 0" }}
+      />
+      {params.map((item: any) => (
+        <div
+          key={item.seriesName}
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <div
+            className="chart-tooltip-text"
+            style={{ width: "calc(100% / 2)" }}
+          >
+            <span
+              className="chart-tooltip-marker"
+              dangerouslySetInnerHTML={{ __html: item.marker }}
+            />
+            {item.seriesName}
+          </div>
+          <div
+            className="chart-tooltip-text"
+            style={{ width: "calc(100% / 2)", textAlign: "right" }}
+          >
+            {tooltipValueFormatter
+              ? tooltipValueFormatter(item.value)
+              : item.value}
+          </div>
+        </div>
+      ))}
+    </div>,
+  );
+};

@@ -47,7 +47,7 @@ const Tooltip: React.FC<{
       className="chart-tooltip"
       style={{
         gap: "10px",
-        width: "400px",
+        width: "300px",
         display: "flex",
         flexDirection: "column",
       }}
@@ -56,15 +56,10 @@ const Tooltip: React.FC<{
       <Divider
         style={{ width: "100%", borderColor: "#DFE3E5", margin: "5px 0" }}
       />
-      <div
-        style={{
-          gap: "7px",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+
+      {props.items.map((item: any) => (
         <div
+          key={item.name}
           style={{
             width: "100%",
             display: "flex",
@@ -76,49 +71,26 @@ const Tooltip: React.FC<{
             className="chart-tooltip-text"
             style={{ width: "calc(100% / 2)" }}
           >
-            <b>Line</b>
+            <span
+              style={{
+                width: "12px",
+                height: "12px",
+                marginRight: "7px",
+                borderRadius: "4px",
+                display: "inline-block",
+                background: item.color ?? "transparent",
+              }}
+            />
+            {item.name}
           </div>
           <div
             className="chart-tooltip-text"
-            style={{ width: "calc(100% / 2)" }}
+            style={{ width: "calc(100% / 2)", textAlign: "right" }}
           >
-            <b>Value</b>
+            {item.value.toFixed(2).replace(".00", "")}%
           </div>
         </div>
-        {props.items.map((item: any) => (
-          <div
-            key={item.name}
-            style={{
-              width: "100%",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <div
-              className="chart-tooltip-text"
-              style={{ width: "calc(100% / 2)" }}
-            >
-              <span
-                style={{
-                  width: "10px",
-                  height: "10px",
-                  marginRight: "5px",
-                  display: "inline-block",
-                  background: item.color ?? "transparent",
-                }}
-              />
-              {item.name}
-            </div>
-            <div
-              className="chart-tooltip-text"
-              style={{ width: "calc(100% / 2)" }}
-            >
-              {item.value.toFixed(2).replace(".00", "")}%
-            </div>
-          </div>
-        ))}
-      </div>
+      ))}
     </div>
   );
 };

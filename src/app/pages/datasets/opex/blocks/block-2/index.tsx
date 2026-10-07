@@ -6,6 +6,8 @@ import { OpexPageChartBlock } from "app/pages/datasets/opex/blocks/common";
 import {
   VIEWS,
   operatingCostsData,
+  tooltipFormatter,
+  tooltipFormatterBar,
 } from "app/pages/datasets/opex/blocks/block-2/data";
 // import { simpleFormatter } from "../block-1/data";
 
@@ -106,13 +108,19 @@ export const OpexPageBlock2: React.FC = () => {
       text={textToDisplay}
       // text={`Total operating costs, including non-recurring and extraordinary items. Under budget in 7 of 9 completed years. For ${endYear} the line is solid over the actuals period (to 30 June, ${simpleFormatter(get(dataOperatingCosts, "actualsLineYValues[0]", 0))} booked) and dotted over the forecast remainder, landing at the full-year ${simpleFormatter(get(dataFormatted, `[2].data[${xAxisKeys.length - 1}]`, 0))}.`}
     >
-      <LineChart showLegend xAxisKeys={xAxisKeys} data={dataFormatted} />
+      <LineChart
+        showLegend
+        data={dataFormatted}
+        xAxisKeys={xAxisKeys}
+        tooltipFormatter={tooltipFormatter}
+      />
       <BarChart
         customLegends
         categories={[""]}
         data={barChartData}
         xAxisKeys={xAxisKeys}
         colors={["#007B50", "#144BC0"]}
+        tooltipFormatter={tooltipFormatterBar}
       />
     </OpexPageChartBlock>
   );

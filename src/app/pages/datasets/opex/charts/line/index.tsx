@@ -285,6 +285,9 @@ export const LineChart: React.FC<LineChartProps> = (props: LineChartProps) => {
           ...chartTooltipCommonConfig(isTouch),
           trigger: "axis",
           formatter: (lines: any) => {
+            if (props.tooltipFormatter) {
+              return props.tooltipFormatter(lines);
+            }
             const xAxisValue = lines[0].axisValue;
             const items: {
               name: string;

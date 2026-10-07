@@ -80,6 +80,13 @@ input[type="text"] {
   line-height: 1;
 }
 
+.chart-tooltip-marker > span {
+  width: 12px !important;
+  height: 12px !important;
+  margin-right: 7px !important;
+  border-radius: 4px !important;
+}
+
 .tabulator .tabulator-tableholder {
   overflow: auto;
 }

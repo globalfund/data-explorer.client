@@ -1,3 +1,7 @@
+import get from "lodash/get";
+import Divider from "@mui/material/Divider";
+import ReactDOMServer from "react-dom/server";
+
 export const simpleFormatter = (value: number) => {
   const isNegative = value < 0;
   value = Math.abs(value);
@@ -68,4 +72,44 @@ export const calculateYAxisTicks = (
   }
 
   return ticks;
+};
+
+export const tooltipFormatter = (lines: any[]) => {
+  const xAxisValue = lines[0].axisValue;
+  const items: {
+    name: string;
+    value: string;
+    marker: string;
+  }[] = lines
+    .filter((line: any) => line.value !== undefined)
+    .map((line: any) => {
+      return {
+        name: line.seriesName,
+        value: `${line.value}¢`,
+        marker: line.marker,
+      };
+    });
+  return ReactDOMServer.renderToString(
+    <div
+      className="chart-tooltip"
+      style={{
+        gap: "10px",
+        width: "200px",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <div className="chart-tooltip-title">{xAxisValue}</div>
+      <Divider
+        style={{ width: "100%", borderColor: "#DFE3E5", margin: "5px 0" }}
+      />
+      <div className="chart-tooltip-text">
+        <span
+          className="chart-tooltip-marker"
+          dangerouslySetInnerHTML={{ __html: get(items, "[0].marker", "") }}
+        />
+        {get(items, "[0].value", "")} per 1$ disbursed
+      </div>
+    </div>,
+  );
 };

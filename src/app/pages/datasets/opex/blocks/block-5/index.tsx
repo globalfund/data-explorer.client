@@ -1,10 +1,12 @@
 import React from "react";
 import get from "lodash/get";
 import { BarChart } from "app/pages/datasets/opex/charts";
+import { formatFinancialValue } from "app/utils/formatFinancialValue";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { OpexPageChartBlock } from "app/pages/datasets/opex/blocks/common";
 import {
   VIEWS,
+  tooltipFormatterBar,
   costCompositionOverTimeMainCategories,
 } from "app/pages/datasets/opex/blocks/block-5/data";
 
@@ -101,6 +103,11 @@ export const OpexPageBlock5: React.FC = () => {
     costCompositionOverTimeMainCategories,
   ]);
 
+  const tooltipValueFormatter = (value: number) =>
+    selectedView === VIEWS[0]
+      ? formatFinancialValue(value).replace("US$", "$")
+      : `${value.toFixed(1).replace(".0", "")}%`;
+
   React.useEffect(() => {
     fetchCostComposition({});
   }, []);
@@ -131,11 +138,9 @@ export const OpexPageBlock5: React.FC = () => {
             ? undefined
             : (value) => `${value.toFixed(1).replace(".0", "")}%`
         }
-        tooltipValueFormatter={
-          selectedView === VIEWS[0]
-            ? undefined
-            : (value) => `${value.toFixed(1).replace(".0", "")}%`
-        }
+        tooltipValueFormatter={tooltipValueFormatter}
+        tooltipFormatter={tooltipFormatterBar}
+        tooltipTrigger="axis"
         categories={[...mainCategories, "Other (incl. non-recurring)"]}
         colors={[
           "#0A2840",

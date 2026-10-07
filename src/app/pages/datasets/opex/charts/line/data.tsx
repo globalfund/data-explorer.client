@@ -21,6 +21,7 @@ export interface LineChartProps {
   data: LineChartDataItem[];
   cumulativeLineValue?: number;
   xAxisSubLabels?: string[];
+  tooltipFormatter?: (lines: any[]) => string;
   yAxisLabelFormatter?: (value: number) => string;
 }
 

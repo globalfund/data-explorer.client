@@ -240,7 +240,15 @@ export const BarChart: React.FC<BarChartProps> = (props: BarChartProps) => {
         tooltip: {
           show: true,
           ...chartTooltipCommonConfig(isTouch),
+          trigger:
+            props.tooltipTrigger ?? chartTooltipCommonConfig(isTouch).trigger,
           formatter: (params: any) => {
+            if (props.tooltipFormatter) {
+              return props.tooltipFormatter(
+                params,
+                props.tooltipValueFormatter,
+              );
+            }
             const values = props.data[params.dataIndex];
             const category = props.categories[params.seriesIndex];
             const value = get(values, `[${params.seriesIndex}]`, 0);
@@ -354,7 +362,15 @@ export const BarChart: React.FC<BarChartProps> = (props: BarChartProps) => {
         tooltip: {
           show: true,
           ...chartTooltipCommonConfig(isTouch),
+          trigger:
+            props.tooltipTrigger ?? chartTooltipCommonConfig(isTouch).trigger,
           formatter: (params: any) => {
+            if (props.tooltipFormatter) {
+              return props.tooltipFormatter(
+                params,
+                props.tooltipValueFormatter,
+              );
+            }
             const values = props.data[params.dataIndex];
             const category = props.categories[params.seriesIndex];
             const value = get(values, `[${params.seriesIndex}]`, 0);
