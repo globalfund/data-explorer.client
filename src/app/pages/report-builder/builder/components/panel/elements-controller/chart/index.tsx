@@ -1,9 +1,6 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import React, { useEffect } from "react";
-import MinimizeIcon from "app/assets/vectors/Minimize.svg?react";
-import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
 import ChartIcon from "app/assets/vectors/RBChart.svg?react";
-import { Options } from "../common/elementOptions";
 import { chartInfo, tabList } from "./data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import LayoutTab from "./layout";
@@ -21,6 +18,7 @@ import { ChartProperty } from "app/state/api/action-reducers/report-builder/sync
 import ControllerTabs from "app/components/tabs";
 import { extraTabs } from "../common/tabOptions";
 import DataSettings from "./data-settings";
+import PanelHeader from "../../panel-header";
 
 type ChartControllerTab =
   "data-settings" | "layout" | "style" | "advanced" | "grid" | "column";
@@ -169,44 +167,12 @@ export default function ChartController() {
             borderBottom: "1px solid #CFD4DA",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              height: "50px",
-
-              ".MuiIconButton-root": {
-                backgroundColor: "#FFFFFF",
-                borderRadius: "4px",
-                border: "1px solid #CFD4DA",
-                width: "34px",
-                height: "34px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              },
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: "10px",
-              }}
-            >
-              <IconButton onClick={handleExpandToggle}>
-                {isExpanded ? <MinimizeIcon /> : <MaximizeIcon />}
-              </IconButton>
-              <ChartIcon />
-              <Typography fontSize="16px" color="#000000" fontWeight={700}>
-                Chart
-              </Typography>
-            </Box>
-
-            <Options />
-          </Box>
+          <PanelHeader
+            isExpanded={isExpanded}
+            handleExpandToggle={handleExpandToggle}
+            name="Chart"
+            icon={<ChartIcon />}
+          />
           {selectedController?.parent?.id ? <AssetSwitch /> : null}
         </Box>
         <Box sx={{ display: isExpanded ? "block" : "none" }}>

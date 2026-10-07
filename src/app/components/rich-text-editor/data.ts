@@ -16,7 +16,7 @@ export const weightOptions = [
     value: "700",
   },
   {
-    label: "Thin Italic",
+    label: "Light Italic",
     value: "400+italic",
   },
   {

@@ -12,6 +12,7 @@ import TextField from "../../components/textfield";
 import { set } from "lodash";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 import { appendPx, removePx } from "app/utils/formatPx";
+import ColorPickerfield from "../../components/colorpickerfield";
 
 export function Customise() {
   const selectedController = useStoreState(
@@ -75,18 +76,6 @@ export function Customise() {
   }, [selectedItem]);
 
   const handleSelectLineOption = (value: "line" | "box" | "simple") => {
-    let alignItems = "";
-    switch (value) {
-      case "line":
-        alignItems = "start";
-        break;
-      case "box":
-        alignItems = "center";
-        break;
-      case "simple":
-        alignItems = "end";
-        break;
-    }
     editItem({
       ...selectedItem,
       initialized: selectedItem?.initialized || false,
@@ -94,9 +83,8 @@ export function Customise() {
       type: "kpi_box",
       options: {
         ...selectedItem?.options,
-        display: "flex",
-        alignItems,
         innerLine: {
+          ...selectedItem?.options?.innerLine,
           type: value,
         },
       },
@@ -174,6 +162,7 @@ export function Customise() {
               handleChange("options.innerLine.borderWidth", appendPx(value));
             }}
             type="number"
+            disabled={lineMenuOption === "simple"}
           />
         </Box>
         <Box>
@@ -188,16 +177,17 @@ export function Customise() {
               selectedItem?.options?.innerLine?.borderColor || "#000000",
             )}
             onChange={handleInnerBorderColorChange}
-            disabled={false}
+            disabled={lineMenuOption === "simple"}
             onResetColor={() => {}}
             onChangeComplete={() => {}}
             triggerWidth="138px"
           />
         </Box>
       </Box>
-      {/* <BorderFill itemType="kpi_box" /> */}
-      {/* <Box>
-        <Typography fontWeight={700}>Border & Fill</Typography>
+      <Box>
+        <Typography fontWeight={700} marginBottom={"8px"}>
+          Border & Fill
+        </Typography>
         <Box
           sx={{
             display: "flex",
@@ -214,73 +204,54 @@ export function Customise() {
           <Box
             sx={{
               display: "flex",
-              gap: "8px",
+              gap: "16px",
               justifyContent: "space-between",
             }}
           >
-            <Box>
-              <Typography
-                sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
-              >
-                Stroke
-              </Typography>
-              <CustomTextField type="borderWidth" item="kpi_box" />
-            </Box>
-            <Box>
-              <Typography
-                sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
-              >
-                Stroke Color
-              </Typography>
-              <ColorPicker
-                color={ColorService.convert(
-                  "hex",
-                  selectedItem?.settings?.borderColor || "#000000",
-                )}
-                onChange={handleBorderColorChange}
-                disabled={false}
-                onResetColor={() => {}}
-                onChangeComplete={() => {}}
-                triggerWidth="138px"
-              />
-            </Box>
+            <TextField
+              label="Stroke"
+              value={removePx(selectedItem?.options?.borderWidth ?? "")}
+              onChange={(value) =>
+                handleChange("options.borderWidth", appendPx(value))
+              }
+              type="number"
+              width="100%"
+            />
+
+            <ColorPickerfield
+              label="Stroke Color"
+              color={selectedItem?.options?.borderColor || "#000000"}
+              onChange={(color) => handleChange("options.borderColor", color)}
+            />
           </Box>
 
           <Box
             sx={{
               display: "flex",
-              gap: "8px",
+              gap: "16px",
               justifyContent: "space-between",
             }}
           >
-            <Box>
-              <Typography
-                sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
-              >
-                Corner Radius
-              </Typography>
-              <CustomTextField type="borderRadius" item="kpi_box" />
-            </Box>
-            <Box>
-              <Typography
-                sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
-              >
-                Background Color
-              </Typography>
-              <ColorPicker
-                color={ColorService.convert(
-                  "hex",
-                  selectedItem?.settings?.backgroundColor ?? "#FFFFFF",
-                )}
-                onChange={handleBackgroundColorChange}
-                disabled={false}
-                onResetColor={() => {}}
-                onChangeComplete={() => {}}
-              />
-            </Box>
+            <TextField
+              label="Corner Radius"
+              value={removePx(selectedItem?.options?.borderRadius ?? "")}
+              onChange={(value) =>
+                handleChange("options.borderRadius", appendPx(value))
+              }
+              type="number"
+              width="100%"
+            />
+
+            <ColorPickerfield
+              label="Background Color"
+              color={selectedItem?.options?.backgroundColor ?? "#FFFFFF"}
+              onChange={(color) =>
+                handleChange("options.backgroundColor", color)
+              }
+            />
           </Box>
         </Box>
-      </Box> */}
+      </Box>
     </Box>
   );
 }

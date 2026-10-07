@@ -1,15 +1,12 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React from "react";
-import MinimizeIcon from "app/assets/vectors/Minimize.svg?react";
 import KPIIcon from "app/assets/vectors/RB_KPI.svg?react";
 import InfoIcon from "@mui/icons-material/Info";
-import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
 import TextIcon from "app/assets/vectors/RBText.svg?react";
 import PaintBucketIcon from "app/assets/vectors/Paint_Bucket.svg?react";
 import LayoutTemplateIcon from "app/assets/vectors/Layout_Template.svg?react";
 import { PaddingSize } from "./layout";
 import { Customise } from "./customise";
-import { Options } from "../common/elementOptions";
 import KPITextFormatting from "./text-format";
 import { AssetSwitch } from "../grid/switchAsset";
 import { useStoreState } from "app/state/store/hooks";
@@ -19,6 +16,7 @@ import RadioCheck from "app/components/radio-check";
 import ControllerTabs from "app/components/tabs";
 import { extraTabs } from "../common/tabOptions";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
+import PanelHeader from "../../panel-header";
 
 type KPIControllerTab = "text" | "style" | "layout" | "grid" | "column";
 export default function KPIController() {
@@ -106,43 +104,12 @@ export default function KPIController() {
           gap: "8px",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            height: "50px",
-
-            ".MuiIconButton-root": {
-              backgroundColor: "#FFFFFF",
-              borderRadius: "4px",
-              border: "1px solid #CFD4DA",
-              width: "34px",
-              height: "34px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            },
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: "10px",
-            }}
-          >
-            <IconButton onClick={handleExpandToggle}>
-              {isExpanded ? <MinimizeIcon /> : <MaximizeIcon />}
-            </IconButton>
-            <KPIIcon />
-            <Typography fontSize="16px" color="#000000" fontWeight={700}>
-              Key Metrics Box
-            </Typography>
-          </Box>
-          <Options />
-        </Box>
+        <PanelHeader
+          isExpanded={isExpanded}
+          handleExpandToggle={handleExpandToggle}
+          name="Key Metrics Box"
+          icon={<KPIIcon />}
+        />
         {selectedController?.parent?.id ? <AssetSwitch /> : null}
         <Box
           sx={{

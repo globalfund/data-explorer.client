@@ -1,9 +1,8 @@
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import Check from "@mui/icons-material/Check";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 import React from "react";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import { KeyboardArrowDown } from "@mui/icons-material";
 
 export interface SelectFieldOption {
   label: string;
@@ -12,6 +11,8 @@ export interface SelectFieldOption {
   sx?: any;
   disabled?: boolean;
 }
+
+const filterOptions = createFilterOptions<SelectFieldOption>({ trim: true });
 
 interface SelectFieldProps {
   options: SelectFieldOption[];
@@ -32,181 +33,182 @@ export default function SelectField({
   disabled,
   placeholder,
 }: Readonly<SelectFieldProps>) {
-  const activeIndex = options.findIndex((o) => o.value === value);
-
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [currentMenuWidth, setCurrentMenuWidth] = React.useState<
-    number | string
-  >("100%");
-
-  const open = Boolean(anchorEl);
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const id = React.useId();
+  const [searchQuery, setSearchQuery] = React.useState<string | null>(null);
+  const selectedOption =
+    options.find((option) => option.value === value) ?? null;
 
   return (
-    <Box
-      sx={{
-        width,
-      }}
-    >
+    <Box sx={{ width }}>
       {label ? (
         <Typography
-          sx={{ color: "#373D43", fontSize: "14px", marginBottom: "8px" }}
+          component="label"
+          htmlFor={id}
+          sx={{
+            display: "block",
+            color: "#373D43",
+            fontSize: "14px",
+            marginBottom: "8px",
+          }}
         >
           {label}
         </Typography>
       ) : null}
 
-      <Button
-        variant="text"
-        onClick={(event) => {
-          setAnchorEl(event.currentTarget);
-          setCurrentMenuWidth(event.currentTarget.clientWidth);
+      <Autocomplete
+        id={id}
+        options={options}
+        value={selectedOption}
+        disabled={disabled}
+        autoHighlight
+        disableClearable={Boolean(selectedOption)}
+        openOnFocus
+        selectOnFocus
+        filterOptions={filterOptions}
+        onInputChange={(_event, inputValue, reason) => {
+          setSearchQuery(reason === "input" ? inputValue : null);
         }}
-        endIcon={anchorEl ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-        sx={{
-          fontWeight: "400",
-          textTransform: "none",
-          color: "#000",
-          bgcolor: "#fff",
-          width: "100%",
-          justifyContent: "space-between",
-          borderRadius: "4px",
-          border: "0.5px solid #98A1AA",
-          opacity: disabled ? 0.6 : 1,
-          pointerEvents: disabled ? "none" : "auto",
-          "&:hover": {
-            bgcolor: "#fff",
-            borderColor: "#98A1AA",
-          },
-          maxWidth: "100%",
-          height: "35px",
-          padding: "0px 8px",
-        }}
-      >
-        <Typography
-          title={
-            options.find((o) => o.value === value)?.label ||
-            placeholder ||
-            "Select..."
+        onClose={(_event, reason) => {
+          if (
+            (reason === "blur" || reason === "toggleInput") &&
+            (searchQuery !== null || !selectedOption)
+          ) {
+            const firstOption = filterOptions(options, {
+              inputValue: searchQuery ?? "",
+              getOptionLabel: (option) => option.label,
+            }).find((option) => !option.disabled);
+
+            if (firstOption && firstOption.value !== value) {
+              onChange(firstOption.value);
+            }
           }
-          fontSize="14px"
-          sx={{
-            maxWidth: "calc(100% - 24px)",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {options.find((o) => o.value === value)?.label ||
-            placeholder ||
-            "Select..."}
-        </Typography>
-      </Button>
-      <Menu
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        keepMounted
-        disableScrollLock
-        transformOrigin={{
-          vertical: -2,
-          horizontal: "left",
+          setSearchQuery(null);
         }}
-        MenuListProps={{
-          sx: {
-            maxHeight: 360,
-            overflowY: "auto",
-            /* Hide scrollbar for Chrome, Safari, Edge */
-            "&::-webkit-scrollbar": {
-              display: "none",
-            },
-
-            /* Hide scrollbar for Firefox */
-            scrollbarWidth: "none",
-          },
+        getOptionLabel={(option) => option.label}
+        getOptionKey={(option) => option.value}
+        getOptionDisabled={(option) => Boolean(option.disabled)}
+        isOptionEqualToValue={(option, selected) =>
+          option.value === selected.value
+        }
+        onChange={(_event, option) => {
+          if (option && !option.disabled) {
+            onChange(option.value);
+          }
         }}
+        popupIcon={<KeyboardArrowDown />}
+        noOptionsText="No options found"
+        size="small"
         sx={{
-          "& .MuiPaper-root": {
-            width: currentMenuWidth,
+          width: "100%",
+          opacity: disabled ? 0.6 : 1,
+          "& .MuiOutlinedInput-root": {
+            height: "35px",
+            padding: "0px 8px",
+            fontSize: "14px",
+            fontWeight: 400,
+            color: "#000",
+            bgcolor: "#fff",
             borderRadius: "4px",
-            border: "1px solid #98A1AA",
-            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.30)",
+            "& fieldset": {
+              border: "0.5px solid #98A1AA",
+            },
+            "&:hover fieldset, &.Mui-focused fieldset": {
+              borderColor: "#98A1AA",
+              borderWidth: "0.5px",
+            },
+            "& .MuiAutocomplete-input": {
+              padding: 0,
+            },
           },
-          "& .MuiList-root": {
-            paddingBottom: "0px",
-            paddingTop: "0px",
+          "& .MuiAutocomplete-popupIndicator": {
+            color: "#000",
           },
         }}
-        classes={{ paper: "rte-keep-open" }}
-      >
-        {options.map((option, i) => {
-          const isActive = value === option.value;
-          const lastIndex = i === options.length - 1;
-          const isPrevItem = i === activeIndex - 1;
-
-          return (
-            <MenuItem
-              key={option.label}
-              value={option.value}
-              onClick={() => {
-                onChange(option.value);
-                handleClose();
-              }}
-              disabled={option.disabled}
-              id={`styled-menu-item-${option.value}`}
-              sx={{
-                position: "relative",
+        slotProps={{
+          paper: {
+            className: "rte-keep-open",
+            sx: {
+              marginTop: "2px",
+              borderRadius: "4px",
+              border: "1px solid #98A1AA",
+              boxShadow: "0 2px 6px rgba(0, 0, 0, 0.30)",
+            },
+          },
+          listbox: {
+            sx: {
+              maxHeight: 360,
+              padding: 0,
+              overflowY: "auto",
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+              scrollbarWidth: "none",
+            },
+          },
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            placeholder={placeholder || "Select..."}
+            inputProps={{
+              ...params.inputProps,
+              title: selectedOption?.label || placeholder || "Select...",
+              "aria-label": label ? undefined : placeholder || "Select option",
+            }}
+          />
+        )}
+        renderOption={({ key, ...props }, option, { selected }) => (
+          <Box
+            component="li"
+            key={key}
+            {...props}
+            sx={{
+              position: "relative",
+              "&.MuiAutocomplete-option": {
                 padding: "11px 16px",
                 fontWeight: 400,
                 fontSize: "14px",
-                background: isActive ? "#F8F9FA" : "transparent",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 gap: "8px",
-                borderTop: isActive ? "1px solid #E0E0E0" : "none",
-                borderBottom: "none",
-
-                "&::after":
-                  !isActive && !isPrevItem && !lastIndex
-                    ? {
-                        content: '""',
-                        position: "absolute",
-                        bottom: 0,
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        width: isActive ? 0 : "90%",
-                        height: "1px",
-                        backgroundColor:
-                          isPrevItem || lastIndex ? "transparent" : "#E0E0E0",
-                      }
-                    : {},
-
+                "&[aria-selected='true']": {
+                  bgcolor: "#F8F9FA",
+                },
+                "&::after": {
+                  content: '""',
+                  position: "absolute",
+                  bottom: 0,
+                  left: "5%",
+                  width: "90%",
+                  height: "1px",
+                  bgcolor: "#E0E0E0",
+                },
+                "&:last-child::after": {
+                  display: "none",
+                },
                 ...option.sx,
+              },
+            }}
+          >
+            {option.icon ?? null}
+            <Typography
+              title={option.label}
+              component="span"
+              sx={{
+                maxWidth: "calc(100% - 24px)",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                fontSize: "14px",
               }}
             >
-              {option?.icon ?? null}
-              <Typography
-                title={option.label}
-                component={"span"}
-                sx={{
-                  maxWidth: "calc(100% - 24px)",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  fontSize: "14px",
-                }}
-              >
-                {option.label}
-              </Typography>
-              {isActive && <Check fontSize="small" htmlColor="#495057" />}
-            </MenuItem>
-          );
-        })}
-      </Menu>
+              {option.label}
+            </Typography>
+            {selected && <Check fontSize="small" htmlColor="#495057" />}
+          </Box>
+        )}
+      />
     </Box>
   );
 }

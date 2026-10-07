@@ -25,7 +25,7 @@ export default function KPIBox({ id, viewMode, parent }: Readonly<Props>) {
 
   const hasParent = !!parent?.id;
   const settings = selectedItem?.options || {};
-  const alignHorizontal = selectedItem?.options?.alignHorizontal;
+
   const innerLine = selectedItem?.options?.innerLine;
   const clearSelectedItem = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.clearItem,
@@ -111,11 +111,12 @@ export default function KPIBox({ id, viewMode, parent }: Readonly<Props>) {
         <Box
           sx={{
             padding: "10px",
-            borderRadius: "4px",
             display: "flex",
             gap: "8px",
             ...settings,
-            border: "none",
+            borderRadius: settings?.borderRadius || "4px",
+            borderWidth: settings?.borderWidth || "1px",
+            borderColor: settings?.borderColor || "#98A1AA",
             height: hasParent ? "100%" : settings?.height || "141px",
             width: hasParent ? "100%" : settings?.width || "100%",
           }}
@@ -130,11 +131,11 @@ export default function KPIBox({ id, viewMode, parent }: Readonly<Props>) {
           >
             <Box
               sx={{
-                height: "25px",
-                paddingBottom: "8px",
-                borderBottomWidth: innerLine?.borderWidth,
-                borderBottomStyle: "solid",
-                borderBottomColor: innerLine?.borderColor,
+                paddingBottom: innerLine?.type === "box" ? "0px" : "8px",
+                borderBottom:
+                  innerLine?.type === "line"
+                    ? `${innerLine?.borderWidth} solid ${innerLine?.borderColor}`
+                    : "none",
                 justifyContent: settings.justifyContent || "flex-start",
                 display: settings.display || "flex",
               }}
@@ -149,6 +150,15 @@ export default function KPIBox({ id, viewMode, parent }: Readonly<Props>) {
                 fontFamily={selectedItem?.data?.topLabel?.fontFamily ?? "Inter"}
                 fontWeight={selectedItem?.data?.topLabel?.fontWeight ?? 400}
                 fontStyle={selectedItem?.data?.topLabel?.fontStyle ?? "normal"}
+                sx={
+                  innerLine?.type === "box"
+                    ? {
+                        border: `${innerLine?.borderWidth} solid ${innerLine?.borderColor}`,
+                        padding: "8px",
+                        borderRadius: "4px",
+                      }
+                    : {}
+                }
               >
                 {selectedItem?.data?.topLabel?.value}
               </Typography>
@@ -156,18 +166,14 @@ export default function KPIBox({ id, viewMode, parent }: Readonly<Props>) {
 
             <Box
               sx={{
-                minWidth: "162px",
                 display: "flex",
-                gap: alignHorizontal === "left" ? "15px" : "0px",
-                alignItems:
-                  alignHorizontal === "left"
-                    ? "center"
-                    : settings.justifyContent,
-                borderBottomWidth: innerLine?.borderWidth,
-                borderBottomStyle: "solid",
-                borderBottomColor: innerLine?.borderColor,
+                alignItems: settings.justifyContent,
+                borderBottom:
+                  innerLine?.type === "line"
+                    ? `${innerLine?.borderWidth} solid ${innerLine?.borderColor}`
+                    : "none",
                 justifyContent: "start",
-                flexDirection: alignHorizontal === "left" ? "row" : "column",
+                flexDirection: "column",
               }}
             >
               <Typography
@@ -188,7 +194,6 @@ export default function KPIBox({ id, viewMode, parent }: Readonly<Props>) {
                 fontStyle={
                   selectedItem?.data?.bigNumberText?.fontStyle ?? "normal"
                 }
-                height={"53px"}
                 // py={"9px"}
                 lineHeight={"normal"}
               >
@@ -211,7 +216,7 @@ export default function KPIBox({ id, viewMode, parent }: Readonly<Props>) {
                   selectedItem?.data?.optionalText?.bgColor ?? "transparent"
                 }
                 height={settings.justifyContent === "left" ? "35px" : "auto"}
-                py={settings.justifyContent === "left" ? "9px" : "0px"}
+                sx={{ paddingBottom: "8px" }}
                 lineHeight={"normal"}
               >
                 {selectedItem?.data?.optionalText?.value}
@@ -219,7 +224,6 @@ export default function KPIBox({ id, viewMode, parent }: Readonly<Props>) {
             </Box>
             <Box
               sx={{
-                height: "27px",
                 justifyContent: settings.justifyContent || "flex-start",
                 display: settings.display || "flex",
                 alignItems: "center",

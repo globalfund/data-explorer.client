@@ -1,9 +1,6 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import React, { useEffect } from "react";
-import MinimizeIcon from "app/assets/vectors/Minimize.svg?react";
-import MaximizeIcon from "app/assets/vectors/Maximize.svg?react";
 import TableIcon from "app/assets/vectors/RBTable.svg?react";
-import { Options } from "../common/elementOptions";
 import DatabaseIcon from "app/assets/vectors/RBDatabase.svg?react";
 import { tabList } from "./data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
@@ -19,6 +16,7 @@ import { DatasetSelectModal } from "../../../dataset-select-modal";
 import { AssetSelect } from "../common/asset-select";
 import ControllerTabs from "app/components/tabs";
 import { extraTabs } from "../common/tabOptions";
+import PanelHeader from "../../panel-header";
 
 type TableControllerTab = "mapping" | "layout" | "style" | "grid" | "column";
 
@@ -130,44 +128,12 @@ export default function TableController() {
               borderBottom: "1px solid #CFD4DA",
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                height: "50px",
-
-                ".MuiIconButton-root": {
-                  backgroundColor: "#FFFFFF",
-                  borderRadius: "4px",
-                  border: "1px solid #CFD4DA",
-                  width: "34px",
-                  height: "34px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: "10px",
-                }}
-              >
-                <IconButton onClick={handleExpandToggle}>
-                  {isExpanded ? <MinimizeIcon /> : <MaximizeIcon />}
-                </IconButton>
-                <TableIcon />
-                <Typography fontSize="16px" color="#000000" fontWeight={700}>
-                  Table
-                </Typography>
-              </Box>
-
-              <Options />
-            </Box>
+            <PanelHeader
+              isExpanded={isExpanded}
+              handleExpandToggle={handleExpandToggle}
+              name="Table"
+              icon={<TableIcon />}
+            />
             {selectedController?.parent?.id ? <AssetSwitch /> : null}
           </Box>
           <Box sx={{ display: isExpanded ? "block" : "none" }}>

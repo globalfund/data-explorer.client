@@ -340,68 +340,75 @@ export default function KPITextFormatting({ source }: KPITextFormattingProps) {
                     },
                   })
                 }
-              />
-              <AdvancedOptions
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "16px",
-                  width: "100%",
-                }}
                 disabled={!checked}
-                label="More text options"
-              >
-                <Box
+              />
+              {checked ? (
+                <AdvancedOptions
                   sx={{
-                    gridColumn: "span 2",
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "16px",
+                    width: "100%",
                   }}
+                  label="More text options"
                 >
-                  <SelectField
-                    label="Font Family"
-                    value={
-                      selectedItem.data?.[option as TextOption]?.fontFamily ??
-                      ""
-                    }
-                    onChange={(value) => handleFontFamilyChange(value, option)}
-                    options={fontFamilyOptions}
-                  />
-                </Box>
+                  <Box
+                    sx={{
+                      gridColumn: "span 2",
+                    }}
+                  >
+                    <SelectField
+                      label="Font Family"
+                      value={
+                        selectedItem.data?.[option as TextOption]?.fontFamily ??
+                        ""
+                      }
+                      onChange={(value) =>
+                        handleFontFamilyChange(value, option)
+                      }
+                      options={fontFamilyOptions}
+                    />
+                  </Box>
 
-                <SelectField
-                  label="Font Size"
-                  value={
-                    selectedItem.data?.[option as TextOption]?.fontSize.replace(
-                      "px",
-                      "",
-                    ) ?? ""
-                  }
-                  onChange={(value) => handleSizeChange(value, option)}
-                  options={fontSizeOptions}
-                />
-                <SelectField
-                  label="Font Weight"
-                  value={
-                    selectedItem.data?.[option as TextOption]
-                      ?.fontWeightLabel ?? ""
-                  }
-                  onChange={(value) => handleWeightChange(value, option)}
-                  options={weightOptions}
-                />
-                <ColorPickerfield
-                  label="Text Color"
-                  color={selectedItem.data?.[option as TextOption]?.color ?? ""}
-                  onChange={(color) => handleColorChange(color, "text", option)}
-                />
-                <ColorPickerfield
-                  label="Background Color"
-                  color={
-                    selectedItem.data?.[option as TextOption]?.bgColor ?? ""
-                  }
-                  onChange={(color) =>
-                    handleColorChange(color, "background", option)
-                  }
-                />
-              </AdvancedOptions>
+                  <SelectField
+                    label="Font Size"
+                    value={
+                      selectedItem.data?.[
+                        option as TextOption
+                      ]?.fontSize.replace("px", "") ?? ""
+                    }
+                    onChange={(value) => handleSizeChange(value, option)}
+                    options={fontSizeOptions}
+                  />
+                  <SelectField
+                    label="Font Weight"
+                    value={
+                      selectedItem.data?.[option as TextOption]
+                        ?.fontWeightLabel ?? ""
+                    }
+                    onChange={(value) => handleWeightChange(value, option)}
+                    options={weightOptions}
+                  />
+                  <ColorPickerfield
+                    label="Text Color"
+                    color={
+                      selectedItem.data?.[option as TextOption]?.color ?? ""
+                    }
+                    onChange={(color) =>
+                      handleColorChange(color, "text", option)
+                    }
+                  />
+                  <ColorPickerfield
+                    label="Background Color"
+                    color={
+                      selectedItem.data?.[option as TextOption]?.bgColor ?? ""
+                    }
+                    onChange={(color) =>
+                      handleColorChange(color, "background", option)
+                    }
+                  />
+                </AdvancedOptions>
+              ) : null}
             </Box>
           </Box>
         );
