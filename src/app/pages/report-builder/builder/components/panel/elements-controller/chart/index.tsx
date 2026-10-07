@@ -103,8 +103,9 @@ export default function ChartController() {
         ...item?.data,
         dataset: selectedDataset,
         mapping: datasetUnchanged ? item?.data?.mapping : {},
-        appliedFilters:
-          filters || (datasetUnchanged ? item?.data?.appliedFilters : {}),
+        appliedFilters: datasetUnchanged
+          ? filters || item?.data?.appliedFilters
+          : {},
       },
     });
     handleBack();

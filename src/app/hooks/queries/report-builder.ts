@@ -608,7 +608,7 @@ export const useDatasetFilterOptions = (
   appliedFilters: Record<string, any[]> = {},
 ) => {
   return useQuery({
-    queryKey: ["ReportBuilderDatasetFilterOptions", datasetId],
+    queryKey: ["ReportBuilderDatasetFilterOptions", datasetId, appliedFilters],
     queryFn: () =>
       axiosInstance.post<FilterGroupModel[]>(
         `/report/filter-options`,

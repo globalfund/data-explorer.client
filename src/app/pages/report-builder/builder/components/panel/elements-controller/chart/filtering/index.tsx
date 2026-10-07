@@ -1,335 +1,392 @@
-import { Box, Button, Typography } from "@mui/material";
-import { useStoreState } from "app/state/store/hooks";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import SearchIcon from "app/assets/vectors/Search_grants.svg?react";
-import CollapseIcon from "app/assets/vectors/Collapse_ButtonIcon.svg?react";
 import React from "react";
-import { appColors } from "app/theme";
-import { SearchInput } from "app/components/filters/list/data";
-import { get, isEqual } from "lodash";
+import {
+  Box,
+  Button,
+  ButtonBase,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useStoreState } from "app/state/store/hooks";
+import {
+  useDatasetFilterOptions,
+  useGFSampleDataset,
+} from "app/hooks/queries/report-builder";
+import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
+import SearchIcon from "app/assets/vectors/Search_grants.svg?react";
+import BackIcon from "app/assets/vectors/DatasetArrowLeft.svg?react";
+import TextIcon from "app/assets/vectors/DatasetFieldText.svg?react";
+import NumberIcon from "app/assets/vectors/DatasetFieldNumber.svg?react";
+import { getColumnType } from "app/pages/report-builder/builder/components/dataset-select-modal/utils";
 import ExpandedFilterGroup from "./expanded-filter-group";
 import {
-  FilterGroupOptionModel,
-  FilterGroupModel,
-} from "app/state/api/action-reducers/report-builder/sync";
-import { useDebounce } from "react-use";
-import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
+  getFilterValues,
+  getMatchingFilterValues,
+  searchFilterOptions,
+  updateFieldFilter,
+} from "./utils";
 
-export default function Filtering() {
+const linkButtonSx = {
+  p: 0,
+  minWidth: 0,
+  color: "#3154F4",
+  fontSize: "12px",
+  fontWeight: 400,
+  lineHeight: "20px",
+  textTransform: "none",
+  textDecoration: "underline",
+  "&:hover": { textDecoration: "underline", bgcolor: "transparent" },
+};
+
+interface FilteringProps {
+  onBack: () => void;
+}
+
+export default function Filtering({ onBack }: FilteringProps) {
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
-
   const { selectedItem: item, editItem } = useGetReportItemState<"chart">({
     id: selectedController?.id || "",
     parent: selectedController?.parent ?? undefined,
   });
-
-  const chartExtra = item?.data;
-
-  const filterOptionGroups = useStoreState(
-    (state) => state.FilterOptionGroupsState.value,
+  const datasetId = item?.data?.dataset || "";
+  const filterOptionsQuery = useDatasetFilterOptions(datasetId);
+  const sampledDatasetQuery = useGFSampleDataset(datasetId);
+  const dataTypes = sampledDatasetQuery.data?.data.data.result.dataTypes;
+  const optionGroups = filterOptionsQuery.data?.data ?? [];
+  const appliedFilters = item?.data?.appliedFilters ?? {};
+  const hasAppliedFilters = Object.values(appliedFilters).some(
+    (values) => values.length > 0,
   );
 
-  const [searchValue, setSearchValue] = React.useState("");
+  const [activeField, setActiveField] = React.useState<string | null>(null);
+  const [fieldSearch, setFieldSearch] = React.useState("");
+  const [valueSearch, setValueSearch] = React.useState("");
+  const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
 
-  const [optionGroupsToShow, setOptionGroupsToShow] = React.useState<
-    FilterGroupModel[]
-  >(filterOptionGroups || []);
-
-  const [expandedGroupNames, setExpandedGroupNames] = React.useState<string[]>(
-    [],
+  const activeGroup = optionGroups.find((group) => group.name === activeField);
+  const visibleGroups = optionGroups.filter((group) =>
+    group.name.toLowerCase().includes(fieldSearch.trim().toLowerCase()),
+  );
+  const allValues = getFilterValues(activeGroup?.options ?? []);
+  const visibleOptions = searchFilterOptions(
+    activeGroup?.options ?? [],
+    valueSearch,
+  );
+  const visibleValues = getMatchingFilterValues(
+    activeGroup?.options ?? [],
+    valueSearch,
   );
 
-  const [tmpAppliedFilters, setTmpAppliedFilters] = React.useState<
-    Record<string, any[]>
-  >(chartExtra?.appliedFilters || {});
-
-  React.useEffect(() => {
-    if (!isEqual(tmpAppliedFilters, chartExtra?.appliedFilters || {})) {
-      setTmpAppliedFilters(chartExtra?.appliedFilters || {});
+  const handleBack = () => {
+    if (activeField !== null) {
+      setActiveField(null);
+      setValueSearch("");
+      setSelectedValues([]);
+    } else {
+      onBack();
     }
-  }, [chartExtra?.appliedFilters]);
+  };
 
-  const handleApply = (reset: boolean = false) => {
-    if (!item) return;
-    if (
-      !reset &&
-      isEqual(tmpAppliedFilters, chartExtra?.appliedFilters || {})
-    ) {
-      return;
-    }
+  const handleApply = () => {
+    if (!item || !activeGroup) return;
     editItem({
       ...item,
-      id: selectedController?.id || "",
-      type: "chart",
       data: {
-        ...item?.data,
-        appliedFilters: reset ? {} : tmpAppliedFilters,
+        ...item.data,
+        appliedFilters: updateFieldFilter(
+          appliedFilters,
+          activeGroup.name,
+          selectedValues,
+        ),
       },
     });
-
-    if (reset) {
-      setTmpAppliedFilters({});
-      setSearchValue("");
-    }
+    onBack();
   };
 
-  const searchOptions = (options: FilterGroupOptionModel[], value: string) => {
-    const results: FilterGroupOptionModel[] = [];
-    options.forEach((option) => {
-      if (
-        option.label.toString().toLowerCase().indexOf(value.toLowerCase()) > -1
-      ) {
-        results.push(option);
-      } else if (option?.subOptions) {
-        const searchResponse = searchOptions(option.subOptions, value);
-
-        if (searchResponse.length) {
-          results.push({
-            ...option,
-            subOptions: searchResponse,
-          });
-        }
-      }
-    });
-    return results;
-  };
-
-  const handleSearch = (value: string) => {
-    if (value.length === 0) {
-      setOptionGroupsToShow(filterOptionGroups || []);
-      return;
-    }
-
-    try {
-      setOptionGroupsToShow(
-        filterOptionGroups?.map((group) => {
-          const searchResults = searchOptions(group.options, value);
-          return { ...group, options: searchResults };
-        }) || [],
-      );
-    } catch (e) {
-      console.error(e);
-      setOptionGroupsToShow(filterOptionGroups || []);
-      return;
-    }
-  };
-  useDebounce(
-    () => {
-      handleSearch(searchValue);
-    },
-    500,
-    [searchValue, filterOptionGroups],
-  );
-
-  useDebounce(
-    () => {
-      if (tmpAppliedFilters) {
-        handleApply();
-      }
-    },
-    1000,
-    [tmpAppliedFilters],
-  );
+  const title =
+    activeField !== null
+      ? `Filter: ${activeField}`
+      : `${hasAppliedFilters ? "Edit" : "Add"} filter — choose field`;
 
   return (
-    <Box
-      sx={{
-        padding: "8px",
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        gap: "8px",
-        maxHeight: "500px",
-        position: "relative",
-        overflowY: "scroll",
-        "&::-webkit-scrollbar": {
-          display: "none",
-        },
-        paddingBottom: 0,
-      }}
-    >
+    <Box sx={{ width: "100%", minWidth: 0, bgcolor: "#F8F9FA" }}>
       <Box
         sx={{
-          gap: "6px",
-          width: "100%",
-          height: "max-content",
           display: "flex",
-          padding: "5px 10px",
-          borderRadius: "5px",
           alignItems: "center",
-          background: appColors.COMMON.WHITE,
-          border: `0.5px solid ${appColors.COMMON.SECONDARY_COLOR_5}`,
-        }}
-      >
-        <SearchIcon />
-        <SearchInput
-          type="text"
-          placeholder="Search"
-          style={{ height: "24px", padding: 0, background: "transparent" }}
-          onChange={(e) => setSearchValue(e.target.value)}
-          value={searchValue}
-        />
-      </Box>
-
-      <Box
-        sx={{
-          display: "flex",
           gap: "8px",
-          alignItems: "center",
-          width: "max-content",
-          marginLeft: "auto",
-          cursor: "pointer",
+          minHeight: "40px",
+          px: "8px",
+          borderBottom: "0.5px solid #CFD4DA",
         }}
-        onClick={() => setExpandedGroupNames([])}
       >
-        <Typography
-          sx={{
-            fontSize: "14px",
-            color: "#3154F4",
-            textDecoration: "underline",
-          }}
+        <IconButton
+          onClick={handleBack}
+          aria-label={
+            activeField !== null
+              ? "Back to filter fields"
+              : "Back to data settings"
+          }
+          sx={{ p: "4px", ml: "-4px", color: "#373D43" }}
         >
-          Collapse All
+          <BackIcon width={12} height={12} />
+        </IconButton>
+        <Typography
+          component="h3"
+          fontSize="14px"
+          fontWeight={700}
+          lineHeight="20px"
+          color="#373D43"
+          sx={{ py: "8px", overflowWrap: "anywhere" }}
+        >
+          {title}
         </Typography>
-        <CollapseIcon stroke="#3154F4" strokeWidth={"0.5px"} />
       </Box>
 
-      <Box>
-        {optionGroupsToShow?.map((group) => (
-          <Accordion
-            key={group.name}
-            expanded={expandedGroupNames.includes(group.name)}
-            onChange={() => {
-              if (expandedGroupNames.includes(group.name)) {
-                setExpandedGroupNames((prev) =>
-                  prev.filter((name) => name !== group.name),
-                );
-              } else {
-                setExpandedGroupNames((prev) => [...prev, group.name]);
-              }
-            }}
-            sx={{
-              borderStyle: "none",
-              borderBottom: `0.5px solid ${appColors.COMMON.SECONDARY_COLOR_6}`,
-              padding: "8px 0px",
-              background: "transparent",
-            }}
+      <Box
+        sx={{
+          p: activeField !== null ? "16px 8px" : "8px",
+          display: "flex",
+          flexDirection: "column",
+          gap: activeField !== null ? "16px" : "8px",
+        }}
+      >
+        <TextField
+          key={activeField ?? "fields"}
+          autoFocus
+          fullWidth
+          size="small"
+          value={activeField !== null ? valueSearch : fieldSearch}
+          placeholder={
+            activeField !== null ? "Search values..." : "Search fields..."
+          }
+          onChange={(event) =>
+            activeField !== null
+              ? setValueSearch(event.target.value)
+              : setFieldSearch(event.target.value)
+          }
+          slotProps={{
+            htmlInput: {
+              "aria-label":
+                activeField !== null
+                  ? "Search filter values"
+                  : "Search filter fields",
+            },
+            input: {
+              startAdornment: (
+                <InputAdornment position="start" sx={{ mr: "4px" }}>
+                  <SearchIcon width={16} height={16} />
+                </InputAdornment>
+              ),
+            },
+          }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              height: "30px",
+              px: "8px",
+              fontSize: "14px",
+              borderRadius: "4px",
+              bgcolor: "#fff",
+              "& fieldset": { border: "0.5px solid #98A1AA" },
+              "&:hover fieldset": { borderColor: "#98A1AA" },
+              "&.Mui-focused fieldset": {
+                borderColor: "#3154F4",
+                borderWidth: "1px",
+              },
+            },
+            "& .MuiInputBase-input": {
+              p: 0,
+              "&::placeholder": { color: "#7E868F", opacity: 1 },
+            },
+          }}
+        />
+
+        {filterOptionsQuery.isPending ? (
+          <Typography
+            role="status"
+            sx={{ p: "8px", fontSize: "14px", color: "#7E868F" }}
           >
-            <AccordionSummary
-              expandIcon={
-                get(group, "options.length", 0) > 0 ? (
-                  <ExpandMoreIcon />
-                ) : undefined
-              }
+            Loading filter fields...
+          </Typography>
+        ) : filterOptionsQuery.isError ? (
+          <Box role="alert" sx={{ p: "8px" }}>
+            <Typography fontSize="14px" color="#373D43">
+              Unable to load filter fields.
+            </Typography>
+            <Button
+              onClick={() => filterOptionsQuery.refetch()}
+              sx={linkButtonSx}
+            >
+              Try again
+            </Button>
+          </Box>
+        ) : activeField === null ? (
+          <Box
+            sx={{ px: "8px", maxHeight: "360px", overflowY: "auto" }}
+            className="scrollbar"
+          >
+            {visibleGroups.length ? (
+              visibleGroups.map((group) => {
+                const numeric =
+                  getColumnType(dataTypes?.[group.name]) === "number";
+                const count = getFilterValues(group.options).length;
+                return (
+                  <ButtonBase
+                    key={group.name}
+                    onClick={() => {
+                      setSelectedValues([
+                        ...(appliedFilters[group.name] ?? []),
+                      ]);
+                      setValueSearch("");
+                      setActiveField(group.name);
+                    }}
+                    sx={{
+                      width: "100%",
+                      minHeight: "40px",
+                      display: "flex",
+                      gap: "8px",
+                      py: "8px",
+                      textAlign: "left",
+                      color: "#000",
+                      borderTop: "0.5px solid #DFE3E5",
+                      "&:hover, &.Mui-focusVisible": { bgcolor: "#EFF1FE" },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: "16px",
+                        flexShrink: 0,
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      {numeric ? <NumberIcon /> : <TextIcon />}
+                    </Box>
+                    <Typography
+                      fontSize="14px"
+                      sx={{ flex: 1, minWidth: 0, overflowWrap: "anywhere" }}
+                    >
+                      {group.name}
+                    </Typography>
+                    <Typography
+                      fontSize="12px"
+                      color="#7E868F"
+                      sx={{
+                        flexShrink: 0,
+                        span: {
+                          color: "#3154F4",
+                        },
+                      }}
+                    >
+                      <span>
+                        {appliedFilters?.[group.name]?.length
+                          ? `${appliedFilters?.[group.name]?.length} selected`
+                          : ""}
+                      </span>
+                      ⋅
+                      {numeric
+                        ? "numeric"
+                        : `${count} ${count === 1 ? "value" : "values"}`}
+                    </Typography>
+                  </ButtonBase>
+                );
+              })
+            ) : (
+              <Typography
+                role="status"
+                sx={{ py: "8px", fontSize: "14px", color: "#7E868F" }}
+              >
+                {fieldSearch.trim()
+                  ? "No fields found."
+                  : "No filter fields available."}
+              </Typography>
+            )}
+          </Box>
+        ) : (
+          <>
+            <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <Typography
+                aria-live="polite"
+                fontSize="12px"
+                color="#495057"
+                sx={{ mr: "auto" }}
+              >
+                <Box component="span" sx={{ color: "#3154F4" }}>
+                  {selectedValues.length}
+                </Box>{" "}
+                of {allValues.length} selected
+              </Typography>
+              {selectedValues.length > 0 && (
+                <Button onClick={() => setSelectedValues([])} sx={linkButtonSx}>
+                  Clear
+                </Button>
+              )}
+              <Button
+                disabled={visibleValues.length === 0}
+                onClick={() =>
+                  setSelectedValues((previous) =>
+                    Array.from(new Set([...previous, ...visibleValues])),
+                  )
+                }
+                sx={linkButtonSx}
+              >
+                Select all
+              </Button>
+            </Box>
+            <Box
               sx={{
-                minHeight: "20px",
-                justifyContent: "flex-start",
-                "&.Mui-expanded": {
-                  minHeight: "20px",
-                },
-                "> .MuiAccordionSummary-content": {
-                  flexGrow: 0,
-                },
-                gap: "8px",
+                px: "16px",
+                maxHeight: "288px",
+                overflowY: "auto",
+                border: "0.5px solid #DFE3E5",
+                borderRadius: "4px",
+              }}
+              className="scrollbar"
+            >
+              {visibleOptions.length ? (
+                <ExpandedFilterGroup
+                  key={`${activeField}:${valueSearch.trim().toLowerCase()}`}
+                  name={activeField}
+                  options={visibleOptions}
+                  selectedFilters={selectedValues}
+                  setSelectedFilters={setSelectedValues}
+                  expandSearchResults={Boolean(valueSearch.trim())}
+                />
+              ) : (
+                <Typography
+                  role="status"
+                  sx={{ py: "12px", fontSize: "14px", color: "#7E868F" }}
+                >
+                  {valueSearch.trim()
+                    ? "No values found."
+                    : "No values available."}
+                </Typography>
+              )}
+            </Box>
+            <Button
+              variant="outlined"
+              fullWidth
+              disabled={!activeGroup}
+              onClick={handleApply}
+              sx={{
+                height: "35px",
+                fontSize: "14px",
+                fontWeight: 400,
+                color: "#000",
+                bgcolor: "#fff",
+                textTransform: "none",
+                border: "0.5px solid #98A1AA",
+                borderRadius: "4px",
+                "&:hover": { bgcolor: "#fff", borderColor: "#3154F4" },
               }}
             >
-              <Typography
-                fontSize="14px"
-                fontWeight={
-                  expandedGroupNames.includes(group.name) ? "700" : "400"
-                }
-              >
-                {group.name}
-              </Typography>
-            </AccordionSummary>
-            {group.options && expandedGroupNames.includes(group.name) && (
-              <AccordionDetails>
-                <ExpandedFilterGroup
-                  name={group.name}
-                  options={group.options || []}
-                  selectedFilters={
-                    get(tmpAppliedFilters, group.name, []) as string[]
-                  }
-                  setSelectedFilters={(filters: string[]) => {
-                    setTmpAppliedFilters((prev) => {
-                      const tempPrev = structuredClone(prev);
-                      if (filters.length === 0) {
-                        delete tempPrev[group.name];
-                        return tempPrev;
-                      }
-                      return {
-                        ...prev,
-                        [group.name]: filters,
-                      };
-                    });
-                  }}
-                />
-              </AccordionDetails>
-            )}
-          </Accordion>
-        ))}
-      </Box>
-
-      <Box
-        sx={{
-          gap: "10px",
-          position: "sticky",
-          bottom: 0,
-          background: "#F8F9FA",
-          display: "flex",
-          borderTop: `0.5px solid ${appColors.COMMON.SECONDARY_COLOR_6}`,
-
-          padding: "5px 0",
-          "& > button": {
-            fontSize: "14px",
-            lineHeight: "1.5",
-            padding: "9px 12px",
-          },
-        }}
-      >
-        <Button
-          onClick={() => {
-            setExpandedGroupNames([]);
-            handleApply(true);
-          }}
-          variant="outlined"
-          startIcon={
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-            >
-              <rect
-                width="16"
-                height="16"
-                fill="white"
-                fillOpacity="0.01"
-                style={{ mixBlendMode: "multiply" }}
-              />
-              <path
-                d="M14 8C14 9.18669 13.6481 10.3467 12.9888 11.3334C12.3295 12.3201 11.3925 13.0892 10.2961 13.5433C9.19975 13.9974 7.99335 14.1162 6.82946 13.8847C5.66558 13.6532 4.59648 13.0818 3.75736 12.2426C2.91825 11.4035 2.3468 10.3344 2.11529 9.17054C1.88378 8.00666 2.0026 6.80026 2.45673 5.7039C2.91085 4.60754 3.67989 3.67047 4.66658 3.01118C5.65328 2.35189 6.81331 2 8 2C9.68 2 11.2867 2.66667 12.4933 3.82667L14 5.33333M14 5.33333L14 2M14 5.33333H10.6667"
-                stroke="black"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          }
-          sx={{
-            border: "none",
-            width: "100%",
-            justifyContent: "flex-start",
-          }}
-        >
-          Reset
-        </Button>
+              Apply filter
+            </Button>
+          </>
+        )}
       </Box>
     </Box>
   );
