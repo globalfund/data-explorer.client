@@ -65,7 +65,7 @@ export const OpexPageBlock3B: React.FC = () => {
           Opex as % of total pledge, by grant cycle
         </Typography>
         <Typography fontSize="16px" color="#373D43">
-          Calculation: total opex (plannedAmount) ÷ total pledge
+          Calculation: total Opex ÷ total pledge
         </Typography>
         <BarChart2
           categories={["Opex Efficiency"]}
