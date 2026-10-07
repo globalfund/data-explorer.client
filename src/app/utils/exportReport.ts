@@ -61,13 +61,13 @@ export const exportReport = async (
   }
 
   const filter = (el: HTMLElement) => {
-    return el.id !== "inline-loader" &&
+    return (
+      el.id !== "inline-loader" &&
       el.id !== "page-loader" &&
       el.tagName !== "BUTTON" &&
       el.tagName !== "INPUT" &&
-      el.className
-      ? el.className?.toString().indexOf("drag-indicator") === -1
-      : true;
+      !el.className?.toString().includes("drag-indicator")
+    );
   };
 
   const options = {
