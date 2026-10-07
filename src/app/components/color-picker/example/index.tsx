@@ -48,7 +48,7 @@ const swatches = [
 interface IColorPickerProps {
   height?: number;
   triggerWidth?: string;
-  color: IColor;
+  color: IColor | null;
   disabled?: boolean;
   onChange: (color: IColor) => void;
   onChangeComplete?: (color: IColor) => void;
@@ -72,13 +72,17 @@ export const ColorPicker = ({
   // Handle hue for grayscale colors
   // hue is lost when converting to hex and back, so we store a fallback hue
   // this only happens with grayscale colors (saturation = 0)
-  const [fallbackHue, setFallbackHue] = React.useState(inputColor.hsv.h);
-  const safeHue = inputColor.hsv.s === 0 ? fallbackHue : inputColor.hsv.h;
+
+  const defaultColor = ColorService.convert("hex", "#000000");
+
+  const safeColor = inputColor ?? defaultColor;
+  const [fallbackHue, setFallbackHue] = React.useState(safeColor.hsv.h);
+  const safeHue = safeColor.hsv.s === 0 ? fallbackHue : safeColor.hsv.h;
 
   const color = {
-    ...inputColor,
+    ...safeColor,
     hsv: {
-      ...inputColor.hsv,
+      ...safeColor.hsv,
       h: safeHue,
     },
   };
@@ -108,7 +112,7 @@ export const ColorPicker = ({
     <ClickAwayListener onClickAway={handleClose}>
       <Box sx={{ position: "relative" }}>
         <Trigger
-          color={color?.hex ?? null}
+          color={inputColor?.hex ?? null}
           onChange={handleTriggerInputChange}
           onClick={handleTriggerColorPicker}
           triggerWidth={triggerWidth}

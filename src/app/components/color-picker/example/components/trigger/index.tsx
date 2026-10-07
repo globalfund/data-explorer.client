@@ -4,7 +4,7 @@ import React from "react";
 import NullColor from "app/assets/vectors/RBNullColor.svg?react";
 import HexIcon from "app/assets/vectors/RBHex.svg?react";
 
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 
 interface ITrigger {
   color: string | null;
@@ -27,33 +27,23 @@ export default function Trigger(props: Readonly<ITrigger>) {
         padding: "0px 8px",
       }}
     >
-      {props.color ? (
-        <Button
-          onClick={props.onClick}
-          sx={{
-            height: "22px",
-            width: "22px",
-            minWidth: "22px",
-            border: "0.75px solid #252C34",
-            backgroundColor: props.color,
-            borderRadius: "4px",
-            padding: "0px",
-          }}
-        />
-      ) : (
-        <IconButton
-          onClick={props.onClick}
-          sx={{
-            backgroundColor: "",
-            border: "none",
-            padding: "0",
-            outline: "none",
-            "&:hover": { backgroundColor: "transparent" },
-          }}
-        >
-          <NullColor />
-        </IconButton>
-      )}
+      {/* Keep the popup anchor mounted when the color changes to or from null. */}
+      <IconButton
+        aria-label="Choose color"
+        onClick={props.onClick}
+        sx={{
+          height: "22px",
+          width: "22px",
+          minWidth: "22px",
+          border: props.color ? "0.75px solid #252C34" : "none",
+          backgroundColor: props.color ?? "transparent",
+          borderRadius: "4px",
+          padding: "0",
+          "&:hover": { backgroundColor: props.color ?? "transparent" },
+        }}
+      >
+        {!props.color && <NullColor />}
+      </IconButton>
 
       <Box
         sx={{
@@ -72,7 +62,7 @@ export default function Trigger(props: Readonly<ITrigger>) {
         <TextField
           variant="standard"
           onChange={(e) => props.onChange(e.target.value)}
-          value={props.color?.replace("#", "")}
+          value={props.color?.replace("#", "") ?? ""}
           slotProps={{
             input: { disableUnderline: !!props.color },
           }}

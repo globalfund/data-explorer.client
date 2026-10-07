@@ -17,7 +17,8 @@ const DragWrapper: React.FC<{
   children: React.ReactNode;
   id: string;
   index: number;
-}> = ({ children, id, index }) => {
+  onClick?: () => void;
+}> = ({ children, id, index, onClick }) => {
   const { ref, isDragging } = useSortable({
     id,
     index,
@@ -36,6 +37,7 @@ const DragWrapper: React.FC<{
         flexDirection: "column",
       }}
       ref={ref}
+      onClick={onClick}
     >
       {children}
     </Box>
@@ -136,14 +138,18 @@ export const FileTabView: React.FC = () => {
               .findIndex((i) => i.id === item.id);
             const option = ComponentOptions.find((o) => o.value === item.type);
             return (
-              <DragWrapper id={item.id} index={itemIndex} key={item.id}>
+              <DragWrapper
+                id={item.id}
+                index={itemIndex}
+                key={item.id}
+                onClick={handleItemClick({
+                  open: true,
+                  id: item.id,
+                  type: item.type,
+                })}
+              >
                 <Button
                   startIcon={option?.icon}
-                  onClick={handleItemClick({
-                    open: true,
-                    id: item.id,
-                    type: item.type,
-                  })}
                   sx={{
                     pointerEvents: "none",
                     cursor: "inherit",

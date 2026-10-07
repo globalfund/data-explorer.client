@@ -54,7 +54,8 @@ export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
         isUnderlined: ctx.editor.isActive("underline"),
         color: ctx.editor.getAttributes("textStyle").color ?? "#000000",
         bgColor:
-          ctx.editor.getAttributes("textStyle").backgroundColor ?? "#ffffff",
+          ctx.editor.getAttributes("textStyle").backgroundColor ??
+          "transparent",
         fontSize: ctx.editor.getAttributes("textStyle").fontSize ?? "16px",
         isNormalText: ctx.editor.isActive("paragraph"),
         isTitle: ctx.editor.isActive("heading", { level: 10 }),
@@ -192,6 +193,11 @@ export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
       )?.value ?? "Inter"
     );
   }, [editorState.fontFamily]);
+
+  const makeHighlightVisible = (hex: string) =>
+    hex.length === 9 && hex.toLowerCase().endsWith("00")
+      ? hex.slice(0, 7)
+      : hex;
 
   return (
     <Box
@@ -444,13 +450,20 @@ export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
           </Typography>
 
           <ColorPicker
-            color={ColorService.convert("hex", editorState.bgColor)}
+            color={
+              editorState.bgColor === "transparent"
+                ? null
+                : ColorService.convert("hex", editorState.bgColor)
+            }
             onChange={(color) => {
-              editor.chain().setBackgroundColor(color.hex).run();
+              editor
+                .chain()
+                .setBackgroundColor(makeHighlightVisible(color.hex))
+                .run();
             }}
             disabled={false}
             onResetColor={() => {
-              editor.chain().setBackgroundColor("#ffffff").run();
+              editor.chain().setBackgroundColor("transparent").run();
             }}
             onChangeComplete={() => {}}
           />

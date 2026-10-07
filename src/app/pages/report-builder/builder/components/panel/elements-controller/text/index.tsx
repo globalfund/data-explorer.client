@@ -41,7 +41,13 @@ export default function TextController() {
   const renderTabPanel = () => {
     switch (value) {
       case "font":
-        return <Box>{<RTEToolbar editor={activeRTE!} />}</Box>;
+        return (
+          <Box>
+            {activeRTE && (
+              <RTEToolbar key={activeRTE.instanceId} editor={activeRTE} />
+            )}
+          </Box>
+        );
       case "style":
         return <StyleTab />;
       case "layout":

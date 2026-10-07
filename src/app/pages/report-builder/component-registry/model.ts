@@ -54,6 +54,7 @@ const itemFactories: Record<CreatableReportItemType, ItemFactory> = {
       height: "100%",
       display: "flex",
       flexDirection: "column",
+      backgroundColor: "transparent",
       ...options,
     },
   }),
