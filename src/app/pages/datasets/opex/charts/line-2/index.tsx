@@ -56,7 +56,6 @@ const Tooltip: React.FC<{
       <Divider
         style={{ width: "100%", borderColor: "#DFE3E5", margin: "5px 0" }}
       />
-
       {props.items.map((item: any) => (
         <div
           key={item.name}
@@ -249,20 +248,22 @@ export const LineChart2: React.FC<LineChart2Props> = (
             const items: {
               name: string;
               value: string;
-            }[] = filter(lines, (line: any) => {
-              if (line.value === undefined) return false;
-              const isDashedOverlay =
-                seriesList[line.seriesIndex]?.isDashedOverlay;
-              return !isDashedOverlay || xAxisValue === lastXAxisKey;
-            }).map((line: any) => {
-              return {
-                name: line.seriesName,
-                value: line.value,
-                color:
-                  line.itemStyle?.color ??
-                  colors[lines.indexOf(line) % colors.length],
-              };
-            });
+            }[] = orderBy(
+              filter(lines, (line: any) => {
+                if (line.value === undefined) return false;
+                const isDashedOverlay =
+                  seriesList[line.seriesIndex]?.isDashedOverlay;
+                return !isDashedOverlay || xAxisValue === lastXAxisKey;
+              }).map((line: any) => {
+                return {
+                  name: line.seriesName,
+                  value: line.value,
+                  color: line.color,
+                };
+              }),
+              ["value"],
+              ["desc"],
+            );
             return ReactDOMServer.renderToString(
               <Tooltip name={xAxisValue} items={items} />,
             );
