@@ -3,6 +3,7 @@ import sumBy from "lodash/sumBy";
 import Box from "@mui/material/Box";
 import { appColors } from "app/theme";
 import * as echarts from "echarts/core";
+import { chartTheme } from "app/components/charts/common/theme/config";
 import Divider from "@mui/material/Divider";
 import ReactDOMServer from "react-dom/server";
 import { SVGRenderer } from "echarts/renderers";
@@ -67,7 +68,7 @@ export const Treemap: React.FC<TreemapProps> = (props: TreemapProps) => {
 
   React.useEffect(() => {
     if (containerRef.current) {
-      const chart = echarts.init(containerRef.current, undefined, {
+      const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
 
