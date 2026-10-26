@@ -1,6 +1,7 @@
 import uniqBy from "lodash/uniqBy";
 import sortBy from "lodash/sortBy";
 import * as echarts from "echarts/core";
+import { chartTheme } from "app/components/charts/common/theme/config";
 import { CanvasRenderer } from "echarts/renderers";
 
 import {
@@ -1100,7 +1101,7 @@ export function useEcharts({
       node,
     );
 
-    const chart = echarts.init(node, undefined, {
+    const chart = echarts.init(node, chartTheme, {
       renderer: "svg",
       height: visualOptions.height,
     });
