@@ -22,7 +22,7 @@ import { OpexPageBlock8 } from "app/pages/datasets/opex/blocks/block-8";
 import { OpexAnimateInView } from "app/pages/datasets/opex/blocks/common/animate-in-view";
 
 export const OpexPage = () => {
-  useTitle("The Data Explorer - Financial Insights");
+  useTitle("The Data Explorer - OPEX");
   const cmsData = useCMSData({ returnData: true });
 
   const years = useStoreState((state) => state.OpexYears.data);
