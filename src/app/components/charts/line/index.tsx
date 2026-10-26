@@ -3,6 +3,7 @@ import find from "lodash/find";
 import Box from "@mui/material/Box";
 import { appColors } from "app/theme";
 import * as echarts from "echarts/core";
+import { chartTheme } from "app/components/charts/common/theme/config";
 import Divider from "@mui/material/Divider";
 import ReactDOMServer from "react-dom/server";
 import { SVGRenderer } from "echarts/renderers";
@@ -137,7 +138,7 @@ export const LineChart: React.FC<LineChartProps> = (props: LineChartProps) => {
 
   React.useEffect(() => {
     if (containerRef.current) {
-      const chart = echarts.init(containerRef.current, undefined, {
+      const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
 

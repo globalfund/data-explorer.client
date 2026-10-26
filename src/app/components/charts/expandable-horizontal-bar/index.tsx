@@ -3,6 +3,7 @@ import filter from "lodash/filter";
 import Box from "@mui/material/Box";
 import { appColors } from "app/theme";
 import * as echarts from "echarts/core";
+import { chartTheme } from "app/components/charts/common/theme/config";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import ReactDOMServer from "react-dom/server";
@@ -150,7 +151,7 @@ export const ExpandableHorizontalBar: React.FC<
 
   React.useEffect(() => {
     if (containerRef.current) {
-      const chart = echarts.init(containerRef.current, undefined, {
+      const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
 

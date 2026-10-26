@@ -1,6 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import * as echarts from "echarts/core";
+import { chartTheme } from "app/components/charts/common/theme/config";
 import Divider from "@mui/material/Divider";
 import ReactDOMServer from "react-dom/server";
 import { SVGRenderer } from "echarts/renderers";
@@ -84,7 +85,7 @@ export const PieChart: React.FC<PieChartProps> = (props: PieChartProps) => {
 
   React.useEffect(() => {
     if (containerRef.current) {
-      const chart = echarts.init(containerRef.current, undefined, {
+      const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
 

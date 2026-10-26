@@ -3,6 +3,7 @@ import sumBy from "lodash/sumBy";
 import Box from "@mui/material/Box";
 import { appColors } from "app/theme";
 import * as echarts from "echarts/core";
+import { chartTheme } from "app/components/charts/common/theme/config";
 import ReactDOMServer from "react-dom/server";
 import { SVGRenderer } from "echarts/renderers";
 import Typography from "@mui/material/Typography";
@@ -46,7 +47,7 @@ export const SankeyChart: React.FC<SankeyChartProps> = (
 
   React.useEffect(() => {
     if (containerRef.current) {
-      const chart = echarts.init(containerRef.current, undefined, {
+      const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
 
