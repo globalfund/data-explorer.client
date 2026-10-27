@@ -212,16 +212,6 @@ export const Footer: React.FC = () => {
                   </FooterSM>
                 ))}
               </Box>
-              <FooterExternalLink
-                target="_blank"
-                href="https://act.unfoundation.org/FJvB3vUCJUepH_5KN75TTQ2"
-              >
-                {getCMSDataField(
-                  cmsData,
-                  "componentsFooter.donateText",
-                  "Donate to the Global Fund through United Nations Foundation",
-                )}
-              </FooterExternalLink>
             </Grid>
           </Grid>
         </Container>
