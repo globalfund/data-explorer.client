@@ -137,6 +137,9 @@ export const extensions = [
     heading: false,
     bulletList: false,
     orderedList: false,
+    // Otherwise a heading, list or quote at the end gets an empty paragraph
+    // after it that is re-added whenever it's deleted.
+    trailingNode: false,
   }),
   TextStyle,
   DefaultFontFamily,
