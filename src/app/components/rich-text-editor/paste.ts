@@ -1,3 +1,4 @@
+import { Fragment, Slice, type Node } from "@tiptap/pm/model";
 import { fontFamilyOptions, MAX_FONT_SIZE, MIN_FONT_SIZE } from "./data";
 
 const supportedFonts = new Map(
@@ -72,6 +73,18 @@ function normaliseFontWeight(value: string) {
 export function normalisePastedHTML(html: string) {
   const doc = new DOMParser().parseFromString(html, "text/html");
 
+  // Google Docs wraps the whole clipboard in <b style="font-weight:normal">.
+  // Unwrap bold tags that declare a non-bold weight; once "normal" is
+  // normalised to "400" below, Tiptap would otherwise treat them as bold.
+  doc.body.querySelectorAll<HTMLElement>("b, strong").forEach((element) => {
+    const fontWeight = element.style.fontWeight;
+    const normalised = fontWeight ? normaliseFontWeight(fontWeight) : null;
+
+    if (normalised && Number(normalised) <= 400) {
+      element.replaceWith(...Array.from(element.childNodes));
+    }
+  });
+
   doc.body.querySelectorAll<HTMLElement>("*").forEach((element) => {
     const fontFamily = element.style.fontFamily;
     const fontSize = element.style.fontSize;
@@ -126,4 +139,40 @@ export function normalisePastedHTML(html: string) {
   });
 
   return doc.body.innerHTML;
+}
+
+function hasBoldWeight(node: Node) {
+  return node.marks.some(
+    (mark) =>
+      mark.type.name === "textStyle" && Number(mark.attrs.fontWeight) > 400,
+  );
+}
+
+function dropRedundantBold(fragment: Fragment): Fragment {
+  const nodes: Node[] = [];
+
+  fragment.forEach((node) => {
+    if (node.isText) {
+      nodes.push(
+        hasBoldWeight(node)
+          ? node.mark(node.marks.filter((mark) => mark.type.name !== "bold"))
+          : node,
+      );
+    } else {
+      nodes.push(node.copy(dropRedundantBold(node.content)));
+    }
+  });
+
+  return Fragment.from(nodes);
+}
+
+// Tiptap's Bold also turns inline font-weight >= 500 into a <strong> on top of
+// the textStyle weight, which renders heavier than the source and hides the
+// real weight from the Text panel. Keep only the weight in that case.
+export function normalisePastedSlice(slice: Slice) {
+  return new Slice(
+    dropRedundantBold(slice.content),
+    slice.openStart,
+    slice.openEnd,
+  );
 }
