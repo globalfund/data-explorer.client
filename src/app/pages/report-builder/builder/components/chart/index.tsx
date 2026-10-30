@@ -1,4 +1,5 @@
 import React from "react";
+import { isAxiosError } from "axios";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
@@ -9,6 +10,34 @@ import { checkValidDimensionMapping } from "../panel/elements-controller/chart/u
 import ChartComponent from "./chart-component";
 import { useRenderChartData } from "app/hooks/queries/report-builder";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
+
+const ChartLoadError: React.FC<{ error: unknown; height?: string }> = ({
+  error,
+  height,
+}) => (
+  <Box
+    role="alert"
+    sx={{
+      height,
+      width: "100%",
+      display: "flex",
+      minHeight: "120px",
+      padding: "16px",
+      borderRadius: "4px",
+      alignItems: "center",
+      bgcolor: "#f8f9fa",
+      textAlign: "center",
+      justifyContent: "center",
+      border: "1px dashed #cfd4da",
+    }}
+  >
+    <Typography fontSize="14px" color="#59616a">
+      {isAxiosError(error) && error.response?.status === 404
+        ? "The data for this chart is no longer available."
+        : "Couldn't load this chart's data. Check its data settings or try again later."}
+    </Typography>
+  </Box>
+);
 
 export const ReportBuilderPageChart: React.FC<{
   id: string;
@@ -60,9 +89,16 @@ export const ReportBuilderPageChart: React.FC<{
     });
   };
 
-  // We want to re-render the chart when the selected controller changes to this chart, or when the chart's own properties change. But we don't want to re-render when other controllers are selected,
-  // so we check if the selected controller's id matches this chart's id and include that in the dependency array
+  // Re-render when this chart's data inputs change, or when it gets selected
+  // (so the panel gets its filter options). Visual options are left out on
+  // purpose: the server's mapped data doesn't depend on them, and echarts
+  // applies them client side.
   const selectedControllerChange = selectedController?.id === id;
+
+  // The response can arrive after further edits to this item; write the
+  // rendered data onto the latest version rather than the one that sent it.
+  const latestItem = React.useRef(selectedItem);
+  latestItem.current = selectedItem;
 
   React.useEffect(() => {
     if (
@@ -73,7 +109,7 @@ export const ReportBuilderPageChart: React.FC<{
         {
           chartType: chartExtra.chartType,
           mapping: chartExtra.mapping,
-          vizOptions: selectedItem.options,
+          vizOptions: latestItem.current?.options,
           appliedFilters: chartExtra.appliedFilters,
           datasetId: chartExtra.dataset,
         },
@@ -91,13 +127,15 @@ export const ReportBuilderPageChart: React.FC<{
               setFilterOptionGroups(filterOptionGroups);
             }
 
+            const item = latestItem.current;
+            if (!item) return;
             editItem({
-              ...selectedItem,
+              ...item,
               id,
               type: "chart",
-              initialized: selectedItem?.initialized || true,
+              initialized: true,
               data: {
-                ...selectedItem?.data,
+                ...item.data,
                 renderedChartData: rendered,
               },
             });
@@ -115,7 +153,6 @@ export const ReportBuilderPageChart: React.FC<{
     chartExtra?.chartType,
     chartExtra?.dataset,
     chartExtra?.appliedFilters,
-    selectedItem?.options,
     selectedControllerChange,
   ]);
 
@@ -130,8 +167,8 @@ export const ReportBuilderPageChart: React.FC<{
 
   const canRender =
     checkValidDimensionMapping(
-      chartExtra.chartType || "",
-      chartExtra.mapping,
+      chartExtra?.chartType || "",
+      chartExtra?.mapping,
     ) && renderedChartData;
 
   return (
@@ -178,7 +215,12 @@ export const ReportBuilderPageChart: React.FC<{
       }}
     >
       {selectedItem?.initialized && chartExtra?.chartType ? (
-        canRender ? (
+        renderChartData.isError ? (
+          <ChartLoadError
+            error={renderChartData.error}
+            height={hasParent ? "100%" : selectedItem?.options?.height}
+          />
+        ) : canRender ? (
           <Box
             sx={{
               width: hasParent ? "100%" : selectedItem?.options?.width,

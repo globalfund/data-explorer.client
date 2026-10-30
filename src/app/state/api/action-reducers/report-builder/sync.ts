@@ -320,6 +320,7 @@ export interface RBReportModel {
   settings: RBReportItemsModel["settings"];
   name: string;
   description: string;
+  owner?: string;
   updatedDate?: string;
   createdDate?: string;
 }

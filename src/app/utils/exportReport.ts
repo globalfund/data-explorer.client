@@ -1,21 +1,26 @@
 import JSPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
-import axios from "axios";
+import axiosInstance from "app/utils/axiosInstance";
 
 export const exportReportFromServer = async (
   reportId: string,
   type: "png" | "svg" | "pdf",
   asset: boolean = false,
 ) => {
-  const response = await axios.get(
-    `${import.meta.env.VITE_API}/report/${reportId}/export/${type}?asset=${asset}`,
+  const response = await axiosInstance.get(
+    `/report/${reportId}/export/${type}`,
     {
+      params: { asset },
       responseType: "blob",
+      // The server renders the page as this user, so it needs their token.
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
     },
   );
 
   const blob = new Blob([response.data], {
-    type: String(response.headers["Content-Type"]),
+    type: String(response.headers["content-type"]),
   });
 
   const downloadUrl = window.URL.createObjectURL(blob);

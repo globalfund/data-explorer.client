@@ -1,3 +1,4 @@
+import React from "react";
 import uniqBy from "lodash/uniqBy";
 import sortBy from "lodash/sortBy";
 import * as echarts from "echarts/core";
@@ -73,17 +74,38 @@ interface UseDataThemesEchartProps {
   setStateChart?: (chart: echarts.EChartsType | null) => void;
 }
 
+// Registering is global; doing it once is enough.
+echarts.registerTransform(transform.regression);
+
+// One observer per chart DOM node, so re-rendering a chart doesn't stack them.
+const resizeObservers = new WeakMap<HTMLElement, ResizeObserver>();
+
+/** Releases the echarts instance and observer attached to a chart node. */
+export function disposeChart(node: HTMLElement) {
+  resizeObservers.get(node)?.disconnect();
+  resizeObservers.delete(node);
+  echarts.getInstanceByDom(node)?.dispose();
+}
+
 export function useEcharts({
   visualOptions: mainVisualOptions,
   setVisualOptions,
   readOnly,
   setStateChart,
 }: UseDataThemesEchartProps) {
-  const debouncedSetVisualOptions = debounce((value: any) => {
-    if (setVisualOptions) {
-      setVisualOptions(value);
-    }
-  }, 500);
+  // The debounce has to survive re-renders to debounce anything, so it calls
+  // the latest setter through a ref.
+  const setVisualOptionsRef = React.useRef(setVisualOptions);
+  setVisualOptionsRef.current = setVisualOptions;
+  const debouncedSetVisualOptions = React.useMemo(
+    () =>
+      debounce((value: any) => {
+        setVisualOptionsRef.current?.(value);
+      }, 500),
+    [],
+  );
+  // Keep a zoom change made just before the chart goes away.
+  React.useEffect(() => () => debouncedSetVisualOptions.flush(), []);
 
   function onResize(chart: echarts.EChartsType, id: string, height?: number) {
     const container = document.getElementById(id);
@@ -92,7 +114,6 @@ export function useEcharts({
       height: height ?? "auto",
     });
   }
-  echarts.registerTransform(transform.regression);
 
   function echartsBarchart(data: any, visualOptions: any, mapping: any) {
     const vo = visualOptions ?? {};
@@ -1096,16 +1117,23 @@ export function useEcharts({
     mapping: any,
     id: string,
   ) {
-    new ResizeObserver(() => onResize(chart, id, node.clientHeight)).observe(
-      node,
-    );
+    // Reuse the node's instance: render runs again on every option change.
+    const chart =
+      echarts.getInstanceByDom(node) ??
+      echarts.init(node, undefined, {
+        renderer: "svg",
+        height: visualOptions.height,
+      });
 
-    const chart = echarts.init(node, undefined, {
-      renderer: "svg",
-      height: visualOptions.height,
-    });
-
-    window.removeEventListener("resize", () => onResize(chart, id));
+    // Also covers window resizes, since the node is sized by its container.
+    if (!resizeObservers.has(node)) {
+      const observer = new ResizeObserver(() => {
+        const instance = echarts.getInstanceByDom(node);
+        if (instance) onResize(instance, id, node.clientHeight);
+      });
+      observer.observe(node);
+      resizeObservers.set(node, observer);
+    }
 
     const CHART_TYPE_TO_COMPONENT = {
       bar: () => echartsBarchart(data, visualOptions, mapping),
@@ -1122,7 +1150,7 @@ export function useEcharts({
 
     chart.setOption(CHART_TYPE_TO_COMPONENT[chartType](), true);
 
-    window.addEventListener("resize", () => onResize(chart, id));
+    chart.off("datazoom");
     chart.on("datazoom", handleDataZoom);
     setStateChart?.(chart);
   }

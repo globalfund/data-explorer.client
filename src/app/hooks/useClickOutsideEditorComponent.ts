@@ -24,9 +24,13 @@ export function useClickOutsideEditor({
       const modalEl = modalId ? document.getElementById(modalId) : null;
       const extraEls = extraIds.map((id) => document.getElementById(id));
 
-      if (!editorEls.length || !toolbarEls.length || !extraEls.length) return;
+      if (!editorEls.length || !toolbarEls.length) return;
 
       const target = e.target as HTMLElement;
+
+      // Menus, poppers and dialogs render in portals outside the page. A click
+      // in one belongs to whatever opened it, so it never deselects.
+      if (!target.closest?.("#main")) return;
 
       const clickedInsideEditor = Array.from(editorEls).some((el) =>
         el.contains(target),

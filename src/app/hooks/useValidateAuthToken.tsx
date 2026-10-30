@@ -1,8 +1,16 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { setAccessTokenGetter } from "app/utils/axiosInstance";
 
 export const useValidateAuthToken = () => {
   const { isLoading, isAuthenticated, getAccessTokenSilently } = useAuth0();
+
+  // Only while signed in: for anonymous visitors Auth0 would make a network
+  // round trip on every API call just to find out there is no session.
+  React.useEffect(() => {
+    setAccessTokenGetter(isAuthenticated ? getAccessTokenSilently : null);
+    return () => setAccessTokenGetter(null);
+  }, [isAuthenticated, getAccessTokenSilently]);
 
   React.useEffect(() => {
     if (isLoading) {

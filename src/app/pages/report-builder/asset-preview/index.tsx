@@ -11,6 +11,7 @@ import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import ViewModeContainer from "app/pages/report-builder/builder/components/order-container/view";
 import { isReportItemComplete } from "app/pages/report-builder/component-registry/model";
 import { ReportItemContent } from "app/pages/report-builder/component-registry/renderer";
+import { ReportBuilderLoadError } from "app/pages/report-builder/components/load-error";
 
 export const Component: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -95,7 +96,10 @@ export const Component: React.FC = () => {
           <CircularProgress />
         </Box>
       )}
-      {!assetQuery.isLoading && (
+      {assetQuery.isError && (
+        <ReportBuilderLoadError error={assetQuery.error} itemType="asset" />
+      )}
+      {!assetQuery.isLoading && !assetQuery.isError && (
         <React.Fragment>
           <Box
             id="items-container"

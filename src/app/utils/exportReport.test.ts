@@ -1,8 +1,11 @@
-import axios from "axios";
+import axiosInstance from "app/utils/axiosInstance";
 import * as htmlToImage from "html-to-image";
 import JSPDF from "jspdf";
 import { exportReport, exportReportFromServer } from "./exportReport";
-jest.mock("axios");
+jest.mock("app/utils/axiosInstance", () => ({
+  __esModule: true,
+  default: { get: jest.fn() },
+}));
 jest.mock("html-to-image", () => ({
   toBlob: jest.fn(),
   toPng: jest.fn(),
@@ -126,15 +129,23 @@ test("export filter omits loaders, controls and drag handles while retaining rep
 test.each(["png", "svg", "pdf"] as const)(
   "downloads server report %s and revokes its object URL",
   async (type) => {
-    jest.mocked(axios.get).mockResolvedValue({
+    localStorage.setItem("accessToken", "test-token");
+    jest.mocked(axiosInstance.get).mockResolvedValue({
       data: "file",
-      headers: { "Content-Type": "image/test" },
+      headers: { "content-type": "image/test" },
     });
     await exportReportFromServer("report-1", type);
-    expect(axios.get).toHaveBeenCalledWith(
-      `https://api.example.test/report/report-1/export/${type}?asset=false`,
-      { responseType: "blob" },
+    expect(axiosInstance.get).toHaveBeenCalledWith(
+      `/report/report-1/export/${type}`,
+      {
+        params: { asset: false },
+        responseType: "blob",
+        headers: { Authorization: "Bearer test-token" },
+      },
     );
+    expect(jest.mocked(URL.createObjectURL).mock.calls[0][0]).toMatchObject({
+      type: "image/test",
+    });
     const anchor = jest.mocked(HTMLAnchorElement.prototype.click).mock
       .instances[0] as unknown as HTMLAnchorElement;
     expect(anchor.download).toBe(`report-report-1.${type}`);
@@ -143,21 +154,23 @@ test.each(["png", "svg", "pdf"] as const)(
   },
 );
 test("server asset export uses asset route flag and filename", async () => {
-  jest.mocked(axios.get).mockResolvedValue({
+  jest.mocked(axiosInstance.get).mockResolvedValue({
     data: "file",
-    headers: { "Content-Type": "image/png" },
+    headers: { "content-type": "image/png" },
   });
   await exportReportFromServer("asset-1", "png", true);
-  expect(axios.get).toHaveBeenCalledWith(
-    expect.stringContaining("?asset=true"),
-    expect.any(Object),
+  expect(axiosInstance.get).toHaveBeenCalledWith(
+    "/report/asset-1/export/png",
+    expect.objectContaining({ params: { asset: true } }),
   );
   const anchor = jest.mocked(HTMLAnchorElement.prototype.click).mock
     .instances[0] as unknown as HTMLAnchorElement;
   expect(anchor.download).toBe("asset-asset-1.png");
 });
 test("server errors propagate without creating a download", async () => {
-  jest.mocked(axios.get).mockRejectedValueOnce(new Error("Export failed"));
+  jest
+    .mocked(axiosInstance.get)
+    .mockRejectedValueOnce(new Error("Export failed"));
   await expect(exportReportFromServer("report-1", "pdf")).rejects.toThrow(
     "Export failed",
   );
