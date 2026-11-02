@@ -26,7 +26,11 @@ import { useCMSData } from "app/hooks/useCMSData";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import UploadIcon from "app/assets/vectors/Upload.svg?react";
-import { useGetAsset, usePatchReport } from "app/hooks/queries/report-builder";
+import {
+  useGetAsset,
+  useGetReport,
+  usePatchReport,
+} from "app/hooks/queries/report-builder";
 import ErrorIcon from "app/assets/vectors/ReportBuilderAutoSaveError.svg?react";
 import CompleteIcon from "app/assets/vectors/ReportBuilderCompleteIcon.svg?react";
 import WarningIcon from "app/assets/vectors/ReportBuilderAutoSaveWarning.svg?react";
@@ -88,6 +92,9 @@ export const ReportBuilderPageHeader: React.FC = () => {
   );
 
   const updateReport = usePatchReport(id);
+  // Shares the page's request. If the report can't be loaded, the page says
+  // why; there's nothing here to rename, save, preview or share.
+  const loadFailed = useGetReport(id).isError;
 
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
@@ -264,30 +271,34 @@ export const ReportBuilderPageHeader: React.FC = () => {
                     "My Reports",
                   )}
                 </Link>
-                <Typography>/</Typography>
-                <input
-                  type="text"
-                  value={reportState.name}
-                  ref={nameInputRef}
-                  disabled={previewMode}
-                  onChange={handleNameOnChangeEvent}
-                />
-                {!previewMode && (
-                  <IconButton onClick={handlePencilButtonClick}>
-                    <Pencil />
-                  </IconButton>
-                )}
-                {previewMode && (
-                  <Typography
-                    sx={{
-                      fontSize: "14px",
-                      padding: "5px 8px",
-                      borderRadius: "4px",
-                      bgcolor: "#d6ddfd",
-                    }}
-                  >
-                    Preview
-                  </Typography>
+                {!loadFailed && (
+                  <React.Fragment>
+                    <Typography>/</Typography>
+                    <input
+                      type="text"
+                      value={reportState.name}
+                      ref={nameInputRef}
+                      disabled={previewMode}
+                      onChange={handleNameOnChangeEvent}
+                    />
+                    {!previewMode && (
+                      <IconButton onClick={handlePencilButtonClick}>
+                        <Pencil />
+                      </IconButton>
+                    )}
+                    {previewMode && (
+                      <Typography
+                        sx={{
+                          fontSize: "14px",
+                          padding: "5px 8px",
+                          borderRadius: "4px",
+                          bgcolor: "#d6ddfd",
+                        }}
+                      >
+                        Preview
+                      </Typography>
+                    )}
+                  </React.Fragment>
                 )}
               </Box>
               <Box
@@ -300,7 +311,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                   justifyContent: "flex-end",
                 }}
               >
-                {!previewMode && (
+                {!loadFailed && !previewMode && (
                   <React.Fragment>
                     <Typography
                       variant="body1"
@@ -417,7 +428,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                     <AddComponent onOpenAssets={handleOpenAssetLibrary} />
                   </React.Fragment>
                 )}
-                {previewMode && (
+                {!loadFailed && previewMode && (
                   <React.Fragment>
                     <Box
                       sx={{
@@ -640,30 +651,34 @@ export const ReportBuilderPageHeader: React.FC = () => {
                     "My Reports",
                   )}
                 </Link>
-                <Typography>/</Typography>
-                <input
-                  type="text"
-                  value={reportState.name}
-                  ref={nameInputRef}
-                  disabled={previewMode}
-                  onChange={handleNameOnChangeEvent}
-                />
-                {!previewMode && (
-                  <IconButton onClick={handlePencilButtonClick}>
-                    <Pencil />
-                  </IconButton>
-                )}
-                {previewMode && (
-                  <Typography
-                    sx={{
-                      fontSize: "14px",
-                      padding: "5px 8px",
-                      borderRadius: "4px",
-                      bgcolor: "#d6ddfd",
-                    }}
-                  >
-                    Preview
-                  </Typography>
+                {!loadFailed && (
+                  <React.Fragment>
+                    <Typography>/</Typography>
+                    <input
+                      type="text"
+                      value={reportState.name}
+                      ref={nameInputRef}
+                      disabled={previewMode}
+                      onChange={handleNameOnChangeEvent}
+                    />
+                    {!previewMode && (
+                      <IconButton onClick={handlePencilButtonClick}>
+                        <Pencil />
+                      </IconButton>
+                    )}
+                    {previewMode && (
+                      <Typography
+                        sx={{
+                          fontSize: "14px",
+                          padding: "5px 8px",
+                          borderRadius: "4px",
+                          bgcolor: "#d6ddfd",
+                        }}
+                      >
+                        Preview
+                      </Typography>
+                    )}
+                  </React.Fragment>
                 )}
               </Box>
               <Box
@@ -674,7 +689,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                   alignItems: "center",
                 }}
               >
-                {!previewMode && (
+                {!loadFailed && !previewMode && (
                   <React.Fragment>
                     <Typography
                       variant="body1"
@@ -791,7 +806,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                     <AddComponent onOpenAssets={handleOpenAssetLibrary} />
                   </React.Fragment>
                 )}
-                {previewMode && (
+                {!loadFailed && previewMode && (
                   <React.Fragment>
                     <Box
                       sx={{
@@ -999,6 +1014,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
     updateReport.isError,
     updateReport.isPaused,
     assetLibraryOpen,
+    loadFailed,
   ]);
 
   const reportPayload = React.useMemo(
@@ -1313,25 +1329,29 @@ export const ReportBuilderAssetPageHeader: React.FC = () => {
                     "My Reports",
                   )}
                 </Link>
-                <Typography>/</Typography>
-                <input
-                  type="text"
-                  value={assetData?.name ?? ""}
-                  ref={nameInputRef}
-                  disabled
-                  size={assetData?.name.length ?? 1}
-                />
+                {!assetQuery.isError && (
+                  <React.Fragment>
+                    <Typography>/</Typography>
+                    <input
+                      type="text"
+                      value={assetData?.name ?? ""}
+                      ref={nameInputRef}
+                      disabled
+                      size={assetData?.name.length ?? 1}
+                    />
 
-                <Typography
-                  sx={{
-                    fontSize: "14px",
-                    padding: "5px 8px",
-                    borderRadius: "4px",
-                    bgcolor: "#d6ddfd",
-                  }}
-                >
-                  Previewing
-                </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "14px",
+                        padding: "5px 8px",
+                        borderRadius: "4px",
+                        bgcolor: "#d6ddfd",
+                      }}
+                    >
+                      Previewing
+                    </Typography>
+                  </React.Fragment>
+                )}
               </Box>
               <Box
                 sx={{
@@ -1341,132 +1361,134 @@ export const ReportBuilderAssetPageHeader: React.FC = () => {
                   alignItems: "center",
                 }}
               >
-                <React.Fragment>
-                  <Box
-                    sx={{
-                      gap: "10px",
-                      display: "flex",
-                      alignItems: "center",
-                      ".MuiButtonBase-root": {
-                        height: "35px",
-                        fontSize: "14px",
-                        bgcolor: "#fff",
-                        fontWeight: "400",
-                        padding: "6px 12px",
-                        borderRadius: "4px",
-                        textTransform: "none",
-                        border: "1px solid #dfe3e5",
-                        "&:hover": {
-                          bgcolor: "#f1f3f5",
-                          borderColor: "#70777e",
-                        },
-                      },
-                    }}
-                  >
-                    <Button
-                      startIcon={<BackArrowIcon />}
-                      onClick={handleBackToEditClick}
-                    >
-                      Back to Assets
-                    </Button>
-                    <Button
-                      onClick={handleClick2}
-                      startIcon={
-                        <UploadIcon width="10.667px" height="13.333px" />
-                      }
-                    >
-                      Export
-                    </Button>
-                    <Button onClick={handleClick} startIcon={<ShareIcon />}>
-                      Share
-                    </Button>
-                    <Button
-                      onClick={() => setUseAssetModalOpen(true)}
-                      startIcon={<Add />}
+                {!assetQuery.isError && (
+                  <React.Fragment>
+                    <Box
                       sx={{
-                        color: "#fff !important",
-                        bgcolor: "#3154f4 !important",
-                        svg: { path: { fill: "#fff !important" } },
+                        gap: "10px",
+                        display: "flex",
+                        alignItems: "center",
+                        ".MuiButtonBase-root": {
+                          height: "35px",
+                          fontSize: "14px",
+                          bgcolor: "#fff",
+                          fontWeight: "400",
+                          padding: "6px 12px",
+                          borderRadius: "4px",
+                          textTransform: "none",
+                          border: "1px solid #dfe3e5",
+                          "&:hover": {
+                            bgcolor: "#f1f3f5",
+                            borderColor: "#70777e",
+                          },
+                        },
                       }}
                     >
-                      Use Asset
-                    </Button>
-                  </Box>
-                  <Menu
-                    open={open}
-                    keepMounted
-                    disableScrollLock
-                    anchorEl={anchorEl}
-                    onClose={handleClose}
-                    transformOrigin={{
-                      vertical: -5,
-                      horizontal: "right",
-                    }}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                    sx={menuSx}
-                  >
-                    <MenuItem onClick={handleCopyUrlLink}>
-                      <CopyIcon />
-                      {getCMSDataField(
-                        cmsData,
-                        "pagesReportBuilderBuilder.copyUrlLinkMenuItem",
-                        "Copy URL Link",
-                      )}
-                    </MenuItem>
-                    <MenuItem onClick={handleSendViaEmail}>
-                      <EmailIcon />
-                      {getCMSDataField(
-                        cmsData,
-                        "pagesReportBuilderBuilder.sendViaEmailMenuItem",
-                        "Send via Email",
-                      )}
-                    </MenuItem>
-                  </Menu>
-                  <Menu
-                    keepMounted
-                    open={open2}
-                    disableScrollLock
-                    anchorEl={anchorEl2}
-                    onClose={handleClose2}
-                    transformOrigin={{
-                      vertical: -5,
-                      horizontal: "right",
-                    }}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                    sx={menuSx}
-                  >
-                    <MenuItem onClick={handleDownloadShareableFile("png")}>
-                      <PNGIcon />
-                      {getCMSDataField(
-                        cmsData,
-                        "pagesReportBuilderBuilder.pngFileMenuItem",
-                        "PNG",
-                      )}
-                    </MenuItem>
-                    <MenuItem onClick={handleDownloadShareableFile("svg")}>
-                      <SVGIcon />
-                      {getCMSDataField(
-                        cmsData,
-                        "pagesReportBuilderBuilder.svgFileMenuItem",
-                        "SVG",
-                      )}
-                    </MenuItem>
-                    <MenuItem onClick={handleDownloadShareableFile("pdf")}>
-                      <PDFIcon />
-                      {getCMSDataField(
-                        cmsData,
-                        "pagesReportBuilderBuilder.pdfFileMenuItem",
-                        "PDF",
-                      )}
-                    </MenuItem>
-                  </Menu>
-                </React.Fragment>
+                      <Button
+                        startIcon={<BackArrowIcon />}
+                        onClick={handleBackToEditClick}
+                      >
+                        Back to Assets
+                      </Button>
+                      <Button
+                        onClick={handleClick2}
+                        startIcon={
+                          <UploadIcon width="10.667px" height="13.333px" />
+                        }
+                      >
+                        Export
+                      </Button>
+                      <Button onClick={handleClick} startIcon={<ShareIcon />}>
+                        Share
+                      </Button>
+                      <Button
+                        onClick={() => setUseAssetModalOpen(true)}
+                        startIcon={<Add />}
+                        sx={{
+                          color: "#fff !important",
+                          bgcolor: "#3154f4 !important",
+                          svg: { path: { fill: "#fff !important" } },
+                        }}
+                      >
+                        Use Asset
+                      </Button>
+                    </Box>
+                    <Menu
+                      open={open}
+                      keepMounted
+                      disableScrollLock
+                      anchorEl={anchorEl}
+                      onClose={handleClose}
+                      transformOrigin={{
+                        vertical: -5,
+                        horizontal: "right",
+                      }}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                      sx={menuSx}
+                    >
+                      <MenuItem onClick={handleCopyUrlLink}>
+                        <CopyIcon />
+                        {getCMSDataField(
+                          cmsData,
+                          "pagesReportBuilderBuilder.copyUrlLinkMenuItem",
+                          "Copy URL Link",
+                        )}
+                      </MenuItem>
+                      <MenuItem onClick={handleSendViaEmail}>
+                        <EmailIcon />
+                        {getCMSDataField(
+                          cmsData,
+                          "pagesReportBuilderBuilder.sendViaEmailMenuItem",
+                          "Send via Email",
+                        )}
+                      </MenuItem>
+                    </Menu>
+                    <Menu
+                      keepMounted
+                      open={open2}
+                      disableScrollLock
+                      anchorEl={anchorEl2}
+                      onClose={handleClose2}
+                      transformOrigin={{
+                        vertical: -5,
+                        horizontal: "right",
+                      }}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                      sx={menuSx}
+                    >
+                      <MenuItem onClick={handleDownloadShareableFile("png")}>
+                        <PNGIcon />
+                        {getCMSDataField(
+                          cmsData,
+                          "pagesReportBuilderBuilder.pngFileMenuItem",
+                          "PNG",
+                        )}
+                      </MenuItem>
+                      <MenuItem onClick={handleDownloadShareableFile("svg")}>
+                        <SVGIcon />
+                        {getCMSDataField(
+                          cmsData,
+                          "pagesReportBuilderBuilder.svgFileMenuItem",
+                          "SVG",
+                        )}
+                      </MenuItem>
+                      <MenuItem onClick={handleDownloadShareableFile("pdf")}>
+                        <PDFIcon />
+                        {getCMSDataField(
+                          cmsData,
+                          "pagesReportBuilderBuilder.pdfFileMenuItem",
+                          "PDF",
+                        )}
+                      </MenuItem>
+                    </Menu>
+                  </React.Fragment>
+                )}
               </Box>
             </React.Fragment>
           )}
