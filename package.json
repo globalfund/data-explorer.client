@@ -127,6 +127,7 @@
     "build-storybook": "storybook build",
     "e2e-ui": "npx cypress open",
     "e2e": "npx cypress run",
+    "e2e:rb": "npx cypress run --spec \"cypress/e2e/report-builder/**/*.cy.ts\"",
     "generate-sitemap": "npx tsx scripts/generate-sitemap.ts",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",

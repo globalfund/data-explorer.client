@@ -276,6 +276,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                     <Typography>/</Typography>
                     <input
                       type="text"
+                      data-cy="rb-report-name"
                       value={reportState.name}
                       ref={nameInputRef}
                       disabled={previewMode}
@@ -314,6 +315,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                 {!loadFailed && !previewMode && (
                   <React.Fragment>
                     <Typography
+                      data-cy="rb-save-status"
                       variant="body1"
                       component="span"
                       fontSize="14px"
@@ -419,6 +421,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                       </Button>
                       <Button
                         component={Link}
+                        data-cy="rb-preview"
                         startIcon={<PreviewIcon />}
                         to={`/report-builder/reports/${id}`}
                       >
@@ -656,6 +659,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                     <Typography>/</Typography>
                     <input
                       type="text"
+                      data-cy="rb-report-name"
                       value={reportState.name}
                       ref={nameInputRef}
                       disabled={previewMode}
@@ -692,6 +696,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                 {!loadFailed && !previewMode && (
                   <React.Fragment>
                     <Typography
+                      data-cy="rb-save-status"
                       variant="body1"
                       component="span"
                       fontSize="14px"
@@ -797,6 +802,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                       </Button>
                       <Button
                         component={Link}
+                        data-cy="rb-preview"
                         startIcon={<PreviewIcon />}
                         to={`/report-builder/reports/${id}`}
                       >

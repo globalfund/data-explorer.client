@@ -311,6 +311,8 @@ export const AllReportsView: React.FC<AllReportsViewProps> = ({
               lg={detailsSidePanelOpen ? 6 : 4}
             >
               <Box
+                data-id={item.id}
+                data-cy={item.isFolder ? "rb-folder-card" : "rb-report-card"}
                 sx={{
                   width: "100%",
                   height: "100%",
