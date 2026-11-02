@@ -8,7 +8,22 @@ jobs:
   jest:
     runs-on: ubuntu-latest
     steps:
+      # Without persist-credentials: false, this repository's token would be
+      # sent when yarn clones rb-core.charts and override RB_CORE_TOKEN.
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      # rb-core.charts is private for now, so yarn needs a token that can read
+      # it. Remove this step once the repository is public.
+      - name: Let yarn read rb-core.charts
+        env:
+          RB_CORE_TOKEN: ${{ secrets.RB_CORE_TOKEN }}
+        run: |
+          if [ -n "$RB_CORE_TOKEN" ]; then
+            echo "GIT_CONFIG_COUNT=1" >> "$GITHUB_ENV"
+            echo "GIT_CONFIG_KEY_0=url.https://x-access-token:${RB_CORE_TOKEN}@github.com/globalfund/rb-core.charts.git.insteadOf" >> "$GITHUB_ENV"
+            echo "GIT_CONFIG_VALUE_0=https://github.com/globalfund/rb-core.charts.git" >> "$GITHUB_ENV"
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: 22
