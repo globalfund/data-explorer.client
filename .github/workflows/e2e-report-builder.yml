@@ -1,0 +1,149 @@
+name: Report builder end-to-end tests
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      server_ref:
+        description: data-explorer.server branch to test against (defaults to the matching branch, see below)
+        required: false
+concurrency:
+  group: e2e-rb-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  cypress:
+    # Pull requests from forks don't get the test users' secrets.
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      mongo:
+        image: mongo:8
+        ports: ["27017:27017"]
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      VITE_API: http://localhost:4200
+      VITE_BASE_URL: http://localhost:3000
+      VITE_AUTH0_DOMAIN: ${{ vars.VITE_AUTH0_DOMAIN }}
+      VITE_AUTH0_CLIENT_ID: ${{ vars.VITE_AUTH0_CLIENT_ID }}
+      VITE_AUTH0_AUDIENCE: ${{ vars.VITE_AUTH0_AUDIENCE }}
+    steps:
+      # Without persist-credentials: false, this repository's token would be
+      # sent when yarn clones rb-core.charts and override RB_CORE_TOKEN.
+      - uses: actions/checkout@v4
+        with:
+          path: client
+          persist-credentials: false
+
+      # Use the server branch with the same name as this one, then the PR's
+      # base branch's, then the report builder branch.
+      - name: Pick the API server branch
+        id: server
+        env:
+          INPUT_REF: ${{ inputs.server_ref }}
+          HEAD_REF: ${{ github.head_ref || github.ref_name }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          for ref in "$INPUT_REF" "$HEAD_REF" "$BASE_REF" feat/rb; do
+            if [ -n "$ref" ] && git ls-remote --exit-code https://github.com/globalfund/data-explorer.server.git "refs/heads/$ref" > /dev/null; then
+              echo "Testing against data-explorer.server@$ref"
+              echo "ref=$ref" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          done
+          echo "::error::No matching data-explorer.server branch"
+          exit 1
+
+      - uses: actions/checkout@v4
+        with:
+          repository: globalfund/data-explorer.server
+          ref: ${{ steps.server.outputs.ref }}
+          path: server
+          persist-credentials: false
+
+      # rb-core.charts is private for now, so yarn needs a token that can read
+      # it. Remove this step once the repository is public.
+      - name: Let yarn read rb-core.charts
+        env:
+          RB_CORE_TOKEN: ${{ secrets.RB_CORE_TOKEN }}
+        run: |
+          if [ -n "$RB_CORE_TOKEN" ]; then
+            echo "GIT_CONFIG_COUNT=1" >> "$GITHUB_ENV"
+            echo "GIT_CONFIG_KEY_0=url.https://x-access-token:${RB_CORE_TOKEN}@github.com/globalfund/rb-core.charts.git.insteadOf" >> "$GITHUB_ENV"
+            echo "GIT_CONFIG_VALUE_0=https://github.com/globalfund/rb-core.charts.git" >> "$GITHUB_ENV"
+          fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: |
+            client/yarn.lock
+            server/yarn.lock
+
+      - name: Install and build the API server
+        working-directory: server
+        env:
+          # Thumbnails and exports aren't tested, so Puppeteer's Chrome isn't needed.
+          PUPPETEER_SKIP_DOWNLOAD: "true"
+        run: |
+          yarn install --frozen-lockfile --network-timeout 100000
+          yarn build
+
+      - name: Start the API server
+        working-directory: server
+        env:
+          AUTH0_DOMAIN: ${{ vars.VITE_AUTH0_DOMAIN }}
+          AUTH0_AUDIENCE: ${{ vars.VITE_AUTH0_AUDIENCE }}
+          FRONTEND_URL: http://localhost:3000
+        run: |
+          nohup node -r source-map-support/register . > ../server.log 2>&1 &
+          curl --silent --output /dev/null --retry 30 --retry-connrefused --retry-delay 2 "$VITE_API/"
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('client/yarn.lock') }}
+
+      - name: Install the client
+        working-directory: client
+        run: |
+          yarn install --frozen-lockfile --ignore-scripts --network-timeout 100000
+          yarn cypress install
+
+      - name: Build and start the client
+        working-directory: client
+        env:
+          # Lets cy.login() hand the app its tokens (see cypress/README.md).
+          VITE_AUTH0_CACHE_LOCATION: localstorage
+        run: |
+          yarn build
+          nohup yarn preview --port 3000 --strictPort > ../client.log 2>&1 &
+          curl --silent --output /dev/null --retry 30 --retry-connrefused --retry-delay 2 "$VITE_BASE_URL/"
+
+      - name: Run the report builder specs
+        working-directory: client
+        env:
+          E2E_AUTH0_REALM: ${{ vars.E2E_AUTH0_REALM }}
+          TEST_USER_1_EMAIL: ${{ secrets.TEST_USER_1_EMAIL }}
+          TEST_USER_1_PASSWORD: ${{ secrets.TEST_USER_1_PASSWORD }}
+          TEST_USER_2_EMAIL: ${{ secrets.TEST_USER_2_EMAIL }}
+          TEST_USER_2_PASSWORD: ${{ secrets.TEST_USER_2_PASSWORD }}
+        run: yarn e2e:rb
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-report-builder
+          path: |
+            client/cypress/screenshots/
+            server.log
+            client.log
+          if-no-files-found: ignore

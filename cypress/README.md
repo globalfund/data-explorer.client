@@ -62,6 +62,29 @@ credentials as secrets.
    for report thumbnails.
 4. **The client**, in test mode: `VITE_AUTH0_CACHE_LOCATION=localstorage yarn start`.
 
+## CI
+
+`.github/workflows/e2e-report-builder.yml` runs `yarn e2e:rb` on every pull
+request, and on demand from the Actions tab. It starts MongoDB and Redis, checks
+out and starts `data-explorer.server`, and builds the client in test mode. The
+data backend isn't started, because these specs don't use it. When a run fails,
+the screenshots and the server and client logs are uploaded with it.
+
+It tests against the `data-explorer.server` branch with the same name as the
+pull request's branch, otherwise its base branch's, otherwise `feat/rb`. A manual
+run can name another one.
+
+Set these under Settings → Secrets and variables → Actions:
+
+| Name                                                                                     | Kind      | Value                                                                               |
+| ---------------------------------------------------------------------------------------- | --------- | ----------------------------------------------------------------------------------- |
+| `VITE_AUTH0_DOMAIN`, `VITE_AUTH0_CLIENT_ID`, `VITE_AUTH0_AUDIENCE`                       | Variables | Same as in `.env`; the API server gets the same domain and audience                 |
+| `E2E_AUTH0_REALM`                                                                        | Variable  | Optional, as above                                                                  |
+| `TEST_USER_1_EMAIL`, `TEST_USER_1_PASSWORD`, `TEST_USER_2_EMAIL`, `TEST_USER_2_PASSWORD` | Secrets   | The test users                                                                      |
+| `RB_CORE_TOKEN`                                                                          | Secret    | Read access to `rb-core.charts` while it's private. The Jest workflow needs it too. |
+
+Pull requests from forks are skipped, since they don't get secrets.
+
 ## Writing specs
 
 - Start logged-in specs with `cy.login()` (or `cy.login("other")`).
