@@ -2,6 +2,7 @@ import React from "react";
 import Box from "@mui/material/Box";
 import { appColors } from "app/theme";
 import * as echarts from "echarts/core";
+import { chartTheme } from "app/components/charts/common/theme/config";
 import { SVGRenderer } from "echarts/renderers";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -50,7 +51,7 @@ export const BarChart2: React.FC<BarChart2Props> = (props: BarChart2Props) => {
 
   React.useEffect(() => {
     if (containerRef.current && inView) {
-      const chart = echarts.init(containerRef.current, undefined, {
+      const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
 
