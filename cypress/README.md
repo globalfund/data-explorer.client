@@ -76,12 +76,12 @@ run can name another one.
 
 Set these under Settings → Secrets and variables → Actions:
 
-| Name                                                                                     | Kind      | Value                                                                               |
-| ---------------------------------------------------------------------------------------- | --------- | ----------------------------------------------------------------------------------- |
-| `VITE_AUTH0_DOMAIN`, `VITE_AUTH0_CLIENT_ID`, `VITE_AUTH0_AUDIENCE`                       | Variables | Same as in `.env`; the API server gets the same domain and audience                 |
-| `E2E_AUTH0_REALM`                                                                        | Variable  | Optional, as above                                                                  |
-| `TEST_USER_1_EMAIL`, `TEST_USER_1_PASSWORD`, `TEST_USER_2_EMAIL`, `TEST_USER_2_PASSWORD` | Secrets   | The test users                                                                      |
-| `RB_CORE_TOKEN`                                                                          | Secret    | Read access to `rb-core.charts` while it's private. The Jest workflow needs it too. |
+| Name                                                                                     | Kind      | Value                                                                                                                                          |
+| ---------------------------------------------------------------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `VITE_AUTH0_DOMAIN`, `VITE_AUTH0_CLIENT_ID`, `VITE_AUTH0_AUDIENCE`                       | Variables | Same as in `.env`; the API server gets the same domain and audience                                                                            |
+| `E2E_AUTH0_REALM`                                                                        | Variable  | Optional, as above                                                                                                                             |
+| `TEST_USER_1_EMAIL`, `TEST_USER_1_PASSWORD`, `TEST_USER_2_EMAIL`, `TEST_USER_2_PASSWORD` | Secrets   | The test users                                                                                                                                 |
+| `RB_CORE_TOKEN`                                                                          | Secret    | A token that can read `rb-core.charts` (see [Access to rb-core.charts](../README.md#access-to-rb-corecharts)). The Jest workflow needs it too. |
 
 Pull requests from forks are skipped, since they don't get secrets.
 
