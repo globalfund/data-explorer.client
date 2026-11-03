@@ -2,6 +2,7 @@ import React from "react";
 import Box from "@mui/material/Box";
 import { appColors } from "app/theme";
 import * as echarts from "echarts/core";
+import { chartTheme } from "app/components/charts/common/theme/config";
 import { SVGRenderer } from "echarts/renderers";
 import { formatLocale } from "app/utils/formatLocale";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -28,7 +29,7 @@ export const PolylineTree: React.FC<PolylineTreeProps> = (
 
   React.useEffect(() => {
     if (containerRef.current) {
-      const chart = echarts.init(containerRef.current, undefined, {
+      const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
 

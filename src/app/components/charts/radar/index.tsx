@@ -4,6 +4,7 @@ import max from "lodash/max";
 import Box from "@mui/material/Box";
 import { appColors } from "app/theme";
 import * as echarts from "echarts/core";
+import { chartTheme } from "app/components/charts/common/theme/config";
 import findIndex from "lodash/findIndex";
 import { SVGRenderer } from "echarts/renderers";
 import { LegendComponent } from "echarts/components";
@@ -30,7 +31,7 @@ export const RadarChart: React.FC<RadarChartProps> = (
 
   React.useEffect(() => {
     if (containerRef.current) {
-      const chart = echarts.init(containerRef.current, undefined, {
+      const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
 
