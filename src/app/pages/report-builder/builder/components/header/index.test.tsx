@@ -61,16 +61,17 @@ const setup = (
     ],
   });
   if (options.dirty) store.getActions().RBReportItemsState.setName("Draft");
-  const view = render(
+  const tree = () => (
     <MemoryRouter
       future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
       <StoreProvider store={store}>
         <ReportBuilderPageHeader />
       </StoreProvider>
-    </MemoryRouter>,
+    </MemoryRouter>
   );
-  return { store, ...view };
+  const view = render(tree());
+  return { store, ...view, rerenderHeader: () => view.rerender(tree()) };
 };
 beforeEach(() => {
   jest.useFakeTimers();
@@ -79,6 +80,7 @@ beforeEach(() => {
     isSuccess: false,
     isError: false,
     isPaused: false,
+    error: null,
   });
 });
 afterEach(() => {
@@ -153,6 +155,28 @@ test("failed saves retain the dirty draft and show an error", () => {
   expect(screen.getByText(/Couldn't save changes/)).toBeInTheDocument();
   expect(store.getState().RBReportItemsState.dirty).toBe(true);
 });
+test.each([403, 404])(
+  "a %i save error stops autosave from retrying",
+  (status) => {
+    Object.assign(mockMutation, {
+      isError: true,
+      error: { isAxiosError: true, response: { status } },
+    });
+    const { store } = setup({ dirty: true });
+    advance();
+    expect(mockMutation.mutate).not.toHaveBeenCalled();
+    expect(store.getState().RBReportItemsState.dirty).toBe(true);
+  },
+);
+test("a server error still retries the save", () => {
+  Object.assign(mockMutation, {
+    isError: true,
+    error: { isAxiosError: true, response: { status: 500 } },
+  });
+  setup({ dirty: true });
+  advance();
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+});
 test("offline saves show a connection warning", () => {
   mockMutation.isPaused = true;
   setup();
@@ -184,4 +208,51 @@ test("saved status resets after five seconds", () => {
   expect(mockMutation.reset).not.toHaveBeenCalled();
   advance(1);
   expect(mockMutation.reset).toHaveBeenCalledTimes(1);
+});
+test("failed saves back off before retrying", () => {
+  setup({ dirty: true });
+  advance();
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+  act(() => mockMutation.mutate.mock.calls[0][1].onError());
+  advance(3999);
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+  advance(1);
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(2);
+  act(() => mockMutation.mutate.mock.calls[1][1].onError());
+  advance(7999);
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(2);
+  advance(1);
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(3);
+});
+test("switching to preview saves pending edits straight away", () => {
+  const { rerenderHeader } = setup({ dirty: true });
+  advance(500);
+  window.history.replaceState({}, "", "/report-builder/reports/report-1");
+  rerenderHeader();
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+  expect(mockMutation.mutate.mock.calls[0][0].name).toBe("Draft");
+  advance(5000);
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+});
+test("leaving the editor saves pending edits", () => {
+  const { unmount } = setup({ dirty: true });
+  advance(500);
+  unmount();
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+  expect(mockMutation.mutate.mock.calls[0][0].name).toBe("Draft");
+});
+test("leaving a clean editor saves nothing", () => {
+  const { unmount } = setup();
+  unmount();
+  expect(mockMutation.mutate).not.toHaveBeenCalled();
+});
+test("closing the tab with unsaved edits asks for confirmation", () => {
+  const { store } = setup({ dirty: true });
+  const dirtyClose = new Event("beforeunload", { cancelable: true });
+  window.dispatchEvent(dirtyClose);
+  expect(dirtyClose.defaultPrevented).toBe(true);
+  act(() => store.getActions().RBReportItemsState.markClean());
+  const cleanClose = new Event("beforeunload", { cancelable: true });
+  window.dispatchEvent(cleanClose);
+  expect(cleanClose.defaultPrevented).toBe(false);
 });

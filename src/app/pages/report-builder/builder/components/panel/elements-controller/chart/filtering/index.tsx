@@ -52,11 +52,12 @@ export default function Filtering({ onBack }: FilteringProps) {
     parent: selectedController?.parent ?? undefined,
   });
   const datasetId = item?.data?.dataset || "";
-  const filterOptionsQuery = useDatasetFilterOptions(datasetId);
+  const appliedFilters = item?.data?.appliedFilters ?? {};
+  // Counts for each field reflect the filters applied on the other fields.
+  const filterOptionsQuery = useDatasetFilterOptions(datasetId, appliedFilters);
   const sampledDatasetQuery = useGFSampleDataset(datasetId);
   const dataTypes = sampledDatasetQuery.data?.data.data.result.dataTypes;
   const optionGroups = filterOptionsQuery.data?.data ?? [];
-  const appliedFilters = item?.data?.appliedFilters ?? {};
   const hasAppliedFilters = Object.values(appliedFilters).some(
     (values) => values.length > 0,
   );

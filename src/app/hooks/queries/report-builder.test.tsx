@@ -11,6 +11,8 @@ import {
   useDuplicateReport,
   useFilteredDataset,
   useGFDatasetPage,
+  useGetFolders,
+  useDatasetFilterOptions,
   useMultiDeleteReportsFolders,
 } from "./report-builder";
 import { createReportItem } from "app/pages/report-builder/component-registry/model";
@@ -72,6 +74,40 @@ test("report fetch exposes server errors", async () => {
   const { result } = renderHook(() => useGetReport("one"), { wrapper });
   await waitFor(() => expect(result.current.isError).toBe(true));
   expect(result.current.error?.message).toBe("Unavailable");
+});
+test("filter options send applied filters under the key the server reads", async () => {
+  const { wrapper } = setup();
+  jest.mocked(axiosInstance.post).mockResolvedValue({ data: [] });
+  const { result } = renderHook(
+    () => useDatasetFilterOptions("gf_allocations", { component: ["HIV"] }),
+    { wrapper },
+  );
+  await waitFor(() => expect(result.current.isSuccess).toBe(true));
+  expect(axiosInstance.post).toHaveBeenCalledWith(
+    "/report/filter-options",
+    { datasetId: "gf_allocations", filters: { component: ["HIV"] } },
+    auth,
+  );
+});
+test("report and asset folder lists are cached separately", async () => {
+  const { client, wrapper } = setup();
+  jest.mocked(axiosInstance.get).mockImplementation(async (_url, config) => ({
+    data: [{ id: String(config?.params?.filter) }],
+  }));
+  const params = { sort: "createdDate DESC", search: "" };
+  const reports = renderHook(
+    () => useGetFolders({ ...params, type: "report" }),
+    { wrapper },
+  );
+  const assets = renderHook(() => useGetFolders({ ...params, type: "asset" }), {
+    wrapper,
+  });
+  await waitFor(() => expect(assets.result.current.isSuccess).toBe(true));
+  await waitFor(() => expect(reports.result.current.isSuccess).toBe(true));
+  expect(axiosInstance.get).toHaveBeenCalledTimes(2);
+  expect(reports.result.current.data?.data[0].id).toContain('"type":"report"');
+  expect(assets.result.current.data?.data[0].id).toContain('"type":"asset"');
+  expect(client.getQueryCache().findAll().length).toBe(2);
 });
 test("report search sends report and folder filters with sorting", async () => {
   const { wrapper } = setup();

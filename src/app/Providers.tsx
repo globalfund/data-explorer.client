@@ -5,6 +5,7 @@ import { ThemeProvider } from "@mui/material";
 import { HelmetProvider } from "react-helmet-async";
 import CssBaseline from "@mui/material/CssBaseline";
 import { PageLoader } from "app/components/page-loader";
+import { shouldRetryQuery } from "app/utils/shouldRetryQuery";
 import { StoreProvider, useStoreRehydrated } from "easy-peasy";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
@@ -31,8 +32,12 @@ const Auth0ProviderWithRedirectCallback = (props: Auth0ProviderOptions) => {
   );
 };
 
+// Created once: a client built during render loses its cache on re-render.
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: shouldRetryQuery } },
+});
+
 function Providers(props: ProviderProps) {
-  const queryClient = new QueryClient();
   return (
     <HelmetProvider>
       <StoreProvider store={store}>

@@ -113,6 +113,7 @@ export default function KPITextFormatting({ source }: KPITextFormattingProps) {
     selectedItem?.data?.datasetColumn,
     selectedItem?.data?.dataset,
     selectedItem?.data?.aggregation,
+    selectedItem?.data?.appliedFilters,
   ]);
 
   type TextOption =

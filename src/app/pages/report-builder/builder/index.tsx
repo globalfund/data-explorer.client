@@ -11,7 +11,7 @@ import { PageLoader } from "app/components/page-loader";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useGetReport } from "app/hooks/queries/report-builder";
-import { withAuthenticationRequired } from "@auth0/auth0-react";
+import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { Empty } from "app/pages/report-builder/builder/components/empty";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -23,13 +23,26 @@ import ElementsController from "app/pages/report-builder/builder/components/pane
 import { ReportBuilderMobileBottomBar } from "app/pages/report-builder/main/components/mobile-bottom-bar";
 import { createReportItem } from "app/pages/report-builder/component-registry/model";
 import { ReportItemContent } from "app/pages/report-builder/component-registry/renderer";
+import { ReportBuilderLoadError } from "app/pages/report-builder/components/load-error";
 
 const ReportBuilderDesktopPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { user } = useAuth0();
   const [searchParams] = useSearchParams();
 
   const reportQuery = useGetReport(id);
   const reportData = reportQuery?.data?.data;
+
+  // Public and template reports can be opened by anyone, but only the owner's
+  // changes are saved, so everyone else gets the read-only view.
+  const isOwner = !reportData || !user?.sub || reportData.owner === user.sub;
+
+  React.useEffect(() => {
+    if (!isOwner) {
+      navigate(`/report-builder/reports/${id}`, { replace: true });
+    }
+  }, [isOwner, id, navigate]);
 
   useTitle(`The Data Explorer - ${reportData?.name ?? "Report"}`);
 
@@ -54,7 +67,7 @@ const ReportBuilderDesktopPage: React.FC = () => {
   const hydratedReportIdRef = React.useRef<string>();
 
   React.useEffect(() => {
-    if (!reportData || reportQuery.isFetching) return;
+    if (!reportData || reportQuery.isFetching || !isOwner) return;
     if (hydratedReportIdRef.current === reportData.id) return;
 
     hydratedReportIdRef.current = reportData.id;
@@ -68,6 +81,7 @@ const ReportBuilderDesktopPage: React.FC = () => {
   }, [
     reportData,
     reportQuery.isFetching,
+    isOwner,
     reportState.id,
     reportState.dirty,
     hydrateActiveReport,
@@ -192,12 +206,15 @@ const ReportBuilderDesktopPage: React.FC = () => {
             <CircularProgress />
           </Box>
         )}
+        {reportQuery.isError && (
+          <ReportBuilderLoadError error={reportQuery.error} itemType="report" />
+        )}
         <DragDropProvider
           onDragOver={(event) => {
             setItems(move(items, event));
           }}
         >
-          {!reportQuery.isLoading && (
+          {!reportQuery.isLoading && !reportQuery.isError && isOwner && (
             <Box
               id="items-container"
               className="scrollbar"

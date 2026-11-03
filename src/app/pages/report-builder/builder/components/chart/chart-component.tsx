@@ -3,7 +3,7 @@ import {
   ChartType,
 } from "app/state/api/action-reducers/report-builder/sync";
 import React from "react";
-import { useEcharts } from "./hooks/useEcharts";
+import { disposeChart, useEcharts } from "./hooks/useEcharts";
 import { Box } from "@mui/material";
 import HeatmapChartComponent from "./heatmap-chart-component";
 import TitleArea from "./title/title-area";
@@ -46,9 +46,23 @@ const ChartComponent = (props: ChartComponentProps) => {
   }, [props.visualOptions?.orderList]);
 
   const domRef = React.useRef<HTMLDivElement>(null);
+  // The node the echarts instance lives on. It changes or disappears when the
+  // chart type switches to or from heatmap, which renders without echarts.
+  const renderedNodeRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(
+    () => () => {
+      if (renderedNodeRef.current) disposeChart(renderedNodeRef.current);
+    },
+    [],
+  );
 
   // client side rendering
   React.useEffect(() => {
+    if (renderedNodeRef.current && renderedNodeRef.current !== domRef.current) {
+      disposeChart(renderedNodeRef.current);
+      renderedNodeRef.current = null;
+    }
     if (
       domRef &&
       domRef.current &&
@@ -56,6 +70,7 @@ const ChartComponent = (props: ChartComponentProps) => {
       props.data &&
       props.chartType !== "heatmap"
     ) {
+      renderedNodeRef.current = domRef.current;
       try {
         render(
           props.data,

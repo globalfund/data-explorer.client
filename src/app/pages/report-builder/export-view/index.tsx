@@ -8,6 +8,7 @@ import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import ViewModeContainer from "app/pages/report-builder/builder/components/order-container/view";
 import { isReportItemComplete } from "app/pages/report-builder/component-registry/model";
 import { ReportItemContent } from "app/pages/report-builder/component-registry/renderer";
+import { ReportBuilderLoadError } from "app/pages/report-builder/components/load-error";
 
 export const ReportBuilderExportViewPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -79,7 +80,10 @@ export const ReportBuilderExportViewPage: React.FC = () => {
           <CircularProgress />
         </Box>
       )}
-      {!reportQuery.isLoading && (
+      {reportQuery.isError && (
+        <ReportBuilderLoadError error={reportQuery.error} itemType="report" />
+      )}
+      {!reportQuery.isLoading && !reportQuery.isError && (
         <Box
           id="items-container"
           className="scrollbar"

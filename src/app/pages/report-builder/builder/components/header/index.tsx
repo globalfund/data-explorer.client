@@ -1,4 +1,5 @@
 import React from "react";
+import { isAxiosError } from "axios";
 import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import { useDebounce } from "react-use";
@@ -153,14 +154,23 @@ export const ReportBuilderPageHeader: React.FC = () => {
 
   const handleDownloadShareableFile =
     (type: "png" | "svg" | "pdf") => async () => {
-      await exportReportFromServer(id!, type);
-      setSnackbarMessage(
-        `${type.toUpperCase()} ${getCMSDataField(
-          cmsData,
-          "pagesReportBuilderBuilder.downloadedMessageSuffix",
-          "downloaded!",
-        )}`,
-      );
+      // Server-side rendering takes a few seconds, so acknowledge the click.
+      setSnackbarMessage(`Preparing ${type.toUpperCase()}...`);
+      setSnackbarOpen(true);
+      try {
+        await exportReportFromServer(id!, type);
+        setSnackbarMessage(
+          `${type.toUpperCase()} ${getCMSDataField(
+            cmsData,
+            "pagesReportBuilderBuilder.downloadedMessageSuffix",
+            "downloaded!",
+          )}`,
+        );
+      } catch {
+        setSnackbarMessage(
+          `Couldn't export the ${type.toUpperCase()}. Please try again.`,
+        );
+      }
       setSnackbarOpen(true);
     };
 
@@ -1013,34 +1023,85 @@ export const ReportBuilderPageHeader: React.FC = () => {
   const latestPayloadFingerprint = React.useRef(reportPayloadFingerprint);
   latestPayloadFingerprint.current = reportPayloadFingerprint;
 
+  // No access / deleted won't succeed on retry; stop autosaving instead of
+  // re-sending every 2 seconds. The error state stays visible in the header.
+  const saveStatus = isAxiosError(updateReport.error)
+    ? updateReport.error.response?.status
+    : undefined;
+  const saveBlocked = saveStatus === 403 || saveStatus === 404;
+  const hasUnsavedEdits =
+    !previewMode && reportState.id === id && reportState.dirty;
+
+  // Back off after failed saves (2s, 4s, 8s... up to a minute) instead of
+  // re-sending every 2 seconds while the server or connection is down.
+  const [failedSaves, setFailedSaves] = React.useState(0);
+  const saveDelay = Math.min(2000 * 2 ** failedSaves, 60_000);
+
+  const save = (payload: typeof reportPayload, fingerprint: string) => {
+    updateReport.mutate(payload, {
+      onSuccess: () => {
+        setFailedSaves(0);
+        if (latestPayloadFingerprint.current === fingerprint) {
+          markClean();
+        }
+      },
+      onError: () => setFailedSaves((count) => count + 1),
+    });
+  };
+
   useDebounce(
     () => {
-      if (
-        !previewMode &&
-        !updateReport.isPending &&
-        reportState.id === id &&
-        reportState.dirty
-      ) {
-        const savedFingerprint = reportPayloadFingerprint;
-
-        updateReport.mutate(reportPayload, {
-          onSuccess: () => {
-            if (latestPayloadFingerprint.current === savedFingerprint) {
-              markClean();
-            }
-          },
-        });
+      if (hasUnsavedEdits && !saveBlocked && !updateReport.isPending) {
+        save(reportPayload, reportPayloadFingerprint);
       }
     },
-    2000,
+    saveDelay,
     [
-      reportState.id,
-      reportState.dirty,
+      hasUnsavedEdits,
       reportPayloadFingerprint,
-      previewMode,
+      saveBlocked,
+      saveDelay,
       updateReport.isPending,
     ],
   );
+
+  // Leaving the editor (Preview, or navigating away) cancels the debounce,
+  // and Preview then re-hydrates the store from the server. Keep the last
+  // unsaved edit-mode payload so it can be saved straight away instead.
+  const pendingEditSave = React.useRef<{
+    payload: typeof reportPayload;
+    fingerprint: string;
+  } | null>(null);
+  if (!previewMode) {
+    pendingEditSave.current =
+      hasUnsavedEdits && !saveBlocked
+        ? { payload: reportPayload, fingerprint: reportPayloadFingerprint }
+        : null;
+  }
+  const flushPendingSave = () => {
+    const pending = pendingEditSave.current;
+    pendingEditSave.current = null;
+    if (pending) {
+      save(pending.payload, pending.fingerprint);
+    }
+  };
+  React.useEffect(() => {
+    if (previewMode) flushPendingSave();
+  }, [previewMode]);
+  React.useEffect(() => () => flushPendingSave(), []);
+
+  // Unsaved edits only live in this tab's session storage, which is gone once
+  // the tab closes, so warn before leaving.
+  const warnBeforeUnload = hasUnsavedEdits || updateReport.isPending;
+  React.useEffect(() => {
+    if (!warnBeforeUnload) return;
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [warnBeforeUnload]);
 
   React.useEffect(() => {
     if (updateReport.isSuccess) {
@@ -1169,14 +1230,22 @@ export const ReportBuilderAssetPageHeader: React.FC = () => {
 
   const handleDownloadShareableFile =
     (type: "png" | "svg" | "pdf") => async () => {
-      await exportReportFromServer(id!, type, true);
-      setSnackbarMessage(
-        `${type.toUpperCase()} ${getCMSDataField(
-          cmsData,
-          "pagesReportBuilderBuilder.downloadedMessageSuffix",
-          "downloaded!",
-        )}`,
-      );
+      setSnackbarMessage(`Preparing ${type.toUpperCase()}...`);
+      setSnackbarOpen(true);
+      try {
+        await exportReportFromServer(id!, type, true);
+        setSnackbarMessage(
+          `${type.toUpperCase()} ${getCMSDataField(
+            cmsData,
+            "pagesReportBuilderBuilder.downloadedMessageSuffix",
+            "downloaded!",
+          )}`,
+        );
+      } catch {
+        setSnackbarMessage(
+          `Couldn't export the ${type.toUpperCase()}. Please try again.`,
+        );
+      }
       setSnackbarOpen(true);
     };
 

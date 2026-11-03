@@ -211,6 +211,7 @@ export const useGetFolders = (params: {
   return useQuery({
     queryKey: [
       "ReportBuilderGetFolders",
+      params.type,
       params.search,
       params.sort,
       params.includeSubFolders,
@@ -347,6 +348,9 @@ export const usePatchReport = (reportId: string | undefined) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["ReportBuilderPatchReport", reportId],
+    // Saves of the same report run one at a time, in order, so an older
+    // payload can never land after a newer one.
+    scope: { id: `ReportBuilderPatchReport-${reportId}` },
     mutationFn: (data: RBReportPatchModel) =>
       axiosInstance.patch<RBReportPatchModel>(`/report/${reportId}`, data, {
         headers: {
@@ -614,7 +618,7 @@ export const useDatasetFilterOptions = (
         `/report/filter-options`,
         {
           datasetId,
-          appliedFilters,
+          filters: appliedFilters,
         },
         {
           headers: {
