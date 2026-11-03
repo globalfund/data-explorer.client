@@ -72,7 +72,11 @@ export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
           fontFamily: "Courier New",
         }),
         fontFamily: ctx.editor.getAttributes("textStyle").fontFamily || "Inter",
-        fontWeight: ctx.editor.getAttributes("textStyle").fontWeight || "400",
+        // Pasted <strong>/<b> and Cmd+B apply the bold mark rather than a
+        // textStyle weight; it renders as bolder, so surface it as 700.
+        fontWeight: ctx.editor.isActive("bold")
+          ? "700"
+          : ctx.editor.getAttributes("textStyle").fontWeight || "400",
         letterSpacing:
           ctx.editor.getAttributes("textStyle").letterSpacing || "0px",
         lineHeight: ctx.editor.getAttributes("textStyle").lineHeight || "Auto",
@@ -83,15 +87,23 @@ export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
   const onWeightChange = (value: string) => {
     const weight = weightOptions.find((option) => option.value === value);
     if (!weight) return;
+    // Drop any bold mark so the chosen weight isn't overridden by <strong>.
     if (weight?.value.includes("italic")) {
       editor
         .chain()
         .focus()
+        .unsetBold()
         .setItalic()
         .setFontWeight(weight.value.split("+")[0])
         .run();
     } else {
-      editor.chain().focus().unsetItalic().setFontWeight(weight.value).run();
+      editor
+        .chain()
+        .focus()
+        .unsetBold()
+        .unsetItalic()
+        .setFontWeight(weight.value)
+        .run();
     }
   };
 
@@ -138,7 +150,7 @@ export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
         editorState.fontWeight + (editorState.isItalic ? "+italic" : ""),
     );
     return selected ? selected.value : "";
-  }, [editorState.fontWeight]);
+  }, [editorState.fontWeight, editorState.isItalic]);
 
   const makeHighlightVisible = (hex: string) =>
     hex.length === 9 && hex.toLowerCase().endsWith("00")
@@ -323,21 +335,11 @@ export const RTEToolbar: React.FC<{ editor: Editor }> = ({ editor }) => {
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: "13px" }}>
-          {/* Bold / Italic / Underline / Text Color / Highlight */}
-          <IconButton
-            onClick={() => addIndent()}
-            className={
-              editorState.isBold ? "active-icon-button" : "icon-button"
-            }
-          >
+          {/* Indent / Outdent / Bullet list */}
+          <IconButton onClick={() => addIndent()} className="icon-button">
             <ParagraphAdd />
           </IconButton>
-          <IconButton
-            onClick={() => removeIndent()}
-            className={
-              editorState.isItalic ? "active-icon-button" : "icon-button"
-            }
-          >
+          <IconButton onClick={() => removeIndent()} className="icon-button">
             <ParagraphRemove />
           </IconButton>
           <IconButton
