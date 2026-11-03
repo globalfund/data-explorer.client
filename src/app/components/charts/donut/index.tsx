@@ -1,6 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import * as echarts from "echarts/core";
+import { chartTheme } from "app/components/charts/common/theme/config";
 import { SVGRenderer } from "echarts/renderers";
 import { DonutChartProps } from "app/components/charts/donut/data";
 import { PieSeriesOption, PieChart as EChartsPie } from "echarts/charts";
@@ -24,7 +25,7 @@ export const DonutChart: React.FC<DonutChartProps> = (
 
   React.useEffect(() => {
     if (containerRef.current) {
-      const chart = echarts.init(containerRef.current, undefined, {
+      const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
 
