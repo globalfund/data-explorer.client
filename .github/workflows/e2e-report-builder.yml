@@ -31,9 +31,11 @@ jobs:
     env:
       VITE_API: http://localhost:4200
       VITE_BASE_URL: http://localhost:3000
-      VITE_AUTH0_DOMAIN: ${{ vars.CI_AUTH0_DOMAIN }}
-      VITE_AUTH0_CLIENT_ID: ${{ vars.CI_AUTH0_CLIENT_ID }}
-      VITE_AUTH0_AUDIENCE: ${{ vars.CI_AUTH0_AUDIENCE }}
+      # Secrets rather than variables, because this repository is public and
+      # variable values show up in the run logs.
+      VITE_AUTH0_DOMAIN: ${{ secrets.CI_AUTH0_DOMAIN }}
+      VITE_AUTH0_CLIENT_ID: ${{ secrets.CI_AUTH0_CLIENT_ID }}
+      VITE_AUTH0_AUDIENCE: ${{ secrets.CI_AUTH0_AUDIENCE }}
     steps:
       # Without persist-credentials: false, git would send this repository's
       # token when yarn clones rb-core.charts, instead of CI_RB_CORE_TOKEN.
@@ -102,8 +104,8 @@ jobs:
       - name: Start the API server
         working-directory: server
         env:
-          AUTH0_DOMAIN: ${{ vars.CI_AUTH0_DOMAIN }}
-          AUTH0_AUDIENCE: ${{ vars.CI_AUTH0_AUDIENCE }}
+          AUTH0_DOMAIN: ${{ secrets.CI_AUTH0_DOMAIN }}
+          AUTH0_AUDIENCE: ${{ secrets.CI_AUTH0_AUDIENCE }}
           FRONTEND_URL: http://localhost:3000
         run: |
           nohup node -r source-map-support/register . > ../server.log 2>&1 &
@@ -133,7 +135,7 @@ jobs:
       - name: Run the report builder specs
         working-directory: client
         env:
-          E2E_AUTH0_REALM: ${{ vars.CI_AUTH0_REALM }}
+          E2E_AUTH0_REALM: ${{ secrets.CI_AUTH0_REALM }}
           TEST_USER_1_EMAIL: ${{ secrets.CI_TEST_USER_1_EMAIL }}
           TEST_USER_1_PASSWORD: ${{ secrets.CI_TEST_USER_1_PASSWORD }}
           TEST_USER_2_EMAIL: ${{ secrets.CI_TEST_USER_2_EMAIL }}

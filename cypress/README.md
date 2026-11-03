@@ -36,7 +36,7 @@ the same tenant and audience.
 ## Environment
 
 Read from the client's `.env` (git-ignored) or the shell. In CI they come from
-the repository's `CI_` variables and secrets (see [CI](#ci)).
+the repository's `CI_` secrets (see [CI](#ci)).
 
 | Variable                                                           | Purpose                                                                       |
 | ------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
@@ -74,15 +74,18 @@ It tests against the `data-explorer.server` branch with the same name as the
 pull request's branch, otherwise its base branch's, otherwise `feat/rb`. A manual
 run can name another one.
 
-Set these under Settings → Secrets and variables → Actions. Only the workflows
-use them, so their names start with `CI_`:
+Add these as repository secrets under Settings → Secrets and variables →
+Actions, or with `gh secret set <name> --repo globalfund/data-explorer.client`.
+Only the workflows use them, so their names start with `CI_`. The Auth0 values
+are secrets too, because the repository is public and variable values show up
+in the run logs.
 
-| Name                                                                                                 | Kind      | Value                                                                                                                                          |
-| ---------------------------------------------------------------------------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `CI_AUTH0_DOMAIN`, `CI_AUTH0_CLIENT_ID`, `CI_AUTH0_AUDIENCE`                                         | Variables | The `VITE_AUTH0_*` values from `.env`; the API server gets the same domain and audience                                                        |
-| `CI_AUTH0_REALM`                                                                                     | Variable  | Optional: the `E2E_AUTH0_REALM` value, as above                                                                                                |
-| `CI_TEST_USER_1_EMAIL`, `CI_TEST_USER_1_PASSWORD`, `CI_TEST_USER_2_EMAIL`, `CI_TEST_USER_2_PASSWORD` | Secrets   | The test users (`TEST_USER_*` above)                                                                                                           |
-| `CI_RB_CORE_TOKEN`                                                                                   | Secret    | A token that can read `rb-core.charts` (see [Access to rb-core.charts](../README.md#access-to-rb-corecharts)). The Jest workflow needs it too. |
+| Name                                                                                                 | Value                                                                                                                                          |
+| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CI_AUTH0_DOMAIN`, `CI_AUTH0_CLIENT_ID`, `CI_AUTH0_AUDIENCE`                                         | The `VITE_AUTH0_*` values from `.env`; the API server gets the same domain and audience                                                        |
+| `CI_AUTH0_REALM`                                                                                     | Optional: the `E2E_AUTH0_REALM` value, as above                                                                                                |
+| `CI_TEST_USER_1_EMAIL`, `CI_TEST_USER_1_PASSWORD`, `CI_TEST_USER_2_EMAIL`, `CI_TEST_USER_2_PASSWORD` | The test users (`TEST_USER_*` above)                                                                                                           |
+| `CI_RB_CORE_TOKEN`                                                                                   | A token that can read `rb-core.charts` (see [Access to rb-core.charts](../README.md#access-to-rb-corecharts)). The Jest workflow needs it too. |
 
 Pull requests from forks are skipped, since they don't get secrets.
 
