@@ -8,8 +8,8 @@ jobs:
   jest:
     runs-on: ubuntu-latest
     steps:
-      # Without persist-credentials: false, this repository's token would be
-      # sent when yarn clones rb-core.charts and override RB_CORE_TOKEN.
+      # Without persist-credentials: false, git would send this repository's
+      # token when yarn clones rb-core.charts, instead of CI_RB_CORE_TOKEN.
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
@@ -17,10 +17,10 @@ jobs:
       # read it (see "Access to rb-core.charts" in README.md).
       - name: Let yarn read rb-core.charts
         env:
-          RB_CORE_TOKEN: ${{ secrets.RB_CORE_TOKEN }}
+          RB_CORE_TOKEN: ${{ secrets.CI_RB_CORE_TOKEN }}
         run: |
           if [ -z "$RB_CORE_TOKEN" ]; then
-            echo "::error::Set the RB_CORE_TOKEN secret so yarn can install rb-core.charts (see README.md)."
+            echo "::error::Set the CI_RB_CORE_TOKEN secret so yarn can install rb-core.charts (see README.md)."
             exit 1
           fi
           echo "GIT_CONFIG_COUNT=1" >> "$GITHUB_ENV"

@@ -63,7 +63,7 @@ Installs all necessary dependencies.
 
   Git then uses the token for `rb-core.charts` only. `git ls-remote https://github.com/globalfund/rb-core.charts.git HEAD` checks that it works. To replace the token, delete its `[url "https://x-access-token:…"]` section from `~/.gitconfig` and run the command again.
 
-- **GitHub Actions:** the workflows read the token from the `RB_CORE_TOKEN` repository secret. Add it under Settings → Secrets and variables → Actions, or run `gh secret set RB_CORE_TOKEN --repo globalfund/data-explorer.client` and paste it at the prompt.
+- **GitHub Actions:** the workflows read the token from the `CI_RB_CORE_TOKEN` repository secret. Add it under Settings → Secrets and variables → Actions, or run `gh secret set CI_RB_CORE_TOKEN --repo globalfund/data-explorer.client` and paste it at the prompt.
 
 To create the token:
 

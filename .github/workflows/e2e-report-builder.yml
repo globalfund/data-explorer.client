@@ -31,12 +31,12 @@ jobs:
     env:
       VITE_API: http://localhost:4200
       VITE_BASE_URL: http://localhost:3000
-      VITE_AUTH0_DOMAIN: ${{ vars.VITE_AUTH0_DOMAIN }}
-      VITE_AUTH0_CLIENT_ID: ${{ vars.VITE_AUTH0_CLIENT_ID }}
-      VITE_AUTH0_AUDIENCE: ${{ vars.VITE_AUTH0_AUDIENCE }}
+      VITE_AUTH0_DOMAIN: ${{ vars.CI_AUTH0_DOMAIN }}
+      VITE_AUTH0_CLIENT_ID: ${{ vars.CI_AUTH0_CLIENT_ID }}
+      VITE_AUTH0_AUDIENCE: ${{ vars.CI_AUTH0_AUDIENCE }}
     steps:
-      # Without persist-credentials: false, this repository's token would be
-      # sent when yarn clones rb-core.charts and override RB_CORE_TOKEN.
+      # Without persist-credentials: false, git would send this repository's
+      # token when yarn clones rb-core.charts, instead of CI_RB_CORE_TOKEN.
       - uses: actions/checkout@v4
         with:
           path: client
@@ -72,10 +72,10 @@ jobs:
       # read it (see "Access to rb-core.charts" in README.md).
       - name: Let yarn read rb-core.charts
         env:
-          RB_CORE_TOKEN: ${{ secrets.RB_CORE_TOKEN }}
+          RB_CORE_TOKEN: ${{ secrets.CI_RB_CORE_TOKEN }}
         run: |
           if [ -z "$RB_CORE_TOKEN" ]; then
-            echo "::error::Set the RB_CORE_TOKEN secret so yarn can install rb-core.charts (see README.md)."
+            echo "::error::Set the CI_RB_CORE_TOKEN secret so yarn can install rb-core.charts (see README.md)."
             exit 1
           fi
           echo "GIT_CONFIG_COUNT=1" >> "$GITHUB_ENV"
@@ -102,8 +102,8 @@ jobs:
       - name: Start the API server
         working-directory: server
         env:
-          AUTH0_DOMAIN: ${{ vars.VITE_AUTH0_DOMAIN }}
-          AUTH0_AUDIENCE: ${{ vars.VITE_AUTH0_AUDIENCE }}
+          AUTH0_DOMAIN: ${{ vars.CI_AUTH0_DOMAIN }}
+          AUTH0_AUDIENCE: ${{ vars.CI_AUTH0_AUDIENCE }}
           FRONTEND_URL: http://localhost:3000
         run: |
           nohup node -r source-map-support/register . > ../server.log 2>&1 &
@@ -133,11 +133,11 @@ jobs:
       - name: Run the report builder specs
         working-directory: client
         env:
-          E2E_AUTH0_REALM: ${{ vars.E2E_AUTH0_REALM }}
-          TEST_USER_1_EMAIL: ${{ secrets.TEST_USER_1_EMAIL }}
-          TEST_USER_1_PASSWORD: ${{ secrets.TEST_USER_1_PASSWORD }}
-          TEST_USER_2_EMAIL: ${{ secrets.TEST_USER_2_EMAIL }}
-          TEST_USER_2_PASSWORD: ${{ secrets.TEST_USER_2_PASSWORD }}
+          E2E_AUTH0_REALM: ${{ vars.CI_AUTH0_REALM }}
+          TEST_USER_1_EMAIL: ${{ secrets.CI_TEST_USER_1_EMAIL }}
+          TEST_USER_1_PASSWORD: ${{ secrets.CI_TEST_USER_1_PASSWORD }}
+          TEST_USER_2_EMAIL: ${{ secrets.CI_TEST_USER_2_EMAIL }}
+          TEST_USER_2_PASSWORD: ${{ secrets.CI_TEST_USER_2_PASSWORD }}
         run: yarn e2e:rb
 
       - uses: actions/upload-artifact@v4
