@@ -17,7 +17,10 @@ jobs:
     timeout-minutes: 25
     services:
       mongo:
-        image: mongo:8
+        # MongoDB 8 refuses to start on the runners' Linux 7.0 kernel
+        # (https://jira.mongodb.org/browse/SERVER-136848). 7.0 doesn't use the
+        # memory allocator that check is about.
+        image: mongo:7.0
         ports: ["27017:27017"]
         options: >-
           --health-cmd "mongosh --quiet --eval 'db.runCommand({ ping: 1 })'"
