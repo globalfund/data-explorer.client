@@ -72,7 +72,8 @@ the screenshots and the server and client logs are uploaded with it.
 
 It tests against the `data-explorer.server` branch with the same name as the
 pull request's branch, otherwise its base branch's, otherwise `feat/rb`. A manual
-run can name another one.
+run can name another one. Changing a pull request's base branch doesn't start a
+run; re-run the job instead, and it uses the new base.
 
 Add these as repository secrets under Settings → Secrets and variables →
 Actions, or with `gh secret set <name> --repo globalfund/data-explorer.client`.

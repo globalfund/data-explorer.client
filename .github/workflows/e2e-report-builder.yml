@@ -9,6 +9,10 @@ on:
 concurrency:
   group: e2e-rb-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+permissions:
+  contents: read
+  # To look up the pull request's base branch.
+  pull-requests: read
 jobs:
   cypress:
     # Pull requests from forks don't get the test users' secrets.
@@ -49,10 +53,18 @@ jobs:
       - name: Pick the API server branch
         id: server
         env:
+          GH_TOKEN: ${{ github.token }}
           INPUT_REF: ${{ inputs.server_ref }}
           HEAD_REF: ${{ github.head_ref || github.ref_name }}
-          BASE_REF: ${{ github.base_ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          EVENT_BASE_REF: ${{ github.base_ref }}
         run: |
+          # Look up the base branch instead of taking it from the event, which
+          # a re-run reuses, so re-running after a retarget uses the new base.
+          BASE_REF="$EVENT_BASE_REF"
+          if [ -n "$PR_NUMBER" ]; then
+            BASE_REF=$(gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --json baseRefName --jq .baseRefName) || BASE_REF="$EVENT_BASE_REF"
+          fi
           for ref in "$INPUT_REF" "$HEAD_REF" "$BASE_REF" feat/rb; do
             if [ -n "$ref" ] && git ls-remote --exit-code https://github.com/globalfund/data-explorer.server.git "refs/heads/$ref" > /dev/null; then
               echo "Testing against data-explorer.server@$ref"
