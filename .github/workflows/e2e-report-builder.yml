@@ -37,12 +37,9 @@ jobs:
       VITE_AUTH0_CLIENT_ID: ${{ secrets.CI_AUTH0_CLIENT_ID }}
       VITE_AUTH0_AUDIENCE: ${{ secrets.CI_AUTH0_AUDIENCE }}
     steps:
-      # Without persist-credentials: false, git would send this repository's
-      # token when yarn clones rb-core.charts, instead of CI_RB_CORE_TOKEN.
       - uses: actions/checkout@v4
         with:
           path: client
-          persist-credentials: false
 
       # Use the server branch with the same name as this one, then the PR's
       # base branch's, then the report builder branch.
@@ -68,21 +65,6 @@ jobs:
           repository: globalfund/data-explorer.server
           ref: ${{ steps.server.outputs.ref }}
           path: server
-          persist-credentials: false
-
-      # rb-core.charts is a private repository, so yarn needs a token that can
-      # read it (see "Access to rb-core.charts" in README.md).
-      - name: Let yarn read rb-core.charts
-        env:
-          RB_CORE_TOKEN: ${{ secrets.CI_RB_CORE_TOKEN }}
-        run: |
-          if [ -z "$RB_CORE_TOKEN" ]; then
-            echo "::error::Set the CI_RB_CORE_TOKEN secret so yarn can install rb-core.charts (see README.md)."
-            exit 1
-          fi
-          echo "GIT_CONFIG_COUNT=1" >> "$GITHUB_ENV"
-          echo "GIT_CONFIG_KEY_0=url.https://x-access-token:${RB_CORE_TOKEN}@github.com/globalfund/rb-core.charts.git.insteadOf" >> "$GITHUB_ENV"
-          echo "GIT_CONFIG_VALUE_0=https://github.com/globalfund/rb-core.charts.git" >> "$GITHUB_ENV"
 
       - uses: actions/setup-node@v4
         with:

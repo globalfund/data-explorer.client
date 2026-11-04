@@ -50,30 +50,6 @@ Installs all necessary dependencies.
 
 `rb-core.charts` is installed from its GitHub repository, pinned to a commit in `package.json`, and builds itself on install, so this needs `git`. To use a newer version, put the new commit hash in `package.json` and run `yarn install`. To work on it locally, run `yarn link` in your checkout of it and `yarn link rb-core.charts` here; `yarn unlink rb-core.charts` and `yarn install --force` switch back.
 
-### Access to rb-core.charts
-
-`rb-core.charts` is a private repository, so `yarn install` needs read access to it.
-
-- **Your own machine:** your GitHub account's access is enough once git can use it, for example after `gh auth setup-git`.
-- **A server or build machine:** use a read-only token (see below). As the user that runs `yarn install`, run this in bash and paste the token at the prompt:
-
-  ```bash
-  read -rsp "rb-core.charts token: " RB_CORE_TOKEN && git config --global url."https://x-access-token:${RB_CORE_TOKEN}@github.com/globalfund/rb-core.charts.git".insteadOf https://github.com/globalfund/rb-core.charts.git && unset RB_CORE_TOKEN && chmod 600 ~/.gitconfig
-  ```
-
-  Git then uses the token for `rb-core.charts` only. `git ls-remote https://github.com/globalfund/rb-core.charts.git HEAD` checks that it works. To replace the token, delete its `[url "https://x-access-token:…"]` section from `~/.gitconfig` and run the command again.
-
-- **GitHub Actions:** the workflows read the token from the `CI_RB_CORE_TOKEN` repository secret. Add it under Settings → Secrets and variables → Actions, or run `gh secret set CI_RB_CORE_TOKEN --repo globalfund/data-explorer.client` and paste it at the prompt.
-
-To create the token:
-
-1. On GitHub, open Settings → Developer settings → Personal access tokens → Fine-grained tokens, and choose **Generate new token**.
-2. Set **Resource owner** to `globalfund`, and **Repository access** to **Only select repositories** → `rb-core.charts`.
-3. Under **Repository permissions**, set **Contents** to **Read-only**. It needs nothing else.
-4. Choose an expiry date and generate the token. If the organization requires approval for fine-grained tokens, an owner has to approve it before it works.
-
-The token acts as the account that created it, so it stops working when it expires or that account loses access to `rb-core.charts`. Creating it from a shared bot account avoids tying it to one person.
-
 ### `yarn start`
 
 Runs the app in the development mode.<br />

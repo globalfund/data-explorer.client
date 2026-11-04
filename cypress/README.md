@@ -80,12 +80,11 @@ Only the workflows use them, so their names start with `CI_`. The Auth0 values
 are secrets too, because the repository is public and variable values show up
 in the run logs.
 
-| Name                                                                                                 | Value                                                                                                                                          |
-| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `CI_AUTH0_DOMAIN`, `CI_AUTH0_CLIENT_ID`, `CI_AUTH0_AUDIENCE`                                         | The `VITE_AUTH0_*` values from `.env`; the API server gets the same domain and audience                                                        |
-| `CI_AUTH0_REALM`                                                                                     | Optional: the `E2E_AUTH0_REALM` value, as above                                                                                                |
-| `CI_TEST_USER_1_EMAIL`, `CI_TEST_USER_1_PASSWORD`, `CI_TEST_USER_2_EMAIL`, `CI_TEST_USER_2_PASSWORD` | The test users (`TEST_USER_*` above)                                                                                                           |
-| `CI_RB_CORE_TOKEN`                                                                                   | A token that can read `rb-core.charts` (see [Access to rb-core.charts](../README.md#access-to-rb-corecharts)). The Jest workflow needs it too. |
+| Name                                                                                                 | Value                                                                                   |
+| ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `CI_AUTH0_DOMAIN`, `CI_AUTH0_CLIENT_ID`, `CI_AUTH0_AUDIENCE`                                         | The `VITE_AUTH0_*` values from `.env`; the API server gets the same domain and audience |
+| `CI_AUTH0_REALM`                                                                                     | Optional: the `E2E_AUTH0_REALM` value, as above                                         |
+| `CI_TEST_USER_1_EMAIL`, `CI_TEST_USER_1_PASSWORD`, `CI_TEST_USER_2_EMAIL`, `CI_TEST_USER_2_PASSWORD` | The test users (`TEST_USER_*` above)                                                    |
 
 Pull requests from forks are skipped, since they don't get secrets.
 
