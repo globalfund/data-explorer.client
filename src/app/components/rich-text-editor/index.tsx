@@ -9,7 +9,7 @@ import {
   ReportItemOf,
 } from "app/state/api/action-reducers/report-builder/sync";
 import { ActionCreator } from "easy-peasy";
-import { normalisePastedHTML } from "./paste";
+import { normalisePastedHTML, normalisePastedSlice } from "./paste";
 
 export const RichEditor: React.FC<{
   itemId: string;
@@ -40,6 +40,7 @@ export const RichEditor: React.FC<{
     editable: !viewMode,
     editorProps: {
       transformPastedHTML: normalisePastedHTML,
+      transformPasted: normalisePastedSlice,
     },
     onUpdate: ({ editor: updatedEditor }) => {
       if (selectedItem) {

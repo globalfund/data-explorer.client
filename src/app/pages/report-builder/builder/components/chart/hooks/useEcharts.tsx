@@ -2,6 +2,7 @@ import React from "react";
 import uniqBy from "lodash/uniqBy";
 import sortBy from "lodash/sortBy";
 import * as echarts from "echarts/core";
+import { chartTheme } from "app/components/charts/common/theme/config";
 import { CanvasRenderer } from "echarts/renderers";
 
 import {
@@ -1120,7 +1121,7 @@ export function useEcharts({
     // Reuse the node's instance: render runs again on every option change.
     const chart =
       echarts.getInstanceByDom(node) ??
-      echarts.init(node, undefined, {
+      echarts.init(node, chartTheme, {
         renderer: "svg",
         height: visualOptions.height,
       });
