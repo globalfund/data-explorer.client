@@ -18,6 +18,10 @@ import { AUTH0_SCOPE } from "../../src/app/utils/auth0Config";
  *                              default directory
  */
 
+// Auth0's name for the password grant with a realm. It's an identifier, not a
+// URL that gets requested, and Auth0 only accepts it spelled exactly this way.
+const PASSWORD_REALM_GRANT = "http://auth0.com/oauth/grant-type/password-realm"; // NOSONAR
+
 export type E2EUser = "owner" | "other";
 
 export interface E2ESession {
@@ -55,9 +59,7 @@ const requestTokens = async (user: E2EUser): Promise<Auth0TokenResponse> => {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
-        grant_type: realm
-          ? "http://auth0.com/oauth/grant-type/password-realm"
-          : "password",
+        grant_type: realm ? PASSWORD_REALM_GRANT : "password",
         username,
         password,
         audience: requireEnv("VITE_AUTH0_AUDIENCE"),

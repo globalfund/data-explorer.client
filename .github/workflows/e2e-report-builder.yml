@@ -89,13 +89,13 @@ jobs:
             client/yarn.lock
             server/yarn.lock
 
+      # --ignore-scripts also skips Puppeteer's Chrome download, which isn't
+      # needed because thumbnails and exports aren't tested. The rb-core git
+      # packages still build themselves.
       - name: Install and build the API server
         working-directory: server
-        env:
-          # Thumbnails and exports aren't tested, so Puppeteer's Chrome isn't needed.
-          PUPPETEER_SKIP_DOWNLOAD: "true"
         run: |
-          yarn install --frozen-lockfile --network-timeout 100000
+          yarn install --frozen-lockfile --ignore-scripts --network-timeout 100000
           yarn build
 
       - name: Start the API server
@@ -117,7 +117,8 @@ jobs:
         working-directory: client
         run: |
           yarn install --frozen-lockfile --ignore-scripts --network-timeout 100000
-          yarn cypress install
+          # --ignore-scripts skipped Cypress's own download of its binary.
+          node_modules/.bin/cypress install
 
       - name: Build and start the client
         working-directory: client
