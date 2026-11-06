@@ -13,10 +13,12 @@ export interface TextFieldProps {
   label?: React.ReactNode;
   placeholder?: string;
   type?: React.HTMLInputTypeAttribute | undefined;
+  "data-cy"?: string;
 }
 export default function TextField(props: Readonly<TextFieldProps>) {
   return (
     <Box
+      data-cy={props["data-cy"]}
       sx={{
         width: props.width ?? "138px",
         height: "max-content",

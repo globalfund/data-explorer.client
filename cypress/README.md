@@ -62,7 +62,8 @@ the repository's `CI_` secrets (see [CI](#ci)).
    for report thumbnails.
 4. **The client**, in test mode: `VITE_AUTH0_CACHE_LOCATION=localstorage yarn start`.
 
-The chart specs use the Allocations dataset (`gf_allocations`). Instead of the
+The chart, table and KPI box specs use the Allocations dataset
+(`gf_allocations`). Instead of the
 real backend, you can run the stand-in CI uses (see below): start
 `node cypress/data-backend-stand-in.mjs` and give the API server
 `PARSED_DATA_FILES_PATH` set to this repository's
@@ -114,9 +115,18 @@ Pull requests from forks are skipped, since they don't get secrets.
 - Select report builder controls by their `data-cy` attribute (`rb-…`), and a
   report's dashboard card with `reportCard(id)`. Labels come from the CMS and
   can change.
-- To check an autosave, intercept the report's PATCH and use `waitForSave()`,
-  which skips earlier saves of half-typed edits. `waitForRequest()` does the
+- `openEditor(label, items)` creates a report, opens it in the editor once it
+  has loaded, and yields its id. `savedItem(id)` reads an item back from the
+  API.
+- To check an autosave, use `waitForSave("@save", ...)` after `openEditor()`.
+  It skips earlier saves of half-typed edits. `waitForRequest()` does the
   same for any intercepted request, such as `POST /report/render-chart-data`.
-- Seed a chart with `barChartItem({ dataset, mapping })`. Use Allocations, or
-  add another small dataset's files to `cypress/fixtures/data-backend` (from
+- Seed a chart with `barChartItem({ dataset, mapping })` and a table with
+  `tableItem({ dataset, columns })`. Use Allocations, or add another small
+  dataset's files to `cypress/fixtures/data-backend` (from
   `data-explorer.backend`'s `parsed-data-files/` and `sample-data-files/`).
+- Some buttons only show on hover, such as the sort and filter buttons of the
+  dataset dialog's column headers. Cypress can't hover, so click them with
+  `{ force: true }`.
+- The dataset dialog's column picker drags with dnd-kit, which ignores
+  `cy.trigger()`'s events. `table.cy.ts` drags with keyboard events instead.

@@ -1,6 +1,7 @@
 import {
   barChartItem,
-  uniqueName,
+  openEditor,
+  savedItem,
   waitForRequest,
   waitForSave,
 } from "../../support/report-builder";
@@ -29,29 +30,15 @@ describe("Report builder: charts", () => {
     cy.deleteReport(reportId);
   });
 
-  const openEditor = (items: unknown[] = []) => {
-    const name = uniqueName("charts");
-    cy.createReport({ name, items }).then((id) => {
+  const openChartEditor = (items: unknown[] = []) =>
+    openEditor("charts", items).then((id) => {
       reportId = id;
-      cy.intercept("PATCH", `**/report/${id}`).as("save");
-      cy.visit(`/report-builder/reports/${id}/edit`);
     });
-    // Components added before the report has loaded are lost.
-    cy.get('[data-cy="rb-report-name"]').should("have.value", name);
-  };
 
   const chart = () => cy.get('[data-cy="rb-chart"]');
 
-  // reportId is only known once openEditor's commands have run.
-  const savedChart = () =>
-    cy
-      .then(() =>
-        cy.api<{ items: { type: string; data: Record<string, unknown> }[] }>({
-          method: "GET",
-          path: `/report/${reportId}`,
-        }),
-      )
-      .its("body.items.0");
+  // reportId is only known once openChartEditor's commands have run.
+  const savedChart = () => cy.then(() => savedItem(reportId));
 
   /** Waits for a successful render request whose body matches. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -69,7 +56,7 @@ describe("Report builder: charts", () => {
   };
 
   it("builds a bar chart from a dataset, a chart type and a mapping", () => {
-    openEditor();
+    openChartEditor();
     cy.get('[data-cy="rb-add-component"]').click();
     cy.get('[data-cy="rb-add-chart"]').click();
     cy.focused().type("{esc}");
@@ -117,7 +104,7 @@ describe("Report builder: charts", () => {
   });
 
   it("filters a chart and shows the filtered chart on the preview page", () => {
-    openEditor([barChartItem({ dataset: DATASET, mapping: MAPPING })]);
+    openChartEditor([barChartItem({ dataset: DATASET, mapping: MAPPING })]);
     chart().should("contain.text", "Europe");
 
     chart().click();

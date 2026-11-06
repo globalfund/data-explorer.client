@@ -41,6 +41,8 @@ export default function KPIBox({ id, viewMode, parent }: Readonly<Props>) {
   return (
     <Box
       id="kpi-render"
+      data-cy="rb-kpi"
+      data-id={id}
       onClick={() => {
         if (viewMode) return;
         editItem({
@@ -177,6 +179,7 @@ export default function KPIBox({ id, viewMode, parent }: Readonly<Props>) {
               }}
             >
               <Typography
+                data-cy="rb-kpi-value"
                 display={
                   selectedItem?.data?.bigNumberText?.enabled ? "block" : "none"
                 }

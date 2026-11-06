@@ -12,6 +12,7 @@ interface ColumnSortWrapperProps {
   setIsDragging?: (dragging: boolean) => void;
   disabled?: boolean;
   type: string;
+  "data-cy"?: string;
 }
 
 const ColumnSortWrapper = (props: ColumnSortWrapperProps) => {
@@ -51,6 +52,8 @@ const ColumnSortWrapper = (props: ColumnSortWrapperProps) => {
         ...props.sx,
       }}
       data-dragging={isDragging}
+      data-cy={props["data-cy"]}
+      data-id={props.id}
     >
       {props.children}
     </Box>
