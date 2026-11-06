@@ -1,0 +1,338 @@
+{
+    "dataset": [
+        {
+            "World": "World",
+            "Continent1": "Americas",
+            "SubContinent1": "Central America",
+            "GeographyName1": "Nicaragua",
+            "AllocationCycle": "2017-2019",
+            "Component": "HIV/AIDS",
+            "AllocationAmountReferenceRate": 8429981.0,
+            "CurrencyReferenceRate": "USD",
+            "DateTimeCreated": "2024-06-30"
+        },
+        {
+            "World": "World",
+            "Continent1": "Americas",
+            "SubContinent1": "Central America",
+            "GeographyName1": "Nicaragua",
+            "AllocationCycle": "2023-2025",
+            "Component": "HIV/AIDS",
+            "AllocationAmountReferenceRate": 12381024.0,
+            "CurrencyReferenceRate": "USD",
+            "DateTimeCreated": "2024-06-30"
+        },
+        {
+            "World": "World",
+            "Continent1": "Americas",
+            "SubContinent1": "Central America",
+            "GeographyName1": "Nicaragua",
+            "AllocationCycle": "2020-2022",
+            "Component": "HIV/AIDS",
+            "AllocationAmountReferenceRate": 12457279.0,
+            "CurrencyReferenceRate": "USD",
+            "DateTimeCreated": "2024-06-30"
+        },
+        {
+            "World": "World",
+            "Continent1": "Asia",
+            "SubContinent1": "Central Asia",
+            "GeographyName1": "Kyrgyzstan",
+            "AllocationCycle": "2017-2019",
+            "Component": "HIV/AIDS",
+            "AllocationAmountReferenceRate": 11266362.0,
+            "CurrencyReferenceRate": "USD",
+            "DateTimeCreated": "2024-06-30"
+        },
+        {
+            "World": "World",
+            "Continent1": "Asia",
+            "SubContinent1": "Central Asia",
+            "GeographyName1": "Kyrgyzstan",
+            "AllocationCycle": "2023-2025",
+            "Component": "HIV/AIDS",
+            "AllocationAmountReferenceRate": 13695211.0,
+            "CurrencyReferenceRate": "USD",
+            "DateTimeCreated": "2024-06-30"
+        },
+        {
+            "World": "World",
+            "Continent1": "Asia",
+            "SubContinent1": "Central Asia",
+            "GeographyName1": "Kyrgyzstan",
+            "AllocationCycle": "2020-2022",
+            "Component": "HIV/AIDS",
+            "AllocationAmountReferenceRate": 11491690.0,
+            "CurrencyReferenceRate": "USD",
+            "DateTimeCreated": "2024-06-30"
+        },
+        {
+            "World": "World",
+            "Continent1": "Africa",
+            "SubContinent1": "Eastern Africa",
+            "GeographyName1": "Tanzania (United Republic)",
+            "AllocationCycle": "2020-2022",
+            "Component": "HIV/AIDS",
+            "AllocationAmountReferenceRate": 364840423.0,
+            "CurrencyReferenceRate": "USD",
+            "DateTimeCreated": "2024-06-30"
+        },
+        {
+            "World": "World",
+            "Continent1": "Africa",
+            "SubContinent1": "Eastern Africa",
+            "GeographyName1": "Tanzania (United Republic)",
+            "AllocationCycle": "2023-2025",
+            "Component": "HIV/AIDS",
+            "AllocationAmountReferenceRate": 370004151.0,
+            "CurrencyReferenceRate": "USD",
+            "DateTimeCreated": "2024-06-30"
+        },
+        {
+            "World": "World",
+            "Continent1": "Africa",
+            "SubContinent1": "Northern Africa",
+            "GeographyName1": "Sudan",
+            "AllocationCycle": "2017-2019",
+            "Component": "HIV/AIDS",
+            "AllocationAmountReferenceRate": 18839720.0,
+            "CurrencyReferenceRate": "USD",
+            "DateTimeCreated": "2024-06-30"
+        },
+        {
+            "World": "World",
+            "Continent1": "Africa",
+            "SubContinent1": "Northern Africa",
+            "GeographyName1": "Sudan",
+            "AllocationCycle": "2023-2025",
+            "Component": "HIV/AIDS",
+            "AllocationAmountReferenceRate": 19740899.0,
+            "CurrencyReferenceRate": "USD",
+            "DateTimeCreated": "2024-06-30"
+        }
+    ],
+    "dataTypes": {
+        "World": "string",
+        "Continent1": "string",
+        "SubContinent1": "string",
+        "GeographyName1": "string",
+        "AllocationCycle": "string",
+        "Component": "string",
+        "AllocationAmountReferenceRate": "number",
+        "CurrencyReferenceRate": "string",
+        "DateTimeCreated": {
+            "type": "date",
+            "dateFormat": "YYYY-MM-DD"
+        }
+    },
+    "errors": [],
+    "count": 795,
+    "stats": [
+        {
+            "name": "World",
+            "type": "percentage",
+            "data": [
+                {
+                    "name": "World",
+                    "value": 100.0
+                }
+            ]
+        },
+        {
+            "name": "Continent1",
+            "type": "bar",
+            "data": [
+                {
+                    "name": "",
+                    "value": 9
+                },
+                {
+                    "name": "Africa",
+                    "value": 432
+                },
+                {
+                    "name": "Americas",
+                    "value": 112
+                },
+                {
+                    "name": "Asia",
+                    "value": 183
+                },
+                {
+                    "name": "Europe",
+                    "value": 35
+                },
+                {
+                    "name": "Oceania",
+                    "value": 15
+                },
+                {
+                    "name": "World",
+                    "value": 9
+                }
+            ]
+        },
+        {
+            "name": "SubContinent1",
+            "type": "bar",
+            "data": [
+                {
+                    "name": "",
+                    "value": 9
+                },
+                {
+                    "name": "Caribbean",
+                    "value": 25
+                },
+                {
+                    "name": "Central America",
+                    "value": 42
+                },
+                {
+                    "name": "Central Asia",
+                    "value": 27
+                },
+                {
+                    "name": "Eastern Africa",
+                    "value": 156
+                },
+                {
+                    "name": "Eastern Asia",
+                    "value": 10
+                },
+                {
+                    "name": "Eastern Europe",
+                    "value": 21
+                },
+                {
+                    "name": "Melanesia",
+                    "value": 15
+                },
+                {
+                    "name": "Middle Africa",
+                    "value": 70
+                },
+                {
+                    "name": "Northern Africa",
+                    "value": 25
+                },
+                {
+                    "name": "Oceania",
+                    "value": 9
+                },
+                {
+                    "name": "South America",
+                    "value": 45
+                },
+                {
+                    "name": "South-Eastern Asia",
+                    "value": 64
+                },
+                {
+                    "name": "Southern Africa",
+                    "value": 37
+                },
+                {
+                    "name": "Southern Asia",
+                    "value": 64
+                },
+                {
+                    "name": "Southern Europe",
+                    "value": 14
+                },
+                {
+                    "name": "Western Africa",
+                    "value": 144
+                },
+                {
+                    "name": "Western Asia",
+                    "value": 18
+                }
+            ]
+        },
+        {
+            "name": "GeographyName1",
+            "type": "percentage",
+            "data": [
+                {
+                    "name": "Nicaragua",
+                    "value": 1.1320754716981132
+                },
+                {
+                    "name": "Ghana",
+                    "value": 1.1320754716981132
+                },
+                {
+                    "name": "Others",
+                    "value": 97.73584905660377
+                }
+            ]
+        },
+        {
+            "name": "AllocationCycle",
+            "type": "percentage",
+            "data": [
+                {
+                    "name": "2017-2019",
+                    "value": 33.9622641509434
+                },
+                {
+                    "name": "2023-2025",
+                    "value": 33.459119496855344
+                },
+                {
+                    "name": "2020-2022",
+                    "value": 32.57861635220126
+                }
+            ]
+        },
+        {
+            "name": "Component",
+            "type": "percentage",
+            "data": [
+                {
+                    "name": "HIV/AIDS",
+                    "value": 39.49685534591195
+                },
+                {
+                    "name": "Tuberculosis",
+                    "value": 35.22012578616352
+                },
+                {
+                    "name": "Malaria",
+                    "value": 25.28301886792453
+                }
+            ]
+        },
+        {
+            "name": "AllocationAmountReferenceRate",
+            "type": "unique",
+            "data": [
+                {
+                    "name": "Unique",
+                    "value": 781
+                }
+            ]
+        },
+        {
+            "name": "CurrencyReferenceRate",
+            "type": "percentage",
+            "data": [
+                {
+                    "name": "USD",
+                    "value": 100.0
+                }
+            ]
+        },
+        {
+            "name": "DateTimeCreated",
+            "type": "percentage",
+            "data": [
+                {
+                    "name": "2024-06-30",
+                    "value": 100.0
+                }
+            ]
+        }
+    ]
+}

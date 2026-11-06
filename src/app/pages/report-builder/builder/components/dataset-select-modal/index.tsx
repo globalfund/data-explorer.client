@@ -429,6 +429,7 @@ export const DatasetSelectModal: React.FC<{
               </Button>
               <Button
                 variant="contained"
+                data-cy="rb-dataset-next"
                 disabled={!selectedDataset}
                 endIcon={<ArrowForward />}
                 onClick={handleOpenView}

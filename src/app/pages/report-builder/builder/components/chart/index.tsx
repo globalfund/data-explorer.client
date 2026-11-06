@@ -17,6 +17,7 @@ const ChartLoadError: React.FC<{ error: unknown; height?: string }> = ({
 }) => (
   <Box
     role="alert"
+    data-cy="rb-chart-error"
     sx={{
       height,
       width: "100%",
@@ -101,9 +102,12 @@ export const ReportBuilderPageChart: React.FC<{
   latestItem.current = selectedItem;
 
   React.useEffect(() => {
+    // A chart without a type has no required dimensions, so the mapping check
+    // alone would let it through and the server would reject the request.
     if (
       chartExtra?.dataset &&
-      checkValidDimensionMapping(chartExtra.chartType || "", chartExtra.mapping)
+      chartExtra.chartType &&
+      checkValidDimensionMapping(chartExtra.chartType, chartExtra.mapping)
     ) {
       renderChartData.mutate(
         {
@@ -148,6 +152,9 @@ export const ReportBuilderPageChart: React.FC<{
         setFilterOptionGroups([]);
       };
     }
+    // Until the chart can be rendered again, show its placeholder rather than
+    // the error of an earlier request.
+    renderChartData.reset();
   }, [
     chartExtra?.mapping,
     chartExtra?.chartType,
@@ -174,6 +181,8 @@ export const ReportBuilderPageChart: React.FC<{
   return (
     <Box
       id="chart-render"
+      data-cy="rb-chart"
+      data-id={id}
       onClick={() => {
         if (!viewMode) {
           editItem({

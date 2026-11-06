@@ -136,6 +136,7 @@ export default function KPIController() {
             Source
           </Typography>
           <Box
+            data-cy="rb-kpi-source"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -144,11 +145,13 @@ export default function KPIController() {
           >
             <RadioCheck
               checked={selectedItem?.data?.source === "manual"}
+              value="manual"
               onChange={() => setSource("manual")}
               label="Manual"
             />
             <RadioCheck
               checked={selectedItem?.data?.source === "dataset"}
+              value="dataset"
               onChange={() => setSource("dataset")}
               label="Dataset"
             />

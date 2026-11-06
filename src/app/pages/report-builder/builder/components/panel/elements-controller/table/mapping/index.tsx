@@ -207,6 +207,7 @@ export default function Mapping() {
             })}
           </Box>
           <Button
+            data-cy="rb-table-edit-columns"
             variant="outlined"
             onClick={handleEditColumns}
             sx={{
@@ -269,6 +270,7 @@ export default function Mapping() {
             ) : null}
           </Box>
           <Button
+            data-cy="rb-table-filters"
             variant="outlined"
             startIcon={<FilterIcon />}
             onClick={handleEditFilters}

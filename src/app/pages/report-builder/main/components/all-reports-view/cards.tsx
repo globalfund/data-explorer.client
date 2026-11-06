@@ -146,7 +146,12 @@ export const ReportCard: React.FC<ReportCardProps> = ({
           Edit
         </Button>
         <Button onClick={handleItemClick(id, "report")}>Preview</Button>
-        <IconButton id={id} onClick={handleItemMenuClick} sx={{ p: "0px" }}>
+        <IconButton
+          id={id}
+          data-cy="rb-item-menu-button"
+          onClick={handleItemMenuClick}
+          sx={{ p: "0px" }}
+        >
           <MoreVert htmlColor="#454545" />
         </IconButton>
       </Box>

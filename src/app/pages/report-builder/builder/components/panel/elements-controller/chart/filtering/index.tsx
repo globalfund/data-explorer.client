@@ -237,6 +237,8 @@ export default function Filtering({ onBack }: FilteringProps) {
                 return (
                   <ButtonBase
                     key={group.name}
+                    data-cy="rb-filter-field"
+                    data-id={group.name}
                     onClick={() => {
                       setSelectedValues([
                         ...(appliedFilters[group.name] ?? []),
@@ -369,6 +371,7 @@ export default function Filtering({ onBack }: FilteringProps) {
             </Box>
             <Button
               variant="outlined"
+              data-cy="rb-apply-filter"
               fullWidth
               disabled={!activeGroup}
               onClick={handleApply}

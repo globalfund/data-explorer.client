@@ -48,6 +48,8 @@ const ExpandedFilterGroup = ({
               }}
             >
               <FormControlLabel
+                data-cy="rb-filter-value"
+                data-value={option.value}
                 label={option.label}
                 control={
                   <Checkbox

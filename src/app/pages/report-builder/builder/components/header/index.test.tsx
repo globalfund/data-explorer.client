@@ -12,6 +12,7 @@ jest.mock("app/utils/exportReport", () => ({
 jest.mock("app/hooks/useCMSData", () => ({ useCMSData: () => ({}) }));
 jest.mock("app/hooks/queries/report-builder", () => ({
   usePatchReport: () => mockMutation,
+  useGetReport: () => mockReportQuery,
   useGetAsset: jest.fn(),
 }));
 jest.mock("react-router-dom", () => ({
@@ -39,6 +40,7 @@ const mockMutation = {
   isPaused: false,
   error: null,
 };
+const mockReportQuery = { isError: false };
 const setup = (
   options: { dirty?: boolean; id?: string; preview?: boolean } = {},
 ) => {
@@ -75,6 +77,7 @@ const setup = (
 };
 beforeEach(() => {
   jest.useFakeTimers();
+  mockReportQuery.isError = false;
   Object.assign(mockMutation, {
     isPending: false,
     isSuccess: false,
@@ -256,3 +259,15 @@ test("closing the tab with unsaved edits asks for confirmation", () => {
   window.dispatchEvent(cleanClose);
   expect(cleanClose.defaultPrevented).toBe(false);
 });
+test.each([false, true])(
+  "a report that can't be loaded shows no name or actions (preview: %s)",
+  (preview) => {
+    mockReportQuery.isError = true;
+    setup({ preview, dirty: true });
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+    expect(screen.queryByText("Preview")).not.toBeInTheDocument();
+    expect(screen.queryByText("Back to Edit")).not.toBeInTheDocument();
+    expect(screen.queryByText("Share")).not.toBeInTheDocument();
+    expect(screen.getByText("My Reports")).toBeInTheDocument();
+  },
+);

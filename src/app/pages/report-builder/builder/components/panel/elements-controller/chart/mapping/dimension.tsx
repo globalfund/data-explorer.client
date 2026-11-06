@@ -5,6 +5,7 @@ import { mappingData, MappingTypeIcons } from "./data";
 import StyledMenu from "./menu";
 
 interface DimensionProps {
+  id: string;
   label: string;
   helperText: string;
   placeholder: string;
@@ -46,6 +47,8 @@ export function Dimension(props: Readonly<DimensionProps>) {
         {props.required ? "*" : " (Optional)"}
       </Typography>
       <Box
+        data-cy="rb-mapping-field"
+        data-id={props.id}
         onClick={handleOpenMenu}
         sx={{
           fontWeight: "400",

@@ -6,6 +6,7 @@ import { HelmetProvider } from "react-helmet-async";
 import CssBaseline from "@mui/material/CssBaseline";
 import { PageLoader } from "app/components/page-loader";
 import { shouldRetryQuery } from "app/utils/shouldRetryQuery";
+import { AUTH0_SCOPE, getAuth0CacheLocation } from "app/utils/auth0Config";
 import { StoreProvider, useStoreRehydrated } from "easy-peasy";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
@@ -45,8 +46,11 @@ function Providers(props: ProviderProps) {
           <Auth0ProviderWithRedirectCallback
             domain={import.meta.env.VITE_AUTH0_DOMAIN!}
             clientId={import.meta.env.VITE_AUTH0_CLIENT_ID!}
+            cacheLocation={getAuth0CacheLocation(
+              import.meta.env.VITE_AUTH0_CACHE_LOCATION,
+            )}
             authorizationParams={{
-              scope: "openid profile email offline_access",
+              scope: AUTH0_SCOPE,
               audience: import.meta.env.VITE_AUTH0_AUDIENCE,
               redirect_uri: `${window.location.origin}/callback`,
             }}

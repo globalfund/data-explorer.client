@@ -13,6 +13,7 @@ interface DropAreaProps {
     | React.ReactNode
     | React.ReactNode[];
   id: string;
+  "data-cy"?: string;
 }
 
 const DropArea = (props: DropAreaProps) => {
@@ -22,7 +23,7 @@ const DropArea = (props: DropAreaProps) => {
     accept: ["SELECTED_COLUMN", "AVAILABLE_COLUMN"],
   });
   return (
-    <Box ref={ref} sx={props.sx}>
+    <Box ref={ref} sx={props.sx} data-cy={props["data-cy"]}>
       {typeof props.children === "function"
         ? props.children({ isDropTarget })
         : props.children}

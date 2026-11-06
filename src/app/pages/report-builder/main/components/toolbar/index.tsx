@@ -97,6 +97,7 @@ export const ReportBuilderToolbar: React.FC<{
         <Input
           value={search}
           disableUnderline
+          inputProps={{ "data-cy": "rb-search" }}
           placeholder={getCMSDataField(
             cmsData,
             "pagesReportBuilderMain.searchPlaceholder",
@@ -204,6 +205,7 @@ export const ReportBuilderToolbar: React.FC<{
           </IconButton>
           {!isTabletOrMobile && (
             <Button
+              data-cy="rb-new-report"
               variant="contained"
               startIcon={<PlusIcon width={16} height={16} />}
               sx={{

@@ -60,6 +60,7 @@ export function AssetSelect({
         </Box>
         {selectedItem ? (
           <Button
+            data-cy={`rb-select-${type}`}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -119,6 +120,7 @@ export function AssetSelect({
             }}
           >
             <Button
+              data-cy={`rb-select-${type}`}
               onClick={() => {
                 if (selectedController) {
                   if (componentType === "table") {

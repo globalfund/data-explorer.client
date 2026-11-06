@@ -112,6 +112,7 @@ export const ReportBuilderDeleteReportModal: React.FC<
               )}
             </Button>
             <Button
+              data-cy="rb-confirm-delete"
               variant="contained"
               onClick={handleDelete}
               sx={{

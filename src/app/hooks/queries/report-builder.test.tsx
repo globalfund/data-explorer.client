@@ -3,6 +3,7 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import axiosInstance from "app/utils/axiosInstance";
 import {
+  buildListFilter,
   useGetReport,
   useGetReports,
   usePatchReport,
@@ -133,6 +134,24 @@ test("report search sends report and folder filters with sorting", async () => {
   expect(config).toMatchObject({
     ...auth,
     params: { onlyRootLevel: true, includeFolders: true },
+  });
+});
+test("search text with quotes and regex characters is matched literally", () => {
+  const filter = JSON.parse(
+    buildListFilter("name ASC", 'Q1 "draft" [v2] (HIV)', { type: "chart" }),
+  );
+  expect(filter).toEqual({
+    where: {
+      name: { like: '.*Q1 "draft" \\[v2\\] \\(HIV\\).*', options: "i" },
+      type: "chart",
+    },
+    order: ["name ASC"],
+  });
+  expect(new RegExp(filter.where.name.like).test('Q1 "draft" [v2] (HIV)')).toBe(
+    true,
+  );
+  expect(JSON.parse(buildListFilter("createdDate DESC", ""))).toEqual({
+    order: ["createdDate DESC"],
   });
 });
 test("patch sends persisted content and invalidates both list and detail caches", async () => {

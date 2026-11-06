@@ -80,6 +80,7 @@ export default function AddComponent({
   return (
     <React.Fragment>
       <Button
+        data-cy="rb-add-component"
         variant="contained"
         startIcon={<Add />}
         sx={{
@@ -133,6 +134,7 @@ export default function AddComponent({
         {ComponentOptions.map((option) => (
           <MenuItem
             key={option.value}
+            data-cy={`rb-add-${option.value}`}
             onClick={() => handleMenuItemClick(option.value)}
           >
             {option.icon}
