@@ -17,6 +17,7 @@ const ChartLoadError: React.FC<{ error: unknown; height?: string }> = ({
 }) => (
   <Box
     role="alert"
+    data-cy="rb-chart-error"
     sx={{
       height,
       width: "100%",
@@ -180,6 +181,8 @@ export const ReportBuilderPageChart: React.FC<{
   return (
     <Box
       id="chart-render"
+      data-cy="rb-chart"
+      data-id={id}
       onClick={() => {
         if (!viewMode) {
           editItem({

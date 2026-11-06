@@ -62,13 +62,24 @@ the repository's `CI_` secrets (see [CI](#ci)).
    for report thumbnails.
 4. **The client**, in test mode: `VITE_AUTH0_CACHE_LOCATION=localstorage yarn start`.
 
+The chart specs use the Allocations dataset (`gf_allocations`). Instead of the
+real backend, you can run the stand-in CI uses (see below): start
+`node cypress/data-backend-stand-in.mjs` and give the API server
+`PARSED_DATA_FILES_PATH` set to this repository's
+`cypress/fixtures/data-backend/parsed-data-files/` (with the trailing slash).
+
 ## CI
 
 `.github/workflows/e2e-report-builder.yml` runs `yarn e2e:rb` on every pull
 request, and on demand from the Actions tab. It starts MongoDB and Redis, checks
-out and starts `data-explorer.server`, and builds the client in test mode. The
-data backend isn't started, because these specs don't use it. When a run fails,
-the screenshots and the server and client logs are uploaded with it.
+out and starts `data-explorer.server`, and builds the client in test mode. When
+a run fails, the screenshots and the logs are uploaded with it.
+
+Instead of the Python data backend, it runs `cypress/data-backend-stand-in.mjs`.
+It answers the two requests the API server sends the backend, sample data and
+pages of a dataset, the same way, from the copies of Allocations in
+`cypress/fixtures/data-backend`. The API server renders charts from the same
+copy. Other datasets are listed in the dataset picker but don't load.
 
 It tests against the `data-explorer.server` branch with the same name as the
 pull request's branch, otherwise its base branch's, otherwise `feat/rb`. A manual
@@ -104,4 +115,8 @@ Pull requests from forks are skipped, since they don't get secrets.
   report's dashboard card with `reportCard(id)`. Labels come from the CMS and
   can change.
 - To check an autosave, intercept the report's PATCH and use `waitForSave()`,
-  which skips earlier saves of half-typed edits.
+  which skips earlier saves of half-typed edits. `waitForRequest()` does the
+  same for any intercepted request, such as `POST /report/render-chart-data`.
+- Seed a chart with `barChartItem({ dataset, mapping })`. Use Allocations, or
+  add another small dataset's files to `cypress/fixtures/data-backend` (from
+  `data-explorer.backend`'s `parsed-data-files/` and `sample-data-files/`).

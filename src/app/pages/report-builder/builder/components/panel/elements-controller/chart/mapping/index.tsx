@@ -169,6 +169,7 @@ export default function Mapping() {
         return (
           <Dimension
             key={dimension.id}
+            id={dimension.id}
             label={dimension.name}
             helperText={dimension.description}
             placeholder={"Select " + dimension.name}

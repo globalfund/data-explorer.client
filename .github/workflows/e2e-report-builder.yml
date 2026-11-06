@@ -98,12 +98,22 @@ jobs:
           yarn install --frozen-lockfile --ignore-scripts --network-timeout 100000
           yarn build
 
+      # Serves the specs' datasets from cypress/fixtures/data-backend, the way
+      # data-explorer.backend would (see cypress/README.md).
+      - name: Start the data backend stand-in
+        run: |
+          nohup node client/cypress/data-backend-stand-in.mjs > data-backend.log 2>&1 &
+          curl --silent --output /dev/null --retry 30 --retry-connrefused --retry-delay 1 http://localhost:5000/health-check
+
       - name: Start the API server
         working-directory: server
         env:
           AUTH0_DOMAIN: ${{ secrets.CI_AUTH0_DOMAIN }}
           AUTH0_AUDIENCE: ${{ secrets.CI_AUTH0_AUDIENCE }}
           FRONTEND_URL: http://localhost:3000
+          BACKEND_API_BASE_URL: http://localhost:5000
+          # Charts are rendered from these files rather than the backend's.
+          PARSED_DATA_FILES_PATH: ${{ github.workspace }}/client/cypress/fixtures/data-backend/parsed-data-files/
         run: |
           nohup node -r source-map-support/register . > ../server.log 2>&1 &
           curl --silent --output /dev/null --retry 30 --retry-connrefused --retry-delay 2 "$VITE_API/"
@@ -146,6 +156,7 @@ jobs:
           name: e2e-report-builder
           path: |
             client/cypress/screenshots/
+            data-backend.log
             server.log
             client.log
           if-no-files-found: ignore
