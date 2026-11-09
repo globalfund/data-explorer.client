@@ -1,7 +1,7 @@
 import React from "react";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider, createStore } from "easy-peasy";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { RBReportItemsState } from "app/state/api/action-reducers/report-builder/sync";
 import { createReportItem } from "../../../component-registry/model";
 import { ReportBuilderPageHeader } from "./index";
@@ -11,13 +11,21 @@ jest.mock("app/utils/exportReport", () => ({
 }));
 jest.mock("app/hooks/useCMSData", () => ({ useCMSData: () => ({}) }));
 jest.mock("app/hooks/queries/report-builder", () => ({
-  usePatchReport: () => mockMutation,
+  // Records which report each save was sent to.
+  usePatchReport: (reportId: string) => ({
+    ...mockMutation,
+    mutate: (...args: unknown[]) => {
+      mockSavedReportIds.push(reportId);
+      return mockMutation.mutate(...args);
+    },
+  }),
   useGetReport: () => mockReportQuery,
   useGetAsset: jest.fn(),
 }));
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
-  useParams: () => ({ id: "report-1" }),
+  useParams: () => ({ id: mockParams.id }),
+  useNavigate: () => mockNavigate,
 }));
 jest.mock("./add-component", () => ({ __esModule: true, default: () => null }));
 jest.mock("../asset-library-modal", () => ({ AssetLibraryModal: () => null }));
@@ -31,8 +39,12 @@ jest.mock(
   "app/pages/report-builder/main/components/report-issue-modal",
   () => ({ ReportBuilderReportIssueModal: () => null }),
 );
+const mockParams = { id: "report-1" };
+const mockNavigate = jest.fn();
+const mockSavedReportIds: string[] = [];
 const mockMutation = {
   mutate: jest.fn(),
+  mutateAsync: jest.fn(),
   reset: jest.fn(),
   isPending: false,
   isSuccess: false,
@@ -41,6 +53,10 @@ const mockMutation = {
   error: null,
 };
 const mockReportQuery = { isError: false };
+// Where links in the header took the router.
+const RouterPath = () => (
+  <span data-testid="router-path">{useLocation().pathname}</span>
+);
 const setup = (
   options: { dirty?: boolean; id?: string; preview?: boolean } = {},
 ) => {
@@ -69,6 +85,7 @@ const setup = (
     >
       <StoreProvider store={store}>
         <ReportBuilderPageHeader />
+        <RouterPath />
       </StoreProvider>
     </MemoryRouter>
   );
@@ -77,6 +94,8 @@ const setup = (
 };
 beforeEach(() => {
   jest.useFakeTimers();
+  mockParams.id = "report-1";
+  mockSavedReportIds.length = 0;
   mockReportQuery.isError = false;
   Object.assign(mockMutation, {
     isPending: false,
@@ -236,6 +255,60 @@ test("switching to preview saves pending edits straight away", () => {
   expect(mockMutation.mutate.mock.calls[0][0].name).toBe("Draft");
   advance(5000);
   expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+});
+test("Preview saves unsaved edits first and opens once they're saved", async () => {
+  mockMutation.mutateAsync.mockResolvedValue({});
+  const { store } = setup({ dirty: true });
+  fireEvent.click(screen.getByText("Preview"));
+  expect(mockMutation.mutateAsync).toHaveBeenCalledWith(
+    expect.objectContaining({ name: "Draft" }),
+  );
+  expect(mockNavigate).not.toHaveBeenCalled();
+  expect(screen.getByTestId("router-path")).toHaveTextContent(/^\/$/);
+  await act(async () => {});
+  expect(mockNavigate).toHaveBeenCalledWith("/report-builder/reports/report-1");
+  expect(store.getState().RBReportItemsState.dirty).toBe(false);
+});
+test("a failed save keeps the editor open with the edits", async () => {
+  mockMutation.mutateAsync.mockRejectedValue(new Error("offline"));
+  const { store } = setup({ dirty: true });
+  fireEvent.click(screen.getByText("Preview"));
+  await act(async () => {});
+  expect(mockNavigate).not.toHaveBeenCalled();
+  expect(screen.getByTestId("router-path")).toHaveTextContent(/^\/$/);
+  expect(store.getState().RBReportItemsState.dirty).toBe(true);
+});
+test("Preview of a saved report doesn't save again", () => {
+  setup();
+  fireEvent.click(screen.getByText("Preview"));
+  expect(mockMutation.mutateAsync).not.toHaveBeenCalled();
+  expect(screen.getByTestId("router-path")).toHaveTextContent(
+    "/report-builder/reports/report-1",
+  );
+});
+test("switching reports saves the previous report's edits to that report", () => {
+  const { rerenderHeader } = setup({ dirty: true });
+  advance(500);
+  mockParams.id = "report-2";
+  rerenderHeader();
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+  expect(mockMutation.mutate.mock.calls[0][0].name).toBe("Draft");
+  expect(mockSavedReportIds).toEqual(["report-1"]);
+  advance(5000);
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+});
+test("an earlier save's status reset doesn't clear a later save's error", () => {
+  mockMutation.isSuccess = true;
+  const { rerenderHeader } = setup();
+  advance(3000);
+  Object.assign(mockMutation, {
+    isSuccess: false,
+    isError: true,
+    error: { isAxiosError: true, response: { status: 403 } },
+  });
+  rerenderHeader();
+  advance(5000);
+  expect(mockMutation.reset).not.toHaveBeenCalled();
 });
 test("leaving the editor saves pending edits", () => {
   const { unmount } = setup({ dirty: true });

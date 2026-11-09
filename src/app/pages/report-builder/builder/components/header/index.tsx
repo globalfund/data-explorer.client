@@ -80,7 +80,15 @@ const spin = keyframes`
     }
   `;
 
+// Keyed by report, so switching reports unmounts the old header, which saves
+// that report's pending edits to it, rather than carrying them over to the new
+// one's render, where they no longer match the URL and would be dropped.
 export const ReportBuilderPageHeader: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  return <ReportBuilderPageHeaderContent key={id} />;
+};
+
+const ReportBuilderPageHeaderContent: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const cmsData = useCMSData({ returnData: true });
@@ -213,6 +221,32 @@ export const ReportBuilderPageHeader: React.FC = () => {
 
   const handleBackToEditClick = () => {
     navigate(`/report-builder/reports/${id}/edit`);
+  };
+
+  // Preview shows the saved report, so save unsaved edits first and only leave
+  // once that worked. If it fails, stay in the editor, which keeps the edits
+  // and shows the error.
+  const savingBeforePreview = React.useRef(false);
+  const handlePreviewClick = async (event: React.MouseEvent) => {
+    const pending = pendingEditSave.current;
+    if (!pending) return;
+    event.preventDefault();
+    if (savingBeforePreview.current) return;
+    savingBeforePreview.current = true;
+    try {
+      await updateReport.mutateAsync(pending.payload);
+    } catch {
+      setFailedSaves((count) => count + 1);
+      return;
+    } finally {
+      savingBeforePreview.current = false;
+    }
+    setFailedSaves(0);
+    if (latestPayloadFingerprint.current === pending.fingerprint) {
+      markClean();
+      pendingEditSave.current = null;
+    }
+    navigate(`/report-builder/reports/${id}`);
   };
 
   const previewMode = React.useMemo(() => {
@@ -424,6 +458,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                         data-cy="rb-preview"
                         startIcon={<PreviewIcon />}
                         to={`/report-builder/reports/${id}`}
+                        onClick={handlePreviewClick}
                       >
                         Preview
                       </Button>
@@ -805,6 +840,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                         data-cy="rb-preview"
                         startIcon={<PreviewIcon />}
                         to={`/report-builder/reports/${id}`}
+                        onClick={handlePreviewClick}
                       >
                         Preview
                       </Button>
@@ -1125,12 +1161,14 @@ export const ReportBuilderPageHeader: React.FC = () => {
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
   }, [warnBeforeUnload]);
 
+  // Cancelled once the next save starts, so it can't clear that save's error
+  // (unblocking autosave after a 403/404) or detach it while it's in flight.
   React.useEffect(() => {
-    if (updateReport.isSuccess) {
-      setTimeout(() => {
-        updateReport.reset();
-      }, 5000);
-    }
+    if (!updateReport.isSuccess) return;
+    const timer = setTimeout(() => {
+      updateReport.reset();
+    }, 5000);
+    return () => clearTimeout(timer);
   }, [updateReport.isSuccess]);
 
   return (

@@ -8,7 +8,11 @@ import { isReportItemComplete } from "app/pages/report-builder/component-registr
 import CircularProgress from "@mui/material/CircularProgress";
 import { useGetReport } from "app/hooks/queries/report-builder";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import {
+  useStore,
+  useStoreActions,
+  useStoreState,
+} from "app/state/store/hooks";
 import { EmptyPreview } from "app/pages/report-builder/builder/components/empty-preview";
 import ViewModeContainer from "app/pages/report-builder/builder/components/order-container/view";
 import { ReportItemContent } from "app/pages/report-builder/component-registry/renderer";
@@ -40,12 +44,21 @@ export const Component: React.FC = () => {
 
   const addedItemRef = React.useRef(items.length > 0);
 
+  const store = useStore();
+
   React.useEffect(() => {
-    if (reportData) {
+    // Edits saved on the way here may still be in flight, or fail. Like the
+    // editor, keep this report's unsaved draft over the cached copy, so a
+    // failed save doesn't lose them.
+    const draft = store.getState().RBReportItemsState;
+    if (reportData && !(draft.id === reportData.id && draft.dirty)) {
       hydrateActiveReport(reportData);
     }
     return () => {
-      resetReport();
+      // An unsaved draft stays for the editor to save.
+      if (!store.getState().RBReportItemsState.dirty) {
+        resetReport();
+      }
     };
   }, [reportData]);
 

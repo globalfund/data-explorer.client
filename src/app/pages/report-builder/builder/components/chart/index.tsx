@@ -2,7 +2,12 @@ import React from "react";
 import { isAxiosError } from "axios";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import {
+  useStore,
+  useStoreActions,
+  useStoreState,
+} from "app/state/store/hooks";
+import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync";
 import ChartIcon from "app/assets/vectors/RBChartLarge.svg?react";
 import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
 import ChartPlaceholder from "./placeholders/placeholder";
@@ -54,6 +59,7 @@ export const ReportBuilderPageChart: React.FC<{
   });
 
   const hasParent = !!parent?.id;
+  const store = useStore();
 
   const clearSelectedItem = useStoreActions(
     (actions) => actions.RBReportItemsControllerState.clearItem,
@@ -82,6 +88,18 @@ export const ReportBuilderPageChart: React.FC<{
 
   const setVisualOptions = (newVisualOptions: Record<string, any>) => {
     if (!selectedItem) return;
+    // A zoom is saved after a short delay, and flushed when the chart
+    // unmounts, which is also what deleting it does. A deleted grid child keeps
+    // its ID, so writing then would bring the chart back; only write to it
+    // while it's still a chart.
+    const items = store.getState().RBReportItemsState.items;
+    const siblings = parent?.id
+      ? (
+          items.find((i) => i.id === parent.id) as
+            ReportItemOf<"grid" | "column"> | undefined
+        )?.data?.items
+      : items;
+    if (siblings?.find((i) => i?.id === id)?.type !== "chart") return;
     editItem({
       ...selectedItem,
       id: id || "",
@@ -223,13 +241,15 @@ export const ReportBuilderPageChart: React.FC<{
         },
       }}
     >
-      {selectedItem?.initialized && chartExtra?.chartType ? (
-        renderChartData.isError ? (
-          <ChartLoadError
-            error={renderChartData.error}
-            height={hasParent ? "100%" : selectedItem?.options?.height}
-          />
-        ) : canRender ? (
+      {/* Checked before `initialized`: asset pages load charts uninitialized,
+          and only a successful data request initializes them. */}
+      {chartExtra?.chartType && renderChartData.isError ? (
+        <ChartLoadError
+          error={renderChartData.error}
+          height={hasParent ? "100%" : selectedItem?.options?.height}
+        />
+      ) : selectedItem?.initialized && chartExtra?.chartType ? (
+        canRender ? (
           <Box
             sx={{
               width: hasParent ? "100%" : selectedItem?.options?.width,

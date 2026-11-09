@@ -6,7 +6,10 @@ import { ReportBuilderPageTable } from "../builder/components/table";
 import { ReportBuilderPageImage } from "../builder/components/image";
 import KPIBox from "../builder/components/kpi";
 import SectionDivider from "../builder/components/section-divider";
-import { ReportItemErrorBoundary } from "./error-boundary";
+import {
+  ReportItemErrorBoundary,
+  useReportItemErrorActions,
+} from "./error-boundary";
 
 export interface ReportItemContentProps {
   item: RBReportItem;
@@ -41,6 +44,12 @@ const contentRegistry: Partial<Record<RBReportItem["type"], ItemRenderer>> = {
 };
 
 export const ReportItemContent: React.FC<ReportItemContentProps> = (props) => {
+  const errorActions = useReportItemErrorActions({
+    itemId: props.item.id,
+    itemType: props.item.type,
+    viewMode: props.viewMode,
+    parent: props.parent,
+  });
   const render = contentRegistry[props.item.type];
   if (!render) return null;
   return (
@@ -49,6 +58,7 @@ export const ReportItemContent: React.FC<ReportItemContentProps> = (props) => {
       itemType={props.item.type}
       resetKey={props.item}
       viewMode={props.viewMode}
+      {...errorActions}
     >
       {render(props)}
     </ReportItemErrorBoundary>
