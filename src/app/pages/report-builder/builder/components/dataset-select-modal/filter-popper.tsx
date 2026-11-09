@@ -158,7 +158,12 @@ const FilterPopper: React.FC<FilterPopperProps> = ({
                   localSelectedFilters?.includes(option.value) || false;
 
                 return (
-                  <Box key={index} sx={{ padding: "11px 16px" }}>
+                  <Box
+                    key={index}
+                    data-cy="rb-column-filter-option"
+                    data-value={option.value}
+                    sx={{ padding: "11px 16px" }}
+                  >
                     <Checkfield
                       label={option.label}
                       onChange={(e) => {
@@ -191,6 +196,7 @@ const FilterPopper: React.FC<FilterPopperProps> = ({
             >
               <Button variant="outlined">Back</Button>
               <Button
+                data-cy="rb-apply-column-filter"
                 sx={{
                   fontWeight: "400",
                   background: "#3154F4",

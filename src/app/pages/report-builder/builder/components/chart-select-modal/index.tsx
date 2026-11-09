@@ -717,6 +717,8 @@ const ChartSelectModal: React.FC<{
                 return (
                   <Box
                     key={chart.id}
+                    data-cy="rb-chart-type-card"
+                    data-id={chart.id}
                     onClick={() => setSelectedChartType(chart.id)}
                     sx={{
                       gap: "8px",
@@ -974,6 +976,7 @@ const ChartSelectModal: React.FC<{
             )}
           </Button>
           <Button
+            data-cy="rb-use-chart-type"
             disabled={!selectedType}
             onClick={handleApply}
             endIcon={<ArrowForward sx={{ width: "18px", height: "18px" }} />}

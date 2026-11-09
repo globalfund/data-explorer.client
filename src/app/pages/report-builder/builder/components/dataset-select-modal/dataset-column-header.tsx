@@ -65,6 +65,8 @@ const DatasetColumnHeader = ({
   return (
     <Box
       component="th"
+      data-cy="rb-preview-column"
+      data-id={column.name}
       sx={{
         width: "240px",
         maxWidth: "240px",
@@ -186,6 +188,7 @@ const DatasetColumnHeader = ({
               handleClose={handleCloseSortPopper}
             >
               <IconButton
+                data-cy="rb-sort-column"
                 disableRipple
                 sx={{
                   padding: 0,
@@ -212,6 +215,7 @@ const DatasetColumnHeader = ({
               handleClose={handleCloseFilterPopper}
             >
               <IconButton
+                data-cy="rb-filter-column"
                 disableRipple
                 sx={{
                   padding: 0,

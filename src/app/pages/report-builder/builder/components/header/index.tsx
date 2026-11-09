@@ -1,4 +1,5 @@
 import React from "react";
+import { isAxiosError } from "axios";
 import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import { useDebounce } from "react-use";
@@ -11,7 +12,13 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { Pencil } from "../report-settings/icons";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import {
+  useStore,
+  useStoreActions,
+  useStoreState,
+} from "app/state/store/hooks";
+import { RBReportItemsModel } from "app/state/api/action-reducers/report-builder/sync";
+import { flushPendingChartEdits } from "app/pages/report-builder/builder/components/chart/pending-edits";
 import CopyIcon from "app/assets/vectors/Copy.svg?react";
 import EmailIcon from "app/assets/vectors/Email.svg?react";
 import PNGIcon from "app/assets/vectors/PngIcon.svg?react";
@@ -25,7 +32,11 @@ import { useCMSData } from "app/hooks/useCMSData";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import UploadIcon from "app/assets/vectors/Upload.svg?react";
-import { useGetAsset, usePatchReport } from "app/hooks/queries/report-builder";
+import {
+  useGetAsset,
+  useGetReport,
+  usePatchReport,
+} from "app/hooks/queries/report-builder";
 import ErrorIcon from "app/assets/vectors/ReportBuilderAutoSaveError.svg?react";
 import CompleteIcon from "app/assets/vectors/ReportBuilderCompleteIcon.svg?react";
 import WarningIcon from "app/assets/vectors/ReportBuilderAutoSaveWarning.svg?react";
@@ -75,7 +86,28 @@ const spin = keyframes`
     }
   `;
 
+const toReportPayload = (
+  report: Pick<
+    RBReportItemsModel,
+    "name" | "description" | "items" | "settings"
+  >,
+) => ({
+  name: report.name,
+  description: report.description,
+  items: prepareReportItemsForSave(report.items),
+  settings: report.settings,
+});
+type ReportPayload = ReturnType<typeof toReportPayload>;
+
+// Keyed by report, so switching reports unmounts the old header, which saves
+// that report's pending edits to it, rather than carrying them over to the new
+// one's render, where they no longer match the URL and would be dropped.
 export const ReportBuilderPageHeader: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  return <ReportBuilderPageHeaderContent key={id} />;
+};
+
+const ReportBuilderPageHeaderContent: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const cmsData = useCMSData({ returnData: true });
@@ -87,6 +119,9 @@ export const ReportBuilderPageHeader: React.FC = () => {
   );
 
   const updateReport = usePatchReport(id);
+  // Shares the page's request. If the report can't be loaded, the page says
+  // why; there's nothing here to rename, save, preview or share.
+  const loadFailed = useGetReport(id).isError;
 
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
@@ -153,14 +188,23 @@ export const ReportBuilderPageHeader: React.FC = () => {
 
   const handleDownloadShareableFile =
     (type: "png" | "svg" | "pdf") => async () => {
-      await exportReportFromServer(id!, type);
-      setSnackbarMessage(
-        `${type.toUpperCase()} ${getCMSDataField(
-          cmsData,
-          "pagesReportBuilderBuilder.downloadedMessageSuffix",
-          "downloaded!",
-        )}`,
-      );
+      // Server-side rendering takes a few seconds, so acknowledge the click.
+      setSnackbarMessage(`Preparing ${type.toUpperCase()}...`);
+      setSnackbarOpen(true);
+      try {
+        await exportReportFromServer(id!, type);
+        setSnackbarMessage(
+          `${type.toUpperCase()} ${getCMSDataField(
+            cmsData,
+            "pagesReportBuilderBuilder.downloadedMessageSuffix",
+            "downloaded!",
+          )}`,
+        );
+      } catch {
+        setSnackbarMessage(
+          `Couldn't export the ${type.toUpperCase()}. Please try again.`,
+        );
+      }
       setSnackbarOpen(true);
     };
 
@@ -196,6 +240,31 @@ export const ReportBuilderPageHeader: React.FC = () => {
 
   const handleBackToEditClick = () => {
     navigate(`/report-builder/reports/${id}/edit`);
+  };
+
+  // Preview shows the saved report, so save unsaved edits first and only leave
+  // once that worked. If it fails, stay in the editor, which keeps the edits
+  // and shows the error.
+  const savingBeforePreview = React.useRef(false);
+  const handlePreviewClick = async (event: React.MouseEvent) => {
+    const pending = takeUnsavedEdits();
+    if (!pending) return;
+    event.preventDefault();
+    if (savingBeforePreview.current) return;
+    savingBeforePreview.current = true;
+    try {
+      await updateReport.mutateAsync(pending.payload);
+    } catch {
+      setFailedSaves((count) => count + 1);
+      return;
+    } finally {
+      savingBeforePreview.current = false;
+    }
+    // Left this report while it saved, so whatever is open now is another.
+    if (!mounted.current) return;
+    setFailedSaves(0);
+    markSavedIfUnchanged(pending.fingerprint);
+    navigate(`/report-builder/reports/${id}`);
   };
 
   const previewMode = React.useMemo(() => {
@@ -254,30 +323,35 @@ export const ReportBuilderPageHeader: React.FC = () => {
                     "My Reports",
                   )}
                 </Link>
-                <Typography>/</Typography>
-                <input
-                  type="text"
-                  value={reportState.name}
-                  ref={nameInputRef}
-                  disabled={previewMode}
-                  onChange={handleNameOnChangeEvent}
-                />
-                {!previewMode && (
-                  <IconButton onClick={handlePencilButtonClick}>
-                    <Pencil />
-                  </IconButton>
-                )}
-                {previewMode && (
-                  <Typography
-                    sx={{
-                      fontSize: "14px",
-                      padding: "5px 8px",
-                      borderRadius: "4px",
-                      bgcolor: "#d6ddfd",
-                    }}
-                  >
-                    Preview
-                  </Typography>
+                {!loadFailed && (
+                  <React.Fragment>
+                    <Typography>/</Typography>
+                    <input
+                      type="text"
+                      data-cy="rb-report-name"
+                      value={reportState.name}
+                      ref={nameInputRef}
+                      disabled={previewMode}
+                      onChange={handleNameOnChangeEvent}
+                    />
+                    {!previewMode && (
+                      <IconButton onClick={handlePencilButtonClick}>
+                        <Pencil />
+                      </IconButton>
+                    )}
+                    {previewMode && (
+                      <Typography
+                        sx={{
+                          fontSize: "14px",
+                          padding: "5px 8px",
+                          borderRadius: "4px",
+                          bgcolor: "#d6ddfd",
+                        }}
+                      >
+                        Preview
+                      </Typography>
+                    )}
+                  </React.Fragment>
                 )}
               </Box>
               <Box
@@ -290,9 +364,10 @@ export const ReportBuilderPageHeader: React.FC = () => {
                   justifyContent: "flex-end",
                 }}
               >
-                {!previewMode && (
+                {!loadFailed && !previewMode && (
                   <React.Fragment>
                     <Typography
+                      data-cy="rb-save-status"
                       variant="body1"
                       component="span"
                       fontSize="14px"
@@ -398,8 +473,10 @@ export const ReportBuilderPageHeader: React.FC = () => {
                       </Button>
                       <Button
                         component={Link}
+                        data-cy="rb-preview"
                         startIcon={<PreviewIcon />}
                         to={`/report-builder/reports/${id}`}
+                        onClick={handlePreviewClick}
                       >
                         Preview
                       </Button>
@@ -407,7 +484,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                     <AddComponent onOpenAssets={handleOpenAssetLibrary} />
                   </React.Fragment>
                 )}
-                {previewMode && (
+                {!loadFailed && previewMode && (
                   <React.Fragment>
                     <Box
                       sx={{
@@ -630,30 +707,35 @@ export const ReportBuilderPageHeader: React.FC = () => {
                     "My Reports",
                   )}
                 </Link>
-                <Typography>/</Typography>
-                <input
-                  type="text"
-                  value={reportState.name}
-                  ref={nameInputRef}
-                  disabled={previewMode}
-                  onChange={handleNameOnChangeEvent}
-                />
-                {!previewMode && (
-                  <IconButton onClick={handlePencilButtonClick}>
-                    <Pencil />
-                  </IconButton>
-                )}
-                {previewMode && (
-                  <Typography
-                    sx={{
-                      fontSize: "14px",
-                      padding: "5px 8px",
-                      borderRadius: "4px",
-                      bgcolor: "#d6ddfd",
-                    }}
-                  >
-                    Preview
-                  </Typography>
+                {!loadFailed && (
+                  <React.Fragment>
+                    <Typography>/</Typography>
+                    <input
+                      type="text"
+                      data-cy="rb-report-name"
+                      value={reportState.name}
+                      ref={nameInputRef}
+                      disabled={previewMode}
+                      onChange={handleNameOnChangeEvent}
+                    />
+                    {!previewMode && (
+                      <IconButton onClick={handlePencilButtonClick}>
+                        <Pencil />
+                      </IconButton>
+                    )}
+                    {previewMode && (
+                      <Typography
+                        sx={{
+                          fontSize: "14px",
+                          padding: "5px 8px",
+                          borderRadius: "4px",
+                          bgcolor: "#d6ddfd",
+                        }}
+                      >
+                        Preview
+                      </Typography>
+                    )}
+                  </React.Fragment>
                 )}
               </Box>
               <Box
@@ -664,9 +746,10 @@ export const ReportBuilderPageHeader: React.FC = () => {
                   alignItems: "center",
                 }}
               >
-                {!previewMode && (
+                {!loadFailed && !previewMode && (
                   <React.Fragment>
                     <Typography
+                      data-cy="rb-save-status"
                       variant="body1"
                       component="span"
                       fontSize="14px"
@@ -772,8 +855,10 @@ export const ReportBuilderPageHeader: React.FC = () => {
                       </Button>
                       <Button
                         component={Link}
+                        data-cy="rb-preview"
                         startIcon={<PreviewIcon />}
                         to={`/report-builder/reports/${id}`}
+                        onClick={handlePreviewClick}
                       >
                         Preview
                       </Button>
@@ -781,7 +866,7 @@ export const ReportBuilderPageHeader: React.FC = () => {
                     <AddComponent onOpenAssets={handleOpenAssetLibrary} />
                   </React.Fragment>
                 )}
-                {previewMode && (
+                {!loadFailed && previewMode && (
                   <React.Fragment>
                     <Box
                       sx={{
@@ -989,15 +1074,11 @@ export const ReportBuilderPageHeader: React.FC = () => {
     updateReport.isError,
     updateReport.isPaused,
     assetLibraryOpen,
+    loadFailed,
   ]);
 
   const reportPayload = React.useMemo(
-    () => ({
-      name: reportState.name,
-      description: reportState.description,
-      items: prepareReportItemsForSave(reportState.items),
-      settings: reportState.settings,
-    }),
+    () => toReportPayload(reportState),
     [
       reportState.name,
       reportState.description,
@@ -1010,44 +1091,124 @@ export const ReportBuilderPageHeader: React.FC = () => {
     () => JSON.stringify(reportPayload),
     [reportPayload],
   );
-  const latestPayloadFingerprint = React.useRef(reportPayloadFingerprint);
-  latestPayloadFingerprint.current = reportPayloadFingerprint;
+
+  // No access / deleted won't succeed on retry; stop autosaving instead of
+  // re-sending every 2 seconds. The error state stays visible in the header.
+  const saveStatus = isAxiosError(updateReport.error)
+    ? updateReport.error.response?.status
+    : undefined;
+  const saveBlocked = saveStatus === 403 || saveStatus === 404;
+  const hasUnsavedDraft = reportState.id === id && reportState.dirty;
+  const hasUnsavedEdits = !previewMode && hasUnsavedDraft;
+
+  // Back off after failed saves (2s, 4s, 8s... up to a minute) instead of
+  // re-sending every 2 seconds while the server or connection is down.
+  const [failedSaves, setFailedSaves] = React.useState(0);
+  const saveDelay = Math.min(2000 * 2 ** failedSaves, 60_000);
+
+  // The functions below also run from effects, cleanups and the memoized
+  // toolbar, so they read the store, and this, as they are at that moment.
+  const store = useStore();
+  const saveBlockedRef = React.useRef(saveBlocked);
+  saveBlockedRef.current = saveBlocked;
+
+  /**
+   * This report's unsaved edits as they are now, including chart zooms that
+   * haven't reached the store yet.
+   */
+  const takeUnsavedEdits = () => {
+    flushPendingChartEdits();
+    const state = store.getState().RBReportItemsState;
+    if (state.id !== id || !state.dirty || saveBlockedRef.current) return null;
+    const payload = toReportPayload(state);
+    return { payload, fingerprint: JSON.stringify(payload) };
+  };
+
+  // Only while the store still holds this report as it was saved: edits made
+  // since, or another report opened since, stay unsaved.
+  const markSavedIfUnchanged = (fingerprint: string) => {
+    const state = store.getState().RBReportItemsState;
+    if (
+      state.id === id &&
+      JSON.stringify(toReportPayload(state)) === fingerprint
+    ) {
+      markClean();
+    }
+  };
+
+  const save = (payload: ReportPayload, fingerprint: string) => {
+    updateReport.mutate(payload, {
+      onSuccess: () => {
+        setFailedSaves(0);
+        markSavedIfUnchanged(fingerprint);
+      },
+      onError: () => setFailedSaves((count) => count + 1),
+    });
+  };
 
   useDebounce(
     () => {
-      if (
-        !previewMode &&
-        !updateReport.isPending &&
-        reportState.id === id &&
-        reportState.dirty
-      ) {
-        const savedFingerprint = reportPayloadFingerprint;
-
-        updateReport.mutate(reportPayload, {
-          onSuccess: () => {
-            if (latestPayloadFingerprint.current === savedFingerprint) {
-              markClean();
-            }
-          },
-        });
+      if (hasUnsavedEdits && !saveBlocked && !updateReport.isPending) {
+        save(reportPayload, reportPayloadFingerprint);
       }
     },
-    2000,
+    saveDelay,
     [
-      reportState.id,
-      reportState.dirty,
+      hasUnsavedEdits,
       reportPayloadFingerprint,
-      previewMode,
+      saveBlocked,
+      saveDelay,
       updateReport.isPending,
     ],
   );
 
+  // Leaving the editor (for Preview, or another page) cancels the debounce, so
+  // save what it was waiting for straight away. By then a chart that's going
+  // away may have written a last zoom, which is why this reads the store.
+  const flushUnsavedEdits = () => {
+    const pending = takeUnsavedEdits();
+    if (pending) save(pending.payload, pending.fingerprint);
+  };
+  const editing = React.useRef(!previewMode);
   React.useEffect(() => {
-    if (updateReport.isSuccess) {
-      setTimeout(() => {
-        updateReport.reset();
-      }, 5000);
-    }
+    if (previewMode && editing.current) flushUnsavedEdits();
+    editing.current = !previewMode;
+  }, [previewMode]);
+  const mounted = React.useRef(true);
+  React.useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      if (editing.current) flushUnsavedEdits();
+    };
+  }, []);
+
+  // Unsaved edits only live in this tab's session storage, which is gone once
+  // the tab closes, so warn before leaving. That includes a draft Preview kept
+  // because its save failed. (Otherwise a draft in Preview needs no warning:
+  // charts there can mark it changed just by rendering.)
+  const warnBeforeUnload =
+    hasUnsavedEdits ||
+    updateReport.isPending ||
+    (hasUnsavedDraft && updateReport.isError);
+  React.useEffect(() => {
+    if (!warnBeforeUnload) return;
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [warnBeforeUnload]);
+
+  // Cancelled once the next save starts, so it can't clear that save's error
+  // (unblocking autosave after a 403/404) or detach it while it's in flight.
+  React.useEffect(() => {
+    if (!updateReport.isSuccess) return;
+    const timer = setTimeout(() => {
+      updateReport.reset();
+    }, 5000);
+    return () => clearTimeout(timer);
   }, [updateReport.isSuccess]);
 
   return (
@@ -1169,14 +1330,22 @@ export const ReportBuilderAssetPageHeader: React.FC = () => {
 
   const handleDownloadShareableFile =
     (type: "png" | "svg" | "pdf") => async () => {
-      await exportReportFromServer(id!, type, true);
-      setSnackbarMessage(
-        `${type.toUpperCase()} ${getCMSDataField(
-          cmsData,
-          "pagesReportBuilderBuilder.downloadedMessageSuffix",
-          "downloaded!",
-        )}`,
-      );
+      setSnackbarMessage(`Preparing ${type.toUpperCase()}...`);
+      setSnackbarOpen(true);
+      try {
+        await exportReportFromServer(id!, type, true);
+        setSnackbarMessage(
+          `${type.toUpperCase()} ${getCMSDataField(
+            cmsData,
+            "pagesReportBuilderBuilder.downloadedMessageSuffix",
+            "downloaded!",
+          )}`,
+        );
+      } catch {
+        setSnackbarMessage(
+          `Couldn't export the ${type.toUpperCase()}. Please try again.`,
+        );
+      }
       setSnackbarOpen(true);
     };
 
@@ -1244,25 +1413,29 @@ export const ReportBuilderAssetPageHeader: React.FC = () => {
                     "My Reports",
                   )}
                 </Link>
-                <Typography>/</Typography>
-                <input
-                  type="text"
-                  value={assetData?.name ?? ""}
-                  ref={nameInputRef}
-                  disabled
-                  size={assetData?.name.length ?? 1}
-                />
+                {!assetQuery.isError && (
+                  <React.Fragment>
+                    <Typography>/</Typography>
+                    <input
+                      type="text"
+                      value={assetData?.name ?? ""}
+                      ref={nameInputRef}
+                      disabled
+                      size={assetData?.name.length ?? 1}
+                    />
 
-                <Typography
-                  sx={{
-                    fontSize: "14px",
-                    padding: "5px 8px",
-                    borderRadius: "4px",
-                    bgcolor: "#d6ddfd",
-                  }}
-                >
-                  Previewing
-                </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "14px",
+                        padding: "5px 8px",
+                        borderRadius: "4px",
+                        bgcolor: "#d6ddfd",
+                      }}
+                    >
+                      Previewing
+                    </Typography>
+                  </React.Fragment>
+                )}
               </Box>
               <Box
                 sx={{
@@ -1272,132 +1445,134 @@ export const ReportBuilderAssetPageHeader: React.FC = () => {
                   alignItems: "center",
                 }}
               >
-                <React.Fragment>
-                  <Box
-                    sx={{
-                      gap: "10px",
-                      display: "flex",
-                      alignItems: "center",
-                      ".MuiButtonBase-root": {
-                        height: "35px",
-                        fontSize: "14px",
-                        bgcolor: "#fff",
-                        fontWeight: "400",
-                        padding: "6px 12px",
-                        borderRadius: "4px",
-                        textTransform: "none",
-                        border: "1px solid #dfe3e5",
-                        "&:hover": {
-                          bgcolor: "#f1f3f5",
-                          borderColor: "#70777e",
-                        },
-                      },
-                    }}
-                  >
-                    <Button
-                      startIcon={<BackArrowIcon />}
-                      onClick={handleBackToEditClick}
-                    >
-                      Back to Assets
-                    </Button>
-                    <Button
-                      onClick={handleClick2}
-                      startIcon={
-                        <UploadIcon width="10.667px" height="13.333px" />
-                      }
-                    >
-                      Export
-                    </Button>
-                    <Button onClick={handleClick} startIcon={<ShareIcon />}>
-                      Share
-                    </Button>
-                    <Button
-                      onClick={() => setUseAssetModalOpen(true)}
-                      startIcon={<Add />}
+                {!assetQuery.isError && (
+                  <React.Fragment>
+                    <Box
                       sx={{
-                        color: "#fff !important",
-                        bgcolor: "#3154f4 !important",
-                        svg: { path: { fill: "#fff !important" } },
+                        gap: "10px",
+                        display: "flex",
+                        alignItems: "center",
+                        ".MuiButtonBase-root": {
+                          height: "35px",
+                          fontSize: "14px",
+                          bgcolor: "#fff",
+                          fontWeight: "400",
+                          padding: "6px 12px",
+                          borderRadius: "4px",
+                          textTransform: "none",
+                          border: "1px solid #dfe3e5",
+                          "&:hover": {
+                            bgcolor: "#f1f3f5",
+                            borderColor: "#70777e",
+                          },
+                        },
                       }}
                     >
-                      Use Asset
-                    </Button>
-                  </Box>
-                  <Menu
-                    open={open}
-                    keepMounted
-                    disableScrollLock
-                    anchorEl={anchorEl}
-                    onClose={handleClose}
-                    transformOrigin={{
-                      vertical: -5,
-                      horizontal: "right",
-                    }}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                    sx={menuSx}
-                  >
-                    <MenuItem onClick={handleCopyUrlLink}>
-                      <CopyIcon />
-                      {getCMSDataField(
-                        cmsData,
-                        "pagesReportBuilderBuilder.copyUrlLinkMenuItem",
-                        "Copy URL Link",
-                      )}
-                    </MenuItem>
-                    <MenuItem onClick={handleSendViaEmail}>
-                      <EmailIcon />
-                      {getCMSDataField(
-                        cmsData,
-                        "pagesReportBuilderBuilder.sendViaEmailMenuItem",
-                        "Send via Email",
-                      )}
-                    </MenuItem>
-                  </Menu>
-                  <Menu
-                    keepMounted
-                    open={open2}
-                    disableScrollLock
-                    anchorEl={anchorEl2}
-                    onClose={handleClose2}
-                    transformOrigin={{
-                      vertical: -5,
-                      horizontal: "right",
-                    }}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                    sx={menuSx}
-                  >
-                    <MenuItem onClick={handleDownloadShareableFile("png")}>
-                      <PNGIcon />
-                      {getCMSDataField(
-                        cmsData,
-                        "pagesReportBuilderBuilder.pngFileMenuItem",
-                        "PNG",
-                      )}
-                    </MenuItem>
-                    <MenuItem onClick={handleDownloadShareableFile("svg")}>
-                      <SVGIcon />
-                      {getCMSDataField(
-                        cmsData,
-                        "pagesReportBuilderBuilder.svgFileMenuItem",
-                        "SVG",
-                      )}
-                    </MenuItem>
-                    <MenuItem onClick={handleDownloadShareableFile("pdf")}>
-                      <PDFIcon />
-                      {getCMSDataField(
-                        cmsData,
-                        "pagesReportBuilderBuilder.pdfFileMenuItem",
-                        "PDF",
-                      )}
-                    </MenuItem>
-                  </Menu>
-                </React.Fragment>
+                      <Button
+                        startIcon={<BackArrowIcon />}
+                        onClick={handleBackToEditClick}
+                      >
+                        Back to Assets
+                      </Button>
+                      <Button
+                        onClick={handleClick2}
+                        startIcon={
+                          <UploadIcon width="10.667px" height="13.333px" />
+                        }
+                      >
+                        Export
+                      </Button>
+                      <Button onClick={handleClick} startIcon={<ShareIcon />}>
+                        Share
+                      </Button>
+                      <Button
+                        onClick={() => setUseAssetModalOpen(true)}
+                        startIcon={<Add />}
+                        sx={{
+                          color: "#fff !important",
+                          bgcolor: "#3154f4 !important",
+                          svg: { path: { fill: "#fff !important" } },
+                        }}
+                      >
+                        Use Asset
+                      </Button>
+                    </Box>
+                    <Menu
+                      open={open}
+                      keepMounted
+                      disableScrollLock
+                      anchorEl={anchorEl}
+                      onClose={handleClose}
+                      transformOrigin={{
+                        vertical: -5,
+                        horizontal: "right",
+                      }}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                      sx={menuSx}
+                    >
+                      <MenuItem onClick={handleCopyUrlLink}>
+                        <CopyIcon />
+                        {getCMSDataField(
+                          cmsData,
+                          "pagesReportBuilderBuilder.copyUrlLinkMenuItem",
+                          "Copy URL Link",
+                        )}
+                      </MenuItem>
+                      <MenuItem onClick={handleSendViaEmail}>
+                        <EmailIcon />
+                        {getCMSDataField(
+                          cmsData,
+                          "pagesReportBuilderBuilder.sendViaEmailMenuItem",
+                          "Send via Email",
+                        )}
+                      </MenuItem>
+                    </Menu>
+                    <Menu
+                      keepMounted
+                      open={open2}
+                      disableScrollLock
+                      anchorEl={anchorEl2}
+                      onClose={handleClose2}
+                      transformOrigin={{
+                        vertical: -5,
+                        horizontal: "right",
+                      }}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                      sx={menuSx}
+                    >
+                      <MenuItem onClick={handleDownloadShareableFile("png")}>
+                        <PNGIcon />
+                        {getCMSDataField(
+                          cmsData,
+                          "pagesReportBuilderBuilder.pngFileMenuItem",
+                          "PNG",
+                        )}
+                      </MenuItem>
+                      <MenuItem onClick={handleDownloadShareableFile("svg")}>
+                        <SVGIcon />
+                        {getCMSDataField(
+                          cmsData,
+                          "pagesReportBuilderBuilder.svgFileMenuItem",
+                          "SVG",
+                        )}
+                      </MenuItem>
+                      <MenuItem onClick={handleDownloadShareableFile("pdf")}>
+                        <PDFIcon />
+                        {getCMSDataField(
+                          cmsData,
+                          "pagesReportBuilderBuilder.pdfFileMenuItem",
+                          "PDF",
+                        )}
+                      </MenuItem>
+                    </Menu>
+                  </React.Fragment>
+                )}
               </Box>
             </React.Fragment>
           )}

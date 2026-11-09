@@ -52,11 +52,12 @@ export default function Filtering({ onBack }: FilteringProps) {
     parent: selectedController?.parent ?? undefined,
   });
   const datasetId = item?.data?.dataset || "";
-  const filterOptionsQuery = useDatasetFilterOptions(datasetId);
+  const appliedFilters = item?.data?.appliedFilters ?? {};
+  // Counts for each field reflect the filters applied on the other fields.
+  const filterOptionsQuery = useDatasetFilterOptions(datasetId, appliedFilters);
   const sampledDatasetQuery = useGFSampleDataset(datasetId);
   const dataTypes = sampledDatasetQuery.data?.data.data.result.dataTypes;
   const optionGroups = filterOptionsQuery.data?.data ?? [];
-  const appliedFilters = item?.data?.appliedFilters ?? {};
   const hasAppliedFilters = Object.values(appliedFilters).some(
     (values) => values.length > 0,
   );
@@ -236,6 +237,8 @@ export default function Filtering({ onBack }: FilteringProps) {
                 return (
                   <ButtonBase
                     key={group.name}
+                    data-cy="rb-filter-field"
+                    data-id={group.name}
                     onClick={() => {
                       setSelectedValues([
                         ...(appliedFilters[group.name] ?? []),
@@ -368,6 +371,7 @@ export default function Filtering({ onBack }: FilteringProps) {
             </Box>
             <Button
               variant="outlined"
+              data-cy="rb-apply-filter"
               fullWidth
               disabled={!activeGroup}
               onClick={handleApply}

@@ -3,14 +3,18 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import axiosInstance from "app/utils/axiosInstance";
 import {
+  buildListFilter,
   useGetReport,
   useGetReports,
   usePatchReport,
+  usePatchReport2,
   useCreateReport,
   useDeleteReport,
   useDuplicateReport,
   useFilteredDataset,
   useGFDatasetPage,
+  useGetFolders,
+  useDatasetFilterOptions,
   useMultiDeleteReportsFolders,
 } from "./report-builder";
 import { createReportItem } from "app/pages/report-builder/component-registry/model";
@@ -73,6 +77,40 @@ test("report fetch exposes server errors", async () => {
   await waitFor(() => expect(result.current.isError).toBe(true));
   expect(result.current.error?.message).toBe("Unavailable");
 });
+test("filter options send applied filters under the key the server reads", async () => {
+  const { wrapper } = setup();
+  jest.mocked(axiosInstance.post).mockResolvedValue({ data: [] });
+  const { result } = renderHook(
+    () => useDatasetFilterOptions("gf_allocations", { component: ["HIV"] }),
+    { wrapper },
+  );
+  await waitFor(() => expect(result.current.isSuccess).toBe(true));
+  expect(axiosInstance.post).toHaveBeenCalledWith(
+    "/report/filter-options",
+    { datasetId: "gf_allocations", filters: { component: ["HIV"] } },
+    auth,
+  );
+});
+test("report and asset folder lists are cached separately", async () => {
+  const { client, wrapper } = setup();
+  jest.mocked(axiosInstance.get).mockImplementation(async (_url, config) => ({
+    data: [{ id: String(config?.params?.filter) }],
+  }));
+  const params = { sort: "createdDate DESC", search: "" };
+  const reports = renderHook(
+    () => useGetFolders({ ...params, type: "report" }),
+    { wrapper },
+  );
+  const assets = renderHook(() => useGetFolders({ ...params, type: "asset" }), {
+    wrapper,
+  });
+  await waitFor(() => expect(assets.result.current.isSuccess).toBe(true));
+  await waitFor(() => expect(reports.result.current.isSuccess).toBe(true));
+  expect(axiosInstance.get).toHaveBeenCalledTimes(2);
+  expect(reports.result.current.data?.data[0].id).toContain('"type":"report"');
+  expect(assets.result.current.data?.data[0].id).toContain('"type":"asset"');
+  expect(client.getQueryCache().findAll().length).toBe(2);
+});
 test("report search sends report and folder filters with sorting", async () => {
   const { wrapper } = setup();
   jest.mocked(axiosInstance.get).mockResolvedValue({ data: [] });
@@ -97,6 +135,24 @@ test("report search sends report and folder filters with sorting", async () => {
   expect(config).toMatchObject({
     ...auth,
     params: { onlyRootLevel: true, includeFolders: true },
+  });
+});
+test("search text with quotes and regex characters is matched literally", () => {
+  const filter = JSON.parse(
+    buildListFilter("name ASC", 'Q1 "draft" [v2] (HIV)', { type: "chart" }),
+  );
+  expect(filter).toEqual({
+    where: {
+      name: { like: '.*Q1 "draft" \\[v2\\] \\(HIV\\).*', options: "i" },
+      type: "chart",
+    },
+    order: ["name ASC"],
+  });
+  expect(new RegExp(filter.where.name.like).test('Q1 "draft" [v2] (HIV)')).toBe(
+    true,
+  );
+  expect(JSON.parse(buildListFilter("createdDate DESC", ""))).toEqual({
+    order: ["createdDate DESC"],
   });
 });
 test("patch sends persisted content and invalidates both list and detail caches", async () => {
@@ -134,6 +190,43 @@ test("failed saves expose errors and do not invalidate saved report caches", asy
   });
   await waitFor(() => expect(result.current.isError).toBe(true));
   expect(invalidate).not.toHaveBeenCalled();
+});
+test("a dashboard rename waits for the report's pending editor save", async () => {
+  const { wrapper } = setup();
+  let finishEditorSave = () => {};
+  jest
+    .mocked(axiosInstance.patch)
+    .mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          finishEditorSave = () => resolve({ data: {} });
+        }),
+    )
+    .mockResolvedValue({ data: {} });
+  const { result } = renderHook(
+    () => ({ save: usePatchReport("one"), rename: usePatchReport2() }),
+    { wrapper },
+  );
+  act(() => result.current.save.mutate({ name: "Old" }));
+  await waitFor(() => expect(axiosInstance.patch).toHaveBeenCalledTimes(1));
+
+  // Another report's rename goes ahead; this report's waits.
+  await act(async () => {
+    await result.current.rename.mutateAsync({ id: "two", name: "Other" });
+  });
+  act(() => result.current.rename.mutate({ id: "one", name: "New" }));
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+  expect(axiosInstance.patch).toHaveBeenCalledTimes(2);
+
+  await act(async () => finishEditorSave());
+  await waitFor(() => expect(axiosInstance.patch).toHaveBeenCalledTimes(3));
+  expect(axiosInstance.patch).toHaveBeenLastCalledWith(
+    "/report/one",
+    { id: "one", name: "New" },
+    auth,
+  );
 });
 test("create sends report metadata, settings and items", async () => {
   const { wrapper } = setup();

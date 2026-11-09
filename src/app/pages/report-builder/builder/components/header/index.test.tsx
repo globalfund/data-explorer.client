@@ -1,9 +1,10 @@
 import React from "react";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider, createStore } from "easy-peasy";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { RBReportItemsState } from "app/state/api/action-reducers/report-builder/sync";
 import { createReportItem } from "../../../component-registry/model";
+import { trackPendingChartEdits } from "../chart/pending-edits";
 import { ReportBuilderPageHeader } from "./index";
 
 jest.mock("app/utils/exportReport", () => ({
@@ -11,12 +12,21 @@ jest.mock("app/utils/exportReport", () => ({
 }));
 jest.mock("app/hooks/useCMSData", () => ({ useCMSData: () => ({}) }));
 jest.mock("app/hooks/queries/report-builder", () => ({
-  usePatchReport: () => mockMutation,
+  // Records which report each save was sent to.
+  usePatchReport: (reportId: string) => ({
+    ...mockMutation,
+    mutate: (...args: unknown[]) => {
+      mockSavedReportIds.push(reportId);
+      return mockMutation.mutate(...args);
+    },
+  }),
+  useGetReport: () => mockReportQuery,
   useGetAsset: jest.fn(),
 }));
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
-  useParams: () => ({ id: "report-1" }),
+  useParams: () => ({ id: mockParams.id }),
+  useNavigate: () => mockNavigate,
 }));
 jest.mock("./add-component", () => ({ __esModule: true, default: () => null }));
 jest.mock("../asset-library-modal", () => ({ AssetLibraryModal: () => null }));
@@ -30,8 +40,12 @@ jest.mock(
   "app/pages/report-builder/main/components/report-issue-modal",
   () => ({ ReportBuilderReportIssueModal: () => null }),
 );
+const mockParams = { id: "report-1" };
+const mockNavigate = jest.fn();
+const mockSavedReportIds: string[] = [];
 const mockMutation = {
   mutate: jest.fn(),
+  mutateAsync: jest.fn(),
   reset: jest.fn(),
   isPending: false,
   isSuccess: false,
@@ -39,6 +53,11 @@ const mockMutation = {
   isPaused: false,
   error: null,
 };
+const mockReportQuery = { isError: false };
+// Where links in the header took the router.
+const RouterPath = () => (
+  <span data-testid="router-path">{useLocation().pathname}</span>
+);
 const setup = (
   options: { dirty?: boolean; id?: string; preview?: boolean } = {},
 ) => {
@@ -61,29 +80,44 @@ const setup = (
     ],
   });
   if (options.dirty) store.getActions().RBReportItemsState.setName("Draft");
-  const view = render(
+  const tree = () => (
     <MemoryRouter
       future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
       <StoreProvider store={store}>
         <ReportBuilderPageHeader />
+        <RouterPath />
       </StoreProvider>
-    </MemoryRouter>,
+    </MemoryRouter>
   );
-  return { store, ...view };
+  const view = render(tree());
+  return { store, ...view, rerenderHeader: () => view.rerender(tree()) };
 };
 beforeEach(() => {
   jest.useFakeTimers();
+  mockParams.id = "report-1";
+  mockSavedReportIds.length = 0;
+  mockReportQuery.isError = false;
   Object.assign(mockMutation, {
     isPending: false,
     isSuccess: false,
     isError: false,
     isPaused: false,
+    error: null,
   });
 });
+const untrackZooms: (() => void)[] = [];
 afterEach(() => {
   jest.useRealTimers();
+  untrackZooms.splice(0).forEach((untrack) => untrack());
 });
+// A chart zoom still waiting in its debounce: it reaches the store on flush.
+const trackPendingZoom = (store: ReturnType<typeof setup>["store"]) =>
+  untrackZooms.push(
+    trackPendingChartEdits({
+      flush: () => store.getActions().RBReportItemsState.setName("Zoomed"),
+    }),
+  );
 const advance = (ms = 2000) =>
   act(() => {
     jest.advanceTimersByTime(ms);
@@ -153,6 +187,28 @@ test("failed saves retain the dirty draft and show an error", () => {
   expect(screen.getByText(/Couldn't save changes/)).toBeInTheDocument();
   expect(store.getState().RBReportItemsState.dirty).toBe(true);
 });
+test.each([403, 404])(
+  "a %i save error stops autosave from retrying",
+  (status) => {
+    Object.assign(mockMutation, {
+      isError: true,
+      error: { isAxiosError: true, response: { status } },
+    });
+    const { store } = setup({ dirty: true });
+    advance();
+    expect(mockMutation.mutate).not.toHaveBeenCalled();
+    expect(store.getState().RBReportItemsState.dirty).toBe(true);
+  },
+);
+test("a server error still retries the save", () => {
+  Object.assign(mockMutation, {
+    isError: true,
+    error: { isAxiosError: true, response: { status: 500 } },
+  });
+  setup({ dirty: true });
+  advance();
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+});
 test("offline saves show a connection warning", () => {
   mockMutation.isPaused = true;
   setup();
@@ -185,3 +241,185 @@ test("saved status resets after five seconds", () => {
   advance(1);
   expect(mockMutation.reset).toHaveBeenCalledTimes(1);
 });
+test("failed saves back off before retrying", () => {
+  setup({ dirty: true });
+  advance();
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+  act(() => mockMutation.mutate.mock.calls[0][1].onError());
+  advance(3999);
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+  advance(1);
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(2);
+  act(() => mockMutation.mutate.mock.calls[1][1].onError());
+  advance(7999);
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(2);
+  advance(1);
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(3);
+});
+test("switching to preview saves pending edits straight away", () => {
+  const { rerenderHeader } = setup({ dirty: true });
+  advance(500);
+  window.history.replaceState({}, "", "/report-builder/reports/report-1");
+  rerenderHeader();
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+  expect(mockMutation.mutate.mock.calls[0][0].name).toBe("Draft");
+  advance(5000);
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+});
+test("Preview saves unsaved edits first and opens once they're saved", async () => {
+  mockMutation.mutateAsync.mockResolvedValue({});
+  const { store } = setup({ dirty: true });
+  fireEvent.click(screen.getByText("Preview"));
+  expect(mockMutation.mutateAsync).toHaveBeenCalledWith(
+    expect.objectContaining({ name: "Draft" }),
+  );
+  expect(mockNavigate).not.toHaveBeenCalled();
+  expect(screen.getByTestId("router-path")).toHaveTextContent(/^\/$/);
+  await act(async () => {});
+  expect(mockNavigate).toHaveBeenCalledWith("/report-builder/reports/report-1");
+  expect(store.getState().RBReportItemsState.dirty).toBe(false);
+});
+test("a failed save keeps the editor open with the edits", async () => {
+  mockMutation.mutateAsync.mockRejectedValue(new Error("offline"));
+  const { store } = setup({ dirty: true });
+  fireEvent.click(screen.getByText("Preview"));
+  await act(async () => {});
+  expect(mockNavigate).not.toHaveBeenCalled();
+  expect(screen.getByTestId("router-path")).toHaveTextContent(/^\/$/);
+  expect(store.getState().RBReportItemsState.dirty).toBe(true);
+});
+test("Preview of a saved report doesn't save again", () => {
+  setup();
+  fireEvent.click(screen.getByText("Preview"));
+  expect(mockMutation.mutateAsync).not.toHaveBeenCalled();
+  expect(screen.getByTestId("router-path")).toHaveTextContent(
+    "/report-builder/reports/report-1",
+  );
+});
+test("switching reports saves the previous report's edits to that report", () => {
+  const { rerenderHeader } = setup({ dirty: true });
+  advance(500);
+  mockParams.id = "report-2";
+  rerenderHeader();
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+  expect(mockMutation.mutate.mock.calls[0][0].name).toBe("Draft");
+  expect(mockSavedReportIds).toEqual(["report-1"]);
+  advance(5000);
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+});
+test("an earlier save's status reset doesn't clear a later save's error", () => {
+  mockMutation.isSuccess = true;
+  const { rerenderHeader } = setup();
+  advance(3000);
+  Object.assign(mockMutation, {
+    isSuccess: false,
+    isError: true,
+    error: { isAxiosError: true, response: { status: 403 } },
+  });
+  rerenderHeader();
+  advance(5000);
+  expect(mockMutation.reset).not.toHaveBeenCalled();
+});
+test("Preview includes a chart zoom that hasn't reached the report yet", async () => {
+  mockMutation.mutateAsync.mockResolvedValue({});
+  const { store } = setup();
+  trackPendingZoom(store);
+  fireEvent.click(screen.getByText("Preview"));
+  expect(mockMutation.mutateAsync).toHaveBeenCalledWith(
+    expect.objectContaining({ name: "Zoomed" }),
+  );
+  await act(async () => {});
+  expect(mockNavigate).toHaveBeenCalledWith("/report-builder/reports/report-1");
+});
+test("leaving the editor includes a chart zoom that hasn't reached the report yet", () => {
+  const { store, unmount } = setup();
+  trackPendingZoom(store);
+  unmount();
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+  expect(mockMutation.mutate.mock.calls[0][0].name).toBe("Zoomed");
+});
+test("switching to preview saves the report as it is by then", () => {
+  const { store } = setup({ dirty: true });
+  window.history.replaceState({}, "", "/report-builder/reports/report-1");
+  // A chart's last zoom, written as the editor unmounted.
+  act(() => store.getActions().RBReportItemsState.setName("Zoomed"));
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+  expect(mockMutation.mutate.mock.calls[0][0].name).toBe("Zoomed");
+});
+test("a Preview save that finishes after leaving the report changes nothing", async () => {
+  let finishSave = () => {};
+  mockMutation.mutateAsync.mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        finishSave = () => resolve({});
+      }),
+  );
+  const { store, rerenderHeader } = setup({ dirty: true });
+  fireEvent.click(screen.getByText("Preview"));
+  mockParams.id = "report-2";
+  rerenderHeader();
+  act(() => {
+    const actions = store.getActions().RBReportItemsState;
+    actions.hydrateReport({
+      id: "report-2",
+      name: "Other",
+      description: "",
+      settings: RBReportItemsState.settings,
+      items: [],
+    });
+    actions.setName("Other, edited");
+  });
+  await act(async () => finishSave());
+  expect(mockNavigate).not.toHaveBeenCalled();
+  expect(store.getState().RBReportItemsState).toMatchObject({
+    id: "report-2",
+    dirty: true,
+  });
+});
+test.each([
+  { saveFailed: true, warns: true },
+  { saveFailed: false, warns: false },
+])(
+  "closing the tab in preview with a draft warns only if its save failed (%p)",
+  ({ saveFailed, warns }) => {
+    mockMutation.isError = saveFailed;
+    setup({ dirty: true, preview: true });
+    const close = new Event("beforeunload", { cancelable: true });
+    window.dispatchEvent(close);
+    expect(close.defaultPrevented).toBe(warns);
+  },
+);
+test("leaving the editor saves pending edits", () => {
+  const { unmount } = setup({ dirty: true });
+  advance(500);
+  unmount();
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+  expect(mockMutation.mutate.mock.calls[0][0].name).toBe("Draft");
+});
+test("leaving a clean editor saves nothing", () => {
+  const { unmount } = setup();
+  unmount();
+  expect(mockMutation.mutate).not.toHaveBeenCalled();
+});
+test("closing the tab with unsaved edits asks for confirmation", () => {
+  const { store } = setup({ dirty: true });
+  const dirtyClose = new Event("beforeunload", { cancelable: true });
+  window.dispatchEvent(dirtyClose);
+  expect(dirtyClose.defaultPrevented).toBe(true);
+  act(() => store.getActions().RBReportItemsState.markClean());
+  const cleanClose = new Event("beforeunload", { cancelable: true });
+  window.dispatchEvent(cleanClose);
+  expect(cleanClose.defaultPrevented).toBe(false);
+});
+test.each([false, true])(
+  "a report that can't be loaded shows no name or actions (preview: %s)",
+  (preview) => {
+    mockReportQuery.isError = true;
+    setup({ preview, dirty: true });
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+    expect(screen.queryByText("Preview")).not.toBeInTheDocument();
+    expect(screen.queryByText("Back to Edit")).not.toBeInTheDocument();
+    expect(screen.queryByText("Share")).not.toBeInTheDocument();
+    expect(screen.getByText("My Reports")).toBeInTheDocument();
+  },
+);

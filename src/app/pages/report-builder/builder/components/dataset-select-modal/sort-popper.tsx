@@ -234,6 +234,8 @@ const SortPopper: React.FC<SortPopperProps> = ({
                   />
                   <Box
                     key={option.order}
+                    data-cy="rb-sort-order"
+                    data-value={option.order}
                     sx={{
                       padding: "11px 16px",
                       display: "flex",
@@ -325,6 +327,7 @@ const SortPopper: React.FC<SortPopperProps> = ({
             >
               <Button variant="outlined">Back</Button>
               <Button
+                data-cy="rb-apply-sort"
                 sx={{
                   fontWeight: "400",
                   background: "#3154F4",

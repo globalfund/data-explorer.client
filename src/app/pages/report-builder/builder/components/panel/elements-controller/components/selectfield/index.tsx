@@ -22,6 +22,7 @@ interface SelectFieldProps {
   label?: React.ReactNode;
   disabled?: boolean;
   placeholder?: string;
+  "data-cy"?: string;
 }
 
 export default function SelectField({
@@ -32,6 +33,7 @@ export default function SelectField({
   label,
   disabled,
   placeholder,
+  "data-cy": dataCy,
 }: Readonly<SelectFieldProps>) {
   const id = React.useId();
   const [searchQuery, setSearchQuery] = React.useState<string | null>(null);
@@ -39,7 +41,7 @@ export default function SelectField({
     options.find((option) => option.value === value) ?? null;
 
   return (
-    <Box sx={{ width }}>
+    <Box sx={{ width }} data-cy={dataCy}>
       {label ? (
         <Typography
           component="label"

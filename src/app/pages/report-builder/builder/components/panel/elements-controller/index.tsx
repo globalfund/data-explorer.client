@@ -1,5 +1,6 @@
-import { useStoreState } from "app/state/store/hooks";
+import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import React from "react";
+import { SettingsErrorBoundary } from "./settings-error-boundary";
 import TextController from "./text";
 import ImageController from "./image";
 import KPIController from "./kpi";
@@ -16,6 +17,9 @@ export default function ElementsController() {
     (state) => state.RBReportItemsControllerState.item,
   );
   const activeRTE = useStoreState((state) => state.RBReportRTEState.activeRTE);
+  const clearSelectedItem = useStoreActions(
+    (actions) => actions.RBReportItemsControllerState.clearItem,
+  );
 
   const renderItem = () => {
     if (selectedItemController?.parent?.open) {
@@ -47,7 +51,14 @@ export default function ElementsController() {
   return selectedItemController?.open ? (
     // @ts-expect-error  missing attributes
     <Draggable nodeRef={nodeRef} handle=".panel-drag-handle">
-      <div ref={nodeRef}>{renderItem()}</div>
+      <div ref={nodeRef}>
+        <SettingsErrorBoundary
+          resetKey={selectedItemController}
+          onClose={clearSelectedItem}
+        >
+          {renderItem()}
+        </SettingsErrorBoundary>
+      </div>
     </Draggable>
   ) : null;
 }

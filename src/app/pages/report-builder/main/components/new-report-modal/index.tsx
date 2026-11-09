@@ -157,6 +157,7 @@ export const ReportBuilderNewReportModal: React.FC<
             <input
               autoFocus
               type="text"
+              data-cy="rb-new-report-name"
               value={nameValue}
               onChange={onNameChange}
               placeholder={getCMSDataField(
@@ -202,6 +203,7 @@ export const ReportBuilderNewReportModal: React.FC<
             }}
           >
             <textarea
+              data-cy="rb-new-report-description"
               value={descriptionValue}
               onChange={onDescriptionChange}
               placeholder={getCMSDataField(
@@ -228,6 +230,7 @@ export const ReportBuilderNewReportModal: React.FC<
               )}
             </Button>
             <Button
+              data-cy="rb-create-report"
               variant="contained"
               disabled={!nameValue || !descriptionValue}
               sx={{

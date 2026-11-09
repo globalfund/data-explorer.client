@@ -2,6 +2,7 @@ import axiosInstance from "app/utils/axiosInstance";
 import { RBItemTypes } from "app/pages/report-builder/data";
 import { AssetViewType } from "app/pages/report-builder/main/components/all-assets-view/toolbar";
 import {
+  QueryClient,
   useMutation,
   useQuery,
   useInfiniteQuery,
@@ -105,6 +106,26 @@ export const useGetFolder = (folderId?: string) => {
   });
 };
 
+const escapeRegExp = (value: string) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+// LoopBack list filter. The search text is matched literally and
+// case-insensitively; the server turns `like` into a regex, so characters
+// such as "[" or "(" are escaped rather than breaking the query.
+export const buildListFilter = (
+  sort: string,
+  search: string,
+  where: Record<string, unknown> = {},
+) => {
+  const fullWhere = search
+    ? { name: { like: `.*${escapeRegExp(search)}.*`, options: "i" }, ...where }
+    : where;
+  return JSON.stringify({
+    ...(Object.keys(fullWhere).length > 0 && { where: fullWhere }),
+    order: [sort],
+  });
+};
+
 export const useGetReports = (params: {
   sort: string;
   search: string;
@@ -112,18 +133,10 @@ export const useGetReports = (params: {
   includeFolders?: boolean;
 }) => {
   // TODO: cache and manage invalidation
-  let filter = "";
-  if (params.search) {
-    filter = `{"where":{"name":{"like":".*${params.search}.*","options":"i"}},"order":["${params.sort}"]}`;
-  } else {
-    filter = `{"order":["${params.sort}"]}`;
-  }
-  let folderFilter = "";
-  if (params.search) {
-    folderFilter = `{"where":{"name":{"like":".*${params.search}.*","options":"i"},"type":"report"},"order":["${params.sort}"]}`;
-  } else {
-    folderFilter = `{"where":{"type":"report"},"order":["${params.sort}"]}`;
-  }
+  const filter = buildListFilter(params.sort, params.search);
+  const folderFilter = buildListFilter(params.sort, params.search, {
+    type: "report",
+  });
   return useQuery({
     queryKey: [
       "ReportBuilderGetReports",
@@ -155,22 +168,14 @@ export const useGetAssets = (params: {
   onlyRootLevel?: boolean;
   includeFolders?: boolean;
 }) => {
-  let filter = "";
-  if (params.search && params.type !== "all") {
-    filter = `{"where":{"name":{"like":".*${params.search}.*","options":"i"},"type":"${params.type}"}},"order":["${params.sort}"]}`;
-  } else if (params.search && params.type === "all") {
-    filter = `{"where":{"name":{"like":".*${params.search}.*","options":"i"}},"order":["${params.sort}"]}`;
-  } else if (!params.search && params.type !== "all") {
-    filter = `{"where":{"type":"${params.type}"},"order":["${params.sort}"]}`;
-  } else {
-    filter = `{"order":["${params.sort}"]}`;
-  }
-  let folderFilter = "";
-  if (params.search) {
-    folderFilter = `{"where":{"name":{"like":".*${params.search}.*","options":"i"},"type":"asset"},"order":["${params.sort}"]}`;
-  } else {
-    folderFilter = `{"where":{"type":"asset"},"order":["${params.sort}"]}`;
-  }
+  const filter = buildListFilter(
+    params.sort,
+    params.search,
+    params.type !== "all" ? { type: params.type } : {},
+  );
+  const folderFilter = buildListFilter(params.sort, params.search, {
+    type: "asset",
+  });
   return useQuery({
     queryKey: [
       "ReportBuilderGetAssets",
@@ -202,15 +207,13 @@ export const useGetFolders = (params: {
   type: "report" | "asset";
   includeSubFolders?: boolean;
 }) => {
-  let filter = "";
-  if (params.search) {
-    filter = `{"where":{"name":{"like":".*${params.search}.*","options":"i"},"type":"${params.type}"},"order":["${params.sort}"]}`;
-  } else {
-    filter = `{"where":{"type":"${params.type}"},"order":["${params.sort}"]}`;
-  }
+  const filter = buildListFilter(params.sort, params.search, {
+    type: params.type,
+  });
   return useQuery({
     queryKey: [
       "ReportBuilderGetFolders",
+      params.type,
       params.search,
       params.sort,
       params.includeSubFolders,
@@ -347,6 +350,9 @@ export const usePatchReport = (reportId: string | undefined) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["ReportBuilderPatchReport", reportId],
+    // Saves of the same report run one at a time, in order, so an older
+    // payload can never land after a newer one.
+    scope: { id: `ReportBuilderPatchReport-${reportId}` },
     mutationFn: (data: RBReportPatchModel) =>
       axiosInstance.patch<RBReportPatchModel>(`/report/${reportId}`, data, {
         headers: {
@@ -364,16 +370,42 @@ export const usePatchReport = (reportId: string | undefined) => {
   });
 };
 
+/** Resolves once no save of the report from usePatchReport is running or queued. */
+const reportSavesSettled = (queryClient: QueryClient, reportId?: string) => {
+  const filters = { mutationKey: ["ReportBuilderPatchReport", reportId] };
+  return new Promise<void>((resolve) => {
+    const settled = () => queryClient.isMutating(filters) === 0;
+    if (settled()) {
+      resolve();
+      return;
+    }
+    const unsubscribe = queryClient.getMutationCache().subscribe(() => {
+      if (!settled()) return;
+      unsubscribe();
+      resolve();
+    });
+  });
+};
+
 export const usePatchReport2 = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["ReportBuilderPatchReport"],
-    mutationFn: (data: RBReportPatchModel) =>
-      axiosInstance.patch<RBReportPatchModel>(`/report/${data.id}`, data, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    mutationFn: async (data: RBReportPatchModel) => {
+      // Leaving the editor saves the whole report, old name included. Its
+      // report's queue can't be joined from here (the report varies per call),
+      // so wait for it instead, or that save can land after a rename here.
+      await reportSavesSettled(queryClient, data.id);
+      return axiosInstance.patch<RBReportPatchModel>(
+        `/report/${data.id}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
         },
-      }),
+      );
+    },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["ReportBuilderGetReports"],
@@ -614,7 +646,7 @@ export const useDatasetFilterOptions = (
         `/report/filter-options`,
         {
           datasetId,
-          appliedFilters,
+          filters: appliedFilters,
         },
         {
           headers: {
