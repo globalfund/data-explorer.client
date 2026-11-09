@@ -2,6 +2,7 @@ import axiosInstance from "app/utils/axiosInstance";
 import { RBItemTypes } from "app/pages/report-builder/data";
 import { AssetViewType } from "app/pages/report-builder/main/components/all-assets-view/toolbar";
 import {
+  QueryClient,
   useMutation,
   useQuery,
   useInfiniteQuery,
@@ -369,16 +370,42 @@ export const usePatchReport = (reportId: string | undefined) => {
   });
 };
 
+/** Resolves once no save of the report from usePatchReport is running or queued. */
+const reportSavesSettled = (queryClient: QueryClient, reportId?: string) => {
+  const filters = { mutationKey: ["ReportBuilderPatchReport", reportId] };
+  return new Promise<void>((resolve) => {
+    const settled = () => queryClient.isMutating(filters) === 0;
+    if (settled()) {
+      resolve();
+      return;
+    }
+    const unsubscribe = queryClient.getMutationCache().subscribe(() => {
+      if (!settled()) return;
+      unsubscribe();
+      resolve();
+    });
+  });
+};
+
 export const usePatchReport2 = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["ReportBuilderPatchReport"],
-    mutationFn: (data: RBReportPatchModel) =>
-      axiosInstance.patch<RBReportPatchModel>(`/report/${data.id}`, data, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    mutationFn: async (data: RBReportPatchModel) => {
+      // Leaving the editor saves the whole report, old name included. Its
+      // report's queue can't be joined from here (the report varies per call),
+      // so wait for it instead, or that save can land after a rename here.
+      await reportSavesSettled(queryClient, data.id);
+      return axiosInstance.patch<RBReportPatchModel>(
+        `/report/${data.id}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
         },
-      }),
+      );
+    },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["ReportBuilderGetReports"],

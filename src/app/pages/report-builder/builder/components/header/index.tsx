@@ -12,7 +12,13 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { Pencil } from "../report-settings/icons";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
+import {
+  useStore,
+  useStoreActions,
+  useStoreState,
+} from "app/state/store/hooks";
+import { RBReportItemsModel } from "app/state/api/action-reducers/report-builder/sync";
+import { flushPendingChartEdits } from "app/pages/report-builder/builder/components/chart/pending-edits";
 import CopyIcon from "app/assets/vectors/Copy.svg?react";
 import EmailIcon from "app/assets/vectors/Email.svg?react";
 import PNGIcon from "app/assets/vectors/PngIcon.svg?react";
@@ -79,6 +85,19 @@ const spin = keyframes`
       transform: rotate(360deg);
     }
   `;
+
+const toReportPayload = (
+  report: Pick<
+    RBReportItemsModel,
+    "name" | "description" | "items" | "settings"
+  >,
+) => ({
+  name: report.name,
+  description: report.description,
+  items: prepareReportItemsForSave(report.items),
+  settings: report.settings,
+});
+type ReportPayload = ReturnType<typeof toReportPayload>;
 
 // Keyed by report, so switching reports unmounts the old header, which saves
 // that report's pending edits to it, rather than carrying them over to the new
@@ -228,7 +247,7 @@ const ReportBuilderPageHeaderContent: React.FC = () => {
   // and shows the error.
   const savingBeforePreview = React.useRef(false);
   const handlePreviewClick = async (event: React.MouseEvent) => {
-    const pending = pendingEditSave.current;
+    const pending = takeUnsavedEdits();
     if (!pending) return;
     event.preventDefault();
     if (savingBeforePreview.current) return;
@@ -241,11 +260,10 @@ const ReportBuilderPageHeaderContent: React.FC = () => {
     } finally {
       savingBeforePreview.current = false;
     }
+    // Left this report while it saved, so whatever is open now is another.
+    if (!mounted.current) return;
     setFailedSaves(0);
-    if (latestPayloadFingerprint.current === pending.fingerprint) {
-      markClean();
-      pendingEditSave.current = null;
-    }
+    markSavedIfUnchanged(pending.fingerprint);
     navigate(`/report-builder/reports/${id}`);
   };
 
@@ -1060,12 +1078,7 @@ const ReportBuilderPageHeaderContent: React.FC = () => {
   ]);
 
   const reportPayload = React.useMemo(
-    () => ({
-      name: reportState.name,
-      description: reportState.description,
-      items: prepareReportItemsForSave(reportState.items),
-      settings: reportState.settings,
-    }),
+    () => toReportPayload(reportState),
     [
       reportState.name,
       reportState.description,
@@ -1078,8 +1091,6 @@ const ReportBuilderPageHeaderContent: React.FC = () => {
     () => JSON.stringify(reportPayload),
     [reportPayload],
   );
-  const latestPayloadFingerprint = React.useRef(reportPayloadFingerprint);
-  latestPayloadFingerprint.current = reportPayloadFingerprint;
 
   // No access / deleted won't succeed on retry; stop autosaving instead of
   // re-sending every 2 seconds. The error state stays visible in the header.
@@ -1087,21 +1098,49 @@ const ReportBuilderPageHeaderContent: React.FC = () => {
     ? updateReport.error.response?.status
     : undefined;
   const saveBlocked = saveStatus === 403 || saveStatus === 404;
-  const hasUnsavedEdits =
-    !previewMode && reportState.id === id && reportState.dirty;
+  const hasUnsavedDraft = reportState.id === id && reportState.dirty;
+  const hasUnsavedEdits = !previewMode && hasUnsavedDraft;
 
   // Back off after failed saves (2s, 4s, 8s... up to a minute) instead of
   // re-sending every 2 seconds while the server or connection is down.
   const [failedSaves, setFailedSaves] = React.useState(0);
   const saveDelay = Math.min(2000 * 2 ** failedSaves, 60_000);
 
-  const save = (payload: typeof reportPayload, fingerprint: string) => {
+  // The functions below also run from effects, cleanups and the memoized
+  // toolbar, so they read the store, and this, as they are at that moment.
+  const store = useStore();
+  const saveBlockedRef = React.useRef(saveBlocked);
+  saveBlockedRef.current = saveBlocked;
+
+  /**
+   * This report's unsaved edits as they are now, including chart zooms that
+   * haven't reached the store yet.
+   */
+  const takeUnsavedEdits = () => {
+    flushPendingChartEdits();
+    const state = store.getState().RBReportItemsState;
+    if (state.id !== id || !state.dirty || saveBlockedRef.current) return null;
+    const payload = toReportPayload(state);
+    return { payload, fingerprint: JSON.stringify(payload) };
+  };
+
+  // Only while the store still holds this report as it was saved: edits made
+  // since, or another report opened since, stay unsaved.
+  const markSavedIfUnchanged = (fingerprint: string) => {
+    const state = store.getState().RBReportItemsState;
+    if (
+      state.id === id &&
+      JSON.stringify(toReportPayload(state)) === fingerprint
+    ) {
+      markClean();
+    }
+  };
+
+  const save = (payload: ReportPayload, fingerprint: string) => {
     updateReport.mutate(payload, {
       onSuccess: () => {
         setFailedSaves(0);
-        if (latestPayloadFingerprint.current === fingerprint) {
-          markClean();
-        }
+        markSavedIfUnchanged(fingerprint);
       },
       onError: () => setFailedSaves((count) => count + 1),
     });
@@ -1123,34 +1162,35 @@ const ReportBuilderPageHeaderContent: React.FC = () => {
     ],
   );
 
-  // Leaving the editor (Preview, or navigating away) cancels the debounce,
-  // and Preview then re-hydrates the store from the server. Keep the last
-  // unsaved edit-mode payload so it can be saved straight away instead.
-  const pendingEditSave = React.useRef<{
-    payload: typeof reportPayload;
-    fingerprint: string;
-  } | null>(null);
-  if (!previewMode) {
-    pendingEditSave.current =
-      hasUnsavedEdits && !saveBlocked
-        ? { payload: reportPayload, fingerprint: reportPayloadFingerprint }
-        : null;
-  }
-  const flushPendingSave = () => {
-    const pending = pendingEditSave.current;
-    pendingEditSave.current = null;
-    if (pending) {
-      save(pending.payload, pending.fingerprint);
-    }
+  // Leaving the editor (for Preview, or another page) cancels the debounce, so
+  // save what it was waiting for straight away. By then a chart that's going
+  // away may have written a last zoom, which is why this reads the store.
+  const flushUnsavedEdits = () => {
+    const pending = takeUnsavedEdits();
+    if (pending) save(pending.payload, pending.fingerprint);
   };
+  const editing = React.useRef(!previewMode);
   React.useEffect(() => {
-    if (previewMode) flushPendingSave();
+    if (previewMode && editing.current) flushUnsavedEdits();
+    editing.current = !previewMode;
   }, [previewMode]);
-  React.useEffect(() => () => flushPendingSave(), []);
+  const mounted = React.useRef(true);
+  React.useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      if (editing.current) flushUnsavedEdits();
+    };
+  }, []);
 
   // Unsaved edits only live in this tab's session storage, which is gone once
-  // the tab closes, so warn before leaving.
-  const warnBeforeUnload = hasUnsavedEdits || updateReport.isPending;
+  // the tab closes, so warn before leaving. That includes a draft Preview kept
+  // because its save failed. (Otherwise a draft in Preview needs no warning:
+  // charts there can mark it changed just by rendering.)
+  const warnBeforeUnload =
+    hasUnsavedEdits ||
+    updateReport.isPending ||
+    (hasUnsavedDraft && updateReport.isError);
   React.useEffect(() => {
     if (!warnBeforeUnload) return;
     const onBeforeUnload = (event: BeforeUnloadEvent) => {

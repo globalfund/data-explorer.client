@@ -4,6 +4,7 @@ import { StoreProvider, createStore } from "easy-peasy";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { RBReportItemsState } from "app/state/api/action-reducers/report-builder/sync";
 import { createReportItem } from "../../../component-registry/model";
+import { trackPendingChartEdits } from "../chart/pending-edits";
 import { ReportBuilderPageHeader } from "./index";
 
 jest.mock("app/utils/exportReport", () => ({
@@ -105,9 +106,18 @@ beforeEach(() => {
     error: null,
   });
 });
+const untrackZooms: (() => void)[] = [];
 afterEach(() => {
   jest.useRealTimers();
+  untrackZooms.splice(0).forEach((untrack) => untrack());
 });
+// A chart zoom still waiting in its debounce: it reaches the store on flush.
+const trackPendingZoom = (store: ReturnType<typeof setup>["store"]) =>
+  untrackZooms.push(
+    trackPendingChartEdits({
+      flush: () => store.getActions().RBReportItemsState.setName("Zoomed"),
+    }),
+  );
 const advance = (ms = 2000) =>
   act(() => {
     jest.advanceTimersByTime(ms);
@@ -310,6 +320,75 @@ test("an earlier save's status reset doesn't clear a later save's error", () => 
   advance(5000);
   expect(mockMutation.reset).not.toHaveBeenCalled();
 });
+test("Preview includes a chart zoom that hasn't reached the report yet", async () => {
+  mockMutation.mutateAsync.mockResolvedValue({});
+  const { store } = setup();
+  trackPendingZoom(store);
+  fireEvent.click(screen.getByText("Preview"));
+  expect(mockMutation.mutateAsync).toHaveBeenCalledWith(
+    expect.objectContaining({ name: "Zoomed" }),
+  );
+  await act(async () => {});
+  expect(mockNavigate).toHaveBeenCalledWith("/report-builder/reports/report-1");
+});
+test("leaving the editor includes a chart zoom that hasn't reached the report yet", () => {
+  const { store, unmount } = setup();
+  trackPendingZoom(store);
+  unmount();
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+  expect(mockMutation.mutate.mock.calls[0][0].name).toBe("Zoomed");
+});
+test("switching to preview saves the report as it is by then", () => {
+  const { store } = setup({ dirty: true });
+  window.history.replaceState({}, "", "/report-builder/reports/report-1");
+  // A chart's last zoom, written as the editor unmounted.
+  act(() => store.getActions().RBReportItemsState.setName("Zoomed"));
+  expect(mockMutation.mutate).toHaveBeenCalledTimes(1);
+  expect(mockMutation.mutate.mock.calls[0][0].name).toBe("Zoomed");
+});
+test("a Preview save that finishes after leaving the report changes nothing", async () => {
+  let finishSave = () => {};
+  mockMutation.mutateAsync.mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        finishSave = () => resolve({});
+      }),
+  );
+  const { store, rerenderHeader } = setup({ dirty: true });
+  fireEvent.click(screen.getByText("Preview"));
+  mockParams.id = "report-2";
+  rerenderHeader();
+  act(() => {
+    const actions = store.getActions().RBReportItemsState;
+    actions.hydrateReport({
+      id: "report-2",
+      name: "Other",
+      description: "",
+      settings: RBReportItemsState.settings,
+      items: [],
+    });
+    actions.setName("Other, edited");
+  });
+  await act(async () => finishSave());
+  expect(mockNavigate).not.toHaveBeenCalled();
+  expect(store.getState().RBReportItemsState).toMatchObject({
+    id: "report-2",
+    dirty: true,
+  });
+});
+test.each([
+  { saveFailed: true, warns: true },
+  { saveFailed: false, warns: false },
+])(
+  "closing the tab in preview with a draft warns only if its save failed (%p)",
+  ({ saveFailed, warns }) => {
+    mockMutation.isError = saveFailed;
+    setup({ dirty: true, preview: true });
+    const close = new Event("beforeunload", { cancelable: true });
+    window.dispatchEvent(close);
+    expect(close.defaultPrevented).toBe(warns);
+  },
+);
 test("leaving the editor saves pending edits", () => {
   const { unmount } = setup({ dirty: true });
   advance(500);

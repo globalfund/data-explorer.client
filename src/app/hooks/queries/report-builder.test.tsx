@@ -7,6 +7,7 @@ import {
   useGetReport,
   useGetReports,
   usePatchReport,
+  usePatchReport2,
   useCreateReport,
   useDeleteReport,
   useDuplicateReport,
@@ -189,6 +190,43 @@ test("failed saves expose errors and do not invalidate saved report caches", asy
   });
   await waitFor(() => expect(result.current.isError).toBe(true));
   expect(invalidate).not.toHaveBeenCalled();
+});
+test("a dashboard rename waits for the report's pending editor save", async () => {
+  const { wrapper } = setup();
+  let finishEditorSave = () => {};
+  jest
+    .mocked(axiosInstance.patch)
+    .mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          finishEditorSave = () => resolve({ data: {} });
+        }),
+    )
+    .mockResolvedValue({ data: {} });
+  const { result } = renderHook(
+    () => ({ save: usePatchReport("one"), rename: usePatchReport2() }),
+    { wrapper },
+  );
+  act(() => result.current.save.mutate({ name: "Old" }));
+  await waitFor(() => expect(axiosInstance.patch).toHaveBeenCalledTimes(1));
+
+  // Another report's rename goes ahead; this report's waits.
+  await act(async () => {
+    await result.current.rename.mutateAsync({ id: "two", name: "Other" });
+  });
+  act(() => result.current.rename.mutate({ id: "one", name: "New" }));
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+  expect(axiosInstance.patch).toHaveBeenCalledTimes(2);
+
+  await act(async () => finishEditorSave());
+  await waitFor(() => expect(axiosInstance.patch).toHaveBeenCalledTimes(3));
+  expect(axiosInstance.patch).toHaveBeenLastCalledWith(
+    "/report/one",
+    { id: "one", name: "New" },
+    auth,
+  );
 });
 test("create sends report metadata, settings and items", async () => {
   const { wrapper } = setup();

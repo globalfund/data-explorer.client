@@ -63,10 +63,15 @@ Cypress.Commands.add("login", (user: E2EUser = "owner") => {
     {
       cacheAcrossSpecs: true,
       validate() {
-        getSession(user).then((session) => {
+        // Check the token cy.session restored into the app, not the task's:
+        // the task fetches a new one once its token expires, but the restored
+        // one stays expired until this fails and the setup above runs again.
+        cy.getAllLocalStorage().then((storage) => {
+          const appOrigin = new URL(Cypress.config("baseUrl") ?? "").origin;
+          const token = storage[appOrigin]?.accessToken;
           cy.request({
             url: `${Cypress.expose("api_url")}/auth/validate-token`,
-            headers: { Authorization: `Bearer ${session.accessToken}` },
+            headers: { Authorization: `Bearer ${token}` },
           });
         });
       },

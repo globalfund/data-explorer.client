@@ -45,6 +45,7 @@ import {
 import { ChartType } from "app/state/api/action-reducers/report-builder/sync";
 import { limitXAxisValues } from "../utils/bar";
 import { limitChartDataItems } from "../utils/pie";
+import { trackPendingChartEdits } from "../pending-edits";
 
 echarts.use([
   BarChart,
@@ -105,8 +106,15 @@ export function useEcharts({
       }, 500),
     [],
   );
-  // Keep a zoom change made just before the chart goes away.
-  React.useEffect(() => () => debouncedSetVisualOptions.flush(), []);
+  // Let a report save include a zoom that's still waiting, and keep one made
+  // just before the chart goes away.
+  React.useEffect(() => {
+    const untrack = trackPendingChartEdits(debouncedSetVisualOptions);
+    return () => {
+      untrack();
+      debouncedSetVisualOptions.flush();
+    };
+  }, []);
 
   function onResize(chart: echarts.EChartsType, id: string, height?: number) {
     const container = document.getElementById(id);
