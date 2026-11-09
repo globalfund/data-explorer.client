@@ -172,8 +172,8 @@ export const ChangelogPage: React.FC = () => {
           )}
         </Typography>
         <Box
-          height="60px"
           sx={{
+            height: "60px",
             "@media (max-width: 767px)": {
               display: "none",
             },
@@ -186,11 +186,19 @@ export const ChangelogPage: React.FC = () => {
           flexDirection="row"
           margin="60px 0 30px 0"
           justifyContent="flex-end"
+          sx={{
+            "@media (max-width: 920px)": {
+              marginTop: "30px",
+            },
+          }}
         >
           <Box
-            width="35%"
             sx={{
+              width: "35%",
               "> div": {
+                width: "100%",
+              },
+              "@media (max-width: 920px)": {
                 width: "100%",
               },
             }}
@@ -229,37 +237,36 @@ export const ChangelogPage: React.FC = () => {
             </Container>
           </Box>
         </Box>
-      </Box>
-      <Box
-        sx={{
-          pb: "100px",
-          gap: "50px",
-          width: "100%",
-          display: "flex",
-          flexDirection: "row",
-        }}
-      >
-        <Divider
-          flexItem
-          orientation="vertical"
-          sx={{ borderColor: "#cfd4da" }}
-        />
         <Box
           sx={{
-            gap: "40px",
+            gap: "50px",
+            width: "100%",
             display: "flex",
-            flexDirection: "column",
+            flexDirection: "row",
           }}
         >
-          {items.map((item) => (
-            <ChangelogItem
-              date={item.date}
-              key={item.version}
-              notes={item.notes}
-              title={item.title}
-              version={item.version}
-            />
-          ))}
+          <Divider
+            flexItem
+            orientation="vertical"
+            sx={{ borderColor: "#cfd4da" }}
+          />
+          <Box
+            sx={{
+              gap: "40px",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {items.map((item) => (
+              <ChangelogItem
+                date={item.date}
+                key={item.version}
+                notes={item.notes}
+                title={item.title}
+                version={item.version}
+              />
+            ))}
+          </Box>
         </Box>
       </Box>
     </>
