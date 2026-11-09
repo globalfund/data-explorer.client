@@ -29,6 +29,8 @@ const DatasetCard = ({
       key={dataset.id}
       component="button"
       type="button"
+      data-cy="rb-dataset-card"
+      data-id={dataset.id}
       onClick={() => setSelectedDataset(dataset.id)}
       sx={{
         m: 0,

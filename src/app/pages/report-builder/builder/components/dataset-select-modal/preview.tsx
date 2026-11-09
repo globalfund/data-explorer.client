@@ -689,6 +689,7 @@ const DataPreview: React.FC<DataPreviewProps> = ({
         </Button>
         <Button
           variant="contained"
+          data-cy="rb-use-dataset"
           disabled={!previewColumns.length}
           endIcon={<DatasetArrowRightIcon />}
           onClick={onUseDataset}

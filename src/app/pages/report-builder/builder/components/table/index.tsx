@@ -207,6 +207,8 @@ export const ReportBuilderPageTable: React.FC<{
   return (
     <Box
       id="table-render"
+      data-cy="rb-table"
+      data-id={id}
       onClick={handleOpenController}
       sx={{
         width: "100%",

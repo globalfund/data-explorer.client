@@ -117,6 +117,7 @@ const DataSettings = () => {
           </Box>
           <Button
             variant="outlined"
+            data-cy="rb-chart-filters"
             startIcon={<AddIcon />}
             onClick={handleEditFilters}
             sx={{

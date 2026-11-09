@@ -216,6 +216,7 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                       key={column.id}
                       disabled={selected}
                       type="AVAILABLE_COLUMN"
+                      data-cy="rb-available-field"
                       sx={{
                         ...fieldChipSx,
                         color: selected ? "#adb5bd" : "#373d43",
@@ -259,6 +260,7 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
             <DropArea
               key="DROP_AREA"
               id="DROP_AREA"
+              data-cy="rb-table-columns"
               sx={{
                 columnGap: "10px",
                 padding: "16px",
@@ -285,6 +287,7 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
                               id={column.id}
                               key={column.id}
                               type="SELECTED_COLUMN"
+                              data-cy="rb-selected-field"
                               sx={{
                                 gap: "6px",
                                 px: "12px",
@@ -554,6 +557,7 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
           </Button>
           <Button
             variant="contained"
+            data-cy="rb-preview-table"
             disabled={!selectedColumns.length}
             endIcon={<DatasetArrowRightIcon />}
             onClick={handlePreviewTable}

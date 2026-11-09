@@ -84,6 +84,8 @@ export default function StyledMenu({
             value={option.value}
             onClick={() => onSelect([...activeValue, option.value!])}
             id={`styled-menu-item-${option.value}`}
+            data-cy="rb-mapping-option"
+            data-value={option.value}
             sx={{
               position: "relative",
               padding: "0 0",

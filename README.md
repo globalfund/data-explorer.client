@@ -48,6 +48,8 @@ In the project directory, you can run:
 
 Installs all necessary dependencies.
 
+`rb-core.charts` is installed from its GitHub repository, pinned to a commit in `package.json`, and builds itself on install, so this needs `git`. To use a newer version, put the new commit hash in `package.json` and run `yarn install`. To work on it locally, run `yarn link` in your checkout of it and `yarn link rb-core.charts` here; `yarn unlink rb-core.charts` and `yarn install --force` switch back.
+
 ### `yarn start`
 
 Runs the app in the development mode.<br />

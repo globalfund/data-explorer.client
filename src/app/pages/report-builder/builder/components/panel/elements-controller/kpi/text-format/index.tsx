@@ -324,6 +324,7 @@ export default function KPITextFormatting({ source }: KPITextFormattingProps) {
                 </Typography>
               </Box>{" "}
               <TextField
+                data-cy={`rb-kpi-${option}`}
                 value={selectedItem?.data?.[option as TextOption]?.value ?? ""}
                 width="100%"
                 onChange={(value) =>
@@ -453,6 +454,7 @@ export default function KPITextFormatting({ source }: KPITextFormattingProps) {
               />
               <SelectField
                 label="Field"
+                data-cy="rb-kpi-field"
                 value={selectedItem.data?.datasetColumn ?? ""}
                 onChange={(value) => handleDatasetColumnChange(value)}
                 options={columns
@@ -466,6 +468,7 @@ export default function KPITextFormatting({ source }: KPITextFormattingProps) {
 
               <SelectField
                 label="Aggregation"
+                data-cy="rb-kpi-aggregation"
                 value={selectedItem.data?.aggregation ?? "sum"}
                 onChange={(value) => handleAggregationChange(value)}
                 options={aggregationOptions}
@@ -504,6 +507,7 @@ export default function KPITextFormatting({ source }: KPITextFormattingProps) {
                 )}
               </Box>
               <Button
+                data-cy="rb-kpi-filters"
                 variant="outlined"
                 startIcon={<FilterIcon />}
                 onClick={handleEditFilters}

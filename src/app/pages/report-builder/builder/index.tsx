@@ -168,31 +168,37 @@ const ReportBuilderDesktopPage: React.FC = () => {
           minHeight: thumbnail ? undefined : "calc(100vh - 60px)",
         }}
       >
-        <Box
-          sx={{
-            zIndex: 2,
-            top: "130px",
-            left: "10px",
-            width: "220px",
-            position: "fixed",
-            borderRadius: "8px",
-            flexDirection: "column",
-            bgcolor: colors.primary.white,
-            boxShadow: "0 0 10px 0 rgba(152, 161, 170, 0.60)",
-          }}
-        >
-          <ReportBuilderPageReportSettings />
-        </Box>
-        <Box
-          sx={{
-            zIndex: 2,
-            top: "130px",
-            right: "10px",
-            position: "fixed",
-          }}
-        >
-          <ElementsController />
-        </Box>
+        {/* Hidden when the report can't be loaded: the store may still hold
+            the previously opened report. */}
+        {!reportQuery.isError && (
+          <React.Fragment>
+            <Box
+              sx={{
+                zIndex: 2,
+                top: "130px",
+                left: "10px",
+                width: "220px",
+                position: "fixed",
+                borderRadius: "8px",
+                flexDirection: "column",
+                bgcolor: colors.primary.white,
+                boxShadow: "0 0 10px 0 rgba(152, 161, 170, 0.60)",
+              }}
+            >
+              <ReportBuilderPageReportSettings />
+            </Box>
+            <Box
+              sx={{
+                zIndex: 2,
+                top: "130px",
+                right: "10px",
+                position: "fixed",
+              }}
+            >
+              <ElementsController />
+            </Box>
+          </React.Fragment>
+        )}
         {reportQuery.isLoading && (
           <Box
             sx={{
@@ -207,7 +213,12 @@ const ReportBuilderDesktopPage: React.FC = () => {
           </Box>
         )}
         {reportQuery.isError && (
-          <ReportBuilderLoadError error={reportQuery.error} itemType="report" />
+          <Box sx={{ alignSelf: "flex-start" }}>
+            <ReportBuilderLoadError
+              error={reportQuery.error}
+              itemType="report"
+            />
+          </Box>
         )}
         <DragDropProvider
           onDragOver={(event) => {
