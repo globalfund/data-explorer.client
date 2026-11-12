@@ -13,7 +13,7 @@ import SortIcon from "app/assets/vectors/RBTableSort.svg?react";
 import FilterIcon from "app/assets/vectors/RBTableFilter.svg?react";
 import DatasetArrowLeftIcon from "app/assets/vectors/DatasetArrowLeft.svg?react";
 import DatasetArrowRightIcon from "app/assets/vectors/DatasetArrowRight.svg?react";
-import { datasetItems } from "app/pages/report-builder/builder/components/chart/data";
+import useDatasetItems from "app/pages/report-builder/hooks/useDatasetItems";
 import {
   useDatasetFilterOptions,
   useFilteredDatasetPage,
@@ -145,9 +145,8 @@ const DataPreview: React.FC<DataPreviewProps> = ({
   const [currentPage, setCurrentPage] = React.useState(1);
   const [search, setSearch] = React.useState("");
   const pageSize = Number(rowsPerPage);
-  const selectedDatasetItem = datasetItems.find(
-    (dataset) => dataset.id === selectedDataset,
-  );
+  const { getDatasetItem } = useDatasetItems();
+  const selectedDatasetItem = getDatasetItem(selectedDataset);
   const sampledDatasetQuery = useGFSampleDataset(selectedDataset);
   const sampledDataset = sampledDatasetQuery?.data?.data?.data?.result;
   const datasetQuery = useFilteredDatasetPage({

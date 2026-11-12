@@ -11,7 +11,7 @@ import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportIt
 import { AssetSwitch } from "../grid/switchAsset";
 import { GridLayoutTab } from "../grid/gridTab";
 import { ColumnLayoutTab } from "../column/columnTab";
-import { datasetItems } from "../../../chart/data";
+import useDatasetItems from "app/pages/report-builder/hooks/useDatasetItems";
 import { DatasetSelectModal } from "../../../dataset-select-modal";
 import { AssetSelect } from "../common/asset-select";
 import ControllerTabs from "app/components/tabs";
@@ -21,6 +21,7 @@ import PanelHeader from "../../panel-header";
 type TableControllerTab = "mapping" | "layout" | "style" | "grid" | "column";
 
 export default function TableController() {
+  const { getDatasetItem } = useDatasetItems();
   const [isExpanded, setIsExpanded] = React.useState(true);
   const [value, setValue] = React.useState<TableControllerTab>("mapping");
 
@@ -151,11 +152,7 @@ export default function TableController() {
                   buttonLabel={"Select Dataset"}
                   helperText={"Select a dataset to get started"}
                   icon={<DatabaseIcon />}
-                  selectedItem={
-                    datasetItems.find(
-                      (dataset) => dataset.id === item?.data?.dataset,
-                    )?.name || ""
-                  }
+                  selectedItem={getDatasetItem(item?.data?.dataset)?.name || ""}
                   type={"dataset"}
                   componentType="table"
                 />
