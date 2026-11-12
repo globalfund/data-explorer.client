@@ -1,9 +1,10 @@
 import React from "react";
-import get from "lodash/get";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
+import CircularProgress from "@mui/material/CircularProgress";
+import FolderOutlined from "@mui/icons-material/FolderOutlined";
 import TouchAppOutlined from "@mui/icons-material/TouchAppOutlined";
 import TextFieldsOutlined from "@mui/icons-material/TextFieldsOutlined";
 import UploadIcon from "app/assets/vectors/Upload.svg?react";
@@ -12,72 +13,142 @@ import GlobeIcon from "app/assets/vectors/Globe.svg?react";
 import GridIcon from "app/assets/vectors/Grid.svg?react";
 import ListIcon from "app/assets/vectors/List.svg?react";
 
-import { datasetItems } from "app/pages/report-builder/builder/components/chart/data";
-import { useStoreState } from "app/state/store/hooks";
 import { useGFSampleDataset } from "app/hooks/queries/report-builder";
+import { RBExternalDatasetModel } from "app/state/api/action-reducers/report-builder/sync";
+import { DatasetItem } from "app/pages/report-builder/hooks/useDatasetItems";
 import { MappingTypeIcons } from "../panel/elements-controller/chart/mapping/data";
 import {
+  DatasetSourceId,
+  externalSources,
+  formatDatasetDate,
   formatNumber,
   getColumnType,
-  getDatasetLatestUpdateKey,
+  getExternalDatasetKey,
+  uploadFileExtensions,
 } from "./utils";
 import DatasetCard from "./dataset-card";
+import ExternalDatasetCard from "./external-dataset-card";
 
-const datasetSourceOptions = [
-  {
-    id: "global-fund",
-    label: "Global Fund",
-    count: 24,
-    icon: BuildingIcon,
-    disabled: false,
-  },
-  { id: "who", label: "WHO", count: 112, icon: BuildingIcon, disabled: true },
-  {
-    id: "kaggle",
-    label: "Kaggle",
-    count: 2360,
-    icon: GlobeIcon,
-    disabled: true,
-  },
+const datasetSourceOptions: {
+  id: DatasetSourceId;
+  label: string;
+  icon: React.ElementType;
+}[] = [
+  { id: "global-fund", label: "Global Fund", icon: BuildingIcon },
+  { id: "who", label: "WHO", icon: BuildingIcon },
+  { id: "kaggle", label: "Kaggle", icon: GlobeIcon },
+  { id: "my-datasets", label: "My Datasets", icon: FolderOutlined },
 ];
 
+const scrollbarSx = {
+  "&::-webkit-scrollbar": {
+    width: "4px",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    backgroundColor: "#000",
+  },
+  "&::-webkit-scrollbar-track": {
+    backgroundColor: "#D9D9D9",
+  },
+};
+
+const PreviewRow: React.FC<{ label: string; children: React.ReactNode }> = ({
+  label,
+  children,
+}) => (
+  <Box
+    sx={{
+      gap: "16px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+    }}
+  >
+    <Typography fontSize="14px" color="#373d43" flexShrink={0}>
+      {label}
+    </Typography>
+    <Typography fontSize="14px" fontWeight={700} textAlign="right" noWrap>
+      {children}
+    </Typography>
+  </Box>
+);
+
+const PreviewLink: React.FC<{ href: string; children: React.ReactNode }> = ({
+  href,
+  children,
+}) => (
+  <Box
+    component="a"
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    sx={{ color: "#3154f4" }}
+  >
+    {children}
+  </Box>
+);
+
+const GridMessage: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <Box
+    sx={{
+      gap: "12px",
+      p: "32px 16px",
+      display: "flex",
+      gridColumn: "1 / -1",
+      alignItems: "center",
+      flexDirection: "column",
+      color: "#373d43",
+      textAlign: "center",
+    }}
+  >
+    {children}
+  </Box>
+);
+
 export const DatasetSelect: React.FC<{
-  filteredDatasets: {
-    id: string;
-    name: string;
-    description: string;
-  }[];
+  source: DatasetSourceId;
+  onSourceChange: (source: DatasetSourceId) => void;
+  sourceCounts: Partial<Record<DatasetSourceId, number>>;
+  filteredDatasets: DatasetItem[];
+  datasetsLoading: boolean;
   selectedDataset: string;
-  setSelectedDataset: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ filteredDatasets, selectedDataset, setSelectedDataset }) => {
+  setSelectedDataset: (id: string) => void;
+  selectedDatasetItem?: DatasetItem;
+  getDatasetLatestUpdate: (id: string) => string;
+  external: {
+    items: RBExternalDatasetModel[];
+    loading: boolean;
+    error: string;
+    hasMore: boolean;
+    loadingMore: boolean;
+    onLoadMore: () => void;
+    selected: RBExternalDatasetModel | null;
+    onSelect: (dataset: RBExternalDatasetModel) => void;
+    connectedKeys: Set<string>;
+  };
+  upload: {
+    onUpload: (file: File) => void;
+    uploading: boolean;
+    error: string;
+  };
+}> = ({
+  source,
+  onSourceChange,
+  sourceCounts,
+  filteredDatasets,
+  datasetsLoading,
+  selectedDataset,
+  setSelectedDataset,
+  selectedDatasetItem,
+  getDatasetLatestUpdate,
+  external,
+  upload,
+}) => {
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const isExternalSource = !!externalSources[source];
   const sampledDatasetQuery = useGFSampleDataset(selectedDataset);
   const sampledDataset = sampledDatasetQuery?.data?.data?.data?.result;
-  const datasetsLatestUpdate = useStoreState(
-    (state) =>
-      get(state.datasetsLatestUpdate, "data.data", []) as {
-        name: string;
-        date: string;
-      }[],
-  );
-
-  const getDatasetLatestUpdate = React.useCallback(
-    (id: string) => {
-      const key = getDatasetLatestUpdateKey(id);
-      if (!key) return "05-01-2025";
-      return (
-        get(
-          datasetsLatestUpdate.find((dataset) => dataset.name === key),
-          "date",
-          "",
-        ) || "05-01-2025"
-      );
-    },
-    [datasetsLatestUpdate],
-  );
-
-  const selectedDatasetItem = datasetItems.find(
-    (dataset) => dataset.id === selectedDataset,
-  );
+  const selectedUserDataset = selectedDatasetItem?.userDataset;
 
   const columns = React.useMemo(() => {
     const dataTypes = sampledDataset?.dataTypes ?? {};
@@ -149,12 +220,16 @@ export const DatasetSelect: React.FC<{
               Sources
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
-              {datasetSourceOptions.map((source) => {
-                const SourceIcon = source.icon;
-                const active = source.id === "global-fund";
+              {datasetSourceOptions.map((option) => {
+                const SourceIcon = option.icon;
+                const active = option.id === source;
+                const count = sourceCounts[option.id];
                 return (
                   <Button
-                    key={source.id}
+                    key={option.id}
+                    aria-pressed={active}
+                    data-cy={`rb-dataset-source-${option.id}`}
+                    onClick={() => onSourceChange(option.id)}
                     startIcon={<SourceIcon />}
                     sx={{
                       gap: "8px",
@@ -175,18 +250,42 @@ export const DatasetSelect: React.FC<{
                         marginRight: 0,
                       },
                     }}
-                    disabled={source.disabled}
                   >
-                    {source.label} ({source.count})
+                    {option.label}
+                    {typeof count === "number"
+                      ? ` (${count.toLocaleString("en-US")})`
+                      : ""}
                   </Button>
                 );
               })}
             </Box>
           </Box>
           <Box sx={{ p: "20px" }}>
+            <input
+              hidden
+              type="file"
+              ref={fileInputRef}
+              data-cy="rb-dataset-upload-input"
+              accept={uploadFileExtensions.join(",")}
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                // Reset, so the same file can be selected again after an error.
+                event.target.value = "";
+                if (file) upload.onUpload(file);
+              }}
+            />
             <Button
               fullWidth
-              startIcon={<UploadIcon />}
+              disabled={upload.uploading}
+              data-cy="rb-dataset-upload"
+              onClick={() => fileInputRef.current?.click()}
+              startIcon={
+                upload.uploading ? (
+                  <CircularProgress size={16} color="inherit" />
+                ) : (
+                  <UploadIcon />
+                )
+              }
               sx={{
                 padding: "12px 14px",
                 color: "#000",
@@ -198,8 +297,17 @@ export const DatasetSelect: React.FC<{
                 fontWeight: 400,
               }}
             >
-              Upload a File
+              {upload.uploading ? "Uploading..." : "Upload a File"}
             </Button>
+            <Typography
+              role={upload.error ? "alert" : undefined}
+              fontSize="12px"
+              mt="8px"
+              color={upload.error ? "#d32f2f" : "#373d43"}
+            >
+              {upload.error ||
+                `Supported files: ${uploadFileExtensions.join(", ")}`}
+            </Typography>
           </Box>
         </Box>
 
@@ -229,7 +337,10 @@ export const DatasetSelect: React.FC<{
           >
             <Typography color="#000" fontSize="16px">
               <Box component="span" fontWeight={700}>
-                {filteredDatasets.length}
+                {isExternalSource
+                  ? external.items.length
+                  : filteredDatasets.length}
+                {isExternalSource && external.hasMore ? "+" : ""}
               </Box>{" "}
               Datasets
             </Typography>
@@ -270,29 +381,87 @@ export const DatasetSelect: React.FC<{
               gap: "8px",
               overflowY: "auto",
               alignContent: "start",
-              "&::-webkit-scrollbar": {
-                width: "4px",
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: "#000",
-              },
-              "&::-webkit-scrollbar-track": {
-                backgroundColor: "#D9D9D9",
-              },
+              ...scrollbarSx,
             }}
           >
-            {filteredDatasets.map((dataset) => {
-              const active = dataset.id === selectedDataset;
-              return (
-                <DatasetCard
-                  key={dataset.id}
-                  dataset={dataset}
-                  active={active}
-                  setSelectedDataset={setSelectedDataset}
-                  getDatasetLatestUpdate={getDatasetLatestUpdate}
-                />
-              );
-            })}
+            {isExternalSource ? (
+              <React.Fragment>
+                {external.items.map((dataset) => {
+                  const key = getExternalDatasetKey(dataset);
+                  return (
+                    <ExternalDatasetCard
+                      key={key}
+                      dataset={dataset}
+                      onSelect={external.onSelect}
+                      connected={external.connectedKeys.has(key)}
+                      active={
+                        !!external.selected &&
+                        getExternalDatasetKey(external.selected) === key
+                      }
+                    />
+                  );
+                })}
+                {external.loading ? (
+                  <GridMessage>
+                    <CircularProgress size={24} />
+                    <Typography fontSize="14px">
+                      Searching datasets...
+                    </Typography>
+                  </GridMessage>
+                ) : external.error ? (
+                  <GridMessage>
+                    <Typography role="alert" fontSize="14px" color="#d32f2f">
+                      {external.error}
+                    </Typography>
+                  </GridMessage>
+                ) : external.items.length === 0 ? (
+                  <GridMessage>
+                    <Typography fontSize="14px">
+                      No datasets found. Try a different search term.
+                    </Typography>
+                  </GridMessage>
+                ) : external.hasMore ? (
+                  <GridMessage>
+                    <Button
+                      variant="outlined"
+                      disabled={external.loadingMore}
+                      onClick={external.onLoadMore}
+                      sx={{ textTransform: "none", fontSize: "14px" }}
+                    >
+                      {external.loadingMore ? "Loading..." : "Load more"}
+                    </Button>
+                  </GridMessage>
+                ) : null}
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                {filteredDatasets.map((dataset) => {
+                  const active = dataset.id === selectedDataset;
+                  return (
+                    <DatasetCard
+                      key={dataset.id}
+                      dataset={dataset}
+                      active={active}
+                      setSelectedDataset={setSelectedDataset}
+                      getDatasetLatestUpdate={getDatasetLatestUpdate}
+                    />
+                  );
+                })}
+                {filteredDatasets.length === 0 && (
+                  <GridMessage>
+                    {datasetsLoading ? (
+                      <CircularProgress size={24} />
+                    ) : (
+                      <Typography fontSize="14px">
+                        {source === "my-datasets"
+                          ? "No datasets yet. Upload a file, or connect a dataset from WHO or Kaggle."
+                          : "No datasets found. Try a different search term."}
+                      </Typography>
+                    )}
+                  </GridMessage>
+                )}
+              </React.Fragment>
+            )}
           </Box>
         </Box>
 
@@ -306,7 +475,51 @@ export const DatasetSelect: React.FC<{
             bgcolor: "#ffffff",
           }}
         >
-          {selectedDatasetItem ? (
+          {isExternalSource && external.selected ? (
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Box sx={{ p: "16px", borderBottom: "0.5px solid #cfd4da" }}>
+                <Typography fontSize="16px" fontWeight={700} color="#000">
+                  {external.selected.title}
+                </Typography>
+                {external.selected.summary && (
+                  <Typography fontSize="16px" color="#373d43" mt="8px">
+                    {external.selected.summary}
+                  </Typography>
+                )}
+              </Box>
+              <Box sx={{ p: "16px", borderBottom: "0.5px solid #cfd4da" }}>
+                {external.selected.file && (
+                  <PreviewRow label="Data File">
+                    {external.selected.file}
+                  </PreviewRow>
+                )}
+                {external.selected.category && (
+                  <PreviewRow label="Category">
+                    {external.selected.category}
+                  </PreviewRow>
+                )}
+                {formatDatasetDate(external.selected.datePublished) && (
+                  <PreviewRow label="Published">
+                    {formatDatasetDate(external.selected.datePublished)}
+                  </PreviewRow>
+                )}
+                <PreviewRow label="Source">
+                  <PreviewLink href={external.selected.url}>
+                    {external.selected.source}
+                  </PreviewLink>
+                </PreviewRow>
+              </Box>
+              <Box sx={{ p: "16px" }}>
+                <Typography fontSize="14px" color="#373d43">
+                  {external.connectedKeys.has(
+                    getExternalDatasetKey(external.selected),
+                  )
+                    ? "This dataset is already connected, you can find it under My Datasets."
+                    : "Connect this dataset to preview its columns and rows. Connected datasets are saved under My Datasets."}
+                </Typography>
+              </Box>
+            </Box>
+          ) : !isExternalSource && selectedDatasetItem ? (
             <Box sx={{ display: "flex", flexDirection: "column" }}>
               <Box sx={{ p: "16px", borderBottom: "0.5px solid #cfd4da" }}>
                 <Typography fontSize="16px" fontWeight={700} color="#000">
@@ -322,90 +535,34 @@ export const DatasetSelect: React.FC<{
                   borderBottom: "0.5px solid #cfd4da",
                 }}
               >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  {" "}
-                  <Typography fontSize="14px" color="#373d43">
-                    Number of Rows
-                  </Typography>
-                  <Typography fontSize="14px" fontWeight={700}>
-                    {previewRowCount}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  {" "}
-                  <Typography fontSize="14px" color="#373d43">
-                    Number of Columns
-                  </Typography>
-                  <Typography fontSize="14px" fontWeight={700}>
-                    {previewColumnCount}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Typography fontSize="14px" color="#373d43">
-                    Number of Cells
-                  </Typography>
-                  <Typography fontSize="14px" fontWeight={700}>
-                    {cellCount}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  {" "}
-                  <Typography fontSize="14px" color="#373d43">
-                    Last Updated
-                  </Typography>
-                  <Typography fontSize="14px" fontWeight={700}>
-                    {getDatasetLatestUpdate(selectedDatasetItem.id)}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Typography fontSize="14px" color="#373d43">
-                    Source
-                  </Typography>
-                  <Typography
-                    fontSize="14px"
-                    fontWeight={700}
-                    color="#3154f4"
-                    component="a"
-                    href={
-                      "https://data.theglobalfund.org/datasets/" +
-                      selectedDatasetItem.id
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    data.theglobalfund.org/downloads
-                  </Typography>
-                </Box>
+                <PreviewRow label="Number of Rows">
+                  {previewRowCount}
+                </PreviewRow>
+                <PreviewRow label="Number of Columns">
+                  {previewColumnCount}
+                </PreviewRow>
+                <PreviewRow label="Number of Cells">{cellCount}</PreviewRow>
+                <PreviewRow label="Last Updated">
+                  {getDatasetLatestUpdate(selectedDatasetItem.id)}
+                </PreviewRow>
+                <PreviewRow label="Source">
+                  {!selectedUserDataset ? (
+                    <PreviewLink
+                      href={
+                        "https://data.theglobalfund.org/datasets/" +
+                        selectedDatasetItem.id
+                      }
+                    >
+                      data.theglobalfund.org/downloads
+                    </PreviewLink>
+                  ) : selectedUserDataset.sourceUrl ? (
+                    <PreviewLink href={selectedUserDataset.sourceUrl}>
+                      {selectedUserDataset.source}
+                    </PreviewLink>
+                  ) : (
+                    selectedUserDataset.fileName || "Uploaded file"
+                  )}
+                </PreviewRow>
               </Box>
               <Box sx={{ p: "16px" }}>
                 <Typography fontSize="16px" fontWeight={700} mb="12px">
@@ -490,8 +647,9 @@ export const DatasetSelect: React.FC<{
             >
               <TouchAppOutlined sx={{ width: 30, height: 30 }} />
               <Typography fontSize="16px" color="#adb5bd">
-                Select a dataset to preview its columns, row count, and
-                metadata.
+                {isExternalSource
+                  ? "Select a dataset to see its details and connect it."
+                  : "Select a dataset to preview its columns, row count, and metadata."}
               </Typography>
             </Box>
           )}

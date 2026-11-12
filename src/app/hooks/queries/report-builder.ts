@@ -22,6 +22,9 @@ import {
   RBFolderModel,
   RBFolderModelResponse,
   FilterGroupModel,
+  RBUserDatasetModel,
+  RBExternalDatasetModel,
+  RBExternalSource,
 } from "app/state/api/action-reducers/report-builder/sync";
 
 export const useCreateReport = () => {
@@ -851,5 +854,126 @@ export const useSendErrorReport = () => {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       }),
+  });
+};
+
+const USER_DATASETS_QUERY_KEY = ["ReportBuilderUserDatasets"];
+// Connecting or uploading a dataset includes processing it, which can take
+// minutes for large files.
+const DATASET_PROCESSING_TIMEOUT = 10 * 60 * 1000;
+export const EXTERNAL_SOURCE_PAGE_SIZE = 20;
+
+export const useUserDatasets = () => {
+  return useQuery({
+    queryKey: USER_DATASETS_QUERY_KEY,
+    queryFn: () =>
+      axiosInstance.get<RBUserDatasetModel[]>(`/report-builder/datasets`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }),
+    staleTime: 1000 * 60 * 5,
+  });
+};
+
+export const useExternalSourceCounts = (enabled = true) => {
+  return useQuery({
+    queryKey: ["ReportBuilderExternalSourceCounts"],
+    queryFn: () =>
+      axiosInstance.get<Record<RBExternalSource, number>>(
+        `/report-builder/external-sources/counts`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
+      ),
+    enabled,
+    retry: false,
+    staleTime: 1000 * 60 * 5,
+  });
+};
+
+export const useExternalSourceSearch = (params: {
+  source: RBExternalSource | null;
+  search: string;
+  sortBy?: "name";
+}) => {
+  return useInfiniteQuery({
+    queryKey: [
+      "ReportBuilderExternalSourceSearch",
+      params.source,
+      params.search,
+      params.sortBy,
+    ],
+    queryFn: ({ pageParam }) =>
+      axiosInstance.get<RBExternalDatasetModel[]>(
+        `/report-builder/external-sources/search`,
+        {
+          params: {
+            source: params.source,
+            q: params.search,
+            sortBy: params.sortBy,
+            limit: EXTERNAL_SOURCE_PAGE_SIZE,
+            offset: pageParam,
+          },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
+      ),
+    initialPageParam: 0,
+    // A dataset can have several files, so a page can hold more or fewer
+    // results than its size: the source is exhausted once a page is empty.
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.data.length > 0
+        ? allPages.length * EXTERNAL_SOURCE_PAGE_SIZE
+        : undefined,
+    enabled: !!params.source,
+    retry: false,
+    staleTime: 1000 * 60 * 5,
+  });
+};
+
+export const useConnectExternalDataset = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["ReportBuilderConnectExternalDataset"],
+    mutationFn: (data: RBExternalDatasetModel) =>
+      axiosInstance.post<RBUserDatasetModel>(
+        `/report-builder/external-sources/connect`,
+        data,
+        {
+          timeout: DATASET_PROCESSING_TIMEOUT,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
+      ),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: USER_DATASETS_QUERY_KEY }),
+  });
+};
+
+export const useUploadDataset = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["ReportBuilderUploadDataset"],
+    mutationFn: (file: File) => {
+      const data = new FormData();
+      data.append("file", file);
+      return axiosInstance.post<RBUserDatasetModel>(
+        `/report-builder/datasets/upload`,
+        data,
+        {
+          timeout: DATASET_PROCESSING_TIMEOUT,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
+      );
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: USER_DATASETS_QUERY_KEY }),
   });
 };

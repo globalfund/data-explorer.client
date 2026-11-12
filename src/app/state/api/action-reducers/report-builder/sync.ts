@@ -451,6 +451,36 @@ export interface RBSampledDatasetResponse {
   };
 }
 
+/** A dataset the user uploaded, or connected from an external source. */
+export interface RBUserDatasetModel {
+  id: string;
+  name: string;
+  description: string;
+  source: string;
+  sourceUrl?: string;
+  category?: string;
+  fileName?: string;
+  externalName?: string;
+  createdDate?: string;
+  updatedDate?: string;
+}
+
+export type RBExternalSource = "WHO" | "Kaggle";
+
+/** A search result of an external source, one per data file of a dataset. */
+export interface RBExternalDatasetModel {
+  /** The name the backend identifies the data file by. */
+  name: string;
+  title: string;
+  file: string;
+  summary: string;
+  description: string;
+  url: string;
+  source: RBExternalSource;
+  category: string;
+  datePublished: string;
+}
+
 export interface RBDatasetResponse {
   data: {
     code: number;

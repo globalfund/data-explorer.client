@@ -13,7 +13,7 @@ import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportIt
 import ControlAccordion from "../../components/accordion";
 import { AssetSelect } from "../../common/asset-select";
 import DatabaseIcon from "app/assets/vectors/RBDatabase.svg?react";
-import { datasetItems } from "../../../../chart/data";
+import useDatasetItems from "app/pages/report-builder/hooks/useDatasetItems";
 import { DatasetSelectModal } from "../../../../dataset-select-modal";
 import FilterIcon from "app/assets/vectors/RBTableFilter.svg?react";
 import { aggregationOptions } from "../../chart/mapping/data";
@@ -32,6 +32,7 @@ interface KPITextFormattingProps {
 }
 
 export default function KPITextFormatting({ source }: KPITextFormattingProps) {
+  const { getDatasetItem } = useDatasetItems();
   const label = { slotProps: { input: { "aria-label": "Checkbox demo" } } };
   const selectedItemController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
@@ -445,9 +446,7 @@ export default function KPITextFormatting({ source }: KPITextFormattingProps) {
                 helperText={"Select a dataset to get started"}
                 icon={<DatabaseIcon />}
                 selectedItem={
-                  datasetItems.find(
-                    (dataset) => dataset.id === selectedItem?.data?.dataset,
-                  )?.name || ""
+                  getDatasetItem(selectedItem?.data?.dataset)?.name || ""
                 }
                 type={"dataset"}
                 componentType="kpi_box"
