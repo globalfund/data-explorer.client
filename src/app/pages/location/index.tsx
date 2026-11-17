@@ -2,6 +2,7 @@ import React from "react";
 import get from "lodash/get";
 import remove from "lodash/remove";
 import Box from "@mui/material/Box";
+import isEqual from "lodash/isEqual";
 import { Helmet } from "react-helmet-async";
 import Divider from "@mui/material/Divider";
 import { useParams } from "react-router-dom";
@@ -37,9 +38,7 @@ export const Location: React.FC = () => {
         value: string;
       }[],
   );
-  const [resultsYear, setResultsYear] = React.useState(
-    cyclesResultsTable[0] ?? new Date().getFullYear().toString(),
-  );
+  const [resultsYear, setResultsYear] = React.useState(cyclesResultsTable[0]);
 
   const dataOverview = useStoreState((state) =>
     get(state.GeographyOverview, "data.data[0]", {
@@ -88,9 +87,6 @@ export const Location: React.FC = () => {
   );
   const clearAllocationsRadialChart = useStoreActions(
     (actions) => actions.GeographyAllocationsRadialChart.clear,
-  );
-  const fetchFundingRequestsTable = useStoreActions(
-    (actions) => actions.GeographyFundingRequestsTable.fetch,
   );
   const loadingFundingRequestsTable = useStoreState(
     (state) => state.GeographyFundingRequestsTable.loading,
@@ -341,6 +337,16 @@ export const Location: React.FC = () => {
   }, [loadingOverview, dataOverview]);
 
   React.useEffect(() => {
+    if (
+      resultsYear === undefined &&
+      cyclesResultsTable[0] &&
+      !isEqual(resultsYear, cyclesResultsTable[0])
+    ) {
+      setResultsYear(cyclesResultsTable[0]);
+    }
+  }, [cyclesResultsTable]);
+
+  React.useEffect(() => {
     if (paramsId) {
       fetchOverview({
         routeParams: {
@@ -353,11 +359,6 @@ export const Location: React.FC = () => {
         },
       });
       fetchAllocationsRadialChart({
-        routeParams: {
-          code: routeParamsId,
-        },
-      });
-      fetchFundingRequestsTable({
         routeParams: {
           code: routeParamsId,
         },
@@ -439,7 +440,7 @@ export const Location: React.FC = () => {
   }, [dataOverview]);
 
   React.useEffect(() => {
-    if (paramsId) {
+    if (paramsId && resultsYear) {
       fetchResultStats({
         filterString: `geographies=${paramsId}&cycle=${resultsYear.value}`,
       });

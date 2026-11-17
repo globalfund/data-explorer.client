@@ -77,7 +77,7 @@ export const Results: React.FC<ResultsProps> = (props: ResultsProps) => {
     if (search) {
       filterString = `&q=${search}`;
     }
-    if (paramsId) {
+    if (paramsId && props.resultsYear) {
       fetchResultsTable({
         filterString,
         routeParams: {
