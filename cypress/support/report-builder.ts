@@ -12,7 +12,8 @@ const itemId = () =>
 // The visual options the editor saves for a new bar chart.
 const BAR_CHART_OPTIONS = {
   showChartName: true,
-  chartTitle: "Bar Chart",
+  chartTitle: "",
+  chartTitleAuto: true,
   chartTitleOptions: {
     fontFamily: "IBM Plex Sans",
     fontWeight: "600",

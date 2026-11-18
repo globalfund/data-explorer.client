@@ -38,10 +38,6 @@ const options: IDefaultChartVisualOptions = {
     group: "Axis Range",
   },
   ...titleOptions,
-  chartTitle: {
-    ...titleOptions.chartTitle,
-    default: "Radar Chart",
-  },
   ...legendOptions,
   showLegend: {
     ...legendOptions.showLegend,

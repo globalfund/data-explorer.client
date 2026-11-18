@@ -7,13 +7,16 @@ export const titleOptions: IDefaultChartVisualOptions = {
     label: "Show Chart Name",
     tab: "layout",
   },
+  // Edited on the chart itself and in the Data Settings tab, not with the
+  // generic options, so neither has a tab. The title follows the chart's data
+  // (see chart/title/chart-title.ts) until the author writes their own.
   chartTitle: {
     type: "text",
-    default: "Chart Title",
-    tab: "layout",
-    disabled: {
-      showChartName: false,
-    },
+    default: "",
+  },
+  chartTitleAuto: {
+    type: "boolean",
+    default: true,
   },
   chartTitleOptions: {
     tab: "layout",

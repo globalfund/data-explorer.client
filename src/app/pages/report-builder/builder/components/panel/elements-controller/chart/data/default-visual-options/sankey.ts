@@ -4,10 +4,6 @@ import { borderAndFillOptions, paddingOptions, titleOptions } from "./base";
 
 const options: IDefaultChartVisualOptions = {
   ...titleOptions,
-  chartTitle: {
-    ...titleOptions.chartTitle,
-    default: "Sankey Chart",
-  },
   nodeWidth: {
     type: "slider",
     default: 15,

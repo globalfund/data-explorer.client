@@ -26,6 +26,7 @@ jest.mock("./placeholders/placeholder", () => ({
 }));
 jest.mock("../panel/elements-controller/chart/utils", () => ({
   checkValidDimensionMapping: () => true,
+  getDimensions: () => [],
 }));
 const mockRenderChartData = {
   mutate: jest.fn(),

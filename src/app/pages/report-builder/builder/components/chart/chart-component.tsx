@@ -19,6 +19,9 @@ interface ChartComponentProps {
   chartType: ChartType;
   setVisualOptions?: (value: Record<string, any>) => void;
   visualOptions: Record<string, any>;
+  /** The title to show: the author's, or the one from the chart's data. */
+  title: string;
+  onTitleChange?: (value: string) => void;
   mapping: MappedDimension | undefined;
   id: string;
   readOnly?: boolean;
@@ -128,7 +131,8 @@ const ChartComponent = (props: ChartComponentProps) => {
                 key={item}
                 index={index}
                 visualOptions={props.visualOptions}
-                setVisualOptions={props.setVisualOptions}
+                title={props.title}
+                onTitleChange={props.onTitleChange}
                 viewMode={props.readOnly}
                 setIsDraggingTitle={setIsDraggingTitle}
               />

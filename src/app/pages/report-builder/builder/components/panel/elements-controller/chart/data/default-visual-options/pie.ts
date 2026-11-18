@@ -8,10 +8,6 @@ import {
 
 const options: IDefaultChartVisualOptions = {
   ...titleOptions,
-  chartTitle: {
-    ...titleOptions.chartTitle,
-    default: "Pie Chart",
-  },
   showLabel: {
     type: "boolean",
     default: true,

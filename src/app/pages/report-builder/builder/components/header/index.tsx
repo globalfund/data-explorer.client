@@ -54,6 +54,12 @@ import { isReportItemComplete } from "app/pages/report-builder/component-registr
 import { ReportBuilderReportIssueModal } from "app/pages/report-builder/main/components/report-issue-modal";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { prepareReportItemsForSave } from "app/utils/reportBuilderState";
+import {
+  getPublishReadinessIssues,
+  PublishReadinessIssue,
+} from "app/pages/report-builder/publish-readiness";
+import { getChartItemTitle } from "app/pages/report-builder/builder/components/chart/title/suggested-title";
+import { PublishReadinessPopover } from "./publish-readiness";
 
 export const menuSx = {
   zIndex: 1400,
@@ -144,6 +150,37 @@ const ReportBuilderPageHeaderContent: React.FC = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const setSelectedController = useStoreActions(
+    (actions) => actions.RBReportItemsControllerState.setItem,
+  );
+  const [readinessAnchorEl, setReadinessAnchorEl] =
+    React.useState<HTMLElement | null>(null);
+  const readinessIssues = React.useMemo(
+    () => getPublishReadinessIssues(reportState.items, getChartItemTitle),
+    [reportState.items],
+  );
+
+  // Sharing publishes the report, so it waits until the report is ready.
+  const handleShareClick = (event: React.MouseEvent<HTMLElement>) => {
+    if (readinessIssues.length > 0) {
+      setReadinessAnchorEl(event.currentTarget);
+      return;
+    }
+    handleClick(event);
+  };
+
+  // Back in the editor, with the item selected so its settings are open.
+  const handleFixReadinessIssue = (issue: PublishReadinessIssue) => {
+    setReadinessAnchorEl(null);
+    setSelectedController({
+      type: "chart",
+      open: true,
+      id: issue.itemId,
+      parent: issue.parent ? { ...issue.parent, open: false } : undefined,
+    });
+    navigate(`/report-builder/reports/${id}/edit`);
   };
 
   const handleClick2 = (event: React.MouseEvent<HTMLElement>) => {
@@ -528,7 +565,7 @@ const ReportBuilderPageHeaderContent: React.FC = () => {
                         Export
                       </Button>
                       <Button
-                        onClick={handleClick}
+                        onClick={handleShareClick}
                         startIcon={<ShareIcon />}
                         sx={{
                           color: "#fff !important",
@@ -910,7 +947,7 @@ const ReportBuilderPageHeaderContent: React.FC = () => {
                         Export
                       </Button>
                       <Button
-                        onClick={handleClick}
+                        onClick={handleShareClick}
                         startIcon={<ShareIcon />}
                         sx={{
                           color: "#fff !important",
@@ -1245,6 +1282,12 @@ const ReportBuilderPageHeaderContent: React.FC = () => {
       <AssetLibraryModal
         open={assetLibraryOpen}
         onClose={handleCloseAssetLibrary}
+      />
+      <PublishReadinessPopover
+        anchorEl={readinessAnchorEl}
+        issues={readinessIssues}
+        onClose={() => setReadinessAnchorEl(null)}
+        onFix={handleFixReadinessIssue}
       />
       <ReportBuilderReportIssueModal
         open={reportIssueModalOpen}

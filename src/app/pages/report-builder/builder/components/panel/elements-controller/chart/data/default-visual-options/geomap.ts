@@ -8,10 +8,6 @@ import {
 
 const options: IDefaultChartVisualOptions = {
   ...titleOptions,
-  chartTitle: {
-    ...titleOptions.chartTitle,
-    default: "Geomap Chart",
-  },
   ...legendOptions,
   showLegend: {
     ...legendOptions.showLegend,

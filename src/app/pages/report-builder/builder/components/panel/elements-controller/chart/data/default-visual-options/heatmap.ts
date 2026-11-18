@@ -47,10 +47,6 @@ const options: IDefaultChartVisualOptions = {
     column: "span 1",
   },
   ...titleOptions,
-  chartTitle: {
-    ...titleOptions.chartTitle,
-    default: "Heatmap Chart",
-  },
   ...legendOptions,
   showLegend: {
     ...legendOptions.showLegend,

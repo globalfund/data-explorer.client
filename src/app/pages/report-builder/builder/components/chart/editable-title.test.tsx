@@ -70,3 +70,38 @@ test("reflects external title updates and disables editing in read-only mode", (
   );
   expect(screen.getByRole("textbox")).toHaveTextContent("Updated");
 });
+test("with a placeholder, a blank title is kept and shows the placeholder", () => {
+  const onTitleChange = jest.fn();
+  const ControlledTitle = () => {
+    const [title, setTitle] = React.useState("Original");
+    return (
+      <EditableTitle
+        title={title}
+        onTitleChange={(value) => {
+          onTitleChange(value);
+          setTitle(value);
+        }}
+        placeholder="Add a chart title…"
+      />
+    );
+  };
+  render(<ControlledTitle />);
+  const input = screen.getByRole("textbox");
+  expect(input).toHaveAttribute("data-placeholder", "Add a chart title…");
+  expect(input).toHaveAttribute("aria-placeholder", "Add a chart title…");
+  fireEvent.focus(input);
+  input.textContent = "   ";
+  fireEvent.blur(input);
+  expect(onTitleChange).toHaveBeenCalledWith("");
+  expect(input).toBeEmptyDOMElement();
+});
+test("Enter followed by the blur it causes saves once", () => {
+  const onTitleChange = jest.fn();
+  render(<EditableTitle title="Original" onTitleChange={onTitleChange} />);
+  const input = screen.getByRole("textbox");
+  fireEvent.focus(input);
+  input.textContent = "New title";
+  fireEvent.keyDown(input, { key: "Enter" });
+  fireEvent.blur(input);
+  expect(onTitleChange).toHaveBeenCalledTimes(1);
+});

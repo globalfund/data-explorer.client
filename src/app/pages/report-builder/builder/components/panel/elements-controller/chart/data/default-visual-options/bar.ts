@@ -8,10 +8,6 @@ import {
 
 const options: IDefaultChartVisualOptions = {
   ...titleOptions,
-  chartTitle: {
-    ...titleOptions.chartTitle,
-    default: "Bar Chart",
-  },
   chartOrientation: {
     type: "text",
     options: ["horizontal", "vertical"],

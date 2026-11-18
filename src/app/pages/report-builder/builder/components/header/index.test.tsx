@@ -2,11 +2,30 @@ import React from "react";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider, createStore } from "easy-peasy";
 import { MemoryRouter, useLocation } from "react-router-dom";
-import { RBReportItemsState } from "app/state/api/action-reducers/report-builder/sync";
+import {
+  RBReportItem,
+  RBReportItemsControllerState,
+  RBReportItemsState,
+} from "app/state/api/action-reducers/report-builder/sync";
 import { createReportItem } from "../../../component-registry/model";
 import { trackPendingChartEdits } from "../chart/pending-edits";
 import { ReportBuilderPageHeader } from "./index";
 
+// rb-core.charts can't load under jest; the titles of the bar charts below
+// only need its bar chart dimensions.
+jest.mock(
+  "app/pages/report-builder/builder/components/panel/elements-controller/chart/utils",
+  () => ({
+    getDimensions: (chartType: string) =>
+      chartType === "bar"
+        ? [
+            { id: "bars", required: true },
+            { id: "size", required: true, aggregation: true },
+            { id: "breakdown", required: false },
+          ]
+        : [],
+  }),
+);
 jest.mock("app/utils/exportReport", () => ({
   exportReportFromServer: jest.fn(),
 }));
@@ -59,7 +78,12 @@ const RouterPath = () => (
   <span data-testid="router-path">{useLocation().pathname}</span>
 );
 const setup = (
-  options: { dirty?: boolean; id?: string; preview?: boolean } = {},
+  options: {
+    dirty?: boolean;
+    id?: string;
+    preview?: boolean;
+    items?: RBReportItem[];
+  } = {},
 ) => {
   window.history.replaceState(
     {},
@@ -68,13 +92,16 @@ const setup = (
       ? "/report-builder/reports/report-1"
       : "/report-builder/reports/report-1/edit",
   );
-  const store = createStore({ RBReportItemsState });
+  const store = createStore({
+    RBReportItemsState,
+    RBReportItemsControllerState,
+  });
   store.getActions().RBReportItemsState.hydrateReport({
     id: options.id ?? "report-1",
     name: "Report",
     description: "Description",
     settings: RBReportItemsState.settings,
-    items: [
+    items: options.items ?? [
       createReportItem("text", { id: "empty" }),
       createReportItem("section_divider", { id: "complete" }),
     ],
@@ -423,3 +450,85 @@ test.each([false, true])(
     expect(screen.getByText("My Reports")).toBeInTheDocument();
   },
 );
+
+// A bar chart of allocations that has rendered, so the report shows it.
+const renderedBarChart = (id: string, options: Record<string, any> = {}) => {
+  const chart = createReportItem("chart", {
+    id,
+    initialized: true,
+    options: { showChartName: true, ...options },
+  });
+  return {
+    ...chart,
+    data: {
+      dataset: "gf_allocations",
+      chartType: "bar",
+      mapping: {
+        bars: { value: ["Continent1"], mappedType: ["string"] },
+        size: {
+          value: ["AllocationAmountReferenceRate"],
+          mappedType: ["number"],
+          config: { aggregation: ["sum"] },
+        },
+      },
+      renderedChartData: { renderedContent: "" },
+    },
+  } as RBReportItem;
+};
+test("sharing a report whose charts have titles opens the share options", () => {
+  setup({
+    preview: true,
+    items: [
+      renderedBarChart("data-title"),
+      renderedBarChart("own-title", {
+        chartTitle: "Allocations",
+        chartTitleAuto: false,
+      }),
+    ],
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Share" }));
+  expect(screen.getByRole("menu")).toHaveTextContent("Copy URL Link");
+  expect(
+    screen.queryByRole("dialog", { name: "Not ready to share" }),
+  ).not.toBeInTheDocument();
+});
+test("sharing waits until every chart in the report has a title", () => {
+  const untitledInGrid = renderedBarChart("untitled-in-grid", {
+    chartTitle: "",
+    chartTitleAuto: false,
+  });
+  const { store } = setup({
+    preview: true,
+    items: [
+      renderedBarChart("titled"),
+      // Hidden titles and unfinished charts don't reach readers.
+      renderedBarChart("hidden-title", {
+        chartTitle: "",
+        chartTitleAuto: false,
+        showChartName: false,
+      }),
+      createReportItem("chart", { id: "unfinished" }),
+      {
+        ...createReportItem("grid", { id: "grid", rows: 1, columns: 1 }),
+        data: { rows: 1, columns: 1, items: [untitledInGrid] },
+      } as RBReportItem,
+    ],
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Share" }));
+  const dialog = screen.getByRole("dialog", { name: "Not ready to share" });
+  expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+  const issues = screen.getAllByRole("button", { name: /needs a title/ });
+  expect(issues).toHaveLength(1);
+  expect(dialog).toHaveTextContent("Bar Chart of Allocations needs a titleFix");
+
+  fireEvent.click(issues[0]);
+  expect(mockNavigate).toHaveBeenCalledWith(
+    "/report-builder/reports/report-1/edit",
+  );
+  expect(store.getState().RBReportItemsControllerState.item).toEqual({
+    type: "chart",
+    open: true,
+    id: "untitled-in-grid",
+    parent: { id: "grid", type: "grid", open: false },
+  });
+});
