@@ -13,11 +13,13 @@ import { CycleProps } from "app/pages/home/data";
 import { useCMSData } from "app/hooks/useCMSData";
 import Typography from "@mui/material/Typography";
 import { ChartBlock } from "app/components/chart-block";
+import { AnimateInView } from "app/components/animate-in-view";
 import { RadialChart } from "app/components/charts/radial";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import useUpdateEffect from "react-use/lib/useUpdateEffect";
 import { RaceBarChart } from "app/components/charts/race-bar";
 import { TableContainer } from "app/components/table-container";
+import { HEADER_HEIGHT } from "app/components/header-menu/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { RadialChartDataItem } from "app/components/charts/radial/data";
 import { useGetDatasetLatestUpdate } from "app/hooks/useGetDatasetLatestUpdate";
@@ -346,110 +348,115 @@ export const AccessToFunding: React.FC = () => {
 
   return (
     <Box gap="24px" display="flex" flexDirection="column">
-      <ChartBlock
-        id="allocation"
-        exportName="allocation"
-        title={`US$${totalAllocationAmount}`}
-        selectedCycles={chart1Cycles}
-        loading={loadingAllocationsRadialChart}
-        handleCycleChange={(value) => handleChartCycleChange(value, 1)}
-        subtitle={`${getCMSDataField(
-          cmsData,
-          "pagesLocationAccessToFunding.allocationSubtitle",
-          "Funds Allocated",
-        )} ${get(chart1Cycles, "[0].value", "").replace(" - ", "-")}`}
-        empty={!showAllocationRadialChart}
-        cycles={allocationsCyclesAll.map((c) => ({
-          ...c,
-          disabled: findIndex(allocationsCycles, { value: c.value }) === -1,
-        }))}
-        text={getCMSDataField(
-          cmsData,
-          "pagesLocationAccessToFunding.allocationText",
-          "The Global Fund is distinct from other organizations in that it gives countries (or groups of countries) an allocation and asks countries to describe how they will use those funds rather than asking for applications and then determining an amount per-country based on the merits of the various proposals received.<br/><br/>This provides greater predictability for countries and helps ensure that the programs being funded are not just the ones with the most capacity to write good applications.",
-        )}
-        data={exportAllocationChartData}
-        latestUpdate={latestUpdateDateChart1}
-        infoType="global"
-      >
-        <Box marginTop="-100px" marginBottom="-100px">
-          <RadialChart
-            tooltipLabel={getCMSDataField(
-              cmsData,
-              "pagesLocationAccessToFunding.allocationTooltipLabel",
-              "Allocation",
-            )}
-            data={dataAllocationsRadialChart}
-            itemLabelFormatterType="name"
-          />
-        </Box>
-        <Box
-          width="100%"
-          display="flex"
-          flexDirection="row"
-          justifyContent="center"
+      <AnimateInView>
+        <ChartBlock
+          id="allocation"
+          exportName="allocation"
+          title={`US$${totalAllocationAmount}`}
+          selectedCycles={chart1Cycles}
+          loading={loadingAllocationsRadialChart}
+          handleCycleChange={(value) => handleChartCycleChange(value, 1)}
+          subtitle={`${getCMSDataField(
+            cmsData,
+            "pagesLocationAccessToFunding.allocationSubtitle",
+            "Funds Allocated",
+          )} ${get(chart1Cycles, "[0].value", "").replace(" - ", "-")}`}
+          empty={!showAllocationRadialChart}
+          cycles={allocationsCyclesAll.map((c) => ({
+            ...c,
+            disabled: findIndex(allocationsCycles, { value: c.value }) === -1,
+          }))}
+          text={getCMSDataField(
+            cmsData,
+            "pagesLocationAccessToFunding.allocationText",
+            "The Global Fund is distinct from other organizations in that it gives countries (or groups of countries) an allocation and asks countries to describe how they will use those funds rather than asking for applications and then determining an amount per-country based on the merits of the various proposals received.<br/><br/>This provides greater predictability for countries and helps ensure that the programs being funded are not just the ones with the most capacity to write good applications.",
+          )}
+          data={exportAllocationChartData}
+          latestUpdate={latestUpdateDateChart1}
+          infoType="global"
         >
-          <Box display="flex" alignItems="center" flexDirection="column">
-            <Typography variant="h4" fontWeight="900">
-              US${totalAllocationAmount}
-            </Typography>
-            <Typography variant="subtitle2">
-              {getCMSDataField(
+          <Box marginTop="-100px" marginBottom="-100px">
+            <RadialChart
+              tooltipLabel={getCMSDataField(
                 cmsData,
-                "pagesLocationAccessToFunding.allocationRadialChartSubtitle",
-                "Total Allocation",
-              )}{" "}
-              {get(chart1Cycles, "[0].value", "")}
-            </Typography>
+                "pagesLocationAccessToFunding.allocationTooltipLabel",
+                "Allocation",
+              )}
+              data={dataAllocationsRadialChart}
+              itemLabelFormatterType="name"
+            />
           </Box>
-        </Box>
-      </ChartBlock>
+          <Box
+            width="100%"
+            display="flex"
+            flexDirection="row"
+            justifyContent="center"
+          >
+            <Box display="flex" alignItems="center" flexDirection="column">
+              <Typography variant="h4" fontWeight="900">
+                US${totalAllocationAmount}
+              </Typography>
+              <Typography variant="subtitle2">
+                {getCMSDataField(
+                  cmsData,
+                  "pagesLocationAccessToFunding.allocationRadialChartSubtitle",
+                  "Total Allocation",
+                )}{" "}
+                {get(chart1Cycles, "[0].value", "")}
+              </Typography>
+            </Box>
+          </Box>
+        </ChartBlock>
+      </AnimateInView>
       {showAllocationRadialChart && fullWidthDivider}
-      <ChartBlock
-        noSplitText
-        noBottomToolbar
-        id="funding-requests"
-        exportName="funding-requests"
-        selectedCycles={chart2Cycles}
-        loading={loadingFundingRequestsTable}
-        title={`${dataFundingRequestsTable._children.length} ${getCMSDataField(
-          cmsData,
-          "pagesLocationAccessToFunding.fundingRequestsTitle",
-          "Funding Requests",
-        )}`}
-        subtitle={`${getCMSDataField(
-          cmsData,
-          "pagesLocationAccessToFunding.fundingRequestsSubtitle",
-          "Submitted for",
-        )} ${get(chart2Cycles, "[0].value", "").replace(" - ", "-")}`}
-        empty={!showFundingRequestsTable}
-        handleCycleChange={(value) => handleChartCycleChange(value, 2)}
-        cycles={fundingRequestsCyclesAll.map((c) => ({
-          ...c,
-          disabled: findIndex(fundingRequestsCycles, { value: c.value }) === -1,
-        }))}
-        text={getCMSDataField(
-          cmsData,
-          "pagesLocationAccessToFunding.fundingRequestsText",
-          `The Funding Request explains how the applicant would use Global Fund allocated funds, if approved. Funding Requests are reviewed by the Global Fund’s Technical Review Panel (TRP). Once approved by the TRP, the Funding Request is turned into one or more grants through the grant-making negotiation. The Grant Approvals Committee (GAC) reviews the final version of each grant and recommends implementation-ready grants to the Global Fund Board for approval. Funding Requests are submitted for internal Global Fund review, but the final grant is the legally-binding agreement.<br/><br/>The tracker below indicates the Funding Requests anticipated for the selected Allocation Period. If information is not available for a component for which the country received an allocation, it likely indicates that the country has not yet registered for a TRP window. Once funding requests have a TRP outcome of "Grant Making", they are made available for download in the Documents section of this page, which also included Funding Requests from previous Allocation Periods, Concept Notes, Proposals, and requests for funding from the COVID19 Response Mechanism.`,
-        )}
-        latestUpdate={latestUpdateDateChart2}
-        data={dataFundingRequestsTable._children}
-        infoType="global"
-      >
-        <TableContainer
-          dataTree
-          withCycles
-          search={tableSearch}
-          dataTreeStartExpanded
-          id="funding-requests-table"
-          onSearchChange={onSearchChange}
-          columns={TABLE_VARIATION_2_COLUMNS}
+      <AnimateInView>
+        <ChartBlock
+          noSplitText
+          noBottomToolbar
+          id="funding-requests"
+          exportName="funding-requests"
+          selectedCycles={chart2Cycles}
+          loading={loadingFundingRequestsTable}
+          title={`${dataFundingRequestsTable._children.length} ${getCMSDataField(
+            cmsData,
+            "pagesLocationAccessToFunding.fundingRequestsTitle",
+            "Funding Requests",
+          )}`}
+          subtitle={`${getCMSDataField(
+            cmsData,
+            "pagesLocationAccessToFunding.fundingRequestsSubtitle",
+            "Submitted for",
+          )} ${get(chart2Cycles, "[0].value", "").replace(" - ", "-")}`}
+          empty={!showFundingRequestsTable}
+          handleCycleChange={(value) => handleChartCycleChange(value, 2)}
+          cycles={fundingRequestsCyclesAll.map((c) => ({
+            ...c,
+            disabled:
+              findIndex(fundingRequestsCycles, { value: c.value }) === -1,
+          }))}
+          text={getCMSDataField(
+            cmsData,
+            "pagesLocationAccessToFunding.fundingRequestsText",
+            `The Funding Request explains how the applicant would use Global Fund allocated funds, if approved. Funding Requests are reviewed by the Global Fund’s Technical Review Panel (TRP). Once approved by the TRP, the Funding Request is turned into one or more grants through the grant-making negotiation. The Grant Approvals Committee (GAC) reviews the final version of each grant and recommends implementation-ready grants to the Global Fund Board for approval. Funding Requests are submitted for internal Global Fund review, but the final grant is the legally-binding agreement.<br/><br/>The tracker below indicates the Funding Requests anticipated for the selected Allocation Period. If information is not available for a component for which the country received an allocation, it likely indicates that the country has not yet registered for a TRP window. Once funding requests have a TRP outcome of "Grant Making", they are made available for download in the Documents section of this page, which also included Funding Requests from previous Allocation Periods, Concept Notes, Proposals, and requests for funding from the COVID19 Response Mechanism.`,
+          )}
+          latestUpdate={latestUpdateDateChart2}
           data={dataFundingRequestsTable._children}
-        />
-        <Box height="64px" />
-        <RaceBarChart noValuesFormat data={raceBarData} />
-      </ChartBlock>
+          infoType="global"
+        >
+          <TableContainer
+            dataTree
+            withCycles
+            search={tableSearch}
+            dataTreeStartExpanded
+            id="funding-requests-table"
+            onSearchChange={onSearchChange}
+            columns={TABLE_VARIATION_2_COLUMNS}
+            data={dataFundingRequestsTable._children}
+          />
+          <Box height="64px" />
+          <RaceBarChart noValuesFormat data={raceBarData} />
+        </ChartBlock>
+      </AnimateInView>
       {showFundingRequestsTable && fullWidthDivider}
       <ChartBlock
         noSplitText
@@ -487,6 +494,11 @@ export const AccessToFunding: React.FC = () => {
           flexDirection="row"
           justifyContent="flex-end"
           sx={{
+            zIndex: 1,
+            bgcolor: "#fff",
+            padding: "10px 0",
+            top: HEADER_HEIGHT,
+            position: "sticky",
             "> div": {
               display: "flex",
               flexDirection: "column",

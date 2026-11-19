@@ -383,6 +383,7 @@ export const GrantImplementationPageBlock3: React.FC<
       <Box gap="10px" display="flex" flexDirection="row">
         {budgetsCycleDropdown}
         <Dropdown
+          width={200}
           dropdownSelected={budgetTableDataType}
           dropdownItems={dropdownItemsBudgetsTableDataTypes}
           handleDropdownChange={handleBudgetTableDataTypeChange}
@@ -560,14 +561,14 @@ export const GrantImplementationPageBlock3: React.FC<
                 {getCMSDataField(
                   cmsData,
                   "pagesDatasetsGrantImplementation.budgetsLabel2",
-                  "Investement Landscape 1",
+                  "Investment Landscape 1",
                 )}
               </Grid>
               <Grid item xs={3}>
                 {getCMSDataField(
                   cmsData,
                   "pagesDatasetsGrantImplementation.budgetsLabel3",
-                  "Investement Landscape 2",
+                  "Investment Landscape 2",
                 )}
               </Grid>
               <Grid item xs={3}>
@@ -749,6 +750,7 @@ export const GrantImplementationPageBlock3: React.FC<
         )}`}
         handleApplyFilters={handleApplyChartFilters}
         handleCancelFilters={handleCancelChartFilters}
+        dropdownWidth={170}
         dropdownItems={dropdownItemsBudgets}
         dropdownSelected={budgetsDropdownSelected}
         handleDropdownChange={(value) => {

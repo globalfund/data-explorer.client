@@ -231,12 +231,12 @@ export const Grants: React.FC = () => {
       const startDate = new Date(item.startDate);
       const endDate = new Date(item.endDate);
       if (startDate) {
-        datesStr = `${getMonthFromNumber(
+        datesStr = `${startDate.getDate()} ${getMonthFromNumber(
           startDate.getMonth() + 1,
         )} ${startDate.getFullYear()} - `;
       }
       if (endDate) {
-        datesStr += `${getMonthFromNumber(
+        datesStr += `${endDate.getDate()} ${getMonthFromNumber(
           endDate.getMonth() + 1,
         )} ${endDate.getFullYear()}`;
       }

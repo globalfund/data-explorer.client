@@ -1,6 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import * as echarts from "echarts/core";
+import { chartTheme } from "app/components/charts/common/theme/config";
 import Divider from "@mui/material/Divider";
 import ReactDOMServer from "react-dom/server";
 import { SVGRenderer } from "echarts/renderers";
@@ -10,6 +11,10 @@ import { PieSeriesOption, PieChart as EChartsPie } from "echarts/charts";
 import { useChartResizeObserver } from "app/hooks/useChartResizeObserver";
 import { TooltipComponent, TooltipComponentOption } from "echarts/components";
 import { chartTooltipCommonConfig } from "app/components/charts/common/tooltip/config";
+import {
+  useAnimateInView,
+  chartAnimationOptions,
+} from "app/components/animate-in-view";
 import {
   RadialChartProps,
   itemLabelFormatter,
@@ -111,7 +116,9 @@ const Tooltip = (props: any) => {
 export const RadialChart: React.FC<RadialChartProps> = (
   props: RadialChartProps,
 ) => {
+  const { inView, enabled: animateInView } = useAnimateInView();
   const isTouch = useMediaQuery("(hover: none)");
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const [stateChart, setStateChart] =
@@ -128,14 +135,15 @@ export const RadialChart: React.FC<RadialChartProps> = (
   });
 
   React.useEffect(() => {
-    if (containerRef.current) {
-      const chart = echarts.init(containerRef.current, undefined, {
+    if (containerRef.current && inView) {
+      const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
 
       const option: echarts.ComposeOption<
         PieSeriesOption | TooltipComponentOption
       > = {
+        ...(animateInView ? chartAnimationOptions(reducedMotion) : {}),
         series: {
           type: "pie",
           endAngle: 360,
@@ -181,7 +189,7 @@ export const RadialChart: React.FC<RadialChartProps> = (
       chart.setOption(option);
       setStateChart(chart);
     }
-  }, [props.data, containerRef.current]);
+  }, [props.data, containerRef.current, inView]);
 
   return (
     <React.Fragment>

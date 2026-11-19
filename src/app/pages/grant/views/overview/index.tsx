@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import { useCMSData } from "app/hooks/useCMSData";
 import { useStoreState } from "app/state/store/hooks";
 import { PageLoader } from "app/components/page-loader";
+import { AnimateInView } from "app/components/animate-in-view";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import { RaceBarChart } from "app/components/charts/race-bar";
 import { ChartBlockButtonToolbar } from "app/components/chart-block/components/button-toolbar";
@@ -259,18 +260,20 @@ export const GrantOverview: React.FC = () => {
         </Grid>
       </Grid>
       {fullWidthDivider}
-      <Box position="relative">
-        <Box id="grant-overview-race-bar-chart">
-          <RaceBarChart data={raceBarChartData} />
+      <AnimateInView>
+        <Box position="relative">
+          <Box id="grant-overview-race-bar-chart">
+            <RaceBarChart data={raceBarChartData} />
+          </Box>
+          <ChartBlockButtonToolbar
+            infoType="global"
+            chartData={exportChartData}
+            exportName="grant-investments"
+            hashId="grant-overview-race-bar-chart"
+            blockId="grant-overview-race-bar-chart"
+          />
         </Box>
-        <ChartBlockButtonToolbar
-          infoType="global"
-          chartData={exportChartData}
-          exportName="grant-investments"
-          hashId="grant-overview-race-bar-chart"
-          blockId="grant-overview-race-bar-chart"
-        />
-      </Box>
+      </AnimateInView>
       <Box>
         <Typography variant="body2" fontWeight="700" fontSize="16px">
           {getCMSDataField(cmsData, "pagesGrantOverview.goals", "Goals")}

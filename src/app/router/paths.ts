@@ -19,6 +19,7 @@ export type RouteComponentName =
   | "GrantImplementationPage"
   | "AnnualResultsPage"
   | "GlossaryPage"
+  | "OpexPage"
   | "ChangelogPage";
 
 export const ROUTE_CONFIGS: RouteConfig[] = [
@@ -71,6 +72,11 @@ export const ROUTE_CONFIGS: RouteConfig[] = [
     path: "/annual-results",
     componentName: "AnnualResultsPage",
     importFrom: "app/pages/datasets/annual-results",
+  },
+  {
+    path: "/opex",
+    componentName: "OpexPage",
+    importFrom: "app/pages/datasets/opex",
   },
   {
     path: "/glossary",

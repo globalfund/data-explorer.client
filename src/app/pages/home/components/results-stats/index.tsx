@@ -1,5 +1,6 @@
 import React from "react";
 import Box from "@mui/material/Box";
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import TBIcon from "app/assets/vectors/TB.svg?react";
 import HIVIcon from "app/assets/vectors/HIV.svg?react";
@@ -27,9 +28,9 @@ const StatComp: React.FC<StatCompProps> = (props: StatCompProps) => {
     <Box
       gap="10px"
       display="flex"
+      padding="0 10px"
       flexDirection="row"
-      alignItems="flex-start"
-      justifyContent="center"
+      alignItems={props.hideGeographies ? "center" : "flex-start"}
       sx={{
         b: {
           fontWeight: 900,
@@ -41,26 +42,57 @@ const StatComp: React.FC<StatCompProps> = (props: StatCompProps) => {
     >
       {icon}
       <Box>
-        <Typography
-          variant="h3"
-          sx={{
-            fontSize: "36px",
-            fontWeight: "700",
-            "@media (max-width: 1200px)": {
-              fontSize: "32px",
-            },
-          }}
-        >
-          {value.number} {value.text}
-        </Typography>
+        {!props.loading ? (
+          <Typography
+            variant="h3"
+            sx={{
+              fontSize: "36px",
+              fontWeight: "700",
+              "@media (max-width: 1200px)": {
+                fontSize: "32px",
+              },
+            }}
+          >
+            {value.number} {value.text}
+          </Typography>
+        ) : (
+          <Skeleton
+            variant="text"
+            sx={{
+              width: "300px",
+              lineHeight: 1.2,
+              fontSize: "36px",
+              "@media (max-width: 1200px)": {
+                fontSize: "32px",
+              },
+            }}
+          />
+        )}
         <Typography
           component="div"
-          fontSize="14px"
+          fontSize="16px"
           variant="overline"
+          marginBottom="2px"
           lineHeight="normal"
         >
           {props.label}
+          {props.hideGeographies ? ` in ${props.yearSelected}` : ""}
         </Typography>
+        {!props.hideGeographies && (
+          <React.Fragment>
+            {!props.loading ? (
+              <Typography fontSize="14px" color="#373D43">
+                Reported by {props.geographies} countr
+                {props.geographies === 1 ? "y" : "ies"} in {props.yearSelected}
+              </Typography>
+            ) : (
+              <Skeleton
+                variant="text"
+                sx={{ width: "250px", fontSize: "14px" }}
+              />
+            )}
+          </React.Fragment>
+        )}
       </Box>
     </Box>
   );
@@ -78,6 +110,9 @@ export const HomeResultsStats: React.FC<HomeResultsStatsProps> = (
       sx={{
         "> div": {
           width: "calc(100% / 3)",
+          ":not(:last-child)": {
+            borderRight: "1px solid #CFD4DA",
+          },
         },
         "@media (max-width: 920px)": {
           justifyContent: "space-around",
@@ -90,6 +125,7 @@ export const HomeResultsStats: React.FC<HomeResultsStatsProps> = (
           flexDirection: "column",
           "> div": {
             width: "100%",
+            borderRightStyle: "none !important",
           },
         },
       }}
@@ -111,7 +147,15 @@ export const HomeResultsStats: React.FC<HomeResultsStatsProps> = (
       {props.stats.length > 0 &&
         statsOrder.map((o) => {
           const stat = props.stats.find((s) => s.label.includes(o));
-          return stat ? <StatComp key={stat.label} {...stat} /> : null;
+          return stat ? (
+            <StatComp
+              key={stat.label}
+              {...stat}
+              loading={props.loading}
+              yearSelected={props.yearSelected}
+              hideGeographies={props.hideGeographies}
+            />
+          ) : null;
         })}
     </Box>
   );

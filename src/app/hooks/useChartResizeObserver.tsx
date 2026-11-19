@@ -21,6 +21,12 @@ export const useChartResizeObserver = (props: ChartResizeObserverProps) => {
         window.requestAnimationFrame(() => {
           if (!props.chart || !Array.isArray(entries) || !entries.length)
             return;
+          const container = document.getElementById(props.containerId);
+          if (
+            container?.clientWidth === props.chart.getWidth() &&
+            props.containerRef.current?.clientHeight === props.chart.getHeight()
+          )
+            return;
           onEchartResize(
             props.chart,
             props.containerId,

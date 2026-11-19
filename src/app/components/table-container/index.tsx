@@ -119,6 +119,15 @@ export const TableContainer: React.FC<TableContainerProps> = (
     }
   }, []);
 
+  React.useEffect(() => {
+    setColumns(
+      props.columns.map((column) => ({
+        ...column,
+        visible: true,
+      })),
+    );
+  }, [props.columns]);
+
   return (
     <Box
       gap="24px"

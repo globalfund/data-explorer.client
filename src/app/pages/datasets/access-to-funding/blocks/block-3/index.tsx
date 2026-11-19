@@ -469,6 +469,7 @@ export const AccessToFundingBlock3: React.FC<AccessToFundingBlock3Props> = (
         )}
         handleApplyFilters={handleApplyChartFilters}
         handleCancelFilters={handleCancelChartFilters}
+        dropdownWidth={170}
         dropdownItems={dropdownItems}
         latestUpdate={latestUpdateDate}
         dropdownSelected={dropdownSelected}

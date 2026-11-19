@@ -2,16 +2,18 @@ import React from "react";
 import get from "lodash/get";
 import remove from "lodash/remove";
 import Box from "@mui/material/Box";
+import isEqual from "lodash/isEqual";
 import { Helmet } from "react-helmet-async";
 import Divider from "@mui/material/Divider";
 import { useParams } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import { useCMSData } from "app/hooks/useCMSData";
+import { NotFoundPage } from "app/pages/not-found";
+import { Breadcrumbs } from "app/components/breadcrumbs";
 import { Results } from "app/pages/location/views/results";
 import CircularProgress from "@mui/material/CircularProgress";
 import { DetailPageTabs } from "app/components/detail-page-tabs";
 import { LocationOverview } from "app/pages/location/views/overview";
-import { RESULT_YEARS } from "app/pages/location/views/results/data";
 import { getLocationTabs } from "app/components/detail-page-tabs/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { AccessToFunding } from "app/pages/location/views/access-to-funding";
@@ -36,9 +38,7 @@ export const Location: React.FC = () => {
         value: string;
       }[],
   );
-  const [resultsYear, setResultsYear] = React.useState(
-    cyclesResultsTable[0] ?? new Date().getFullYear().toString(),
-  );
+  const [resultsYear, setResultsYear] = React.useState(cyclesResultsTable[0]);
 
   const dataOverview = useStoreState((state) =>
     get(state.GeographyOverview, "data.data[0]", {
@@ -87,9 +87,6 @@ export const Location: React.FC = () => {
   );
   const clearAllocationsRadialChart = useStoreActions(
     (actions) => actions.GeographyAllocationsRadialChart.clear,
-  );
-  const fetchFundingRequestsTable = useStoreActions(
-    (actions) => actions.GeographyFundingRequestsTable.fetch,
   );
   const loadingFundingRequestsTable = useStoreState(
     (state) => state.GeographyFundingRequestsTable.loading,
@@ -335,6 +332,20 @@ export const Location: React.FC = () => {
     LOCATION_TABS,
   ]);
 
+  const notFound = React.useMemo(() => {
+    return !loadingOverview && dataOverview.name === "";
+  }, [loadingOverview, dataOverview]);
+
+  React.useEffect(() => {
+    if (
+      resultsYear === undefined &&
+      cyclesResultsTable[0] &&
+      !isEqual(resultsYear, cyclesResultsTable[0])
+    ) {
+      setResultsYear(cyclesResultsTable[0]);
+    }
+  }, [cyclesResultsTable]);
+
   React.useEffect(() => {
     if (paramsId) {
       fetchOverview({
@@ -348,11 +359,6 @@ export const Location: React.FC = () => {
         },
       });
       fetchAllocationsRadialChart({
-        routeParams: {
-          code: routeParamsId,
-        },
-      });
-      fetchFundingRequestsTable({
         routeParams: {
           code: routeParamsId,
         },
@@ -384,11 +390,6 @@ export const Location: React.FC = () => {
         routeParams: {
           code: routeParamsId,
         },
-      });
-      fetchResultStats({
-        filterString: `geographies=${paramsId}&cycle=${
-          RESULT_YEARS[RESULT_YEARS.length - 1].value
-        }`,
       });
       fetchDocumentsTable({
         filterString: `types=Application&geographies=${paramsId}`,
@@ -439,7 +440,10 @@ export const Location: React.FC = () => {
   }, [dataOverview]);
 
   React.useEffect(() => {
-    if (paramsId) {
+    if (paramsId && resultsYear) {
+      fetchResultStats({
+        filterString: `geographies=${paramsId}&cycle=${resultsYear.value}`,
+      });
       fetchResultsTable({
         routeParams: {
           code: routeParamsId,
@@ -491,6 +495,10 @@ export const Location: React.FC = () => {
     />
   );
 
+  if (notFound) {
+    return <NotFoundPage code={paramsId} variant="location" />;
+  }
+
   return (
     <>
       <Helmet>
@@ -499,6 +507,17 @@ export const Location: React.FC = () => {
           href={`${window.location.origin}/location/${paramsId}/${params.tab}`}
         />
       </Helmet>
+      <Breadcrumbs
+        items={[
+          { label: "Homepage", path: "/" },
+          { label: "/" },
+          { label: "Geography", path: "/geography" },
+          { label: "/" },
+          {
+            label: dataOverview.name,
+          },
+        ]}
+      />
       <Box
         padding="50px 0"
         sx={{

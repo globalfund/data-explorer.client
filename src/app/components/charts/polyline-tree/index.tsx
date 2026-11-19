@@ -2,10 +2,15 @@ import React from "react";
 import Box from "@mui/material/Box";
 import { appColors } from "app/theme";
 import * as echarts from "echarts/core";
+import { chartTheme } from "app/components/charts/common/theme/config";
 import { SVGRenderer } from "echarts/renderers";
 import { formatLocale } from "app/utils/formatLocale";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useChartResizeObserver } from "app/hooks/useChartResizeObserver";
+import {
+  useAnimateInView,
+  chartAnimationOptions,
+} from "app/components/animate-in-view";
 import { TreeSeriesOption, TreeChart as EchartsTree } from "echarts/charts";
 import { PolylineTreeProps } from "app/components/charts/polyline-tree/data";
 
@@ -15,6 +20,8 @@ export const PolylineTree: React.FC<PolylineTreeProps> = (
   props: PolylineTreeProps,
 ) => {
   const mobile = useMediaQuery("(max-width: 767px)");
+  const { inView, enabled: animateInView } = useAnimateInView();
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const [stateChart, setStateChart] =
@@ -27,12 +34,13 @@ export const PolylineTree: React.FC<PolylineTreeProps> = (
   });
 
   React.useEffect(() => {
-    if (containerRef.current) {
-      const chart = echarts.init(containerRef.current, undefined, {
+    if (containerRef.current && inView) {
+      const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
 
       const option: echarts.ComposeOption<TreeSeriesOption> = {
+        ...(animateInView ? chartAnimationOptions(reducedMotion) : {}),
         series: {
           type: "tree",
           data: [props.data],
@@ -115,7 +123,7 @@ export const PolylineTree: React.FC<PolylineTreeProps> = (
       chart.setOption(option);
       setStateChart(chart);
     }
-  }, [containerRef.current, mobile]);
+  }, [containerRef.current, mobile, inView]);
 
   return (
     <React.Fragment>

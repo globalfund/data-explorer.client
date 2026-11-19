@@ -2,50 +2,65 @@ import React from "react";
 import get from "lodash/get";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
+import { useCMSData } from "app/hooks/useCMSData";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { TableContainer } from "app/components/table-container";
-import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { TABLE_VARIATION_6_COLUMNS as DOCUMENTS_TABLE_COLUMNS } from "app/components/table/data";
-import { useCMSData } from "app/hooks/useCMSData";
 
 interface AccessToFundingBlock6Props {
   filterString: string;
 }
+
+// INFO: switched from easy-peasy data fetching to direct API call
+// because the output size was exceeding the easy-peasy store limit
+// and causing the whole app to freeze
 
 export const AccessToFundingBlock6: React.FC<AccessToFundingBlock6Props> = (
   props: AccessToFundingBlock6Props,
 ) => {
   const cmsData = useCMSData({ returnData: true });
   const [tableSearch, setTableSearch] = React.useState("");
+  const [dataDocumentsTable, setDataDocumentsTable] = React.useState([]);
+  const [loadingDocumentsTable, setLoadingDocumentsTable] =
+    React.useState(false);
 
-  const dataDocumentsTable = useStoreState((state) =>
-    get(state.AccessToFundingDocumentsTable, "data.data", []).map(
-      (item: any, index) => {
-        if (index === 0) {
-          return {
-            ...item,
-            top: true,
-            _children: item._children.map((subItem: any) => ({
-              ...subItem,
+  const fetchDocumentsTable = async ({
+    filterString,
+  }: {
+    filterString: string;
+  }) => {
+    setLoadingDocumentsTable(true);
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API}/documents?${filterString}`,
+      );
+      const result = await response.json();
+      setDataDocumentsTable(
+        result.data.map((item: any, index: number) => {
+          if (index === 0) {
+            return {
+              ...item,
               top: true,
-              _children: subItem._children.map((subSubItem: any) => ({
-                ...subSubItem,
+              _children: item._children.map((subItem: any) => ({
+                ...subItem,
                 top: true,
+                _children: subItem._children.map((subSubItem: any) => ({
+                  ...subSubItem,
+                  top: true,
+                })),
               })),
-            })),
-          };
-        }
-        return item;
-      },
-    ),
-  );
-  const loadingDocumentsTable = useStoreState(
-    (state) => state.AccessToFundingDocumentsTable.loading,
-  );
-  const fetchDocumentsTable = useStoreActions(
-    (actions) => actions.AccessToFundingDocumentsTable.fetch,
-  );
+            };
+          }
+          return item;
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingDocumentsTable(false);
+    }
+  };
 
   const onSearchChange = (search: string) => {
     setTableSearch(search);

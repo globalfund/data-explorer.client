@@ -5,6 +5,7 @@ import Add from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
 import Divider from "@mui/material/Divider";
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import { Dropdown } from "app/components/dropdown";
 import { FilterPanel } from "app/components/filters/panel";
@@ -134,9 +135,16 @@ export const DatasetChartBlock: React.FC<DatasetChartBlockProps> = (
       <Typography variant={props.titleVariant ?? "h2"} lineHeight={1.2}>
         {props.title}
       </Typography>
-      <Typography variant={props.subtitleVariant ?? "body2"} fontSize="20px">
-        {props.subtitle}
-      </Typography>
+      {!props.loading ? (
+        <Typography variant={props.subtitleVariant ?? "body2"} fontSize="20px">
+          {props.subtitle}
+        </Typography>
+      ) : (
+        <Skeleton
+          variant="text"
+          sx={{ width: "300px", lineHeight: 1.4, fontSize: "20px" }}
+        />
+      )}
       <Divider
         sx={{
           margin: "10px 0",
@@ -201,6 +209,7 @@ export const DatasetChartBlock: React.FC<DatasetChartBlockProps> = (
           >
             {filterPopoverContent}
           </Popover>
+          {props.extraToolbar}
           {/* <Button variant="outlined" startIcon={<SettingsIcon />}>
             Settings
           </Button> */}
@@ -223,6 +232,7 @@ export const DatasetChartBlock: React.FC<DatasetChartBlockProps> = (
             props.dropdownSelected &&
             props.handleDropdownChange && (
               <Dropdown
+                width={props.dropdownWidth}
                 dropdownItems={props.dropdownItems}
                 dropdownSelected={props.dropdownSelected}
                 handleDropdownChange={props.handleDropdownChange}

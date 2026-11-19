@@ -1,5 +1,6 @@
-import { colors } from "app/theme";
 import { getCMSDataField } from "app/utils/getCMSDataField";
+
+export const HEADER_HEIGHT = "67px";
 
 export interface HeaderMenuProps {
   mobileMenuOpen: boolean;
@@ -101,6 +102,30 @@ export const getPages = (cmsData: any): HeaderMenuPage[] => {
       label: getCMSDataField(cmsData, "componentsHeader.grantsLabel", "Grants"),
       link: "/grants",
     },
+    {
+      id: "secretariat",
+      label: getCMSDataField(
+        cmsData,
+        "componentsHeader.secretariatLabel",
+        "Secretariat",
+      ),
+      subPages: [
+        {
+          id: "opex",
+          label: getCMSDataField(
+            cmsData,
+            "componentsHeader.opexLabel",
+            "OPEX data",
+          ),
+          link: "/opex",
+          description: getCMSDataField(
+            cmsData,
+            "componentsHeader.opexDescription",
+            "Operating expenses by year & category",
+          ),
+        },
+      ],
+    },
   ];
 
   return PAGES;
@@ -121,11 +146,13 @@ export function isNavButtonActive(id: string, path: string): boolean {
       return path.includes("/geography") || path.includes("/location");
     case "grants":
       return path.includes("/grants") || path.includes("/grant");
+    case "secretariat":
+      return path.includes("/opex");
     default:
       return id === path.split("/")[1];
   }
 }
 
 export const activeButtonStateStyle = {
-  borderBottom: `4px solid ${colors.primary.black}`,
+  background: "#F8F9FA",
 };

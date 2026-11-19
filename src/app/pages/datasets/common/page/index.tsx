@@ -116,7 +116,7 @@ export const DatasetPage: React.FC<DatasetPageProps> = (
         display="flex"
         marginTop="50px"
         flexDirection="row"
-        justifyContent="space-between"
+        justifyContent={!props.hideFilters ? "space-between" : "flex-end"}
         sx={{
           "@media (max-width: 767px)": {
             gap: "16px",
@@ -125,47 +125,54 @@ export const DatasetPage: React.FC<DatasetPageProps> = (
           },
         }}
       >
-        <Box gap="20px" display="flex" flexDirection="row" alignItems="center">
-          <Button
-            variant="outlined"
-            startIcon={<Add />}
-            onClick={handleFilterButtonClick}
-            sx={
-              props.appliedFilters.length > 0
-                ? {
-                    "&:after": {
-                      top: "-3px",
-                      right: "8px",
-                      width: "6px",
-                      height: "6px",
-                      content: "''",
-                      borderRadius: "50%",
-                      position: "absolute",
-                      background: "#FF9800",
-                    },
-                  }
-                : {}
-            }
-            data-cy="datasets-filter-btn"
+        {!props.hideFilters && (
+          <Box
+            gap="20px"
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
           >
-            Filters
-          </Button>
-          <Tooltip title={<TooltipTitle />} arrow>
-            <InfoOutlined fontSize="small" />
-          </Tooltip>
-          <Popover
-            disableScrollLock
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleFilterPanelClose}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-          >
-            {filterPopoverContent}
-          </Popover>
-        </Box>
+            <Button
+              variant="outlined"
+              startIcon={<Add />}
+              onClick={handleFilterButtonClick}
+              sx={
+                props.appliedFilters.length > 0
+                  ? {
+                      "&:after": {
+                        top: "-3px",
+                        right: "8px",
+                        width: "6px",
+                        height: "6px",
+                        content: "''",
+                        borderRadius: "50%",
+                        position: "absolute",
+                        background: "#FF9800",
+                      },
+                    }
+                  : {}
+              }
+              data-cy="datasets-filter-btn"
+            >
+              Filters
+            </Button>
+            <Tooltip title={<TooltipTitle />} arrow>
+              <InfoOutlined fontSize="small" />
+            </Tooltip>
+            <Popover
+              disableScrollLock
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleFilterPanelClose}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+            >
+              {filterPopoverContent}
+            </Popover>
+          </Box>
+        )}
         {props.toolbarRightContent}
       </Box>
       <Divider

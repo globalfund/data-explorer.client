@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import { useCMSData } from "app/hooks/useCMSData";
 import Info from "@mui/icons-material/InfoOutlined";
 import { getCMSDataField } from "app/utils/getCMSDataField";
+import { HEADER_HEIGHT } from "app/components/header-menu/data";
 import { TableContainer } from "app/components/table-container";
 import { FilterGroupModel } from "app/components/filters/list/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
@@ -303,6 +304,11 @@ export const AccessToFundingBlock2: React.FC<AccessToFundingBlock2Props> = (
           flexDirection="row"
           justifyContent="flex-end"
           sx={{
+            zIndex: 1,
+            bgcolor: "#fff",
+            padding: "10px 0",
+            top: HEADER_HEIGHT,
+            position: "sticky",
             "> div": {
               display: "flex",
               flexDirection: "column",

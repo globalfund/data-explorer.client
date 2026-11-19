@@ -6,6 +6,7 @@ import Divider from "@mui/material/Divider";
 import { useParams } from "react-router-dom";
 import { useCMSData } from "app/hooks/useCMSData";
 import { ChartBlock } from "app/components/chart-block";
+import { AnimateInView } from "app/components/animate-in-view";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import { TableContainer } from "app/components/table-container";
 import { ResultsProps } from "app/pages/location/views/results/data";
@@ -77,7 +78,7 @@ export const Results: React.FC<ResultsProps> = (props: ResultsProps) => {
     if (search) {
       filterString = `&q=${search}`;
     }
-    if (paramsId) {
+    if (paramsId && props.resultsYear) {
       fetchResultsTable({
         filterString,
         routeParams: {
@@ -121,7 +122,14 @@ export const Results: React.FC<ResultsProps> = (props: ResultsProps) => {
 
   return (
     <Box gap="24px" display="flex" flexDirection="column">
-      {showStats && <HomeResultsStats stats={dataResultStats} />}
+      {showStats && (
+        <AnimateInView>
+          <HomeResultsStats
+            stats={dataResultStats}
+            yearSelected={props.resultsYear.value?.toString() ?? ""}
+          />
+        </AnimateInView>
+      )}
       {showStats && fullWidthDivider}
       <ChartBlock
         id="results"

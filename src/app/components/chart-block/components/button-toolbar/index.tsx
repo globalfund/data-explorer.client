@@ -85,11 +85,13 @@ export const ChartBlockButtonToolbar: React.FC<ChartBlockButtonToolbarProps> = (
               background: "transparent",
               border: "1px solid #98A1AA",
               "&:hover": {
-                background: "#F8F9FA",
+                background: "#EFF1FE",
+                borderColor: "#3154F4",
               },
             },
             "#active": {
-              background: "#F8F9FA",
+              background: "#EFF1FE",
+              borderColor: "#3154F4",
             },
           }}
         >
@@ -117,6 +119,8 @@ export const ChartBlockButtonToolbar: React.FC<ChartBlockButtonToolbarProps> = (
                       background:
                         appColors.CHART_BLOCK_CYCLES
                           .BUTTON_ACTIVE_BACKGROUND_COLOR,
+                      borderColor:
+                        appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BORDER_COLOR,
                     },
                   },
                   "& > div": {
@@ -125,8 +129,12 @@ export const ChartBlockButtonToolbar: React.FC<ChartBlockButtonToolbarProps> = (
                     fontWeight: "400",
                     padding: "9px 12px",
                     borderRadius: "4px",
-                    color: appColors.COMMON.WHITE,
-                    background: appColors.COMMON.BLACK,
+                    border: `1px solid ${appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_BORDER_COLOR}`,
+                    color:
+                      appColors.CHART_BLOCK_CYCLES.BUTTON_ACTIVE_TEXT_COLOR,
+                    background:
+                      appColors.CHART_BLOCK_CYCLES
+                        .BUTTON_ACTIVE_BACKGROUND_COLOR,
                   },
                 }}
               >

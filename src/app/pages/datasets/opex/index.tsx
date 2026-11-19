@@ -1,0 +1,125 @@
+import React from "react";
+import get from "lodash/get";
+import Box from "@mui/material/Box";
+import { useTitle } from "react-use";
+import Divider from "@mui/material/Divider";
+import { Helmet } from "react-helmet-async";
+import Skeleton from "@mui/material/Skeleton";
+import Typography from "@mui/material/Typography";
+import { useCMSData } from "app/hooks/useCMSData";
+import { useStoreState } from "app/state/store/hooks";
+import { getCMSDataField } from "app/utils/getCMSDataField";
+import { DatasetPage } from "app/pages/datasets/common/page";
+import { OpexPageBlock1 } from "app/pages/datasets/opex/blocks/block-1";
+import { OpexPageBlock2 } from "app/pages/datasets/opex/blocks/block-2";
+import { OpexPageBlock3 } from "app/pages/datasets/opex/blocks/block-3";
+import { OpexPageBlock3B } from "app/pages/datasets/opex/blocks/block-3B";
+// import { OpexPageBlock4 } from "app/pages/datasets/opex/blocks/block-4";
+import { OpexPageBlock5 } from "app/pages/datasets/opex/blocks/block-5";
+import { OpexPageBlock6 } from "app/pages/datasets/opex/blocks/block-6";
+import { OpexPageBlock7 } from "app/pages/datasets/opex/blocks/block-7";
+import { OpexPageBlock8 } from "app/pages/datasets/opex/blocks/block-8";
+import { AnimateInView } from "app/components/animate-in-view";
+
+export const OpexPage = () => {
+  useTitle("The Data Explorer - OPEX");
+  const cmsData = useCMSData({ returnData: true });
+
+  const years = useStoreState((state) => state.OpexYears.data);
+  const yearsLoading = useStoreState((state) => state.OpexYears.loading);
+  const startYear = get(years, "startYear", "");
+  const endYear = get(years, "endYear", "");
+
+  const handleResetFilters = () => {};
+  const handleCancelFilters = () => {};
+  const handleApplyFilters = () => {};
+
+  const toolbarRightContent = React.useMemo(() => {
+    return (
+      <Box
+        width="100%"
+        display="flex"
+        alignItems="center"
+        justifyContent="flex-end"
+      >
+        {yearsLoading ? (
+          <Skeleton variant="rectangular" width="100%" height={24} />
+        ) : (
+          <Typography fontSize="14px">
+            {/* {endYear} actuals to <b>30 June {endYear}</b> · forecast thereafter
+            · updated <b>1 July {endYear}</b> */}
+            2026 Actuals to June 2026, Updated Q3 2026.
+          </Typography>
+        )}
+      </Box>
+    );
+  }, [endYear, yearsLoading]);
+
+  return (
+    <>
+      <Helmet>
+        <link rel="canonical" href={`${window.location.origin}/opex`} />
+      </Helmet>
+      <DatasetPage
+        hideFilters
+        title={getCMSDataField(
+          cmsData,
+          "pagesDatasetsOpex.title",
+          "Operating Expenditure, {years}",
+        ).replace("{years}", `${startYear}-${endYear}`)}
+        filterGroups={[]}
+        appliedFilters={[]}
+        handleResetFilters={handleResetFilters}
+        // subtitle={getCMSDataField(
+        //   cmsData,
+        //   "pagesDatasetsOpex.subtitle",
+        //   "Nine years of operating cost actuals against budget across all cost lines: LFA fees, CCM funding, Secretariat and OIG, and non-recurring items. All figures in USD millions.",
+        // )}
+        subtitle="Overview of actual operating expenditure against budget across key categories. All figures in US$ Millions"
+        toolbarRightContent={toolbarRightContent}
+        handleApplyFilters={handleApplyFilters}
+        handleCancelFilters={handleCancelFilters}
+      >
+        <Box
+          width="100%"
+          marginTop="50px"
+          sx={{ "> hr": { margin: "60px 0" } }}
+        >
+          <AnimateInView>
+            <OpexPageBlock1 />
+          </AnimateInView>
+          <Divider />
+          <AnimateInView>
+            <OpexPageBlock3B />
+          </AnimateInView>
+          <Divider />
+          <AnimateInView>
+            <OpexPageBlock3 />
+          </AnimateInView>
+          <Divider />
+          <AnimateInView>
+            <OpexPageBlock2 />
+          </AnimateInView>
+          <Divider />
+          {/* <OpexPageBlock4 />
+          <Divider /> */}
+          <AnimateInView>
+            <OpexPageBlock5 />
+          </AnimateInView>
+          <Divider />
+          <AnimateInView>
+            <OpexPageBlock6 />
+          </AnimateInView>
+          <Divider />
+          <AnimateInView>
+            <OpexPageBlock7 />
+          </AnimateInView>
+          <Divider />
+          <AnimateInView>
+            <OpexPageBlock8 />
+          </AnimateInView>
+        </Box>
+      </DatasetPage>
+    </>
+  );
+};

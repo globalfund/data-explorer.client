@@ -1,8 +1,14 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import * as echarts from "echarts/core";
+import { chartTheme } from "app/components/charts/common/theme/config";
 import { SVGRenderer } from "echarts/renderers";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { DonutChartProps } from "app/components/charts/donut/data";
+import {
+  useAnimateInView,
+  chartAnimationOptions,
+} from "app/components/animate-in-view";
 import { PieSeriesOption, PieChart as EChartsPie } from "echarts/charts";
 import { useChartResizeObserver } from "app/hooks/useChartResizeObserver";
 
@@ -11,6 +17,8 @@ echarts.use([EChartsPie, SVGRenderer]);
 export const DonutChart: React.FC<DonutChartProps> = (
   props: DonutChartProps,
 ) => {
+  const { inView, enabled: animateInView } = useAnimateInView();
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const [stateChart, setStateChart] =
@@ -23,12 +31,13 @@ export const DonutChart: React.FC<DonutChartProps> = (
   });
 
   React.useEffect(() => {
-    if (containerRef.current) {
-      const chart = echarts.init(containerRef.current, undefined, {
+    if (containerRef.current && inView) {
+      const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
 
       const option: echarts.ComposeOption<PieSeriesOption> = {
+        ...(animateInView ? chartAnimationOptions(reducedMotion) : {}),
         series: {
           type: "pie",
           top: 0,
@@ -55,7 +64,7 @@ export const DonutChart: React.FC<DonutChartProps> = (
       chart.setOption(option);
       setStateChart(chart);
     }
-  }, [props.value, containerRef.current]);
+  }, [props.value, containerRef.current, inView]);
 
   return (
     <React.Fragment>

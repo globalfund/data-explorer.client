@@ -5,6 +5,7 @@ import { useTitle } from "react-use";
 import Divider from "@mui/material/Divider";
 import { Search } from "app/components/search";
 import { HomeHero } from "app/pages/home/components/hero";
+import { AnimateInView } from "app/components/animate-in-view";
 import { HomeBlock1 } from "app/pages/home/blocks/block-1";
 import { HomeBlock2 } from "app/pages/home/blocks/block-2";
 import { HomeBlock3 } from "app/pages/home/blocks/block-3";
@@ -68,10 +69,14 @@ export const Home: React.FC = () => {
           },
         }}
       />
-      <HomeResultsStats
-        stats={dataResultsStats}
-        loading={loadingResultsStats}
-      />
+      <AnimateInView>
+        <HomeResultsStats
+          hideGeographies
+          stats={dataResultsStats}
+          loading={loadingResultsStats}
+          yearSelected={annualResultsCycles[0]?.value?.toString() ?? ""}
+        />
+      </AnimateInView>
       <Box height="64px" />
       <Box display="flex" flexDirection="row" justifyContent="center">
         <Box
@@ -88,23 +93,33 @@ export const Home: React.FC = () => {
         </Box>
       </Box>
       <Box height="64px" />
-      <HomeBlock1 />
+      <AnimateInView>
+        <HomeBlock1 />
+      </AnimateInView>
       <Box height="50px" />
       {fullWidthDivider}
       <Box height="50px" />
-      <HomeBlock2 />
+      <AnimateInView>
+        <HomeBlock2 />
+      </AnimateInView>
       <Box height="50px" />
       {fullWidthDivider}
       <Box height="50px" />
-      <HomeBlock3 />
+      <AnimateInView>
+        <HomeBlock3 />
+      </AnimateInView>
       <Box height="50px" />
       {fullWidthDivider}
       <Box height="50px" />
-      <HomeBlock4 />
+      <AnimateInView>
+        <HomeBlock4 />
+      </AnimateInView>
       <Box height="50px" />
       {fullWidthDivider}
       <Box height="50px" />
-      <HomeBlock5 />
+      <AnimateInView>
+        <HomeBlock5 />
+      </AnimateInView>
     </Box>
   );
 };

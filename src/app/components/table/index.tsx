@@ -38,6 +38,7 @@ export const Table: React.FC<TableProps> = (props: TableProps) => {
         dataTreeCollapseElement: CollapseElement,
         dataTreeBranchElement: props.dataTreeBranchElement,
         dataTreeStartExpanded,
+        rowFormatter: props.rowFormatter,
       });
 
       table.on("tableBuilt", () => {
@@ -70,9 +71,10 @@ export const Table: React.FC<TableProps> = (props: TableProps) => {
       const tables = Tabulator.findTable(`#${props.id}`);
       if (tables.length > 0 && tables[0]) {
         tables[0].replaceData(props.data);
+        tables[0].setColumns(props.columns);
       }
     }
-  }, [props.data, tableBuiltRef.current]);
+  }, [props.data, props.columns, tableBuiltRef.current]);
 
   return (
     <Box

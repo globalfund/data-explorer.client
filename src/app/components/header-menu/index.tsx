@@ -5,7 +5,6 @@ import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
 import Collapse from "@mui/material/Collapse";
 import { styled } from "@mui/material/styles";
-import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useCMSData } from "app/hooks/useCMSData";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -13,6 +12,7 @@ import ChevronRight from "@mui/icons-material/ChevronRight";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   getPages,
+  HEADER_HEIGHT,
   HeaderMenuPage,
   HeaderMenuProps,
   isNavButtonActive,
@@ -20,16 +20,14 @@ import {
 } from "app/components/header-menu/data";
 
 const HeaderMenuButton = styled(Button)({
-  height: "100%",
-  borderRadius: 0,
+  height: "38px",
   fontSize: "18px",
   padding: "6px 15px",
+  borderRadius: "4px",
   textTransform: "none",
   color: colors.primary.black,
-  border: "1px solid transparent",
-  borderBottom: "4px solid transparent",
   "&:hover": {
-    background: "transparent",
+    background: "#F8F9FA",
   },
   "@media (max-width: 920px)": {
     minWidth: "120px",
@@ -49,17 +47,18 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [selectedPage, setSelectedPage] = React.useState<string | null>(null);
 
-  const handleClick = (isSubPage: boolean, page: HeaderMenuPage) => () => {
-    if (!isSubPage) {
-      const container = document.getElementById("header-menu-tabs-container");
-      setAnchorEl(container);
-      setSelectedPage(page.id === selectedPage ? null : page.id);
-    }
-    if (page.link) {
-      navigate(page.link);
-      handleClose();
-    }
-  };
+  const handleClick =
+    (isSubPage: boolean, page: HeaderMenuPage) =>
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (!isSubPage) {
+        setAnchorEl(e.currentTarget);
+        setSelectedPage(page.id === selectedPage ? null : page.id);
+      }
+      if (page.link) {
+        navigate(page.link);
+        handleClose();
+      }
+    };
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -68,6 +67,7 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
 
   const onScroll = () => {
     setAnchorEl(null);
+    setSelectedPage(null);
   };
 
   React.useEffect(() => {
@@ -82,8 +82,8 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
       <Collapse
         sx={{
           left: 0,
-          top: "77px",
           width: "100vw",
+          top: HEADER_HEIGHT,
           position: "absolute",
         }}
         in={props.mobileMenuOpen}
@@ -92,9 +92,9 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
           sx={{
             width: "100vw",
             padding: "0 16px",
-            height: "calc(100vh - 77px)",
-            bgcolor: colors.primary.gray,
+            bgcolor: colors.primary.white,
             borderBottom: "1px solid #cfd4da",
+            height: `calc(100vh - ${HEADER_HEIGHT})`,
             "> button": {
               width: "100%",
               padding: "10px",
@@ -202,7 +202,11 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
         height: "100%",
         display: "flex",
         flexDirection: "row",
+        alignItems: "center",
         justifyContent: "center",
+        "@media (max-width: 920px)": {
+          gap: "10px",
+        },
       }}
     >
       {PAGES.map((page) => (
@@ -223,7 +227,7 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
           }
           sx={
             isNavButtonActive(page.id, location.pathname) ||
-            (page.subPages && Boolean(anchorEl))
+            (page.subPages && Boolean(anchorEl) && selectedPage === page.id)
               ? activeButtonStateStyle
               : { "&:hover": activeButtonStateStyle }
           }
@@ -247,86 +251,59 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = (
         }}
         sx={{
           "& .MuiPopover-paper": {
-            maxWidth: "100vw",
-            left: "0 !important",
-            top: "77px !important",
+            borderRadius: "4px",
+            boxShadow: "0 0 8px 0 rgba(152, 161, 170, 0.30)",
+            top: `${parseInt(HEADER_HEIGHT.replace("px", ""), 10) + 1}px !important`,
           },
         }}
       >
         <Box
           sx={{
-            width: "100vw",
-            height: "100%",
-            padding: "10px 0 1px 0",
-            background: "#F8F8F8",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
-          <Container maxWidth="lg" sx={{ padding: "0px !important" }}>
-            <Box
-              sx={{
-                gap: "40px",
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "flex-start",
-                justifyContent: "flex-start",
-              }}
-            >
-              {PAGES.find((page) => page.id === selectedPage)?.subPages?.map(
-                (subPage) => (
-                  <Box
-                    key={subPage.id}
-                    sx={{
-                      height: "92px",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      justifyContent: "flex-start",
-                      width: `calc(100% / ${PAGES.length})`,
-                    }}
-                  >
-                    <HeaderMenuButton
-                      disableRipple
-                      key={subPage.id}
-                      data-cy="header-menu-button"
-                      onClick={handleClick(true, subPage)}
-                      sx={{
-                        width: "100%",
-                        height: "100%",
-                        paddingBottom: "10px",
-                        alignItems: "flex-start",
-                        "&:hover": activeButtonStateStyle,
-                        ...(isNavButtonActive(subPage.id, location.pathname)
-                          ? activeButtonStateStyle
-                          : {}),
-                      }}
-                    >
-                      <Box
-                        gap="5px"
-                        width="100%"
-                        display="flex"
-                        flexDirection="column"
-                        alignItems="flex-start"
-                        sx={{
-                          p: {
-                            textAlign: "start",
-                          },
-                        }}
-                      >
-                        <Typography fontSize="16px" fontWeight="700">
-                          {subPage.label}
-                        </Typography>
-                        <Typography fontSize="14px">
-                          {subPage.description}
-                        </Typography>
-                      </Box>
-                    </HeaderMenuButton>
-                  </Box>
-                ),
-              )}
-            </Box>
-          </Container>
+          {PAGES.find((page) => page.id === selectedPage)?.subPages?.map(
+            (subPage) => (
+              <HeaderMenuButton
+                disableRipple
+                key={subPage.id}
+                data-cy="header-menu-button"
+                onClick={handleClick(true, subPage)}
+                sx={{
+                  height: "60px",
+                  borderRadius: 0,
+                  paddingBottom: "10px",
+                  alignItems: "flex-start",
+                  "&:not(:last-of-type)": {
+                    borderBottom: "1px solid #CFD4DA",
+                  },
+                  "&:hover": activeButtonStateStyle,
+                  ...(isNavButtonActive(subPage.id, location.pathname)
+                    ? activeButtonStateStyle
+                    : {}),
+                }}
+              >
+                <Box
+                  gap="2px"
+                  width="100%"
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="flex-start"
+                  sx={{
+                    p: {
+                      textAlign: "start",
+                    },
+                  }}
+                >
+                  <Typography fontSize="16px" fontWeight="700">
+                    {subPage.label}
+                  </Typography>
+                  <Typography fontSize="14px">{subPage.description}</Typography>
+                </Box>
+              </HeaderMenuButton>
+            ),
+          )}
         </Box>
       </Popover>
     </Box>

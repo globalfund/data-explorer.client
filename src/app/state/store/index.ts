@@ -141,10 +141,23 @@ import {
   glossary,
   changelog,
   countrySummary,
-} from "../api/action-reducers/cms/collections";
-import { formattedCollections } from "../api/action-reducers/cms/formatted";
-import componentHeader from "../api/action-reducers/cms/componentsHeader";
-import componentFooter from "../api/action-reducers/cms/componentsFooter";
+} from "app/state/api/action-reducers/cms/collections";
+import { formattedCollections } from "app/state/api/action-reducers/cms/formatted";
+import componentHeader from "app/state/api/action-reducers/cms/componentsHeader";
+import componentFooter from "app/state/api/action-reducers/cms/componentsFooter";
+import { AnnualResultsGroupedByComponent } from "app/state/api/action-reducers/annual-results/grouped-by-component";
+import {
+  OpexCostComposition,
+  OpexEfficiency,
+  OpexEfficiency2,
+  OpexIndexedTrends,
+  OpexKeyCosts,
+  OpexOperatingCosts,
+  OpexStats,
+  OpexTable,
+  OpexYears,
+  OpexYearStats,
+} from "../api/action-reducers/opex";
 
 const storeContent: StoreModel = {
   // homepage
@@ -214,7 +227,19 @@ const storeContent: StoreModel = {
   AnnualResultsStats: persist(AnnualResultsStats),
   AnnualResultsPolyline: persist(AnnualResultsPolyline),
   AnnualResultsTable: persist(AnnualResultsTable),
+  AnnualResultsGroupedByComponent: persist(AnnualResultsGroupedByComponent),
   AnnualResultsDocumentsTable: persist(ResultsDocuments),
+  // opex
+  OpexYears: persist(OpexYears),
+  OpexStats: persist(OpexStats),
+  OpexOperatingCosts: persist(OpexOperatingCosts),
+  OpexEfficiency: persist(OpexEfficiency),
+  OpexEfficiencyB: persist(OpexEfficiency2),
+  OpexYearStats: persist(OpexYearStats),
+  OpexCostComposition: persist(OpexCostComposition),
+  OpexKeyCosts: persist(OpexKeyCosts),
+  OpexIndexedTrends: persist(OpexIndexedTrends),
+  OpexTable: persist(OpexTable),
   // grants
   GrantList: persist(GrantList),
   // location

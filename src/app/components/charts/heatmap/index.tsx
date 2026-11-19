@@ -345,7 +345,7 @@ export function Heatmap(props: HeatmapProps) {
                         : `calc((100% - 112px) / ${flatVisibleColumns.length})`,
                       minWidth: props.itemWidth
                         ? `${props.itemWidth}px`
-                        : "135px",
+                        : "145px",
                     }}
                   >
                     {column.name}
@@ -449,7 +449,7 @@ export function Heatmap(props: HeatmapProps) {
                             : `calc((100% - 112px) / ${flatVisibleColumns.length})`,
                           minWidth: props.itemWidth
                             ? `${props.itemWidth}px`
-                            : "135px",
+                            : "145px",
                         }}
                       >
                         {value}

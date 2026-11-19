@@ -3,11 +3,16 @@ import find from "lodash/find";
 import Box from "@mui/material/Box";
 import { appColors } from "app/theme";
 import * as echarts from "echarts/core";
+import { chartTheme } from "app/components/charts/common/theme/config";
 import Divider from "@mui/material/Divider";
 import ReactDOMServer from "react-dom/server";
 import { SVGRenderer } from "echarts/renderers";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { LineChartProps } from "app/components/charts/line/data";
+import {
+  useAnimateInView,
+  chartAnimationOptions,
+} from "app/components/animate-in-view";
 import { GridComponent, TooltipComponent } from "echarts/components";
 import { formatFinancialValue } from "app/utils/formatFinancialValue";
 import { useChartResizeObserver } from "app/hooks/useChartResizeObserver";
@@ -114,6 +119,8 @@ const Tooltip = (props: any) => {
 export const LineChart: React.FC<LineChartProps> = (props: LineChartProps) => {
   const isTouch = useMediaQuery("(hover: none)");
   const mobile = useMediaQuery("(max-width: 767px)");
+  const { inView, enabled: animateInView } = useAnimateInView();
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const [stateChart, setStateChart] =
@@ -136,8 +143,8 @@ export const LineChart: React.FC<LineChartProps> = (props: LineChartProps) => {
   }, [props.data]);
 
   React.useEffect(() => {
-    if (containerRef.current) {
-      const chart = echarts.init(containerRef.current, undefined, {
+    if (containerRef.current && inView) {
+      const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
 
@@ -148,6 +155,7 @@ export const LineChart: React.FC<LineChartProps> = (props: LineChartProps) => {
         | XAXisComponentOption
         | TooltipComponentOption
       > = {
+        ...(animateInView ? chartAnimationOptions(reducedMotion) : {}),
         grid: {
           top: 40,
           left: 60,
@@ -261,7 +269,7 @@ export const LineChart: React.FC<LineChartProps> = (props: LineChartProps) => {
       chart.setOption(option);
       setStateChart(chart);
     }
-  }, [props.data, props.xAxisKeys, containerRef.current]);
+  }, [props.data, props.xAxisKeys, containerRef.current, inView]);
 
   return (
     <React.Fragment>

@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { HEADER_HEIGHT } from "app/components/header-menu/data";
 import HeaderMenuIcon from "app/assets/vectors/HeaderMenu.svg?react";
 import { HeaderSearchProps } from "app/components/header-search/data";
 import HeaderCloseIcon from "app/assets/vectors/HeaderClose.svg?react";
@@ -148,8 +149,8 @@ export const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
         <Collapse
           sx={{
             left: 0,
-            top: "77px",
             width: "100vw",
+            top: HEADER_HEIGHT,
             position: "absolute",
           }}
           in={props.searchOpen}
@@ -158,8 +159,8 @@ export const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
             sx={{
               width: "100vw",
               padding: "0 16px",
-              height: "calc(100vh - 77px)",
               bgcolor: colors.primary.gray,
+              height: `calc(100vh - ${HEADER_HEIGHT})`,
             }}
           >
             <Typography

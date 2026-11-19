@@ -1,11 +1,16 @@
 import React from "react";
+import axios from "axios";
 import get from "lodash/get";
 import remove from "lodash/remove";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
+import { Helmet } from "react-helmet-async";
 import Typography from "@mui/material/Typography";
+import { useCMSData } from "app/hooks/useCMSData";
+import { NotFoundPage } from "app/pages/not-found";
 import { PageLoader } from "app/components/page-loader";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { Breadcrumbs } from "app/components/breadcrumbs";
 import { useNavigate, useParams } from "react-router-dom";
 import { GrantTargetsResults } from "./views/targets-results";
 import { GrantOverview } from "app/pages/grant/views/overview";
@@ -17,8 +22,6 @@ import { splitStringInMiddle } from "app/utils/splitStringInMiddle";
 import { SankeyChartData } from "app/components/charts/sankey/data";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { GrantImplementation } from "app/pages/grant/views/grant-implementation";
-import { useCMSData } from "app/hooks/useCMSData";
-import { Helmet } from "react-helmet-async";
 
 export const Grant: React.FC = () => {
   const cmsData = useCMSData({ returnData: true });
@@ -26,6 +29,7 @@ export const Grant: React.FC = () => {
     return getGrantTabs(cmsData);
   }, [cmsData]);
   const navigate = useNavigate();
+  const [notFound, setNotFound] = React.useState(false);
   const smallScreen = useMediaQuery("(max-width: 920px)");
   const params = useParams<{ id: string; ip: string; tab: string }>();
 
@@ -141,7 +145,30 @@ export const Grant: React.FC = () => {
   };
 
   const titleSplits = React.useMemo(() => {
-    return splitStringInMiddle(dropdownSelected?.title || "");
+    let title = dropdownSelected?.title ?? "";
+    // check if title has a period of 2 dates at the end of the string, like "Grant Title (01-Jan-2020-31-Dec-2020)", and if so, extract it and reformat it to "Grant Title (01 Jan 2020 - 31 Dec 2020)"
+    const dateRangeMatch = title.match(
+      /\((\d{2}-[A-Za-z]{3}-\d{4})-(\d{2}-[A-Za-z]{3}-\d{4})\)$/,
+    );
+    if (dateRangeMatch) {
+      const startDate = new Date(dateRangeMatch[1]);
+      const endDate = new Date(dateRangeMatch[2]);
+      const formattedStartDate = startDate.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+      const formattedEndDate = endDate.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+      title = title.replace(
+        dateRangeMatch[0],
+        `(${formattedStartDate} - ${formattedEndDate})`,
+      );
+    }
+    return splitStringInMiddle(title);
   }, [dropdownSelected?.title]);
 
   const view = React.useMemo(() => {
@@ -255,7 +282,21 @@ export const Grant: React.FC = () => {
     GRANT_TABS,
   ]);
 
+  const checkIfGrantExists = async (id: string) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API}/grant/${id}`,
+      );
+      setNotFound(get(response, "data.data[0].code", "") === "");
+    } catch {
+      setNotFound(true);
+    }
+  };
+
   React.useEffect(() => {
+    if (params.id) {
+      checkIfGrantExists(params.id);
+    }
     return () => {
       clearGrant();
       clearOverview();
@@ -279,6 +320,10 @@ export const Grant: React.FC = () => {
     />
   );
 
+  if (notFound) {
+    return <NotFoundPage code={params.id} variant="grant" />;
+  }
+
   return (
     <>
       <Helmet>
@@ -287,6 +332,17 @@ export const Grant: React.FC = () => {
           href={`${window.location.origin}/grant/${params.id}/${params.ip}/${params.tab}`}
         />
       </Helmet>
+      <Breadcrumbs
+        items={[
+          { label: "Homepage", path: "/" },
+          { label: "/" },
+          { label: "Grants", path: "/grants" },
+          { label: "/" },
+          {
+            label: params.id ?? "",
+          },
+        ]}
+      />
       <Box padding="50px 0">
         <Typography variant="h1" lineHeight={1.2}>
           {params.id}

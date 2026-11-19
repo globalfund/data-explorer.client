@@ -240,7 +240,7 @@ const theme = createTheme({
             width: "100vw",
           },
           "@media (max-width: 920px)": {
-            padding: "0 48px",
+            padding: "0 24px",
           },
           "@media (max-width: 768px)": {
             padding: "0 24px",
@@ -913,6 +913,7 @@ export const appColors = {
       "#D9D9D9",
       "#C3EDFD",
     ],
+    CUMULATIVE_LINE_COLOR: "#013E77",
   },
   RADIAL_CHART: {
     ITEM_COLORS: ["#0A2840", "#013E77", "#00B5AE", "#C3EDFD", "#F3F5F4"],
@@ -936,10 +937,11 @@ export const appColors = {
   CHART_BLOCK_CYCLES: {
     BUTTON_TEXT_COLOR: BLACK,
     BUTTON_BACKGROUND_COLOR: WHITE,
-    BUTTON_ACTIVE_TEXT_COLOR: BLACK,
+    BUTTON_ACTIVE_TEXT_COLOR: "#3154F4",
     BUTTON_ACTIVE_BACKGROUND_COLOR: "#EFF1FE",
-    BUTTON_HOVER_BACKGROUND_COLOR: "#F8F9FA",
+    BUTTON_HOVER_BACKGROUND_COLOR: "#EFF1FE",
     BUTTON_BORDER_COLOR: SECONDARY_COLOR_7,
+    BUTTON_ACTIVE_BORDER_COLOR: "#3154F4",
   },
   SUNBURST: {
     ITEM_COLORS: [

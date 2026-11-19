@@ -2,6 +2,7 @@ import React from "react";
 import get from "lodash/get";
 import sumBy from "lodash/sumBy";
 import Box from "@mui/material/Box";
+import Skeleton from "@mui/material/Skeleton";
 import { useCMSData } from "app/hooks/useCMSData";
 import Typography from "@mui/material/Typography";
 import { BarChart } from "app/components/charts/bar";
@@ -9,6 +10,7 @@ import { ChartBlock } from "app/components/chart-block";
 import { CYCLES, CycleProps } from "app/pages/home/data";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import { BarChartDataItem } from "app/components/charts/bar/data";
+import { formatFinancialValue } from "app/utils/formatFinancialValue";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import { applyResultValueFormula } from "app/utils/applyResultValueFormula";
 import { useGetDatasetLatestUpdate } from "app/hooks/useGetDatasetLatestUpdate";
@@ -80,19 +82,21 @@ export const HomeBlock1: React.FC = () => {
   }, [chart1Cycles]);
 
   const totalPledge = React.useMemo(() => {
-    const v = applyResultValueFormula(
-      sumBy(dataPledgesContributionsBarChart, "value"),
-      3,
-    );
-    return `US$${v.number} ${v.text}`;
+    const rawValue = sumBy(dataPledgesContributionsBarChart, "value");
+    const v = applyResultValueFormula(rawValue, 3);
+    return {
+      raw: formatFinancialValue(rawValue),
+      formatted: `US$${v.number} ${v.text}`,
+    };
   }, [dataPledgesContributionsBarChart]);
 
   const totalContribution = React.useMemo(() => {
-    const v = applyResultValueFormula(
-      sumBy(dataPledgesContributionsBarChart, "value1"),
-      3,
-    );
-    return `US$${v.number} ${v.text}`;
+    const rawValue = sumBy(dataPledgesContributionsBarChart, "value1");
+    const v = applyResultValueFormula(rawValue, 3);
+    return {
+      raw: formatFinancialValue(rawValue),
+      formatted: `US$${v.number} ${v.text}`,
+    };
   }, [dataPledgesContributionsBarChart]);
 
   const exportData = React.useMemo(() => {
@@ -125,7 +129,7 @@ export const HomeBlock1: React.FC = () => {
         id="pledges-contributions"
         exportName="pledges-contributions"
         selectedCycles={chart1Cycles}
-        title={`${totalPledge}`}
+        title={totalPledge.formatted}
         latestUpdate={latestUpdateDate}
         subtitle={getCMSDataField(
           cmsData,
@@ -145,16 +149,8 @@ export const HomeBlock1: React.FC = () => {
         <BarChart
           data={dataPledgesContributionsBarChart}
           valueLabels={{
-            value: getCMSDataField(
-              cmsData,
-              "pagesHome.pledgesContributionsLabel1",
-              "Pledge",
-            ),
-            value1: getCMSDataField(
-              cmsData,
-              "pagesHome.pledgesContributionsLabel2",
-              "Contribution",
-            ),
+            value: "Pledge",
+            value1: "Contribution",
           }}
         />
       </ChartBlock>
@@ -177,12 +173,26 @@ export const HomeBlock1: React.FC = () => {
         <Box
           width="50%"
           display="flex"
-          alignItems="center"
+          paddingRight="40px"
           flexDirection="column"
+          alignItems="flex-start"
+          borderRight="1px solid #CFD4DA"
+          sx={{
+            "@media (max-width: 767px)": {
+              borderRightStyle: "none !important",
+            },
+          }}
         >
-          <Typography variant="h3" fontWeight="700">
-            {totalPledge}
-          </Typography>
+          {!loadingPledgesContributionsBarChart ? (
+            <Typography variant="h3" fontWeight="700">
+              {totalPledge.formatted}
+            </Typography>
+          ) : (
+            <Skeleton
+              variant="text"
+              sx={{ width: "250px", fontSize: "36px" }}
+            />
+          )}
           <Typography variant="subtitle2">
             {getCMSDataField(
               cmsData,
@@ -190,16 +200,34 @@ export const HomeBlock1: React.FC = () => {
               "Pledged",
             )}
           </Typography>
+          {!loadingPledgesContributionsBarChart ? (
+            <Typography fontSize="14px" color="#373D43">
+              {totalPledge.raw}
+            </Typography>
+          ) : (
+            <Skeleton
+              variant="text"
+              sx={{ width: "250px", fontSize: "14px" }}
+            />
+          )}
         </Box>
         <Box
           width="50%"
           display="flex"
-          alignItems="center"
+          paddingLeft="40px"
           flexDirection="column"
+          alignItems="flex-start"
         >
-          <Typography variant="h3" fontWeight="700">
-            {totalContribution}
-          </Typography>
+          {!loadingPledgesContributionsBarChart ? (
+            <Typography variant="h3" fontWeight="700">
+              {totalContribution.formatted}
+            </Typography>
+          ) : (
+            <Skeleton
+              variant="text"
+              sx={{ width: "250px", fontSize: "36px" }}
+            />
+          )}
           <Typography variant="subtitle2">
             {getCMSDataField(
               cmsData,
@@ -207,6 +235,16 @@ export const HomeBlock1: React.FC = () => {
               "Contributed",
             )}
           </Typography>
+          {!loadingPledgesContributionsBarChart ? (
+            <Typography fontSize="14px" color="#373D43">
+              {totalContribution.raw}
+            </Typography>
+          ) : (
+            <Skeleton
+              variant="text"
+              sx={{ width: "250px", fontSize: "14px" }}
+            />
+          )}
         </Box>
       </Box>
     </React.Fragment>

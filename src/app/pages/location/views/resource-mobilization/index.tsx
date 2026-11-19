@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import { useCMSData } from "app/hooks/useCMSData";
 import { BarChart } from "app/components/charts/bar";
 import { ChartBlock } from "app/components/chart-block";
+import { AnimateInView } from "app/components/animate-in-view";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import useUpdateEffect from "react-use/lib/useUpdateEffect";
 import { BarChartDataItem } from "app/components/charts/bar/data";
@@ -18,6 +19,7 @@ import {
   getRange,
   getFinancialValueWithMetricPrefix,
 } from "app/utils/getFinancialValueWithMetricPrefix";
+import { formatFinancialValue } from "app/utils/formatFinancialValue";
 
 export const ResourceMobilization: React.FC = () => {
   const cmsData = useCMSData({ returnData: true });
@@ -82,17 +84,23 @@ export const ResourceMobilization: React.FC = () => {
   const totalPledge = React.useMemo(() => {
     const value = sumBy(dataRMBarChart, "value");
     const range = getRange([{ value }], ["value"]);
-    return `${getFinancialValueWithMetricPrefix(value, range.index, 2)} ${
-      range.full
-    }`;
+    return {
+      raw: formatFinancialValue(value),
+      formatted: `${getFinancialValueWithMetricPrefix(value, range.index, 2)} ${
+        range.full
+      }`,
+    };
   }, [dataRMBarChart]);
 
   const totalContribution = React.useMemo(() => {
     const value = sumBy(dataRMBarChart, "value1");
     const range = getRange([{ value }], ["value"]);
-    return `${getFinancialValueWithMetricPrefix(value, range.index, 2)} ${
-      range.full
-    }`;
+    return {
+      raw: formatFinancialValue(value),
+      formatted: `${getFinancialValueWithMetricPrefix(value, range.index, 2)} ${
+        range.full
+      }`,
+    };
   }, [dataRMBarChart]);
 
   const exportChartData = React.useMemo(() => {
@@ -104,40 +112,42 @@ export const ResourceMobilization: React.FC = () => {
 
   return (
     <Box>
-      <ChartBlock
-        cycles={cycles}
-        id="resource-mobilization"
-        exportName="pledges-contributions"
-        loading={loadingRMBarChart}
-        title={`US$${totalPledge}`}
-        selectedCycles={chart1Cycles}
-        latestUpdate={latestUpdateDate}
-        subtitle={getCMSDataField(
-          cmsData,
-          "pagesLocationResourceMobilization.title",
-          "Pledges & Contributions",
-        )}
-        data={exportChartData}
-        handleCycleChange={handleChartCycleChange}
-        empty={dataRMBarChart.length === 0 && chart1Cycles.length === 0}
-        infoType="pledges_contributions"
-      >
-        <BarChart
-          data={dataRMBarChart}
-          valueLabels={{
-            value: getCMSDataField(
-              cmsData,
-              "pagesLocationResourceMobilization.barchartLabel1",
-              "Pledge",
-            ),
-            value1: getCMSDataField(
-              cmsData,
-              "pagesLocationResourceMobilization.barchartLabel2",
-              "Contribution",
-            ),
-          }}
-        />
-      </ChartBlock>
+      <AnimateInView>
+        <ChartBlock
+          cycles={cycles}
+          id="resource-mobilization"
+          exportName="pledges-contributions"
+          loading={loadingRMBarChart}
+          title={`US$${totalPledge.formatted}`}
+          selectedCycles={chart1Cycles}
+          latestUpdate={latestUpdateDate}
+          subtitle={getCMSDataField(
+            cmsData,
+            "pagesLocationResourceMobilization.title",
+            "Pledges & Contributions",
+          )}
+          data={exportChartData}
+          handleCycleChange={handleChartCycleChange}
+          empty={dataRMBarChart.length === 0 && chart1Cycles.length === 0}
+          infoType="pledges_contributions"
+        >
+          <BarChart
+            data={dataRMBarChart}
+            valueLabels={{
+              value: getCMSDataField(
+                cmsData,
+                "pagesLocationResourceMobilization.barchartLabel1",
+                "Pledge",
+              ),
+              value1: getCMSDataField(
+                cmsData,
+                "pagesLocationResourceMobilization.barchartLabel2",
+                "Contribution",
+              ),
+            }}
+          />
+        </ChartBlock>
+      </AnimateInView>
       <Box
         width="100%"
         display="flex"
@@ -157,11 +167,18 @@ export const ResourceMobilization: React.FC = () => {
         <Box
           width="50%"
           display="flex"
-          alignItems="center"
+          paddingRight="40px"
           flexDirection="column"
+          alignItems="flex-start"
+          borderRight="1px solid #CFD4DA"
+          sx={{
+            "@media (max-width: 767px)": {
+              borderRightStyle: "none !important",
+            },
+          }}
         >
-          <Typography variant="h3" fontWeight="900">
-            US${totalPledge}
+          <Typography variant="h3" fontWeight="700">
+            US${totalPledge.formatted}
           </Typography>
           <Typography variant="subtitle2">
             {getCMSDataField(
@@ -173,15 +190,19 @@ export const ResourceMobilization: React.FC = () => {
               ? ` ${chart1Cycles.map((c) => c.name).join(",")}`
               : ""}
           </Typography>
+          <Typography fontSize="14px" color="#373D43">
+            {totalPledge.raw}
+          </Typography>
         </Box>
         <Box
           width="50%"
           display="flex"
-          alignItems="center"
+          paddingLeft="40px"
           flexDirection="column"
+          alignItems="flex-start"
         >
-          <Typography variant="h3" fontWeight="900">
-            US${totalContribution}
+          <Typography variant="h3" fontWeight="700">
+            US${totalContribution.formatted}
           </Typography>
           <Typography variant="subtitle2">
             {getCMSDataField(
@@ -192,6 +213,9 @@ export const ResourceMobilization: React.FC = () => {
             {chart1Cycles.length > 0
               ? ` ${chart1Cycles.map((c) => c.name).join(",")}`
               : ""}
+          </Typography>
+          <Typography fontSize="14px" color="#373D43">
+            {totalContribution.raw}
           </Typography>
         </Box>
       </Box>

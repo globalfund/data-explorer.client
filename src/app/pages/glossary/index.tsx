@@ -108,8 +108,8 @@ export const GlossaryPage: React.FC = () => {
           )}
         </Typography>
         <Box
-          height="60px"
           sx={{
+            height: "60px",
             "@media (max-width: 767px)": {
               display: "none",
             },
@@ -122,11 +122,19 @@ export const GlossaryPage: React.FC = () => {
           flexDirection="row"
           margin="60px 0 30px 0"
           justifyContent="flex-end"
+          sx={{
+            "@media (max-width: 920px)": {
+              marginTop: "30px",
+            },
+          }}
         >
           <Box
-            width="35%"
             sx={{
+              width: "35%",
               "> div": {
+                width: "100%",
+              },
+              "@media (max-width: 920px)": {
                 width: "100%",
               },
             }}

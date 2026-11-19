@@ -5,6 +5,7 @@ import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import { useCMSData } from "app/hooks/useCMSData";
 import { Dropdown } from "app/components/dropdown";
+import { useAnimateInView } from "app/components/animate-in-view";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
@@ -21,6 +22,7 @@ export const GrantImplementationPageBlock4: React.FC<
   GrantImplementationPageBlock4Props
 > = (props: GrantImplementationPageBlock4Props) => {
   const cmsData = useCMSData({ returnData: true });
+  const { inView } = useAnimateInView();
   const latestUpdateDate = useGetDatasetLatestUpdate({
     dataset: "budgets",
   });
@@ -147,8 +149,14 @@ export const GrantImplementationPageBlock4: React.FC<
             bgcolor={i.color}
             position="relative"
             alignItems="center"
-            width={`${i.value}%`}
             flexDirection="column"
+            sx={{
+              width: inView ? `${i.value}%` : 0,
+              transition: "width 1.2s cubic-bezier(0.33, 1, 0.68, 1) 0.2s",
+              "@media (prefers-reduced-motion: reduce)": {
+                transition: "none",
+              },
+            }}
           >
             <Box
               top="-35px"

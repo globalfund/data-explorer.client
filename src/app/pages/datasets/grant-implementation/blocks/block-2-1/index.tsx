@@ -357,6 +357,7 @@ export const GrantImplementationPageBlock21: React.FC = () => {
           "Cumulative disbursements by disbursement area",
         )}
         extraDropdown={cycleDropdown}
+        dropdownWidth={170}
         dropdownSelected={dropdownSelected}
         dropdownItems={dropdownItemsHolisticGrantInvestments}
         handleDropdownChange={handleDropdownSelectionChange}

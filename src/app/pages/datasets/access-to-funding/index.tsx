@@ -1,8 +1,10 @@
 import React from "react";
 import get from "lodash/get";
 import Box from "@mui/material/Box";
-import { useTitle, useUnmount } from "react-use";
+import isEqual from "lodash/isEqual";
+import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
+import { useTitle, useUnmount } from "react-use";
 import { useCMSData } from "app/hooks/useCMSData";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import { DatasetPage } from "app/pages/datasets/common/page";
@@ -15,8 +17,7 @@ import { AccessToFundingBlock3 } from "app/pages/datasets/access-to-funding/bloc
 import { AccessToFundingBlock4 } from "app/pages/datasets/access-to-funding/blocks/block-4";
 import { AccessToFundingBlock5 } from "app/pages/datasets/access-to-funding/blocks/block-5";
 import { AccessToFundingBlock6 } from "app/pages/datasets/access-to-funding/blocks/block-6";
-import isEqual from "lodash/isEqual";
-import { Helmet } from "react-helmet-async";
+import { AnimateInView } from "app/components/animate-in-view";
 
 export const AccessToFundingPage: React.FC = () => {
   const cmsData = useCMSData({ returnData: true });
@@ -174,28 +175,40 @@ export const AccessToFundingPage: React.FC = () => {
         handleCancelFilters={handleCancelFilters}
       >
         <Box width="100%" marginTop="50px">
-          {/* Eligible Countries by Numbers */}
-          <AccessToFundingBlock1
-            filterString={filterString}
-            eligibilityYear={eligibilityYear}
-            eligibilityYears={eligibilityYears}
-            setEligibilityYear={setEligibilityYear}
-          />
+          {/* Eligible Countries */}
+          <AnimateInView>
+            <AccessToFundingBlock1
+              filterString={filterString}
+              eligibilityYear={eligibilityYear}
+              eligibilityYears={eligibilityYears}
+              setEligibilityYear={setEligibilityYear}
+            />
+          </AnimateInView>
           <FullWidthDivider />
           {/* Eligibility */}
-          <AccessToFundingBlock2 filterGroups={filterGroups} />
+          <AnimateInView>
+            <AccessToFundingBlock2 filterGroups={filterGroups} />
+          </AnimateInView>
           <FullWidthDivider />
           {/* Allocation */}
-          <AccessToFundingBlock3 filterGroups={filterGroups} />
+          <AnimateInView>
+            <AccessToFundingBlock3 filterGroups={filterGroups} />
+          </AnimateInView>
           <FullWidthDivider />
           {/* Cumulative Allocation by Cycles */}
-          <AccessToFundingBlock4 filterString={filterString} />
+          <AnimateInView>
+            <AccessToFundingBlock4 filterString={filterString} />
+          </AnimateInView>
           <FullWidthDivider />
           {/* Funding Requests */}
-          <AccessToFundingBlock5 filterGroups={filterGroups} />
+          <AnimateInView>
+            <AccessToFundingBlock5 filterGroups={filterGroups} />
+          </AnimateInView>
           <FullWidthDivider />
           {/* Documents */}
-          <AccessToFundingBlock6 filterString={filterString} />
+          <AnimateInView>
+            <AccessToFundingBlock6 filterString={filterString} />
+          </AnimateInView>
         </Box>
       </DatasetPage>
     </>

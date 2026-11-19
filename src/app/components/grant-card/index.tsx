@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import LocationIcon from "@mui/icons-material/LocationOn";
 import { GrantCardProps } from "app/components/grant-card/data";
 import { formatFinancialValue } from "app/utils/formatFinancialValue";
+import { getMonthFromNumber } from "app/utils/getMonthFromNumber";
 // import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 
 export const GrantCard: React.FC<GrantCardProps> = (props: GrantCardProps) => {
@@ -13,7 +14,9 @@ export const GrantCard: React.FC<GrantCardProps> = (props: GrantCardProps) => {
     if (props.startDate) {
       const date = new Date(props.startDate);
       res.push(
-        `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`,
+        `${date.getDate()} ${getMonthFromNumber(
+          date.getMonth() + 1,
+        )} ${date.getFullYear()}`,
       );
     } else {
       res.push("-");
@@ -21,7 +24,9 @@ export const GrantCard: React.FC<GrantCardProps> = (props: GrantCardProps) => {
     if (props.endDate) {
       const date = new Date(props.endDate);
       res.push(
-        `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`,
+        `${date.getDate()} ${getMonthFromNumber(
+          date.getMonth() + 1,
+        )} ${date.getFullYear()}`,
       );
     } else {
       res.push("-");

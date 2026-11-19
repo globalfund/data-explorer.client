@@ -2,6 +2,7 @@ import React from "react";
 import Box from "@mui/material/Box";
 import uniqueId from "lodash/uniqueId";
 import Divider from "@mui/material/Divider";
+import Skeleton from "@mui/material/Skeleton";
 import { useCMSData } from "app/hooks/useCMSData";
 import Typography from "@mui/material/Typography";
 import { Dropdown } from "app/components/dropdown";
@@ -75,9 +76,16 @@ export const ChartBlock: React.FC<ChartBlockProps> = (
           position: "absolute",
         }}
       />
-      <Typography variant="h3" lineHeight={1.2} fontSize="44px">
-        {props.title}
-      </Typography>
+      {!props.loading ? (
+        <Typography variant="h3" lineHeight={1.2} fontSize="44px">
+          {props.title}
+        </Typography>
+      ) : (
+        <Skeleton
+          variant="text"
+          sx={{ width: "300px", lineHeight: 1.2, fontSize: "44px" }}
+        />
+      )}
       <Typography variant="h5" marginBottom="5px" fontSize="24px">
         {props.subtitle}
       </Typography>
@@ -152,6 +160,7 @@ export const ChartBlock: React.FC<ChartBlockProps> = (
                 props.dropdownSelected &&
                 props.handleDropdownChange && (
                   <Dropdown
+                    width={props.dropdownWidth}
                     dropdownItems={props.dropdownItems}
                     dropdownSelected={props.dropdownSelected}
                     handleDropdownChange={props.handleDropdownChange}

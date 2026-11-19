@@ -1,11 +1,12 @@
 import React from "react";
+import { colors } from "app/theme";
 import Box from "@mui/material/Box";
 import { styled } from "styled-components";
 import { Dropdown } from "app/components/dropdown";
 import { NavLink, useParams } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { HEADER_HEIGHT } from "app/components/header-menu/data";
 import { DetailPageTabsProps } from "app/components/detail-page-tabs/data";
-import { colors } from "app/theme";
 
 const ButtonTab = styled(NavLink)`
   font-size: 14px;
@@ -36,12 +37,12 @@ export const DetailPageTabs: React.FC<DetailPageTabsProps> = (
 
   return (
     <Box
-      top="57px"
       zIndex="100"
       width="100%"
       display="flex"
       padding="20px 0"
       position="sticky"
+      top={HEADER_HEIGHT}
       bgcolor={colors.primary.white}
       justifyContent="space-between"
       sx={{

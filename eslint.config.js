@@ -60,6 +60,7 @@ export default tseslint.config(
       "@typescript-eslint/no-require-imports": "off",
       "no-case-declarations": "off",
       "jsx-a11y/no-autofocus": "off",
+      "react/no-unescaped-entities": "off",
     },
   },
 );
