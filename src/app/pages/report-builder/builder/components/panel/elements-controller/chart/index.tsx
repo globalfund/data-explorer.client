@@ -13,7 +13,8 @@ import { ColumnLayoutTab } from "../column/columnTab";
 import ChartSelectModal from "app/pages/report-builder/builder/components/chart-select-modal";
 import { DatasetSelectModal } from "../../../dataset-select-modal";
 import { AssetSelect } from "../common/asset-select";
-import { chartTypes, datasetItems } from "../../../chart/data";
+import { chartTypes } from "../../../chart/data";
+import useDatasetItems from "app/pages/report-builder/hooks/useDatasetItems";
 import { ChartProperty } from "app/state/api/action-reducers/report-builder/sync";
 import ControllerTabs from "app/components/tabs";
 import { extraTabs } from "../common/tabOptions";
@@ -24,6 +25,7 @@ type ChartControllerTab =
   "data-settings" | "layout" | "style" | "advanced" | "grid" | "column";
 
 export default function ChartController() {
+  const { getDatasetItem } = useDatasetItems();
   const [isExpanded, setIsExpanded] = React.useState(true);
   const [value, setValue] = React.useState<ChartControllerTab>("data-settings");
 
@@ -117,10 +119,7 @@ export default function ChartController() {
       const chartType = chartTypes.find((chart) => chart.id === chartTypeId);
       return chartType ? chartType.chartType : "";
     } else if (type === "dataset") {
-      return (
-        datasetItems.find((dataset) => dataset.id === chartData.dataset)
-          ?.name || ""
-      );
+      return getDatasetItem(chartData.dataset)?.name || "";
     }
     return chartExtra?.[type] || "";
   };

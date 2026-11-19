@@ -1,4 +1,7 @@
-import { DataType } from "app/state/api/action-reducers/report-builder/sync";
+import {
+  DataType,
+  RBExternalSource,
+} from "app/state/api/action-reducers/report-builder/sync";
 
 export type DatasetColumn = {
   name: string;
@@ -48,4 +51,51 @@ export const formatCellValue = (value: unknown) => {
   if (typeof value === "boolean") return value ? "True" : "False";
   if (typeof value === "object") return JSON.stringify(value);
   return String(value);
+};
+
+export type DatasetSourceId = "global-fund" | "who" | "kaggle" | "my-datasets";
+
+/** The sources that are searched on the server, by their name in the API. */
+export const externalSources: Partial<
+  Record<DatasetSourceId, RBExternalSource>
+> = {
+  who: "WHO",
+  kaggle: "Kaggle",
+};
+
+export const uploadFileExtensions = [
+  ".csv",
+  ".tsv",
+  ".json",
+  ".xlsx",
+  ".xlsm",
+  ".parquet",
+];
+
+/** Identifies a search result, and the dataset it was connected as. */
+export const getExternalDatasetKey = (dataset: {
+  url?: string;
+  sourceUrl?: string;
+  name?: string;
+  externalName?: string;
+}) =>
+  `${dataset.sourceUrl ?? dataset.url}|${dataset.externalName ?? dataset.name}`;
+
+export const formatDatasetDate = (value?: string) => {
+  if (!value) return "";
+  const date = new Date(value.replace(" ", "T"));
+  if (Number.isNaN(date.getTime())) return "";
+  return [
+    String(date.getDate()).padStart(2, "0"),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    date.getFullYear(),
+  ].join("-");
+};
+
+/** The message of an API error, which the API sends as `{error: {message}}`. */
+export const getApiErrorMessage = (error: unknown, fallback: string) => {
+  const message = (
+    error as { response?: { data?: { error?: { message?: unknown } } } }
+  )?.response?.data?.error?.message;
+  return typeof message === "string" && message ? message : fallback;
 };

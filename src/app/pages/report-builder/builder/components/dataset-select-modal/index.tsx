@@ -22,10 +22,26 @@ import DataPreview from "./preview";
 import {
   DatasetColumn,
   DatasetRowsPerPage,
+  DatasetSourceId,
+  externalSources,
+  formatDatasetDate,
+  getApiErrorMessage,
   getColumnType,
   getDatasetLatestUpdateKey,
+  getExternalDatasetKey,
+  uploadFileExtensions,
 } from "./utils";
-import { useGFSampleDataset } from "app/hooks/queries/report-builder";
+import {
+  useConnectExternalDataset,
+  useExternalSourceCounts,
+  useExternalSourceSearch,
+  useGFSampleDataset,
+  useUploadDataset,
+} from "app/hooks/queries/report-builder";
+import useDatasetItems from "app/pages/report-builder/hooks/useDatasetItems";
+import { RBExternalDatasetModel } from "app/state/api/action-reducers/report-builder/sync";
+
+const SEARCH_DEBOUNCE_MS = 400;
 
 type DatasetSort = "updatedDate DESC" | "name ASC" | "name DESC";
 type DatasetTypeFilter = "all" | "global-fund";
@@ -70,6 +86,10 @@ export const DatasetSelectModal: React.FC<{
   const [selectedType, setSelectedType] =
     React.useState<DatasetTypeFilter>("all");
   const [selectedDataset, setSelectedDataset] = React.useState<string>("");
+  const [source, setSource] = React.useState<DatasetSourceId>("global-fund");
+  const [debouncedSearch, setDebouncedSearch] = React.useState("");
+  const [selectedExternal, setSelectedExternal] =
+    React.useState<RBExternalDatasetModel | null>(null);
   const [rowsPerPage, setRowsPerPage] =
     React.useState<DatasetRowsPerPage>("10");
   const [previewColumns, setPreviewColumns] = React.useState<DatasetColumn[]>(
@@ -94,6 +114,41 @@ export const DatasetSelectModal: React.FC<{
   const sampledDatasetQuery = useGFSampleDataset(selectedDataset);
   const sampledDataset = sampledDatasetQuery?.data?.data?.data?.result;
 
+  const { getDatasetItem, userDatasetItems, userDatasetsLoading } =
+    useDatasetItems();
+  const externalSource = externalSources[source] ?? null;
+  const externalCountsQuery = useExternalSourceCounts(open);
+  const externalSearchQuery = useExternalSourceSearch({
+    source: open ? externalSource : null,
+    search: debouncedSearch,
+    sortBy: selectedSort === "name ASC" ? "name" : undefined,
+  });
+  const connectExternalDataset = useConnectExternalDataset();
+  const uploadDataset = useUploadDataset();
+  const [uploadError, setUploadError] = React.useState("");
+
+  const externalItems = React.useMemo(
+    () => externalSearchQuery.data?.pages.flatMap((page) => page.data) ?? [],
+    [externalSearchQuery.data],
+  );
+  const connectedKeys = React.useMemo(
+    () =>
+      new Set(
+        userDatasetItems
+          .filter((dataset) => dataset.userDataset?.sourceUrl)
+          .map((dataset) => getExternalDatasetKey(dataset.userDataset!)),
+      ),
+    [userDatasetItems],
+  );
+
+  React.useEffect(() => {
+    const timeout = setTimeout(
+      () => setDebouncedSearch(search.trim()),
+      SEARCH_DEBOUNCE_MS,
+    );
+    return () => clearTimeout(timeout);
+  }, [search]);
+
   const datasetsLatestUpdate = useStoreState(
     (state) =>
       get(state.datasetsLatestUpdate, "data.data", []) as {
@@ -109,6 +164,15 @@ export const DatasetSelectModal: React.FC<{
       setSelectedType("all");
       setSelectedDataset(item?.data?.dataset ?? "");
       setRowsPerPage("10");
+      setSelectedExternal(null);
+      setUploadError("");
+      connectExternalDataset.reset();
+      // Datasets are stored by id: an id without the Global Fund prefix is one
+      // the user uploaded or connected.
+      const dataset = item?.data?.dataset;
+      setSource(
+        dataset && !dataset.startsWith("gf_") ? "my-datasets" : "global-fund",
+      );
     }
   }, [item?.data?.dataset, open]);
 
@@ -130,6 +194,12 @@ export const DatasetSelectModal: React.FC<{
 
   const getDatasetLatestUpdate = React.useCallback(
     (id: string) => {
+      const userDataset = getDatasetItem(id)?.userDataset;
+      if (userDataset) {
+        return formatDatasetDate(
+          userDataset.updatedDate ?? userDataset.createdDate,
+        );
+      }
       const key = getDatasetLatestUpdateKey(id);
       if (!key) return "05-01-2025";
       return (
@@ -140,11 +210,26 @@ export const DatasetSelectModal: React.FC<{
         ) || "05-01-2025"
       );
     },
-    [datasetsLatestUpdate],
+    [datasetsLatestUpdate, getDatasetItem],
   );
 
   const filteredDatasets = React.useMemo(() => {
     const searchTerm = search.trim().toLowerCase();
+    if (source === "my-datasets") {
+      return userDatasetItems
+        .filter((dataset) =>
+          [dataset.name, dataset.description]
+            .join(" ")
+            .toLowerCase()
+            .includes(searchTerm),
+        )
+        .sort((a, b) => {
+          if (selectedSort === "name ASC") return a.name.localeCompare(b.name);
+          if (selectedSort === "name DESC") return b.name.localeCompare(a.name);
+          // The API returns them newest first.
+          return 0;
+        });
+    }
     return datasetItems
       .filter((dataset) => {
         if (selectedType === "global-fund" && !dataset.id.startsWith("gf_")) {
@@ -165,7 +250,54 @@ export const DatasetSelectModal: React.FC<{
           ) || a.name.localeCompare(b.name)
         );
       });
-  }, [getDatasetLatestUpdate, search, selectedSort, selectedType]);
+  }, [
+    getDatasetLatestUpdate,
+    search,
+    selectedSort,
+    selectedType,
+    source,
+    userDatasetItems,
+  ]);
+
+  const handleSourceChange = (newSource: DatasetSourceId) => {
+    setSource(newSource);
+    setSelectedExternal(null);
+    connectExternalDataset.reset();
+  };
+
+  // Shows a dataset that was just uploaded or connected, selected and ready
+  // to be configured.
+  const showUserDataset = (id: string) => {
+    setSearch("");
+    setSelectedExternal(null);
+    setSource("my-datasets");
+    setSelectedDataset(id);
+  };
+
+  const handleUpload = (file: File) => {
+    const extension = file.name.slice(file.name.lastIndexOf(".")).toLowerCase();
+    if (!uploadFileExtensions.includes(extension)) {
+      setUploadError(
+        `Unsupported file type, please upload one of: ${uploadFileExtensions.join(", ")}`,
+      );
+      return;
+    }
+    setUploadError("");
+    uploadDataset.mutate(file, {
+      onSuccess: (response) => showUserDataset(response.data.id),
+      onError: (error) =>
+        setUploadError(
+          getApiErrorMessage(error, "Unable to upload the file, try again."),
+        ),
+    });
+  };
+
+  const handleConnectExternal = () => {
+    if (!selectedExternal) return;
+    connectExternalDataset.mutate(selectedExternal, {
+      onSuccess: (response) => showUserDataset(response.data.id),
+    });
+  };
 
   const initialSelectedColumns = React.useMemo(() => {
     if (item?.type !== "table") {
@@ -381,32 +513,69 @@ export const DatasetSelectModal: React.FC<{
                   </MenuItem>
                 ))}
               </Select>
-              <Select
-                size="small"
-                value={selectedType}
-                onChange={(event) =>
-                  setSelectedType(event.target.value as DatasetTypeFilter)
-                }
-                sx={{
-                  height: "34px",
-                  minWidth: "90px",
-                  bgcolor: "#ffffff",
-                  flexShrink: 0,
-                }}
-                IconComponent={KeyboardArrowDownIcon}
-              >
-                {typeOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Select>
+              {source === "global-fund" && (
+                <Select
+                  size="small"
+                  value={selectedType}
+                  onChange={(event) =>
+                    setSelectedType(event.target.value as DatasetTypeFilter)
+                  }
+                  sx={{
+                    height: "34px",
+                    minWidth: "90px",
+                    bgcolor: "#ffffff",
+                    flexShrink: 0,
+                  }}
+                  IconComponent={KeyboardArrowDownIcon}
+                >
+                  {typeOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )}
             </Box>
 
             <DatasetSelect
+              source={source}
+              onSourceChange={handleSourceChange}
+              sourceCounts={{
+                "global-fund": datasetItems.length,
+                who: externalCountsQuery.data?.data?.WHO,
+                kaggle: externalCountsQuery.data?.data?.Kaggle,
+                "my-datasets": userDatasetItems.length,
+              }}
               selectedDataset={selectedDataset}
               setSelectedDataset={setSelectedDataset}
+              selectedDatasetItem={getDatasetItem(selectedDataset)}
+              getDatasetLatestUpdate={getDatasetLatestUpdate}
               filteredDatasets={filteredDatasets}
+              datasetsLoading={source === "my-datasets" && userDatasetsLoading}
+              external={{
+                items: externalItems,
+                loading: externalSearchQuery.isLoading,
+                error: externalSearchQuery.isError
+                  ? getApiErrorMessage(
+                      externalSearchQuery.error,
+                      "Unable to search this source, try again later.",
+                    )
+                  : "",
+                hasMore: !!externalSearchQuery.hasNextPage,
+                loadingMore: externalSearchQuery.isFetchingNextPage,
+                onLoadMore: () => externalSearchQuery.fetchNextPage(),
+                selected: selectedExternal,
+                onSelect: (dataset) => {
+                  connectExternalDataset.reset();
+                  setSelectedExternal(dataset);
+                },
+                connectedKeys,
+              }}
+              upload={{
+                onUpload: handleUpload,
+                uploading: uploadDataset.isPending,
+                error: uploadError,
+              }}
             />
 
             <Box
@@ -420,6 +589,25 @@ export const DatasetSelectModal: React.FC<{
                 borderTop: "0.5px solid #cfd4da",
               }}
             >
+              {externalSource && connectExternalDataset.isError && (
+                <Typography
+                  role="alert"
+                  fontSize="14px"
+                  color="#d32f2f"
+                  sx={{ mr: "auto" }}
+                >
+                  {getApiErrorMessage(
+                    connectExternalDataset.error,
+                    "Unable to connect the dataset, try again.",
+                  )}
+                </Typography>
+              )}
+              {externalSource && connectExternalDataset.isPending && (
+                <Typography fontSize="14px" color="#373d43" sx={{ mr: "auto" }}>
+                  Downloading and processing the dataset, this can take a
+                  minute...
+                </Typography>
+              )}
               <Button
                 variant="outlined"
                 onClick={onClose}
@@ -427,27 +615,51 @@ export const DatasetSelectModal: React.FC<{
               >
                 Cancel
               </Button>
-              <Button
-                variant="contained"
-                data-cy="rb-dataset-next"
-                disabled={!selectedDataset}
-                endIcon={<ArrowForward />}
-                onClick={handleOpenView}
-                sx={{
-                  color: "#ffffff",
-                  fontSize: "16px",
-                  borderRadius: "4px",
-                  textTransform: "none",
-                  bgcolor: !selectedDataset ? "#dfe3e5" : "#3154f4",
-                  "&:hover": {
-                    bgcolor: !selectedDataset ? "#dfe3e5" : "#2542c7",
-                  },
-                }}
-              >
-                {selectedDataset
-                  ? "View, Filter and Sort"
-                  : "Configure Dataset"}
-              </Button>
+              {externalSource ? (
+                <Button
+                  variant="contained"
+                  data-cy="rb-dataset-connect"
+                  disabled={
+                    !selectedExternal || connectExternalDataset.isPending
+                  }
+                  onClick={handleConnectExternal}
+                  sx={{
+                    color: "#ffffff",
+                    fontSize: "16px",
+                    borderRadius: "4px",
+                    textTransform: "none",
+                    bgcolor: "#3154f4",
+                    "&:hover": { bgcolor: "#2542c7" },
+                    "&.Mui-disabled": { color: "#ffffff", bgcolor: "#dfe3e5" },
+                  }}
+                >
+                  {connectExternalDataset.isPending
+                    ? "Connecting..."
+                    : "Connect Dataset"}
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  data-cy="rb-dataset-next"
+                  disabled={!selectedDataset}
+                  endIcon={<ArrowForward />}
+                  onClick={handleOpenView}
+                  sx={{
+                    color: "#ffffff",
+                    fontSize: "16px",
+                    borderRadius: "4px",
+                    textTransform: "none",
+                    bgcolor: !selectedDataset ? "#dfe3e5" : "#3154f4",
+                    "&:hover": {
+                      bgcolor: !selectedDataset ? "#dfe3e5" : "#2542c7",
+                    },
+                  }}
+                >
+                  {selectedDataset
+                    ? "View, Filter and Sort"
+                    : "Configure Dataset"}
+                </Button>
+              )}
             </Box>
           </React.Fragment>
         ) : step === "view" ? (

@@ -8,7 +8,7 @@ import DatasetFieldCloseIcon from "app/assets/vectors/DatasetFieldClose.svg?reac
 import DatasetFieldDateIcon from "app/assets/vectors/DatasetFieldDate.svg?react";
 import DatasetFieldNumberIcon from "app/assets/vectors/DatasetFieldNumber.svg?react";
 import DatasetFieldTextIcon from "app/assets/vectors/DatasetFieldText.svg?react";
-import { datasetItems } from "app/pages/report-builder/builder/components/chart/data";
+import useDatasetItems from "app/pages/report-builder/hooks/useDatasetItems";
 import {
   DataType,
   RBSampledDatasetResponse,
@@ -79,9 +79,8 @@ const DatasetSelectModalDataView: React.FC<DataViewProps> = ({
     [],
   );
 
-  const selectedDatasetItem = datasetItems.find(
-    (dataset) => dataset.id === selectedDataset,
-  );
+  const { getDatasetItem } = useDatasetItems();
+  const selectedDatasetItem = getDatasetItem(selectedDataset);
 
   const [isDraggingColumn1, setIsDraggingColumn1] = React.useState(false);
   const [isDraggingColumn2, setIsDraggingColumn2] = React.useState(false);
