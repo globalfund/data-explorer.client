@@ -23,6 +23,7 @@ import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import GroupedViewIcon from "app/assets/vectors/GroupedView.svg?react";
 import { DatasetChartBlock } from "app/pages/datasets/common/chart-block";
 import { HomeResultsStats } from "app/pages/home/components/results-stats";
+import { AnimateInView } from "app/components/animate-in-view";
 import { useGetDatasetLatestUpdate } from "app/hooks/useGetDatasetLatestUpdate";
 import { PolylineTreeDataItem } from "app/components/charts/polyline-tree/data";
 import { defaultAppliedFilters } from "app/state/api/action-reducers/sync/filters";
@@ -693,12 +694,14 @@ export const AnnualResultsPage: React.FC = () => {
         handleCancelFilters={handleCancelFilters}
       >
         <Box width="100%" marginTop="50px">
-          <HomeResultsStats
-            hideGeographies
-            stats={dataStats}
-            loading={loadingResults}
-            yearSelected={yearSelected ?? ""}
-          />
+          <AnimateInView>
+            <HomeResultsStats
+              hideGeographies
+              stats={dataStats}
+              loading={loadingResults}
+              yearSelected={yearSelected ?? ""}
+            />
+          </AnimateInView>
           <Box height="50px" />
           <Divider
             sx={{
@@ -719,41 +722,43 @@ export const AnnualResultsPage: React.FC = () => {
               },
             }}
           >
-            <DatasetChartBlock
-              id="annual-results"
-              exportName="annual-results"
-              title={get(
-                cmsData,
-                "pagesDatasetsAnnualResults.chartTitle",
-                "Annual Results",
-              )}
-              subtitle=""
-              data={exportChartData}
-              loading={loadingResults}
-              dropdownWidth={170}
-              dropdownItems={dropdownItems}
-              latestUpdate={latestUpdateDate}
-              dropdownSelected={dropdownSelected}
-              handleApplyFilters={handleApplyChartFilters}
-              handleCancelFilters={handleCancelChartFilters}
-              handleDropdownChange={handleSelectionChange}
-              disableCollapse={dropdownSelected === dropdownItems[1].value}
-              empty={chartEmpty}
-              filterGroups={filterGroups}
-              toggleFilter={handleToggleChartFilter}
-              removeFilter={handleRemoveChartFilter}
-              handleResetFilters={handleResetChartFilters}
-              appliedFilters={chartTempAppliedFilters}
-              tempAppliedFiltersData={chartTempAppliedFiltersData}
-              infoType="global"
-              extraToolbar={
-                dropdownSelected === dropdownItems[0].value
-                  ? groupedByComponentToolbar
-                  : undefined
-              }
-            >
-              {chartContent}
-            </DatasetChartBlock>
+            <AnimateInView>
+              <DatasetChartBlock
+                id="annual-results"
+                exportName="annual-results"
+                title={get(
+                  cmsData,
+                  "pagesDatasetsAnnualResults.chartTitle",
+                  "Annual Results",
+                )}
+                subtitle=""
+                data={exportChartData}
+                loading={loadingResults}
+                dropdownWidth={170}
+                dropdownItems={dropdownItems}
+                latestUpdate={latestUpdateDate}
+                dropdownSelected={dropdownSelected}
+                handleApplyFilters={handleApplyChartFilters}
+                handleCancelFilters={handleCancelChartFilters}
+                handleDropdownChange={handleSelectionChange}
+                disableCollapse={dropdownSelected === dropdownItems[1].value}
+                empty={chartEmpty}
+                filterGroups={filterGroups}
+                toggleFilter={handleToggleChartFilter}
+                removeFilter={handleRemoveChartFilter}
+                handleResetFilters={handleResetChartFilters}
+                appliedFilters={chartTempAppliedFilters}
+                tempAppliedFiltersData={chartTempAppliedFiltersData}
+                infoType="global"
+                extraToolbar={
+                  dropdownSelected === dropdownItems[0].value
+                    ? groupedByComponentToolbar
+                    : undefined
+                }
+              >
+                {chartContent}
+              </DatasetChartBlock>
+            </AnimateInView>
           </Box>
           <Divider
             sx={{

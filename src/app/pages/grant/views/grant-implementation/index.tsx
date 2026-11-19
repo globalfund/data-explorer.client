@@ -15,6 +15,7 @@ import IconButton from "@mui/material/IconButton";
 import { Dropdown } from "app/components/dropdown";
 import { useTitle, useUpdateEffect } from "react-use";
 import { ChartBlock } from "app/components/chart-block";
+import { AnimateInView } from "app/components/animate-in-view";
 import { Heatmap } from "app/components/charts/heatmap";
 import { RadialChart } from "app/components/charts/radial";
 import { SankeyChart } from "app/components/charts/sankey";
@@ -497,149 +498,155 @@ export const GrantImplementation: React.FC = () => {
         </Grid>
       </Grid>
       {fullWidthDivider}
-      <ChartBlock
-        id="radial-chart"
-        exportName="grant-investments"
-        title={disbursementsTotal}
-        subtitle={getCMSDataField(
-          cmsData,
-          "pagesGrantGrantImplementation.disbursementsSubtitle",
-          "Disbursements",
-        )}
-        data={exportChartData}
-        empty={!showRadialChart}
-        latestUpdate={latestUpdateDateChart1}
-        infoType="financials"
-      >
-        <RadialChart
-          tooltipLabel={getCMSDataField(
+      <AnimateInView>
+        <ChartBlock
+          id="radial-chart"
+          exportName="grant-investments"
+          title={disbursementsTotal}
+          subtitle={getCMSDataField(
             cmsData,
-            "pagesGrantGrantImplementation.disbursementsTooltipLabel",
-            "Amount",
+            "pagesGrantGrantImplementation.disbursementsSubtitle",
+            "Disbursements",
           )}
-          data={radialChartData}
-          itemLabelFormatterType="name-value-percent"
-        />
-        <Box
-          top="55%"
-          display="flex"
-          alignItems="center"
-          position="absolute"
-          flexDirection="column"
-          justifyContent="center"
-          right="calc(50% - 33px)"
+          data={exportChartData}
+          empty={!showRadialChart}
+          latestUpdate={latestUpdateDateChart1}
+          infoType="financials"
         >
-          <Box
-            width="17px"
-            height="17px"
-            borderRadius="50%"
-            bgcolor={appColors.RADIAL_CHART.ITEM_COLORS[2]}
+          <RadialChart
+            tooltipLabel={getCMSDataField(
+              cmsData,
+              "pagesGrantGrantImplementation.disbursementsTooltipLabel",
+              "Amount",
+            )}
+            data={radialChartData}
+            itemLabelFormatterType="name-value-percent"
           />
-          <Typography variant="body2" fontWeight="700">
-            {getCMSDataField(
-              cmsData,
-              "pagesGrantGrantImplementation.disbursementsRadialChartLabel",
-              "Signed",
-            )}
-          </Typography>
-          <Typography variant="body2">{signedFormatted}</Typography>
-        </Box>
-        <RaceBarChart data={raceBarChartData} />
-      </ChartBlock>
+          <Box
+            top="55%"
+            display="flex"
+            alignItems="center"
+            position="absolute"
+            flexDirection="column"
+            justifyContent="center"
+            right="calc(50% - 33px)"
+          >
+            <Box
+              width="17px"
+              height="17px"
+              borderRadius="50%"
+              bgcolor={appColors.RADIAL_CHART.ITEM_COLORS[2]}
+            />
+            <Typography variant="body2" fontWeight="700">
+              {getCMSDataField(
+                cmsData,
+                "pagesGrantGrantImplementation.disbursementsRadialChartLabel",
+                "Signed",
+              )}
+            </Typography>
+            <Typography variant="body2">{signedFormatted}</Typography>
+          </Box>
+          <RaceBarChart data={raceBarChartData} />
+        </ChartBlock>
+      </AnimateInView>
       {showRadialChart && fullWidthDivider}
-      <ChartBlock
-        id="budget"
-        title={totalBudget}
-        exportName="grant-budgets"
-        subtitle={getCMSDataField(
-          cmsData,
-          "pagesGrantGrantImplementation.budgetsSubtitle",
-          "Grant Budgets",
-        )}
-        empty={!showBudgetSankeyChart}
-        data={exportBudgetSankeyChartData}
-        latestUpdate={latestUpdateDateChart2}
-        infoType="budgets"
-      >
-        <Grid
-          container
-          spacing={4}
-          sx={{
-            color: "#464646",
-            fontSize: "10px",
-            marginTop: "8px",
-            fontWeight: "700",
-          }}
+      <AnimateInView>
+        <ChartBlock
+          id="budget"
+          title={totalBudget}
+          exportName="grant-budgets"
+          subtitle={getCMSDataField(
+            cmsData,
+            "pagesGrantGrantImplementation.budgetsSubtitle",
+            "Grant Budgets",
+          )}
+          empty={!showBudgetSankeyChart}
+          data={exportBudgetSankeyChartData}
+          latestUpdate={latestUpdateDateChart2}
+          infoType="budgets"
         >
-          <Grid item xs={3}>
-            {getCMSDataField(
-              cmsData,
-              "pagesDatasetsGrantImplementation.budgetsLabel1",
-              "Total budget",
-            )}
+          <Grid
+            container
+            spacing={4}
+            sx={{
+              color: "#464646",
+              fontSize: "10px",
+              marginTop: "8px",
+              fontWeight: "700",
+            }}
+          >
+            <Grid item xs={3}>
+              {getCMSDataField(
+                cmsData,
+                "pagesDatasetsGrantImplementation.budgetsLabel1",
+                "Total budget",
+              )}
+            </Grid>
+            <Grid item xs={3}>
+              {getCMSDataField(
+                cmsData,
+                "pagesDatasetsGrantImplementation.budgetsLabel2",
+                "Investment Landscape 1",
+              )}
+            </Grid>
+            <Grid item xs={3}>
+              {getCMSDataField(
+                cmsData,
+                "pagesDatasetsGrantImplementation.budgetsLabel3",
+                "Investment Landscape 2",
+              )}
+            </Grid>
+            <Grid item xs={3}>
+              {getCMSDataField(
+                cmsData,
+                "pagesDatasetsGrantImplementation.budgetsLabel4",
+                "Cost Category",
+              )}
+            </Grid>
           </Grid>
-          <Grid item xs={3}>
-            {getCMSDataField(
-              cmsData,
-              "pagesDatasetsGrantImplementation.budgetsLabel2",
-              "Investment Landscape 1",
-            )}
-          </Grid>
-          <Grid item xs={3}>
-            {getCMSDataField(
-              cmsData,
-              "pagesDatasetsGrantImplementation.budgetsLabel3",
-              "Investment Landscape 2",
-            )}
-          </Grid>
-          <Grid item xs={3}>
-            {getCMSDataField(
-              cmsData,
-              "pagesDatasetsGrantImplementation.budgetsLabel4",
-              "Cost Category",
-            )}
-          </Grid>
-        </Grid>
-        <SankeyChart data={dataBudgetSankeyChart} />
-      </ChartBlock>
+          <SankeyChart data={dataBudgetSankeyChart} />
+        </ChartBlock>
+      </AnimateInView>
       {showBudgetSankeyChart && showExpendituresHeatmap && fullWidthDivider}
-      <ChartBlock
-        cycles={CYCLES}
-        id="expenditures"
-        exportName="grant-expenditures"
-        subtitle={getCMSDataField(
-          cmsData,
-          "pagesGrantGrantImplementation.expendituresSubtitle",
-          "Expenditures",
-        )}
-        title={expendituresTotal}
-        empty={!showExpendituresHeatmap}
-        dropdownWidth={200}
-        dropdownSelected={chart2Dropdown}
-        dropdownItems={expendituresGroupingOptions}
-        handleDropdownChange={setChart2Dropdown}
-        data={exportExpenditureHeatmapChartData}
-        unitButtons={chart2UnitButtons}
-        latestUpdate={latestUpdateDateChart3}
-        infoType="expenditures"
-        extraDropdown={expendituresComponentGroupingDropdown}
-      >
-        <Heatmap
-          hoveredLegend={null}
-          columnCategory="cycle"
-          valueType={chart2Unit}
-          rowHeader="Components"
-          rowCategory="component"
-          data={dataExpendituresHeatmap}
-          getItemColor={getPercentageColor}
-          contentProp={chart2Unit === "percentage" ? "percentage" : "value"}
-          columnHeader={
-            chart2Dropdown === expendituresGroupingOptions[0].value
-              ? "Modules & Interventions"
-              : "Investment Landscapes & Cost Categories"
-          }
-        />
-      </ChartBlock>
+      <AnimateInView>
+        <ChartBlock
+          cycles={CYCLES}
+          id="expenditures"
+          exportName="grant-expenditures"
+          subtitle={getCMSDataField(
+            cmsData,
+            "pagesGrantGrantImplementation.expendituresSubtitle",
+            "Expenditures",
+          )}
+          title={expendituresTotal}
+          empty={!showExpendituresHeatmap}
+          dropdownWidth={200}
+          dropdownSelected={chart2Dropdown}
+          dropdownItems={expendituresGroupingOptions}
+          handleDropdownChange={setChart2Dropdown}
+          data={exportExpenditureHeatmapChartData}
+          unitButtons={chart2UnitButtons}
+          latestUpdate={latestUpdateDateChart3}
+          infoType="expenditures"
+          extraDropdown={expendituresComponentGroupingDropdown}
+        >
+          <Heatmap
+            hoveredLegend={null}
+            columnCategory="cycle"
+            valueType={chart2Unit}
+            rowHeader="Components"
+            rowCategory="component"
+            data={dataExpendituresHeatmap}
+            getItemColor={getPercentageColor}
+            contentProp={chart2Unit === "percentage" ? "percentage" : "value"}
+            columnHeader={
+              chart2Dropdown === expendituresGroupingOptions[0].value
+                ? "Modules & Interventions"
+                : "Investment Landscapes & Cost Categories"
+            }
+          />
+        </ChartBlock>
+      </AnimateInView>
     </Box>
   );
 };

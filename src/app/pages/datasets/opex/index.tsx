@@ -19,7 +19,7 @@ import { OpexPageBlock5 } from "app/pages/datasets/opex/blocks/block-5";
 import { OpexPageBlock6 } from "app/pages/datasets/opex/blocks/block-6";
 import { OpexPageBlock7 } from "app/pages/datasets/opex/blocks/block-7";
 import { OpexPageBlock8 } from "app/pages/datasets/opex/blocks/block-8";
-import { OpexAnimateInView } from "app/pages/datasets/opex/blocks/common/animate-in-view";
+import { AnimateInView } from "app/components/animate-in-view";
 
 export const OpexPage = () => {
   useTitle("The Data Explorer - OPEX");
@@ -85,39 +85,39 @@ export const OpexPage = () => {
           marginTop="50px"
           sx={{ "> hr": { margin: "60px 0" } }}
         >
-          <OpexAnimateInView>
+          <AnimateInView>
             <OpexPageBlock1 />
-          </OpexAnimateInView>
+          </AnimateInView>
           <Divider />
-          <OpexAnimateInView>
+          <AnimateInView>
             <OpexPageBlock3B />
-          </OpexAnimateInView>
+          </AnimateInView>
           <Divider />
-          <OpexAnimateInView>
+          <AnimateInView>
             <OpexPageBlock3 />
-          </OpexAnimateInView>
+          </AnimateInView>
           <Divider />
-          <OpexAnimateInView>
+          <AnimateInView>
             <OpexPageBlock2 />
-          </OpexAnimateInView>
+          </AnimateInView>
           <Divider />
           {/* <OpexPageBlock4 />
           <Divider /> */}
-          <OpexAnimateInView>
+          <AnimateInView>
             <OpexPageBlock5 />
-          </OpexAnimateInView>
+          </AnimateInView>
           <Divider />
-          <OpexAnimateInView>
+          <AnimateInView>
             <OpexPageBlock6 />
-          </OpexAnimateInView>
+          </AnimateInView>
           <Divider />
-          <OpexAnimateInView>
+          <AnimateInView>
             <OpexPageBlock7 />
-          </OpexAnimateInView>
+          </AnimateInView>
           <Divider />
-          <OpexAnimateInView>
+          <AnimateInView>
             <OpexPageBlock8 />
-          </OpexAnimateInView>
+          </AnimateInView>
         </Box>
       </DatasetPage>
     </>

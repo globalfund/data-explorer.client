@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { DonutChart } from "app/components/charts/donut";
+import { useAnimateInView } from "app/components/animate-in-view";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {
@@ -77,6 +78,7 @@ const ExpandableItem: React.FC<FinancialMetricExpandableItemProps> = (
   props: FinancialMetricExpandableItemProps,
 ) => {
   const [expanded, setExpanded] = React.useState(false);
+  const { inView } = useAnimateInView();
 
   const bgcolor = React.useMemo(() => {
     if (props.level === 0) {
@@ -135,7 +137,13 @@ const ExpandableItem: React.FC<FinancialMetricExpandableItemProps> = (
             <Box
               height="100%"
               bgcolor={props.color}
-              width={`${props.value}%`}
+              sx={{
+                width: inView ? `${props.value}%` : 0,
+                transition: "width 1.2s cubic-bezier(0.33, 1, 0.68, 1) 0.2s",
+                "@media (prefers-reduced-motion: reduce)": {
+                  transition: "none",
+                },
+              }}
             />
           </Box>
         </Box>

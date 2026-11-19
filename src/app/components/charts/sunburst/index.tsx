@@ -12,6 +12,10 @@ import { SVGRenderer } from "echarts/renderers";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { formatFinancialValue } from "app/utils/formatFinancialValue";
+import {
+  useAnimateInView,
+  chartAnimationOptions,
+} from "app/components/animate-in-view";
 import { useChartResizeObserver } from "app/hooks/useChartResizeObserver";
 import { TooltipComponent, TooltipComponentOption } from "echarts/components";
 import { chartTooltipCommonConfig } from "app/components/charts/common/tooltip/config";
@@ -139,6 +143,8 @@ const Breadcrumbs = (props: {
 
 export function SunburstChart(props: SunburstProps) {
   const isTouch = useMediaQuery("(hover: none)");
+  const { inView, enabled: animateInView } = useAnimateInView();
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const containerRef = React.useRef<HTMLDivElement>(null);
   const selectionsRef = React.useRef<
     {
@@ -220,7 +226,7 @@ export function SunburstChart(props: SunburstProps) {
   const [centerLabel, setCenterLabel] = React.useState("");
 
   React.useEffect(() => {
-    if (containerRef.current) {
+    if (containerRef.current && inView) {
       const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
@@ -228,6 +234,7 @@ export function SunburstChart(props: SunburstProps) {
       const option: echarts.ComposeOption<
         SunburstSeriesOption | TooltipComponentOption
       > = {
+        ...(animateInView ? chartAnimationOptions(reducedMotion) : {}),
         series: {
           id: "sectors-sunburst",
           type: "sunburst",
@@ -295,7 +302,7 @@ export function SunburstChart(props: SunburstProps) {
 
       setStateChart(chart);
     }
-  }, [containerRef.current, isTouch]);
+  }, [containerRef.current, isTouch, inView]);
 
   React.useEffect(() => {
     if (stateChart) {

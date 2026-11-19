@@ -24,6 +24,10 @@ import { formatFinancialValue } from "app/utils/formatFinancialValue";
 import { useStoreActions, useStoreState } from "app/state/store/hooks";
 import BarChartIcon from "app/assets/vectors/Select_BarChart.svg?react";
 import { DatasetChartBlock } from "app/pages/datasets/common/chart-block";
+import {
+  AnimateInView,
+  useAnimateInView,
+} from "app/components/animate-in-view";
 import { applyResultValueFormula } from "app/utils/applyResultValueFormula";
 import { useGetDatasetLatestUpdate } from "app/hooks/useGetDatasetLatestUpdate";
 import { defaultAppliedFilters } from "app/state/api/action-reducers/sync/filters";
@@ -35,6 +39,7 @@ const DonorByTypeComponent: React.FC<{
   value: number;
   percentage: number;
 }> = (props) => {
+  const { inView } = useAnimateInView();
   return (
     <Grid item xs={12} sm={12} md={3} lg={3}>
       <Box
@@ -79,6 +84,15 @@ const DonorByTypeComponent: React.FC<{
                 height: "12px",
                 borderRadius: "50%",
                 bgcolor: "#108E09",
+                opacity: inView ? 1 : 0,
+                transform: inView ? "scale(1)" : "scale(0)",
+                transition: "opacity 0.4s ease-out, transform 0.4s ease-out",
+                transitionDelay: `${Math.min(index * 15, 1500)}ms`,
+                "@media (prefers-reduced-motion: reduce)": {
+                  opacity: 1,
+                  transform: "none",
+                  transition: "none",
+                },
               }}
             />
           ))}
@@ -772,65 +786,67 @@ export const ResourceMobilizationPage: React.FC = () => {
               <CircularProgress />
             </Box>
           )}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              marginBottom: "20px",
-              alignItems: "flex-start",
-              justifyContent: "space-between",
-            }}
-          >
-            <Box>
-              <Typography variant="h3">
-                {getCMSDataField(
-                  cmsData,
-                  "pagesDatasetsResourceMobilization.statsText4Titlee",
-                  "Donors by type",
-                )}
-              </Typography>
-              <Typography variant="body2" fontSize="20px">
-                {getCMSDataField(
-                  cmsData,
-                  "pagesDatasetsResourceMobilization.statsText4Subtitlee",
-                  "Public sector donors account for more than half of all donors mobilized.",
-                )}
-              </Typography>
-            </Box>
+          <AnimateInView>
             <Box
               sx={{
-                gap: "6px",
                 display: "flex",
                 flexDirection: "row",
-                alignItems: "center",
+                marginBottom: "20px",
+                alignItems: "flex-start",
+                justifyContent: "space-between",
               }}
             >
+              <Box>
+                <Typography variant="h3">
+                  {getCMSDataField(
+                    cmsData,
+                    "pagesDatasetsResourceMobilization.statsText4Titlee",
+                    "Donors by type",
+                  )}
+                </Typography>
+                <Typography variant="body2" fontSize="20px">
+                  {getCMSDataField(
+                    cmsData,
+                    "pagesDatasetsResourceMobilization.statsText4Subtitlee",
+                    "Public sector donors account for more than half of all donors mobilized.",
+                  )}
+                </Typography>
+              </Box>
               <Box
                 sx={{
-                  width: "12px",
-                  height: "12px",
-                  borderRadius: "50%",
-                  bgcolor: "#108E09",
+                  gap: "6px",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
                 }}
-              />
-              <Typography fontSize="16px" color="#373D43">
-                = 1 donor
-              </Typography>
+              >
+                <Box
+                  sx={{
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    bgcolor: "#108E09",
+                  }}
+                />
+                <Typography fontSize="16px" color="#373D43">
+                  = 1 donor
+                </Typography>
+              </Box>
             </Box>
-          </Box>
-          <Grid container spacing={2} marginBottom="40px">
-            {donorsByType.length > 0 && (
-              <DonorByTypeComponent
-                {...donorsByType[0]}
-                key={donorsByType[0].name}
-              />
-            )}
-            <Grid item container rowSpacing={4} xs={12} sm={12} md={9} lg={9}>
-              {donorsByType.slice(1).map((item) => (
-                <DonorByTypeComponent key={item.name} {...item} />
-              ))}
+            <Grid container spacing={2} marginBottom="40px">
+              {donorsByType.length > 0 && (
+                <DonorByTypeComponent
+                  {...donorsByType[0]}
+                  key={donorsByType[0].name}
+                />
+              )}
+              <Grid item container rowSpacing={4} xs={12} sm={12} md={9} lg={9}>
+                {donorsByType.slice(1).map((item) => (
+                  <DonorByTypeComponent key={item.name} {...item} />
+                ))}
+              </Grid>
             </Grid>
-          </Grid>
+          </AnimateInView>
           <Typography variant="overline" fontSize="14px">
             Latest Update: <b>{latestUpdateDate}</b>
           </Typography>
@@ -858,39 +874,41 @@ export const ResourceMobilizationPage: React.FC = () => {
                 : {}
             }
           >
-            <DatasetChartBlock
-              id="pledges-contributions"
-              exportName="pledges-and-contributions"
-              title={getCMSDataField(
-                cmsData,
-                "pagesDatasetsResourceMobilization.pledgesTitle",
-                "Pledges & Contributions",
-              )}
-              subtitle={getCMSDataField(
-                cmsData,
-                "pagesDatasetsResourceMobilization.pledgesSubtitle",
-                "Government, private sector, non-government and other donor pledges and contributions.",
-              )}
-              dropdownItems={dropdownItems}
-              dropdownSelected={dropdownSelected}
-              handleDropdownChange={handleSelectionChange}
-              disableCollapse={dropdownSelected === dropdownItems[1].value}
-              loading={dataChartLoading}
-              empty={chartEmpty}
-              filterGroups={filterGroups}
-              latestUpdate={latestUpdateDate}
-              appliedFilters={chartTempAppliedFilters}
-              toggleFilter={handleToggleChartFilter}
-              removeFilter={handleRemoveChartFilter}
-              handleResetFilters={handleResetChartFilters}
-              tempAppliedFiltersData={chartTempAppliedFiltersData}
-              handleApplyFilters={handleApplyChartFilters}
-              handleCancelFilters={handleCancelChartFilters}
-              data={chartData}
-              infoType="pledges_contributions"
-            >
-              {chartContent}
-            </DatasetChartBlock>
+            <AnimateInView>
+              <DatasetChartBlock
+                id="pledges-contributions"
+                exportName="pledges-and-contributions"
+                title={getCMSDataField(
+                  cmsData,
+                  "pagesDatasetsResourceMobilization.pledgesTitle",
+                  "Pledges & Contributions",
+                )}
+                subtitle={getCMSDataField(
+                  cmsData,
+                  "pagesDatasetsResourceMobilization.pledgesSubtitle",
+                  "Government, private sector, non-government and other donor pledges and contributions.",
+                )}
+                dropdownItems={dropdownItems}
+                dropdownSelected={dropdownSelected}
+                handleDropdownChange={handleSelectionChange}
+                disableCollapse={dropdownSelected === dropdownItems[1].value}
+                loading={dataChartLoading}
+                empty={chartEmpty}
+                filterGroups={filterGroups}
+                latestUpdate={latestUpdateDate}
+                appliedFilters={chartTempAppliedFilters}
+                toggleFilter={handleToggleChartFilter}
+                removeFilter={handleRemoveChartFilter}
+                handleResetFilters={handleResetChartFilters}
+                tempAppliedFiltersData={chartTempAppliedFiltersData}
+                handleApplyFilters={handleApplyChartFilters}
+                handleCancelFilters={handleCancelChartFilters}
+                data={chartData}
+                infoType="pledges_contributions"
+              >
+                {chartContent}
+              </DatasetChartBlock>
+            </AnimateInView>
           </Box>
         </Box>
       </DatasetPage>

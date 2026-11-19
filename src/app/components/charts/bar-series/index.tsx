@@ -8,6 +8,10 @@ import ReactDOMServer from "react-dom/server";
 import { SVGRenderer } from "echarts/renderers";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { formatFinancialValue } from "app/utils/formatFinancialValue";
+import {
+  useAnimateInView,
+  chartAnimationOptions,
+} from "app/components/animate-in-view";
 import { BarSeriesOption, BarChart as EChartsBar } from "echarts/charts";
 import { useChartResizeObserver } from "app/hooks/useChartResizeObserver";
 import { BarSeriesChartProps } from "app/components/charts/bar-series/data";
@@ -92,6 +96,8 @@ export const BarSeriesChart: React.FC<BarSeriesChartProps> = (
 ) => {
   const isTouch = useMediaQuery("(hover: none)");
   const mobile = useMediaQuery("(max-width: 767px)");
+  const { inView, enabled: animateInView } = useAnimateInView();
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const [stateChart, setStateChart] =
@@ -116,7 +122,7 @@ export const BarSeriesChart: React.FC<BarSeriesChartProps> = (
   }, [props.data]);
 
   React.useEffect(() => {
-    if (containerRef.current) {
+    if (containerRef.current && inView) {
       const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
@@ -130,6 +136,7 @@ export const BarSeriesChart: React.FC<BarSeriesChartProps> = (
         | TooltipComponentOption
         | DataZoomComponentOption
       > = {
+        ...(animateInView ? chartAnimationOptions(reducedMotion) : {}),
         grid: {
           top: 40,
           left: 20,
@@ -233,7 +240,7 @@ export const BarSeriesChart: React.FC<BarSeriesChartProps> = (
       chart.setOption(option);
       setStateChart(chart);
     }
-  }, [containerRef.current, props.data, props.keys, range, mobile]);
+  }, [containerRef.current, props.data, props.keys, range, mobile, inView]);
 
   return (
     <React.Fragment>

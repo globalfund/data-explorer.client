@@ -9,6 +9,10 @@ import { SVGRenderer } from "echarts/renderers";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { SankeyChartProps } from "app/components/charts/sankey/data";
+import {
+  useAnimateInView,
+  chartAnimationOptions,
+} from "app/components/animate-in-view";
 import { formatFinancialValue } from "app/utils/formatFinancialValue";
 import { useChartResizeObserver } from "app/hooks/useChartResizeObserver";
 import { SankeyChartTooltip } from "app/components/charts/sankey/tooltip";
@@ -28,6 +32,8 @@ export const SankeyChart: React.FC<SankeyChartProps> = (
   props: SankeyChartProps,
 ) => {
   const mobile = useMediaQuery("(max-width: 767px)");
+  const { inView, enabled: animateInView } = useAnimateInView();
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const [stateChart, setStateChart] =
@@ -46,7 +52,7 @@ export const SankeyChart: React.FC<SankeyChartProps> = (
   }, [props.data.links]);
 
   React.useEffect(() => {
-    if (containerRef.current) {
+    if (containerRef.current && inView) {
       const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
@@ -56,6 +62,7 @@ export const SankeyChart: React.FC<SankeyChartProps> = (
       const option: echarts.ComposeOption<
         SankeySeriesOption | TooltipComponentOption
       > = {
+        ...(animateInView ? chartAnimationOptions(reducedMotion) : {}),
         blendMode: "color",
         series: {
           top: 10,
@@ -289,7 +296,7 @@ export const SankeyChart: React.FC<SankeyChartProps> = (
       chart.setOption(option);
       setStateChart(chart);
     }
-  }, [containerRef.current, totalValue, props.data, mobile]);
+  }, [containerRef.current, totalValue, props.data, mobile, inView]);
 
   return (
     <React.Fragment>

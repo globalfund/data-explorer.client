@@ -13,6 +13,10 @@ import { formatFinancialValue } from "app/utils/formatFinancialValue";
 import { PieSeriesOption, PieChart as EChartsPie } from "echarts/charts";
 import { useChartResizeObserver } from "app/hooks/useChartResizeObserver";
 import { chartTooltipCommonConfig } from "app/components/charts/common/tooltip/config";
+import {
+  useAnimateInView,
+  chartAnimationOptions,
+} from "app/components/animate-in-view";
 
 echarts.use([EChartsPie, TooltipComponent, SVGRenderer]);
 
@@ -71,7 +75,9 @@ const Tooltip = (props: any) => {
 };
 
 export const PieChart: React.FC<PieChartProps> = (props: PieChartProps) => {
+  const { inView, enabled: animateInView } = useAnimateInView();
   const isTouch = useMediaQuery("(hover: none)");
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const [stateChart, setStateChart] =
@@ -84,7 +90,7 @@ export const PieChart: React.FC<PieChartProps> = (props: PieChartProps) => {
   });
 
   React.useEffect(() => {
-    if (containerRef.current) {
+    if (containerRef.current && inView) {
       const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
@@ -92,6 +98,7 @@ export const PieChart: React.FC<PieChartProps> = (props: PieChartProps) => {
       const option: echarts.ComposeOption<
         PieSeriesOption | TooltipComponentOption
       > = {
+        ...(animateInView ? chartAnimationOptions(reducedMotion) : {}),
         series: {
           type: "pie",
           data: props.data,
@@ -122,7 +129,7 @@ export const PieChart: React.FC<PieChartProps> = (props: PieChartProps) => {
       chart.setOption(option);
       setStateChart(chart);
     }
-  }, [props.data, containerRef.current]);
+  }, [props.data, containerRef.current, inView]);
 
   return (
     <React.Fragment>

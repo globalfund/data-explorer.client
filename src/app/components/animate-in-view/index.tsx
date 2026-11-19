@@ -1,11 +1,14 @@
 import React from "react";
 import Box from "@mui/material/Box";
 
-const OpexInViewContext = React.createContext<boolean>(true);
+const AnimateInViewContext = React.createContext<boolean | null>(null);
 
-export const useOpexInView = () => React.useContext(OpexInViewContext);
+export const useAnimateInView = () => {
+  const value = React.useContext(AnimateInViewContext);
+  return { inView: value ?? true, enabled: value !== null };
+};
 
-export const opexChartAnimationOptions = (reducedMotion: boolean) => ({
+export const chartAnimationOptions = (reducedMotion: boolean) => ({
   animation: !reducedMotion,
   animationDuration: 2000,
   animationEasing: "cubicOut" as const,
@@ -14,7 +17,7 @@ export const opexChartAnimationOptions = (reducedMotion: boolean) => ({
   animationEasingUpdate: "cubicOut" as const,
 });
 
-export const OpexAnimateInView: React.FC<React.PropsWithChildren> = (props) => {
+export const AnimateInView: React.FC<React.PropsWithChildren> = (props) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const [visible, setVisible] = React.useState(false);
 
@@ -31,7 +34,7 @@ export const OpexAnimateInView: React.FC<React.PropsWithChildren> = (props) => {
           observer.disconnect();
         }
       },
-      { threshold: 0.3 },
+      { threshold: 0, rootMargin: "0px 0px -30% 0px" },
     );
     observer.observe(element);
     return () => observer.disconnect();
@@ -39,9 +42,9 @@ export const OpexAnimateInView: React.FC<React.PropsWithChildren> = (props) => {
 
   return (
     <Box ref={ref}>
-      <OpexInViewContext.Provider value={visible}>
+      <AnimateInViewContext.Provider value={visible}>
         {props.children}
-      </OpexInViewContext.Provider>
+      </AnimateInViewContext.Provider>
     </Box>
   );
 };

@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import { useCMSData } from "app/hooks/useCMSData";
 import { BarChart } from "app/components/charts/bar";
 import { ChartBlock } from "app/components/chart-block";
+import { AnimateInView } from "app/components/animate-in-view";
 import { getCMSDataField } from "app/utils/getCMSDataField";
 import useUpdateEffect from "react-use/lib/useUpdateEffect";
 import { BarChartDataItem } from "app/components/charts/bar/data";
@@ -111,40 +112,42 @@ export const ResourceMobilization: React.FC = () => {
 
   return (
     <Box>
-      <ChartBlock
-        cycles={cycles}
-        id="resource-mobilization"
-        exportName="pledges-contributions"
-        loading={loadingRMBarChart}
-        title={`US$${totalPledge.formatted}`}
-        selectedCycles={chart1Cycles}
-        latestUpdate={latestUpdateDate}
-        subtitle={getCMSDataField(
-          cmsData,
-          "pagesLocationResourceMobilization.title",
-          "Pledges & Contributions",
-        )}
-        data={exportChartData}
-        handleCycleChange={handleChartCycleChange}
-        empty={dataRMBarChart.length === 0 && chart1Cycles.length === 0}
-        infoType="pledges_contributions"
-      >
-        <BarChart
-          data={dataRMBarChart}
-          valueLabels={{
-            value: getCMSDataField(
-              cmsData,
-              "pagesLocationResourceMobilization.barchartLabel1",
-              "Pledge",
-            ),
-            value1: getCMSDataField(
-              cmsData,
-              "pagesLocationResourceMobilization.barchartLabel2",
-              "Contribution",
-            ),
-          }}
-        />
-      </ChartBlock>
+      <AnimateInView>
+        <ChartBlock
+          cycles={cycles}
+          id="resource-mobilization"
+          exportName="pledges-contributions"
+          loading={loadingRMBarChart}
+          title={`US$${totalPledge.formatted}`}
+          selectedCycles={chart1Cycles}
+          latestUpdate={latestUpdateDate}
+          subtitle={getCMSDataField(
+            cmsData,
+            "pagesLocationResourceMobilization.title",
+            "Pledges & Contributions",
+          )}
+          data={exportChartData}
+          handleCycleChange={handleChartCycleChange}
+          empty={dataRMBarChart.length === 0 && chart1Cycles.length === 0}
+          infoType="pledges_contributions"
+        >
+          <BarChart
+            data={dataRMBarChart}
+            valueLabels={{
+              value: getCMSDataField(
+                cmsData,
+                "pagesLocationResourceMobilization.barchartLabel1",
+                "Pledge",
+              ),
+              value1: getCMSDataField(
+                cmsData,
+                "pagesLocationResourceMobilization.barchartLabel2",
+                "Contribution",
+              ),
+            }}
+          />
+        </ChartBlock>
+      </AnimateInView>
       <Box
         width="100%"
         display="flex"

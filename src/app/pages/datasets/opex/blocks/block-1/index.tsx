@@ -5,7 +5,7 @@ import Divider from "@mui/material/Divider";
 // import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 // import { useStoreActions, useStoreState } from "app/state/store/hooks";
-import { useOpexInView } from "app/pages/datasets/opex/blocks/common/animate-in-view";
+import { useAnimateInView } from "app/components/animate-in-view";
 import {
   GridItem,
   // gridItems,
@@ -15,7 +15,7 @@ import {
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 const ItemBox = ({ item }: { item: GridItem }) => {
-  const inView = useOpexInView();
+  const { inView } = useAnimateInView();
   return (
     <Box>
       <Typography fontWeight="700" fontSize={item.titleFontSize}>

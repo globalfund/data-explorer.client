@@ -12,6 +12,10 @@ import { TooltipComponent } from "echarts/components";
 import { formatLocale } from "app/utils/formatLocale";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { TreemapProps } from "app/components/charts/treemap/data";
+import {
+  useAnimateInView,
+  chartAnimationOptions,
+} from "app/components/animate-in-view";
 import { formatFinancialValue } from "app/utils/formatFinancialValue";
 import { useChartResizeObserver } from "app/hooks/useChartResizeObserver";
 import { chartTooltipCommonConfig } from "app/components/charts/common/tooltip/config";
@@ -49,6 +53,8 @@ const Tooltip = (props: any) => {
 
 export const Treemap: React.FC<TreemapProps> = (props: TreemapProps) => {
   const isTouch = useMediaQuery("(hover: none)");
+  const { inView, enabled: animateInView } = useAnimateInView();
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const [stateChart, setStateChart] =
@@ -67,7 +73,7 @@ export const Treemap: React.FC<TreemapProps> = (props: TreemapProps) => {
   const total = React.useMemo(() => sumBy(props.data, "value"), [props.data]);
 
   React.useEffect(() => {
-    if (containerRef.current) {
+    if (containerRef.current && inView) {
       const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
@@ -75,6 +81,7 @@ export const Treemap: React.FC<TreemapProps> = (props: TreemapProps) => {
       const option: echarts.ComposeOption<
         TreemapSeriesOption | TooltipComponentOption
       > = {
+        ...(animateInView ? chartAnimationOptions(reducedMotion) : {}),
         // @ts-expect-error ECharts type mismatch
         series: {
           top: 0,
@@ -173,7 +180,7 @@ export const Treemap: React.FC<TreemapProps> = (props: TreemapProps) => {
       chart.setOption(option);
       setStateChart(chart);
     }
-  }, [containerRef.current, isMultilevel]);
+  }, [containerRef.current, isMultilevel, inView]);
 
   React.useEffect(() => {
     if (stateChart) {

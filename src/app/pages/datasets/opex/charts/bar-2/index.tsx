@@ -10,9 +10,9 @@ import { BarSeriesOption, BarChart as EChartsBar } from "echarts/charts";
 import { useChartResizeObserver } from "app/hooks/useChartResizeObserver";
 import { BarChart2Props } from "app/pages/datasets/opex/charts/bar-2/data";
 import {
-  useOpexInView,
-  opexChartAnimationOptions,
-} from "app/pages/datasets/opex/blocks/common/animate-in-view";
+  useAnimateInView,
+  chartAnimationOptions,
+} from "app/components/animate-in-view";
 import {
   GridComponent,
   LegendComponent,
@@ -36,7 +36,7 @@ echarts.use([
 
 export const BarChart2: React.FC<BarChart2Props> = (props: BarChart2Props) => {
   const mobile = useMediaQuery("(max-width: 767px)");
-  const inView = useOpexInView();
+  const { inView } = useAnimateInView();
   const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -63,7 +63,7 @@ export const BarChart2: React.FC<BarChart2Props> = (props: BarChart2Props) => {
         | LegendComponentOption
         | DataZoomComponentOption
       > = {
-        ...opexChartAnimationOptions(reducedMotion),
+        ...chartAnimationOptions(reducedMotion),
         grid: {
           top: 40,
           left: 20,
@@ -166,7 +166,7 @@ export const BarChart2: React.FC<BarChart2Props> = (props: BarChart2Props) => {
   React.useEffect(() => {
     if (stateChart) {
       stateChart.setOption({
-        ...opexChartAnimationOptions(reducedMotion),
+        ...chartAnimationOptions(reducedMotion),
         grid: {
           bottom: mobile ? 50 : 20,
         },

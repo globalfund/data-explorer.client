@@ -14,9 +14,9 @@ import { LineSeriesOption, LineChart as EChartsLine } from "echarts/charts";
 import { simpleFormatter } from "app/pages/datasets/opex/blocks/block-8/data";
 import { chartTooltipCommonConfig } from "app/components/charts/common/tooltip/config";
 import {
-  useOpexInView,
-  opexChartAnimationOptions,
-} from "app/pages/datasets/opex/blocks/common/animate-in-view";
+  useAnimateInView,
+  chartAnimationOptions,
+} from "app/components/animate-in-view";
 import {
   GridComponent,
   LegendComponent,
@@ -119,7 +119,7 @@ const Tooltip: React.FC<{
 export const LineChart: React.FC<LineChartProps> = (props: LineChartProps) => {
   const isTouch = useMediaQuery("(hover: none)");
   const mobile = useMediaQuery("(max-width: 767px)");
-  const inView = useOpexInView();
+  const { inView } = useAnimateInView();
   const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -146,7 +146,7 @@ export const LineChart: React.FC<LineChartProps> = (props: LineChartProps) => {
         | LegendComponentOption
         | TooltipComponentOption
       > = {
-        ...opexChartAnimationOptions(reducedMotion),
+        ...chartAnimationOptions(reducedMotion),
         grid: {
           top: mobile && props.showLegend ? 70 : 40,
           left: 60,

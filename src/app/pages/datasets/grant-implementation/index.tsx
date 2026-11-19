@@ -19,6 +19,7 @@ import { GrantImplementationPageBlock3 } from "app/pages/datasets/grant-implemen
 import { GrantImplementationPageBlock4 } from "app/pages/datasets/grant-implementation/blocks/block-4";
 import { GrantImplementationPageBlock5 } from "app/pages/datasets/grant-implementation/blocks/block-5";
 import { GrantImplementationPageBlock6 } from "app/pages/datasets/grant-implementation/blocks/block-6";
+import { AnimateInView } from "app/components/animate-in-view";
 import {
   FullWidthDivider,
   defaultGeographyGroupingOptions,
@@ -368,44 +369,58 @@ export const GrantImplementationPage: React.FC = () => {
         handleCancelFilters={handleCancelFilters}
       >
         <Box width="100%" marginTop="50px">
-          <GrantImplementationPageBlock1
-            filterString={filterString}
-            geographyGrouping={geographyGrouping}
-            componentsGrouping={componentsGrouping}
-          />
+          <AnimateInView>
+            <GrantImplementationPageBlock1
+              filterString={filterString}
+              geographyGrouping={geographyGrouping}
+              componentsGrouping={componentsGrouping}
+            />
+          </AnimateInView>
           <FullWidthDivider />
-          <GrantImplementationPageBlock2
-            geographyGrouping={geographyGrouping}
-            componentsGrouping={componentsGrouping}
-            filterGroups={filterGroupsDisbursements}
-          />
+          <AnimateInView>
+            <GrantImplementationPageBlock2
+              geographyGrouping={geographyGrouping}
+              componentsGrouping={componentsGrouping}
+              filterGroups={filterGroupsDisbursements}
+            />
+          </AnimateInView>
           <FullWidthDivider />
-          <GrantImplementationPageBlock21 />
+          <AnimateInView>
+            <GrantImplementationPageBlock21 />
+          </AnimateInView>
           <FullWidthDivider />
-          <GrantImplementationPageBlock3
-            filterString={filterString}
-            filterGroups={filterGroups}
-            geographyGrouping={geographyGrouping}
-            componentsGrouping={componentsGrouping}
-          />
+          <AnimateInView>
+            <GrantImplementationPageBlock3
+              filterString={filterString}
+              filterGroups={filterGroups}
+              geographyGrouping={geographyGrouping}
+              componentsGrouping={componentsGrouping}
+            />
+          </AnimateInView>
           <FullWidthDivider />
-          <GrantImplementationPageBlock4
-            filterString={filterString}
-            geographyGrouping={geographyGrouping}
-            componentsGrouping={componentsGrouping}
-          />
+          <AnimateInView>
+            <GrantImplementationPageBlock4
+              filterString={filterString}
+              geographyGrouping={geographyGrouping}
+              componentsGrouping={componentsGrouping}
+            />
+          </AnimateInView>
           <FullWidthDivider />
-          <GrantImplementationPageBlock5
-            filterGroups={filterGroups}
-            geographyGrouping={geographyGrouping}
-            componentsGrouping={componentsGrouping}
-          />
+          <AnimateInView>
+            <GrantImplementationPageBlock5
+              filterGroups={filterGroups}
+              geographyGrouping={geographyGrouping}
+              componentsGrouping={componentsGrouping}
+            />
+          </AnimateInView>
           <FullWidthDivider />
-          <GrantImplementationPageBlock6
-            filterGroups={filterGroups}
-            geographyGrouping={geographyGrouping}
-            componentsGrouping={componentsGrouping}
-          />
+          <AnimateInView>
+            <GrantImplementationPageBlock6
+              filterGroups={filterGroups}
+              geographyGrouping={geographyGrouping}
+              componentsGrouping={componentsGrouping}
+            />
+          </AnimateInView>
         </Box>
       </DatasetPage>
     </>

@@ -5,6 +5,7 @@ import { useTitle } from "react-use";
 import Divider from "@mui/material/Divider";
 import { useParams } from "react-router-dom";
 import { useStoreState } from "app/state/store/hooks";
+import { AnimateInView } from "app/components/animate-in-view";
 import { LineChartProps } from "app/components/charts/line/data";
 import { SankeyChartData } from "app/components/charts/sankey/data";
 import { HeatmapDataItem } from "app/components/charts/heatmap/data";
@@ -73,13 +74,21 @@ export const GrantImplementation = () => {
 
   return (
     <Box gap="24px" display="flex" flexDirection="column">
-      <LocationGrantImplementationBlock1 />
+      <AnimateInView>
+        <LocationGrantImplementationBlock1 />
+      </AnimateInView>
       {showDisbursementsLineChart && fullWidthDivider}
-      <LocationGrantImplementationBlock2 />
+      <AnimateInView>
+        <LocationGrantImplementationBlock2 />
+      </AnimateInView>
       {showBudgetSankeyChart && fullWidthDivider}
-      <LocationGrantImplementationBlock3 />
+      <AnimateInView>
+        <LocationGrantImplementationBlock3 />
+      </AnimateInView>
       {showExpendituresHeatmap && fullWidthDivider}
-      <LocationGrantImplementationBlock4 />
+      <AnimateInView>
+        <LocationGrantImplementationBlock4 />
+      </AnimateInView>
     </Box>
   );
 };

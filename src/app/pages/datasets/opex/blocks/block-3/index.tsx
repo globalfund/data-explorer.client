@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import { LineChart } from "app/pages/datasets/opex/charts";
 import { useStoreState, useStoreActions } from "app/state/store/hooks";
 import { OpexPageChartBlock } from "app/pages/datasets/opex/blocks/common";
-import { useOpexInView } from "app/pages/datasets/opex/blocks/common/animate-in-view";
+import { useAnimateInView } from "app/components/animate-in-view";
 import {
   simpleFormatter,
   tooltipFormatter,
@@ -14,7 +14,7 @@ import {
 } from "app/pages/datasets/opex/blocks/block-3/data";
 
 export const OpexPageBlock3: React.FC = () => {
-  const inView = useOpexInView();
+  const { inView } = useAnimateInView();
   const dataEfficiency = useStoreState((state) => state.OpexEfficiency.data);
   const fetchEfficiency = useStoreActions(
     (actions) => actions.OpexEfficiency.fetch,

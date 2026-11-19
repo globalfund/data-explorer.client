@@ -11,6 +11,10 @@ import { SVGRenderer } from "echarts/renderers";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { splitStringInMiddle } from "app/utils/splitStringInMiddle";
+import {
+  useAnimateInView,
+  chartAnimationOptions,
+} from "app/components/animate-in-view";
 import { formatFinancialValue } from "app/utils/formatFinancialValue";
 import { BarSeriesOption, BarChart as EChartsBar } from "echarts/charts";
 import { useChartResizeObserver } from "app/hooks/useChartResizeObserver";
@@ -97,6 +101,8 @@ export const ExpandableHorizontalBar: React.FC<
 > = (props: ExpandableHorizontalBarChartProps) => {
   const isMounted = React.useRef(false);
   const isTouch = useMediaQuery("(hover: none)");
+  const { inView, enabled: animateInView } = useAnimateInView();
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const [data, setData] = React.useState(props.data);
@@ -150,7 +156,7 @@ export const ExpandableHorizontalBar: React.FC<
   };
 
   React.useEffect(() => {
-    if (containerRef.current) {
+    if (containerRef.current && inView) {
       const chart = echarts.init(containerRef.current, chartTheme, {
         renderer: "svg",
       });
@@ -163,6 +169,7 @@ export const ExpandableHorizontalBar: React.FC<
         | LegendComponentOption
         | TooltipComponentOption
       > = {
+        ...(animateInView ? chartAnimationOptions(reducedMotion) : {}),
         grid: {
           top: 40,
           left: 20,
@@ -331,7 +338,7 @@ export const ExpandableHorizontalBar: React.FC<
       setStateChart(chart);
       isMounted.current = true;
     }
-  }, [containerRef.current, range]);
+  }, [containerRef.current, range, inView]);
 
   React.useEffect(() => {
     if (expandedBars.length > 0) {
