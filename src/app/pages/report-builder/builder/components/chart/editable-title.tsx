@@ -7,6 +7,13 @@ interface EditableTitleProps {
   sx?: any;
   disabled?: boolean;
   setEditing?: (editing: boolean) => void;
+  /**
+   * Shown, muted, while the title is blank. A title with a placeholder may be
+   * left blank; one without goes back to what it was.
+   */
+  placeholder?: string;
+  ariaLabel?: string;
+  "data-cy"?: string;
 }
 
 const EditableTitle: React.FC<EditableTitleProps> = ({
@@ -15,38 +22,42 @@ const EditableTitle: React.FC<EditableTitleProps> = ({
   sx,
   disabled,
   setEditing,
+  placeholder,
+  ariaLabel = "Edit title",
+  "data-cy": dataCy,
 }) => {
-  const [currentTitle, setCurrentTitle] = React.useState(title);
   const [isEditing, setIsEditing] = React.useState(false);
-  const titleRef = React.useRef<HTMLHeadingElement>(null);
+  // Enter finishes editing and then blurs, which would finish it again.
+  const editingRef = React.useRef(false);
+  const titleRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     setEditing?.(isEditing);
-    setCurrentTitle(title);
+  }, [isEditing]);
+
+  // While it's edited the text belongs to the element, so React doesn't render
+  // it as a child; it's written here whenever the title isn't being edited.
+  React.useLayoutEffect(() => {
     if (titleRef.current && !isEditing) {
       titleRef.current.textContent = title;
     }
   }, [title, isEditing]);
 
   const finishEditing = () => {
-    const nextValue = titleRef.current?.textContent?.trim() ?? "";
-    const finalValue = nextValue || title;
+    if (!editingRef.current) return;
+    editingRef.current = false;
 
-    setCurrentTitle(finalValue);
+    const text = titleRef.current?.textContent?.trim() ?? "";
+    const finalValue = text || (placeholder === undefined ? title : "");
+
     setIsEditing(false);
-
     if (titleRef.current) {
       titleRef.current.textContent = finalValue;
     }
-
     onTitleChange(finalValue);
   };
 
-  //   const handleInput = (e: React.FormEvent<HTMLHeadingElement>) => {
-  //     setCurrentTitle(e.currentTarget.textContent ?? "");
-  //   };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLHeadingElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
       finishEditing();
@@ -55,7 +66,7 @@ const EditableTitle: React.FC<EditableTitleProps> = ({
 
     if (e.key === "Escape") {
       e.preventDefault();
-      setCurrentTitle(title);
+      editingRef.current = false;
       if (titleRef.current) {
         titleRef.current.textContent = title;
         titleRef.current.blur();
@@ -65,11 +76,8 @@ const EditableTitle: React.FC<EditableTitleProps> = ({
   };
 
   const handleFocus = () => {
+    editingRef.current = true;
     setIsEditing(true);
-  };
-
-  const handleBlur = () => {
-    finishEditing();
   };
 
   const editing = isEditing && !disabled;
@@ -90,6 +98,19 @@ const EditableTitle: React.FC<EditableTitleProps> = ({
             ? "#EFF1FE"
             : sx?.backgroundColor || "transparent",
           borderRadius: "4px",
+          cursor: disabled ? "default" : "text",
+          ...(placeholder !== undefined && {
+            "&:empty::before": {
+              content: "attr(data-placeholder)",
+              color: "#70777E",
+              fontStyle: "italic",
+              fontWeight: 400,
+            },
+          }),
+          ...(!disabled &&
+            !editing && {
+              "&:hover": { borderColor: "#CFD4DA" },
+            }),
         },
       }}
     >
@@ -98,14 +119,15 @@ const EditableTitle: React.FC<EditableTitleProps> = ({
         contentEditable={!disabled}
         suppressContentEditableWarning
         role="textbox"
-        aria-label="Edit title"
-        tabIndex={0}
+        aria-label={ariaLabel}
+        aria-placeholder={placeholder}
+        data-placeholder={placeholder}
+        data-cy={dataCy}
+        tabIndex={disabled ? -1 : 0}
         onFocus={handleFocus}
-        onBlur={handleBlur}
+        onBlur={finishEditing}
         onKeyDown={handleKeyDown}
-      >
-        {currentTitle}
-      </div>
+      />
     </Box>
   );
 };

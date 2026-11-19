@@ -15,6 +15,7 @@ import Puzzle from "app/assets/vectors/Puzzle.svg?react";
 import { useStoreState, useStoreActions } from "app/state/store/hooks";
 import { chartTypes } from "app/pages/report-builder/builder/components/chart/data";
 import { getDefaultVisualOptions } from "app/pages/report-builder/builder/components/panel/elements-controller/chart/utils";
+import { isChartTitleAuto } from "app/pages/report-builder/builder/components/chart/title/chart-title";
 import { ChartType } from "app/state/api/action-reducers/report-builder/sync";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 import WarningIcon from "app/assets/vectors/WarningIcon.svg?react";
@@ -286,6 +287,14 @@ const ChartSelectModal: React.FC<{
             ...defaultOptions,
             width: item.options?.width || defaultOptions.width,
             height: item.options?.height || defaultOptions.height,
+            // A title the author wrote still fits the chart as another type;
+            // one from the data is worked out again for the new mapping.
+            ...(item.options && !isChartTitleAuto(item.options)
+              ? {
+                  chartTitle: item.options.chartTitle,
+                  chartTitleAuto: false,
+                }
+              : {}),
           },
     });
 

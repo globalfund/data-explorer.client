@@ -77,6 +77,10 @@ describe("Report builder: charts", () => {
     // Nothing can be rendered until the mapping is complete, so the chart
     // waits without asking the server or showing an error.
     cy.get('[data-cy="rb-select-chartType"]').should("contain.text", "Bar");
+    // Its title can be written already; until then it asks for one.
+    cy.get('[data-cy="rb-chart-title"]')
+      .should("have.text", "")
+      .and("have.attr", "data-placeholder", "Add a chart title…");
     cy.get('[data-cy="rb-chart-error"]').should("not.exist");
     cy.get("@render.all").should("have.length", 0);
 
@@ -90,6 +94,11 @@ describe("Report builder: charts", () => {
         Cypress._.isEqual(body.mapping, MAPPING),
     );
     chart().should("contain.text", "Africa").and("contain.text", "Europe");
+    // Untitled charts are titled from what they show.
+    cy.get('[data-cy="rb-chart-title"]').should(
+      "have.text",
+      "Allocation Amount Reference Rate by Continent",
+    );
 
     waitForSave(
       "@save",

@@ -1,5 +1,5 @@
 import React from "react";
-import { capitalize, get, groupBy, set } from "lodash";
+import { capitalize, cloneDeep, get, groupBy, set } from "lodash";
 import {
   fontFamilyOptions,
   fontSizeOptions,
@@ -20,6 +20,17 @@ import { IDefaultChartVisualOptions } from "../../chart/utils";
 import { appendPx, removePx } from "app/utils/formatPx";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
 
+/** The options with the edits, each a value by its path, applied. */
+const applyEdits = (
+  options: Record<string, any>,
+  edits: Record<string, any> | null,
+): Record<string, any> => {
+  if (!edits) return options;
+  const edited = cloneDeep(options);
+  Object.entries(edits).forEach(([path, value]) => set(edited, path, value));
+  return edited;
+};
+
 const VisualOptions = ({
   defaultOptionsToDisplay,
   tab,
@@ -37,34 +48,39 @@ const VisualOptions = ({
     parent: selectedItemController?.parent ?? undefined,
   });
 
-  const [visualOptionsTemp, setVisualOptionsTemp] = React.useState<Record<
+  // Edits here are saved half a second after the last one. Until then they're
+  // kept as the options they change, by path, rather than as a copy of all the
+  // options: saving a copy would undo whatever changed meanwhile elsewhere,
+  // such as the title, which is also edited on the chart.
+  const [pendingEdits, setPendingEdits] = React.useState<Record<
     string,
     any
   > | null>(null);
 
   const visualOptionsState = selectedItem?.options ?? {};
 
-  const visualOptions = visualOptionsTemp ?? visualOptionsState;
+  const visualOptions = React.useMemo(
+    () => applyEdits(visualOptionsState, pendingEdits),
+    [visualOptionsState, pendingEdits],
+  );
 
-  const setVisualOptionsState = (newVisualOptions: Record<string, any>) => {
-    if (!selectedItem) return;
+  const savePendingEdits = () => {
+    if (!pendingEdits || !selectedItem) return;
     editItem({
       ...selectedItem,
       id: selectedItemController?.id || "",
       type: "chart",
-      options: newVisualOptions,
+      options: applyEdits(visualOptionsState, pendingEdits),
     });
+    setPendingEdits(null);
   };
 
-  useDebounce(
-    () => {
-      if (visualOptionsTemp) {
-        setVisualOptionsState(visualOptionsTemp);
-      }
-    },
-    500,
-    [visualOptionsTemp],
-  );
+  useDebounce(savePendingEdits, 500, [pendingEdits]);
+
+  // Switching tabs, or to another item, unmounts this before the delay is up.
+  const savePendingEditsRef = React.useRef(savePendingEdits);
+  savePendingEditsRef.current = savePendingEdits;
+  React.useEffect(() => () => savePendingEditsRef.current(), []);
 
   const optionsToDisplay = React.useMemo(() => {
     return Object.entries(defaultOptionsToDisplay)
@@ -164,13 +180,8 @@ const VisualOptions = ({
     const optionDisabled = checkOptionDisabled(option, parent);
 
     const onChange = (value: any) => {
-      const newVisualOptions = { ...visualOptions };
-      let key = option.key;
-      if (parent) {
-        key = `${parent}.${option.key}`;
-      }
-      set(newVisualOptions, key, value);
-      setVisualOptionsTemp(newVisualOptions);
+      const key = parent ? `${parent}.${option.key}` : option.key;
+      setPendingEdits((edits) => ({ ...edits, [key]: value }));
     };
     switch (option.type) {
       case "boolean":

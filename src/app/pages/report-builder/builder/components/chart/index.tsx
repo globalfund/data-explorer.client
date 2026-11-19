@@ -15,6 +15,9 @@ import { checkValidDimensionMapping } from "../panel/elements-controller/chart/u
 import ChartComponent from "./chart-component";
 import { useRenderChartData } from "app/hooks/queries/report-builder";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
+import { getChartTitle, setChartTitle } from "./title/chart-title";
+import { getSuggestedChartTitle } from "./title/suggested-title";
+import { TitleStaticArea } from "./title/title-static-area";
 
 const ChartLoadError: React.FC<{ error: unknown; height?: string }> = ({
   error,
@@ -106,6 +109,18 @@ export const ReportBuilderPageChart: React.FC<{
       type: "chart",
       options: newVisualOptions,
     });
+  };
+
+  const suggestedTitle = getSuggestedChartTitle(chartExtra);
+  const title = getChartTitle(selectedItem?.options, suggestedTitle);
+
+  const handleTitleChange = (value: string) => {
+    // Leaving the title as it was isn't an edit; it would also make a title
+    // that follows the data stop following it.
+    if (value.trim() === title) return;
+    setVisualOptions(
+      setChartTitle(selectedItem?.options, value, suggestedTitle),
+    );
   };
 
   // Re-render when this chart's data inputs change, or when it gets selected
@@ -263,6 +278,8 @@ export const ReportBuilderPageChart: React.FC<{
               chartType={chartExtra.chartType}
               visualOptions={selectedItem.options || {}}
               setVisualOptions={setVisualOptions}
+              title={title}
+              onTitleChange={handleTitleChange}
               id={id}
               readOnly={viewMode}
             />
@@ -273,9 +290,22 @@ export const ReportBuilderPageChart: React.FC<{
               width: hasParent ? "100%" : selectedItem?.options?.width,
               height: hasParent ? "100%" : selectedItem?.options?.height,
               position: "relative",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <ChartPlaceholder chartType={chartExtra.chartType} />
+            {/* The chart can't be drawn until its mapping is complete, but its
+                title can be written already. */}
+            {selectedItem?.options?.showChartName ? (
+              <TitleStaticArea
+                visualOptions={selectedItem.options}
+                title={title}
+                onTitleChange={handleTitleChange}
+              />
+            ) : null}
+            <Box sx={{ flex: 1, minHeight: 0 }}>
+              <ChartPlaceholder chartType={chartExtra.chartType} />
+            </Box>
           </Box>
         )
       ) : viewMode ? null : (

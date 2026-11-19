@@ -5,6 +5,7 @@ import AddIcon from "@mui/icons-material/Add";
 import ControlAccordion from "../../components/accordion";
 import { Box } from "@mui/system";
 import LimitToTopN from "../limit-to-top-n";
+import ChartTitleField from "../title-field";
 import { Button, Typography } from "@mui/material";
 import { useStoreState } from "app/state/store/hooks";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
@@ -70,6 +71,9 @@ const DataSettings = () => {
         },
       }}
     >
+      <ControlAccordion title="Title">
+        <ChartTitleField />
+      </ControlAccordion>
       <ControlAccordion title="Mapping">
         <Mapping />
       </ControlAccordion>

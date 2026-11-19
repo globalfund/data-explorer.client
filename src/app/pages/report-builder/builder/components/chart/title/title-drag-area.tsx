@@ -3,11 +3,14 @@ import React from "react";
 import EditableTitle from "../editable-title";
 import DragIndicator from "@mui/icons-material/DragIndicator";
 import { useSortable } from "@dnd-kit/react/sortable";
+import { CHART_TITLE_PLACEHOLDER } from "./chart-title";
+import { getTitleJustifyContent, getTitleTextSx } from "./title-style";
 
 interface TitleDragAreaProps {
   index: number;
   visualOptions: Record<string, any>;
-  setVisualOptions?: (value: Record<string, any>) => void;
+  title: string;
+  onTitleChange?: (value: string) => void;
   setIsDraggingTitle?: (dragging: boolean) => void;
 }
 
@@ -37,7 +40,7 @@ export const TitleDragArea = (props: TitleDragAreaProps) => {
   return (
     <Box
       sx={{
-        textAlign: props.visualOptions.chartTitleOptions.align,
+        textAlign: chartTitleOptions?.align,
       }}
       onMouseOver={(e) => {
         if (e.currentTarget.contains(e.relatedTarget as Node)) {
@@ -75,32 +78,17 @@ export const TitleDragArea = (props: TitleDragAreaProps) => {
             display: "flex",
             flex: 1,
             alignItems: "center",
-            justifyContent:
-              props.visualOptions.chartTitleOptions.align === "left"
-                ? "flex-start"
-                : props.visualOptions.chartTitleOptions.align === "right"
-                  ? "flex-end"
-                  : "center",
+            justifyContent: getTitleJustifyContent(chartTitleOptions?.align),
           }}
         >
           <EditableTitle
-            title={props.visualOptions.chartTitle}
-            onTitleChange={(newTitle) =>
-              props.setVisualOptions?.({
-                ...props.visualOptions,
-                chartTitle: newTitle,
-              })
-            }
+            title={props.title}
+            onTitleChange={(value) => props.onTitleChange?.(value)}
             setEditing={setIsEditing}
-            sx={{
-              fontFamily: chartTitleOptions.fontFamily,
-              fontWeight: chartTitleOptions.fontWeight.split("+")?.[0] || "400",
-              fontStyle:
-                chartTitleOptions.fontWeight.split("+")?.[1] || "normal",
-              fontSize: chartTitleOptions.fontSize + "px",
-              color: chartTitleOptions.textColor,
-              backgroundColor: chartTitleOptions.backgroundColor,
-            }}
+            sx={getTitleTextSx(chartTitleOptions)}
+            placeholder={CHART_TITLE_PLACEHOLDER}
+            ariaLabel="Chart title"
+            data-cy="rb-chart-title"
           />
         </Box>
       </Box>
