@@ -60,7 +60,9 @@ export const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
 
   const handleUserIconClick = () => {
     if (isAuthenticated) {
-      logout();
+      // Without returnTo, Auth0 sends everyone to the first of the app's
+      // Allowed Logout URLs, whichever site they logged out from.
+      logout({ logoutParams: { returnTo: window.location.origin } });
     } else {
       loginWithRedirect();
     }
@@ -167,7 +169,11 @@ export const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
               >
                 <HeaderMenuIcon />
               </IconButton>
-              <IconButton onClick={handleUserIconClick} sx={{ p: 0 }}>
+              <IconButton
+                onClick={handleUserIconClick}
+                aria-label={isAuthenticated ? "Log out" : "Log in"}
+                sx={{ p: 0 }}
+              >
                 {!isAuthenticated ? <UserIcon /> : <LogoutIcon />}
               </IconButton>
             </React.Fragment>
@@ -263,7 +269,11 @@ export const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
           </IconButton>
         </Tooltip>
       )}
-      <IconButton onClick={handleUserIconClick} sx={{ marginLeft: "12px" }}>
+      <IconButton
+        onClick={handleUserIconClick}
+        aria-label={isAuthenticated ? "Log out" : "Log in"}
+        sx={{ marginLeft: "12px" }}
+      >
         {!isAuthenticated ? <UserIcon /> : <LogoutIcon />}
       </IconButton>
     </Box>
