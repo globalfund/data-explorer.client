@@ -11,7 +11,11 @@ import { ReportItemOf } from "app/state/api/action-reducers/report-builder/sync"
 import ChartIcon from "app/assets/vectors/RBChartLarge.svg?react";
 import { useClickOutsideEditor } from "app/hooks/useClickOutsideEditorComponent";
 import ChartPlaceholder from "./placeholders/placeholder";
-import { checkValidDimensionMapping } from "../panel/elements-controller/chart/utils";
+import {
+  checkValidDimensionMapping,
+  getMissingDimensions,
+} from "../panel/elements-controller/chart/utils";
+import { joinWithAnd } from "../panel/elements-controller/chart/mapping/switch-mapping";
 import ChartComponent from "./chart-component";
 import { useRenderChartData } from "app/hooks/queries/report-builder";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
@@ -45,6 +49,46 @@ const ChartLoadError: React.FC<{ error: unknown; height?: string }> = ({
         ? "The data for this chart is no longer available."
         : "Couldn't load this chart's data. Check its data settings or try again later."}
     </Typography>
+  </Box>
+);
+
+/** Shown over a chart's placeholder while its mapping is incomplete. */
+const IncompleteChartMessage: React.FC<{ missing: string[] }> = ({
+  missing,
+}) => (
+  <Box
+    sx={{
+      inset: 0,
+      padding: "16px",
+      display: "flex",
+      position: "absolute",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <Box
+      role="status"
+      data-cy="rb-chart-incomplete"
+      sx={{
+        gap: "4px",
+        maxWidth: "320px",
+        display: "flex",
+        padding: "12px 16px",
+        borderRadius: "4px",
+        textAlign: "center",
+        flexDirection: "column",
+        bgcolor: "rgba(255, 255, 255, 0.92)",
+        border: "0.5px solid #CFD4DA",
+        boxShadow: "0 0 10px 0 rgba(152, 161, 170, 0.30)",
+      }}
+    >
+      <Typography fontSize="14px" fontWeight={700} color="#252C34">
+        Complete the configuration to preview this chart
+      </Typography>
+      <Typography fontSize="12px" color="#59616a">
+        Still needed: {joinWithAnd(missing)}
+      </Typography>
+    </Box>
   </Box>
 );
 
@@ -205,11 +249,11 @@ export const ReportBuilderPageChart: React.FC<{
     },
   });
 
-  const canRender =
-    checkValidDimensionMapping(
-      chartExtra?.chartType || "",
-      chartExtra?.mapping,
-    ) && renderedChartData;
+  const missingDimensions = getMissingDimensions(
+    chartExtra?.chartType || "",
+    chartExtra?.mapping,
+  );
+  const canRender = missingDimensions.length === 0 && renderedChartData;
 
   return (
     <Box
@@ -303,8 +347,15 @@ export const ReportBuilderPageChart: React.FC<{
                 onTitleChange={handleTitleChange}
               />
             ) : null}
-            <Box sx={{ flex: 1, minHeight: 0 }}>
+            <Box sx={{ flex: 1, minHeight: 0, position: "relative" }}>
               <ChartPlaceholder chartType={chartExtra.chartType} />
+              {missingDimensions.length > 0 ? (
+                <IncompleteChartMessage
+                  missing={missingDimensions.map(
+                    ({ dimension }) => dimension.name,
+                  )}
+                />
+              ) : null}
             </Box>
           </Box>
         )

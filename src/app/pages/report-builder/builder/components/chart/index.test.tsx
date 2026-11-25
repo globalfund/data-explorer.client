@@ -24,8 +24,10 @@ jest.mock("./placeholders/placeholder", () => ({
   __esModule: true,
   default: () => null,
 }));
+const mockMissingDimensions: { current: unknown[] } = { current: [] };
 jest.mock("../panel/elements-controller/chart/utils", () => ({
-  checkValidDimensionMapping: () => true,
+  checkValidDimensionMapping: () => mockMissingDimensions.current.length === 0,
+  getMissingDimensions: () => mockMissingDimensions.current,
   getDimensions: () => [],
 }));
 const mockRenderChartData = {
@@ -89,6 +91,7 @@ const gridChild = (store: ReturnType<typeof setup>) => {
 
 beforeEach(() => {
   mockChartProps.current = null;
+  mockMissingDimensions.current = [];
   Object.assign(mockRenderChartData, { isError: false, error: null });
 });
 
@@ -119,4 +122,35 @@ test("an uninitialized chart whose data fails to load shows the error", () => {
   expect(screen.getByRole("alert")).toHaveTextContent(
     "The data for this chart is no longer available.",
   );
+});
+
+test("a chart with missing fields asks for them instead of drawing", () => {
+  mockMissingDimensions.current = [
+    { dimension: { id: "x", name: "X Axis" }, needed: 1 },
+    { dimension: { id: "y", name: "Y Axis" }, needed: 1 },
+  ];
+  setup(barChart(true));
+  expect(screen.queryByTestId("chart")).not.toBeInTheDocument();
+  expect(screen.getByRole("status")).toHaveTextContent(
+    "Complete the configuration to preview this chart",
+  );
+  expect(screen.getByRole("status")).toHaveTextContent(
+    "Still needed: X Axis and Y Axis",
+  );
+});
+
+test("an incomplete chart shows nothing in view mode", () => {
+  mockMissingDimensions.current = [
+    { dimension: { id: "y", name: "Y Axis" }, needed: 1 },
+  ];
+  setup(barChart(true), { viewMode: true });
+  expect(screen.queryByRole("status")).not.toBeInTheDocument();
+});
+
+test("a complete chart waiting for its data shows no prompt", () => {
+  const chart = barChart(true);
+  chart.data.renderedChartData = null;
+  setup(chart);
+  expect(screen.queryByTestId("chart")).not.toBeInTheDocument();
+  expect(screen.queryByRole("status")).not.toBeInTheDocument();
 });

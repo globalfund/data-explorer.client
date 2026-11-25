@@ -14,6 +14,10 @@ import RADAR_OPTIONS from "../chart/data/default-visual-options/radar";
 import HEATMAP_OPTIONS from "../chart/data/default-visual-options/heatmap";
 
 import { charts } from "./data/chartsBase";
+import {
+  findMissingDimensions,
+  MissingDimension,
+} from "./mapping/switch-mapping";
 
 type OptionType =
   | "number"
@@ -66,23 +70,17 @@ export const getDimensions = (chartType: string): IChartDimension[] => {
   return chart.dimensions as IChartDimension[];
 };
 
+/** The required dimensions of a chart that still need fields. */
+export const getMissingDimensions = (
+  chartType: string,
+  mapping: MappedDimension | undefined,
+): MissingDimension[] =>
+  findMissingDimensions(getDimensions(chartType), mapping);
+
 export const checkValidDimensionMapping = (
   chartType: string,
   mapping: MappedDimension | undefined,
-): boolean => {
-  const dimensions = getDimensions(chartType);
-  if (dimensions.length === 0) return true;
-
-  for (const dimension of dimensions) {
-    if (dimension.required) {
-      const mappedDimension = mapping ? mapping[dimension.id] : undefined;
-      if (!mappedDimension || !mappedDimension.value) {
-        return false;
-      }
-    }
-  }
-  return true;
-};
+): boolean => getMissingDimensions(chartType, mapping).length === 0;
 
 export const getDefaultVisualOptions = (
   chartType: string,

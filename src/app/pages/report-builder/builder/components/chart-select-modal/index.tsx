@@ -14,7 +14,15 @@ import GitCompare from "app/assets/vectors/GitCompare.svg?react";
 import Puzzle from "app/assets/vectors/Puzzle.svg?react";
 import { useStoreState, useStoreActions } from "app/state/store/hooks";
 import { chartTypes } from "app/pages/report-builder/builder/components/chart/data";
-import { getDefaultVisualOptions } from "app/pages/report-builder/builder/components/panel/elements-controller/chart/utils";
+import {
+  getDefaultVisualOptions,
+  getDimensions,
+} from "app/pages/report-builder/builder/components/panel/elements-controller/chart/utils";
+import {
+  ChartTypeSwitch,
+  switchMapping,
+} from "app/pages/report-builder/builder/components/panel/elements-controller/chart/mapping/switch-mapping";
+import { ConfirmTypeSwitch } from "./confirm-type-switch";
 import { isChartTitleAuto } from "app/pages/report-builder/builder/components/chart/title/chart-title";
 import { ChartType } from "app/state/api/action-reducers/report-builder/sync";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
@@ -163,7 +171,9 @@ const intentOptions: {
 const ChartSelectModal: React.FC<{
   open: boolean;
   onClose: () => void;
-}> = ({ open, onClose }) => {
+  /** Called with what a type switch did to the chart's fields. */
+  onSwitch?: (change: ChartTypeSwitch | null) => void;
+}> = ({ open, onClose, onSwitch }) => {
   const cmsData = useCMSData({ returnData: true });
   const [search, setSearch] = React.useState("");
   const [selectedIntent, setSelectedIntent] = React.useState<IntentId>("all");
@@ -229,6 +239,8 @@ const ChartSelectModal: React.FC<{
   const selectedChart =
     localizedChartSelectItems.find((chart) => chart.id === selectedType) ??
     localizedChartSelectItems[0];
+  const getChartName = (id: string) =>
+    localizedChartSelectItems.find((chart) => chart.id === id)?.chartType ?? id;
 
   const filteredCharts = React.useMemo(() => {
     const searchTerm = search.trim().toLowerCase();
@@ -267,9 +279,34 @@ const ChartSelectModal: React.FC<{
     });
   };
 
+  const previousType = item?.data?.chartType ?? "";
+  const chartTypeUnchanged = previousType === selectedType;
+  // Recomputed per render; only read when the author applies a new type.
+  const mappingSwitch =
+    !chartTypeUnchanged && selectedType
+      ? switchMapping(
+          getDimensions(previousType),
+          getDimensions(selectedType),
+          item?.data?.mapping,
+        )
+      : null;
+  const [confirmingSwitch, setConfirmingSwitch] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!open) setConfirmingSwitch(false);
+  }, [open]);
+
+  const handleUseChart = () => {
+    if (mappingSwitch?.removed.length) {
+      setConfirmingSwitch(true);
+    } else {
+      handleApply();
+    }
+  };
+
   const handleApply = () => {
+    setConfirmingSwitch(false);
     if (!item || !selectedType) return;
-    const chartTypeUnchanged = item.data?.chartType === selectedType;
     const defaultOptions = getDefaultVisualOptions(selectedType);
 
     editItem({
@@ -278,8 +315,11 @@ const ChartSelectModal: React.FC<{
       type: "chart",
       data: {
         ...item.data,
-        mapping: chartTypeUnchanged ? item.data?.mapping : {},
+        mapping: mappingSwitch ? mappingSwitch.mapping : item.data?.mapping,
         chartType: selectedType as ChartType,
+        // The previous type's data would draw the new type until its own
+        // arrives; the chart shows its placeholder in the meantime instead.
+        ...(chartTypeUnchanged ? {} : { renderedChartData: null }),
       },
       options: chartTypeUnchanged
         ? item.options
@@ -297,6 +337,23 @@ const ChartSelectModal: React.FC<{
               : {}),
           },
     });
+
+    // A chart getting its first type, or one without fields, has nothing to
+    // explain.
+    if (
+      previousType &&
+      mappingSwitch &&
+      (mappingSwitch.kept.length || mappingSwitch.removed.length)
+    ) {
+      onSwitch?.({
+        from: getChartName(previousType),
+        to: selectedChart.chartType,
+        kept: mappingSwitch.kept,
+        removed: mappingSwitch.removed,
+      });
+    } else if (!chartTypeUnchanged) {
+      onSwitch?.(null);
+    }
 
     onClose();
   };
@@ -987,7 +1044,7 @@ const ChartSelectModal: React.FC<{
           <Button
             data-cy="rb-use-chart-type"
             disabled={!selectedType}
-            onClick={handleApply}
+            onClick={handleUseChart}
             endIcon={<ArrowForward sx={{ width: "18px", height: "18px" }} />}
             sx={{
               height: "35px",
@@ -1017,6 +1074,13 @@ const ChartSelectModal: React.FC<{
             )}
           </Button>
         </Box>
+        <ConfirmTypeSwitch
+          open={confirmingSwitch}
+          chartName={selectedChart.chartType}
+          removed={mappingSwitch?.removed ?? []}
+          onCancel={() => setConfirmingSwitch(false)}
+          onConfirm={handleApply}
+        />
       </Box>
     </Modal>
   );

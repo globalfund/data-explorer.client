@@ -9,8 +9,17 @@ import ChartTitleField from "../title-field";
 import { Button, Typography } from "@mui/material";
 import { useStoreState } from "app/state/store/hooks";
 import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportItemState";
+import { ChartTypeSwitch } from "../mapping/switch-mapping";
 
-const DataSettings = () => {
+interface DataSettingsProps {
+  typeSwitch?: ChartTypeSwitch | null;
+  onDismissTypeSwitch?: () => void;
+}
+
+const DataSettings = ({
+  typeSwitch,
+  onDismissTypeSwitch,
+}: Readonly<DataSettingsProps>) => {
   const [isFiltering, setIsFiltering] = React.useState(false);
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
@@ -75,7 +84,10 @@ const DataSettings = () => {
         <ChartTitleField />
       </ControlAccordion>
       <ControlAccordion title="Mapping">
-        <Mapping />
+        <Mapping
+          typeSwitch={typeSwitch}
+          onDismissTypeSwitch={onDismissTypeSwitch}
+        />
       </ControlAccordion>
       <ControlAccordion title="Filter">
         <Box

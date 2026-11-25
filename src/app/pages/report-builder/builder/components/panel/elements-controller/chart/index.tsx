@@ -19,6 +19,7 @@ import ControllerTabs from "app/components/tabs";
 import { extraTabs } from "../common/tabOptions";
 import DataSettings from "./data-settings";
 import PanelHeader from "../../panel-header";
+import { ChartTypeSwitch } from "./mapping/switch-mapping";
 
 type ChartControllerTab =
   "data-settings" | "layout" | "style" | "advanced" | "grid" | "column";
@@ -26,6 +27,10 @@ type ChartControllerTab =
 export default function ChartController() {
   const [isExpanded, setIsExpanded] = React.useState(true);
   const [value, setValue] = React.useState<ChartControllerTab>("data-settings");
+  // What the last chart type switch did to the fields, until it's dismissed.
+  const [typeSwitch, setTypeSwitch] = React.useState<ChartTypeSwitch | null>(
+    null,
+  );
 
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
@@ -60,7 +65,12 @@ export default function ChartController() {
   const renderTabPanel = () => {
     switch (value) {
       case "data-settings":
-        return <DataSettings />;
+        return (
+          <DataSettings
+            typeSwitch={typeSwitch}
+            onDismissTypeSwitch={() => setTypeSwitch(null)}
+          />
+        );
       case "layout":
         return <LayoutTab />;
       case "style":
@@ -95,6 +105,7 @@ export default function ChartController() {
   ) => {
     if (!item || !selectedDataset) return;
     const datasetUnchanged = item?.data?.dataset === selectedDataset;
+    if (!datasetUnchanged) setTypeSwitch(null);
     editItem({
       ...item,
       id: selectedController?.id || "",
@@ -132,6 +143,7 @@ export default function ChartController() {
   }, [chartConfigured, item?.data?.dataset, item?.data?.chartType]);
 
   React.useEffect(() => {
+    setTypeSwitch(null);
     if (selectedController?.parent?.type === "grid") {
       setValue("grid");
     } else if (selectedController?.parent?.type === "column") {
@@ -228,6 +240,7 @@ export default function ChartController() {
       <ChartSelectModal
         open={selectedController?.extra?.chart?.listToDisplay == "chartType"}
         onClose={handleBack}
+        onSwitch={setTypeSwitch}
       />
       <DatasetSelectModal
         open={selectedController?.extra?.chart?.listToDisplay == "dataset"}

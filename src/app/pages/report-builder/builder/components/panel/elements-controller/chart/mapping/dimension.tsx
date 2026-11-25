@@ -185,6 +185,7 @@ export function Dimension(props: Readonly<DimensionProps>) {
         </Box>
       </Box>
       <Typography
+        data-cy={props.errorText ? "rb-mapping-prompt" : undefined}
         sx={{
           color: props.errorText ? "#D32F2F" : "#70777E",
           fontSize: "12px",
