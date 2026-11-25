@@ -11,14 +11,30 @@ import useGetReportItemState from "app/pages/report-builder/hooks/useGetReportIt
 import RBBarGroupedIcon from "app/assets/vectors/RBBarGrouped.svg?react";
 import RBBarStackedIcon from "app/assets/vectors/RBBarStacked.svg?react";
 import RBBarPercentIcon from "app/assets/vectors/RBBarPercent.svg?react";
+import {
+  ChartTypeSwitch,
+  DEFAULT_AGGREGATION,
+  findMissingDimensions,
+  getMissingDimensionPrompt,
+} from "./switch-mapping";
+import { TypeSwitchNotice } from "./type-switch-notice";
 
-export default function Mapping() {
+interface MappingProps {
+  /** What the last chart type switch did to the fields. */
+  typeSwitch?: ChartTypeSwitch | null;
+  onDismissTypeSwitch?: () => void;
+}
+
+export default function Mapping({
+  typeSwitch,
+  onDismissTypeSwitch,
+}: Readonly<MappingProps>) {
   const selectedController = useStoreState(
     (state) => state.RBReportItemsControllerState.item,
   );
 
   const [selectedAggregation, setSelectedAggregation] =
-    React.useState<string>("sum");
+    React.useState<string>(DEFAULT_AGGREGATION);
 
   const { selectedItem: item, editItem } = useGetReportItemState<"chart">({
     id: selectedController?.id || "",
@@ -38,6 +54,11 @@ export default function Mapping() {
   );
 
   const showAggregation = dimensions.some((dim) => dim.aggregation);
+
+  const missingDimensions = findMissingDimensions(
+    dimensions,
+    chartExtra?.mapping,
+  );
 
   const currentAggregation = React.useMemo(() => {
     if (!showAggregation) return null;
@@ -161,7 +182,18 @@ export default function Mapping() {
         width: "100%",
       }}
     >
+      {typeSwitch ? (
+        <TypeSwitchNotice
+          change={typeSwitch}
+          missing={missingDimensions}
+          onDismiss={onDismissTypeSwitch}
+        />
+      ) : null}
+
       {dimensions.map((dimension) => {
+        const missing = missingDimensions.find(
+          (entry) => entry.dimension.id === dimension.id,
+        );
         const selectedValue = chartExtra?.mapping?.[dimension.id]?.value?.length
           ? chartExtra?.mapping?.[dimension.id]?.value
           : [];
@@ -175,6 +207,7 @@ export default function Mapping() {
             placeholder={"Select " + dimension.name}
             selectedValue={selectedValue}
             required={dimension.required}
+            errorText={missing ? getMissingDimensionPrompt(missing) : undefined}
             options={
               sampledDataset?.filterOptionGroups?.map((optionGroup: any) => ({
                 value: optionGroup,
